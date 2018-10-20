@@ -15,7 +15,7 @@ import (
     "io"
 )
 
-func addEntity(c *ishell.Context) {
+func msrpcEntityAdd(c *ishell.Context) {
 
     yellow := color.New(color.FgYellow).SprintFunc()
 
