@@ -4,9 +4,10 @@ import (
     "gopkg.in/abiosoft/ishell.v2"
 )
 
+var shell = ishell.New()
+
 func RunShell() {
 
-    var shell = ishell.New()
 
     // display welcome info.
     shell.Println("Welcome to interactive shell")
@@ -20,9 +21,9 @@ func RunShell() {
     })
 
     shell.AddCmd(&ishell.Cmd{
-        Name: "msrpc:entity:add",
-        Help: "Command create new file api/entity.go and create default components for working via msrpc",
-        Func: addEntity,
+        Name: "setAppType",
+        Help: "Set app type",
+        Func: whoAmI,
     })
 
     // run shell
