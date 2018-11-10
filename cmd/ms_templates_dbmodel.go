@@ -1,10 +1,9 @@
 package cmd
 
-const msDbmodel = `package dbmodels
+const msDbmodelEntity = `package dbmodels
 
 import (
     "time"
-    "strings"
     "github.com/google/uuid"
 )
 
@@ -12,29 +11,43 @@ type Entity struct {
     ID          		uuid.UUID	` + "`" + `sql:"primary_key;type:uuid;default:uuid_generate_v4()"` + "`" + `
     AppId          		uuid.UUID
 
-    validationErrors	[]string
-
     CreatedAt time.Time
     UpdatedAt time.Time
     DeletedAt *time.Time ` + "`" + `sql:"index"` + "`" + `
-}
 
+    validator
+}
 
 func (entity *Entity) Validate()  {
 
 }
+`
 
-func (entity *Entity) IsValid() bool {
-    return len(entity.validationErrors) < 1
+const msDbmodelValidator = `package dbmodels
+
+import "strings"
+
+type validator struct {
+    validationErrors	[]string
 }
 
-func (entity *Entity) GetValidationErrors() string {
+func (val *validator) IsValid() bool {
+    return len(val.validationErrors) < 1
+}
 
-    return strings.Join(entity.validationErrors, ". ")
-}`
+func (val *validator) GetValidationErrors() string {
+
+    return strings.Join(val.validationErrors, ". ")
+}
+`
 
 var msTemplateDbmodelsEntity = template{
     Path:    "./dbmodels/entity.go",
-    Content: msDbmodel,
+    Content: msDbmodelEntity,
+}
+
+var msTemplateDbmodelsValidator = template{
+    Path:    "./dbmodels/validator.go",
+    Content: msDbmodelValidator,
 }
 

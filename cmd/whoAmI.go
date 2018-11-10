@@ -11,6 +11,10 @@ const MSRPC_ENTITY_ADD = "rpc:entity:add"
 
 const MS_INIT = "ms:init"
 
+const MS_ENTITY_ADD = "ms:entity:add"
+
+const USUAL_APP_CREATE = "usual:create"
+
 func whoAmI(c *ishell.Context) {
 
     red := color.New(color.FgRed).SprintFunc()
@@ -25,7 +29,7 @@ func whoAmI(c *ishell.Context) {
         "MsRpcApi",
         "Microservice instance",
         "App using MsRpcApi [not available]",
-        "Usual app [not available]",
+        "Usual app",
     }, "Please select type of current app")
 
     switch choice {
@@ -54,9 +58,27 @@ func whoAmI(c *ishell.Context) {
         case 2:
 
             c.Println("Hello " + blue("Microservice instance") + " you have some commands:")
-            c.Println(green(MS_INIT), " - Create new empty microservice")
+            c.Println(green(MS_INIT), " - Create new microservice")
 
             setMsInit()
+
+            c.Println(green(MS_ENTITY_ADD), " - Add entity witch CRUD to microservice")
+
+            setMsEntityAdd()
+
+            break
+
+        //uisual app
+        case 4:
+
+            c.Println("Hello " + blue("autonomic") + " application:")
+            c.Println(green(MS_INIT), " - Create new app")
+
+            setMsInit()
+
+            c.Println(green(MS_ENTITY_ADD), " - Add entity witch CRUD to microservice")
+
+            setUsualAppCreate()
 
             break
 
@@ -92,5 +114,23 @@ func setMsInit() {
         Name: MS_INIT,
         Help: "Command create new empty microservice for using with msrpc, mscore and other services",
         Func: msInit,
+    })
+}
+
+func setMsEntityAdd() {
+
+    shell.AddCmd(&ishell.Cmd{
+        Name: MS_ENTITY_ADD,
+        Help: "Command add new entity to microservice",
+        Func: msEntityAdd,
+    })
+}
+
+func setUsualAppCreate() {
+
+    shell.AddCmd(&ishell.Cmd{
+        Name: USUAL_APP_CREATE,
+        Help: "Command create new usual non MS application",
+        Func: usualAppCreate,
     })
 }

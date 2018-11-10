@@ -3,10 +3,10 @@ package cmd
 const msInsertDataToDb = `package bootstrap
 
 import (
-	"msproduct/dbmodels"
+	"{ms-name}/dbmodels"
 	"fmt"
 	"os"
-	"msproduct/core"
+	"{ms-name}/core"
 )
 
 func FillDBTestData()  {
@@ -21,7 +21,7 @@ func FillDBTestData()  {
 	if isDropTables == true {
 
 		core.Db.DropTableIfExists(
-//          dbmodels.Product{},
+          dbmodels.Entity{},
 		)
 
 		fmt.Println("All tables removed")
@@ -29,7 +29,7 @@ func FillDBTestData()  {
 	}
 
 	core.Db.AutoMigrate(
-//		&dbmodels.Product{},
+		&dbmodels.Entity{},
 	)
 
 	// add fixtures
@@ -38,6 +38,6 @@ func FillDBTestData()  {
 
 var msTemplateInsertDataToDb = template{
     Path:    "./bootstrap/insert_data_to_db.go",
-    Content: microserviceNameRegexp.ReplaceAllString(msInsertDataToDb, getCurrentDirName()),
+    Content: assignMsName(msInsertDataToDb),
 }
 

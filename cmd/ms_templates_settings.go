@@ -7,22 +7,21 @@ import (
     "fmt"
 )
 
-const RabbitServerPassword = "rabbit-pass"
-const RabbitServerLogin = "msproduct"
+const RabbitServerPassword = "{new-pass}"
+const RabbitServerLogin = "{ms-name}"
 const RabbitServer = "core.140140.ru"
 const RabbitServerPort = "5672"
 const rabbitServerVirtualhost = "/microservices"
 const rabbitServerVirtualhostTest = "/microservices-test"
 
-const MicroserviceAuthKey = "new-guid";
+const MicroserviceAuthKey = "{new-guid}"
 
+func IsDev() bool {
+    var matchDev = regexp.MustCompile("^/tmp/go-build")
+    return matchDev.Match([]byte(os.Args[0]))
+}
 
 func GetVirtualHost() string {
-
-    if len(os.Args) < 1 {
-        fmt.Println("RPC use PRODUCTION environment")
-        return rabbitServerVirtualhost
-    }
 
     for _, param := range os.Args {
 
@@ -30,6 +29,11 @@ func GetVirtualHost() string {
             fmt.Println("RPC use DEV environment")
             return rabbitServerVirtualhostTest
         }
+    }
+
+    if IsDev() {
+        fmt.Println("RPC use DEV environment")
+        return rabbitServerVirtualhostTest
     }
 
     fmt.Println("RPC use PRODUCTION environment")
@@ -42,21 +46,23 @@ const DbHost = "127.0.0.1"
 
 const DbPort = "5432"
 
-const DbUser = "msproduct"
+const DbUser = "{ms-name}"
 
-const DbPass = "prd00dfghLLvQuw"
+const DbPass = "{new-pass}"
 
-const DbName = "msproduct"
+const DbName = "{ms-name}"
 `
 
 var msTemplageSettingsAppContent =
-        microserviceNameRegexp.ReplaceAllString(
-            newGuidRegexp.ReplaceAllString(
-                newPassRegexp.ReplaceAllString(msSettingsApp, generatePassword(8)),
-                getNewGuid()),
-        getCurrentDirName())
+        assignMsName(
+            assignGuid(
+                assignPass(
+                    msSettingsApp)))
 
-var msTemplageSettingsDbContent = newPassRegexp.ReplaceAllString(msSettingsDb, generatePassword(8))
+var msTemplageSettingsDbContent =
+        assignMsName(
+            assignPass(
+                msSettingsDb))
 
 var msTemplateSettingsApp = template{
     Path:    "./settings/app.go",
