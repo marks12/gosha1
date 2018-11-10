@@ -4,7 +4,7 @@ const msCoreDb = `package core
 
 import (
 	"github.com/jinzhu/gorm"
-	"msproduct/settings"
+	"{ms-name}/settings"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
@@ -20,5 +20,5 @@ var Db, DbErr = gorm.Open("postgres", DbConnectString)`
 
 var msTemplateCoreDb = template{
     Path:    "./core/db.go",
-    Content: microserviceNameRegexp.ReplaceAllString(msCoreDb, getCurrentDirName()),
+    Content: assignMsName(msCoreDb),
 }

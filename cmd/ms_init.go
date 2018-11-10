@@ -14,13 +14,31 @@ func msInit(c *ishell.Context) {
     c.Println("Hello new microservice", green(getCurrentDirName()))
 
     createMain(c)
-    CreateFile(msTemplateInsertDataToDb.Path, msTemplateInsertDataToDb.Content)
-    CreateFile(msTemplateCoreDb.Path, msTemplateCoreDb.Content)
-    CreateFile(msTemplateSettingsApp.Path, msTemplateSettingsApp.Content)
-    CreateFile(msTemplateSettingsDb.Path, msTemplateSettingsDb.Content)
-    CreateFile(msTemplateDbmodelsEntity.Path, msTemplateDbmodelsEntity.Content)
-    CreateFile(msTemplateRpcappErrors.Path, msTemplateRpcappErrors.Content)
-    CreateFile("./.gitignore", ".idea\n")
+
+    //bootstrap
+    CreateFile(msTemplateInsertDataToDb.Path, msTemplateInsertDataToDb.Content, c)
+
+    //core
+    CreateFile(msTemplateCoreDb.Path, msTemplateCoreDb.Content, c)
+
+    //settings
+    CreateFile(msTemplateSettingsApp.Path, msTemplateSettingsApp.Content, c)
+    CreateFile(msTemplateSettingsDb.Path, msTemplateSettingsDb.Content, c)
+
+    //dbmodels
+    CreateFile(msTemplateDbmodelsEntity.Path, msTemplateDbmodelsEntity.Content, c)
+    CreateFile(msTemplateDbmodelsValidator.Path, msTemplateDbmodelsValidator.Content, c)
+
+    //rpcapp
+    CreateFile(msTemplateRpcappErrors.Path, msTemplateRpcappErrors.Content, c)
+
+    //logic
+    CreateFile(msTemplateLogicAssigner.Path, msTemplateLogicAssigner.Content, c)
+
+    //msRabbitServerPassword
+    CreateFile(msTemplateMsTicket.Path, msTemplateMsTicket.Content, c)
+
+    CreateFile("./.gitignore", "./\\.idea\n", c)
 
     c.Println(red("New app with microservice structure created"))
 }
@@ -31,13 +49,14 @@ func createMain(c *ishell.Context) {
 
     if choice == 0 {
 
-        CreateFile(msTemplateMain.Path, msTemplateMain.Content)
+        CreateFile(msTemplateMain.Path, msTemplateMain.Content, c)
 
         for _, folder := range []string{
             "core",
             "settings",
             "dbmodels",
             "bootstrap",
+            "logic",
             "ms",
             "rpcapp",
         } {

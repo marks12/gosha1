@@ -41,7 +41,7 @@ func msrpcEntityAdd(c *ishell.Context) {
         return
     }
 
-    CopyNewEntity(
+    CopyFile(
         sourceFile,
         destinationFile1,
         []string{"NewEntity", "newEntity"},
@@ -51,7 +51,7 @@ func msrpcEntityAdd(c *ishell.Context) {
     sourceFile = "./cnf/route_new_entity.go"
     destinationFile2 := "./cnf/route_" + snakeCase + ".go"
 
-    CopyNewEntity(
+    CopyFile(
         sourceFile,
         destinationFile2,
         []string{"NewEntity", "newEntity", "QueueNameCore"},
@@ -151,7 +151,7 @@ func getFileLines(filepath string) (strArr []string) {
     return
 }
 
-func CopyNewEntity(sourceFile, destinationFile string, replaceFrom []string, replaceTo []string, c *ishell.Context) {
+func CopyFile(sourceFile, destinationFile string, replaceFrom []string, replaceTo []string, c *ishell.Context) {
 
     input, err := ioutil.ReadFile(sourceFile)
     if err != nil {
