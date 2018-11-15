@@ -5,6 +5,7 @@ const msSettingsApp = `package settings
 import (
     "os"
     "fmt"
+    "regexp"
 )
 
 const RabbitServerPassword = "{new-pass}"
