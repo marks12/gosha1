@@ -13,7 +13,7 @@ func msInit(c *ishell.Context) {
 
     c.Println("Hello new microservice", green(getCurrentDirName()))
 
-    createMain(c)
+    msCreateMain(c)
 
     //bootstrap
     CreateFile(msTemplateInsertDataToDb.Path, msTemplateInsertDataToDb.Content, c)
@@ -35,7 +35,7 @@ func msInit(c *ishell.Context) {
     //logic
     CreateFile(msTemplateLogicAssigner.Path, msTemplateLogicAssigner.Content, c)
 
-    //msRabbitServerPassword
+    //ms forlder
     CreateFile(msTemplateMsTicket.Path, msTemplateMsTicket.Content, c)
 
     CreateFile("./.gitignore", "./\\.idea\n", c)
@@ -43,7 +43,7 @@ func msInit(c *ishell.Context) {
     c.Println(red("New app with microservice structure created"))
 }
 
-func createMain(c *ishell.Context) {
+func msCreateMain(c *ishell.Context) {
 
     choice := c.MultiChoice([]string{"Yes", "No"}, "Do you wont rewrite mian.go ?")
 

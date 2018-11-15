@@ -15,6 +15,8 @@ const MS_ENTITY_ADD = "ms:entity:add"
 
 const USUAL_APP_CREATE = "usual:create"
 
+const USUAL_ENTITY_ADD = "usual:entity:add"
+
 func whoAmI(c *ishell.Context) {
 
     red := color.New(color.FgRed).SprintFunc()
@@ -72,13 +74,12 @@ func whoAmI(c *ishell.Context) {
         case 4:
 
             c.Println("Hello " + blue("autonomic") + " application:")
-            c.Println(green(MS_INIT), " - Create new app")
 
-            setMsInit()
-
-            c.Println(green(MS_ENTITY_ADD), " - Add entity witch CRUD to microservice")
-
+            c.Println(green(USUAL_APP_CREATE), " - Create new app")
             setUsualAppCreate()
+
+            c.Println(green(USUAL_ENTITY_ADD), " - Add entity")
+            setUsualEntityAdd()
 
             break
 
@@ -131,6 +132,16 @@ func setUsualAppCreate() {
     shell.AddCmd(&ishell.Cmd{
         Name: USUAL_APP_CREATE,
         Help: "Command create new usual non MS application",
-        Func: usualAppCreate,
+        Func: usualAppInit,
+    })
+}
+
+
+func setUsualEntityAdd() {
+
+    shell.AddCmd(&ishell.Cmd{
+        Name: USUAL_ENTITY_ADD,
+        Help: "Command add new entity to usual app",
+        Func: usualEntityAdd,
     })
 }

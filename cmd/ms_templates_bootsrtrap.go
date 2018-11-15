@@ -3,13 +3,18 @@ package cmd
 const msInsertDataToDb = `package bootstrap
 
 import (
-	"{ms-name}/dbmodels"
+	"dkr-admin/dbmodels"
 	"fmt"
 	"os"
-	"{ms-name}/core"
+	"dkr-admin/core"
 )
 
 func FillDBTestData()  {
+
+	if core.DbErr != nil {
+		fmt.Println("Error dabatabse connect", core.DbErr.Error())
+		os.Exit(0)
+	}
 
 	isDropTables := false
 
