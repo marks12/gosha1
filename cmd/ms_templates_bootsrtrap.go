@@ -3,10 +3,10 @@ package cmd
 const msInsertDataToDb = `package bootstrap
 
 import (
-	"dkr-admin/dbmodels"
+	"{ms-name}/dbmodels"
 	"fmt"
 	"os"
-	"dkr-admin/core"
+	"{ms-name}/core"
 )
 
 func FillDBTestData()  {
