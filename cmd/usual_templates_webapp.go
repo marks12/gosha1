@@ -32,11 +32,11 @@ func validResponse (w http.ResponseWriter, data interface{}) {
 const usualWebappEntity = `package webapp
 
 import (
-    "dkr-admin/logic"
+    "{ms-name}/logic"
     "net/http"
     "msrpc/mdl"
-    "dkr-admin/types"
-    "dkr-admin/settings"
+    "{ms-name}/types"
+    "{ms-name}/settings"
 )
 
 func {entity-name}Find(w http.ResponseWriter, httpRequest *http.Request) {

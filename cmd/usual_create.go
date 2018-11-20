@@ -67,7 +67,6 @@ func usualCreate(c *ishell.Context) {
     CreateFile(msTemplateSettingsApp.Path, msTemplateSettingsApp.Content, c)
     CreateFile(msTemplateSettingsDb.Path, msTemplateSettingsDb.Content, c)
     CreateFile(usualTemplateSettingsWebapp.Path, usualTemplateSettingsWebapp.Content, c)
-    CreateFile(msTemplateSettingsWebApp.Path, msTemplateSettingsWebApp.Content, c)
 
     //types
     CreateFile(usualTemplateTypesAuthenticator.Path, usualTemplateTypesAuthenticator.Content, c)
