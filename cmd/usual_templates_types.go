@@ -281,7 +281,6 @@ const usualTypesResponse = `package types
 
 import (
 	"{ms-name}/settings"
-	"fmt"
 )
 
 type APIStatus struct {
@@ -345,9 +344,6 @@ func (pagination *Pagination) Validate(functionType string) {
 		pagination.validator.validationErrors = append(pagination.validator.validationErrors, "Usupported function type: " + functionType)
 		break
 	}
-
-	fmt.Println("Pagination", pagination.validationErrors)
-
 }
 `
 

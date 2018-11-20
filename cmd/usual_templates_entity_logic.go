@@ -54,8 +54,6 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
        result = append(result, assign{Entity}TypeFromDb(item))
     }
 
-    fmt.Println("dbmodelData", dbmodelData)
-
     return result, count, nil
 }
 
