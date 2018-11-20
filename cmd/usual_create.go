@@ -49,33 +49,36 @@ func usualCreate(c *ishell.Context) {
     //core
     CreateFile(msTemplateCoreDb.Path, msTemplateCoreDb.Content, c)
 
-    //settings
-    CreateFile(msTemplateSettingsApp.Path, msTemplateSettingsApp.Content, c)
-    CreateFile(msTemplateSettingsDb.Path, msTemplateSettingsDb.Content, c)
-    CreateFile(usualTemplateSettingsWebapp.Path, usualTemplateSettingsWebapp.Content, c)
-
-    //service
-    CreateFile(usualTemplateServicesCaller.Path, usualTemplateServicesCaller.Content, c)
-    CreateFile(usualTemplateServicesTicket.Path, usualTemplateServicesTicket.Content, c)
-
     //dbmodels
     CreateFile(usualTemplateDbmodelsEntity.Path, usualTemplateDbmodelsEntity.Content, c)
     CreateFile(usualTemplateDbmodelsValidator.Path, usualTemplateDbmodelsValidator.Content, c)
-
-    //types
-    CreateFile(usualTemplateTypesAuthenticator.Path, usualTemplateTypesAuthenticator.Content, c)
-    CreateFile(usualTemplateTypesEntity.Path, usualTemplateTypesEntity.Content, c)
-    CreateFile(usualTemplateTypesValidator.Path, usualTemplateTypesValidator.Content, c)
-    CreateFile(usualTemplateTypesResponse.Path, usualTemplateTypesResponse.Content, c)
-
-    //webapp
-    CreateFile(usualTemplateWebappErrors.Path, usualTemplateWebappErrors.Content, c)
 
     //logic
     CreateFile(msTemplateLogicAssigner.Path, msTemplateLogicAssigner.Content, c)
 
     //router
     CreateFile(usualTemplateRouter.Path, usualTemplateRouter.Content, c)
+
+    //service
+    CreateFile(usualTemplateServicesCaller.Path, usualTemplateServicesCaller.Content, c)
+    CreateFile(usualTemplateServicesTicket.Path, usualTemplateServicesTicket.Content, c)
+
+    //settings
+    CreateFile(msTemplateSettingsApp.Path, msTemplateSettingsApp.Content, c)
+    CreateFile(msTemplateSettingsDb.Path, msTemplateSettingsDb.Content, c)
+    CreateFile(usualTemplateSettingsWebapp.Path, usualTemplateSettingsWebapp.Content, c)
+    CreateFile(msTemplateSettingsWebApp.Path, msTemplateSettingsWebApp.Content, c)
+
+    //types
+    CreateFile(usualTemplateTypesAuthenticator.Path, usualTemplateTypesAuthenticator.Content, c)
+    CreateFile(usualTemplateTypesEntity.Path, usualTemplateTypesEntity.Content, c)
+    CreateFile(usualTemplateTypesFilter.Path, usualTemplateTypesFilter.Content, c)
+    CreateFile(usualTemplateTypesRequest.Path, usualTemplateTypesRequest.Content, c)
+    CreateFile(usualTemplateTypesValidator.Path, usualTemplateTypesValidator.Content, c)
+    CreateFile(usualTemplateTypesResponse.Path, usualTemplateTypesResponse.Content, c)
+
+    //webapp
+    CreateFile(usualTemplateWebappErrors.Path, usualTemplateWebappErrors.Content, c)
 
     ////ms folder
     //CreateFile(msTemplateMsTicket.Path, msTemplateMsTicket.Content, c)

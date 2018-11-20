@@ -54,6 +54,17 @@ const DbPass = "{new-pass}"
 const DbName = "{ms-name}"
 `
 
+const usualTemplageSettingsWebAppContent = `package settings
+
+const ServerPort = "7005"
+
+const FunctionTypeFind		= "00000000-0000-0000-0000-000000000001"
+const FunctionTypeRead		= "00000000-0000-0000-0000-000000000002"
+const FunctionTypeUpdate	= "00000000-0000-0000-0000-000000000003"
+const FunctionTypeDelete	= "00000000-0000-0000-0000-000000000004"
+const FunctionTypeCreate	= "00000000-0000-0000-0000-000000000005"
+`
+
 var msTemplageSettingsAppContent =
         assignMsName(
             assignGuid(
@@ -73,5 +84,10 @@ var msTemplateSettingsApp = template{
 var msTemplateSettingsDb = template{
     Path:    "./settings/db.go",
     Content: msTemplageSettingsDbContent,
+}
+
+var msTemplateSettingsWebApp = template{
+    Path:    "./settings/web_app.go",
+    Content: usualTemplageSettingsWebAppContent,
 }
 
