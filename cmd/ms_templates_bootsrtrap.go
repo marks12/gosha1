@@ -26,7 +26,8 @@ func FillDBTestData()  {
 	if isDropTables == true {
 
 		core.Db.DropTableIfExists(
-          dbmodels.Entity{},
+          &dbmodels.Entity{},
+          //generator insert entity
 		)
 
 		fmt.Println("All tables removed")
@@ -35,6 +36,7 @@ func FillDBTestData()  {
 
 	core.Db.AutoMigrate(
 		&dbmodels.Entity{},
+        //generator insert entity
 	)
 
 	// add fixtures

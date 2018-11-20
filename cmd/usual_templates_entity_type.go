@@ -1,47 +1,46 @@
 package cmd
 
-const usualWebappEntityType = `
-package types
+const usualWebappEntityType = `package types
 
 import (
     "net/http"
 )
 
-
-type {entity-name} struct {
-    ID                  string
-
-    CreatedAt           string
-    UpdatedAt           string
-    DeletedAt           string
+type {Entity} struct {
+    Id   int
+    Name string
 }
 
-type {entity-name}Filter struct {
+func ({entity} *{Entity}) Validate()  {
 
-    Pagination
-    validator
-    Authenticator
 }
 
-func Get{entity-name}Filter(request *http.Request) {entity-name}Filter {
+type {Entity}Filter struct {
 
-    var filter {entity-name}Filter
+    AbstractFilter
+}
+
+func Get{Entity}Filter(request *http.Request, functionType string) {Entity}Filter {
+
+    var filter {Entity}Filter
+
+    filter.request = request
+
+    ReadJSON(filter.request, &filter)
+    filter.AbstractFilter = GetAbstractFilter(request, functionType)
 
     return  filter
 }
 
+func (filter *{Entity}Filter) Get{Entity}Model() {Entity} {
 
-func Get{entity-name}Model(request *http.Request) {entity-name} {
+    var model {Entity}
 
-    var model {entity-name}
+    ReadJSON(filter.request, &model)
 
     model.Validate()
 
     return  model
-}
-
-func (user *{entity-name}) Validate()  {
-
 }
 `
 

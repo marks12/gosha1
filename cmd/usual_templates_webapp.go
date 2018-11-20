@@ -3,7 +3,6 @@ package cmd
 const usualWebappErrors = `package webapp
 
 import (
-//    "{ms-name}/services"
     "{ms-name}/types"
     "net/http"
     "encoding/json"
@@ -30,21 +29,19 @@ func validResponse (w http.ResponseWriter, data interface{}) {
     return
 }`
 
-const usualWebappEntity = `
-package webapp
+const usualWebappEntity = `package webapp
 
 import (
-    "{ms-name}/logic"
-    "{ms-name}/services"
+    "dkr-admin/logic"
     "net/http"
     "msrpc/mdl"
-    "{ms-name}/types"
+    "dkr-admin/types"
+    "dkr-admin/settings"
 )
-
 
 func {entity-name}Find(w http.ResponseWriter, httpRequest *http.Request) {
 
-    requestDto := types.Get{entity-name}Filter(httpRequest)
+    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeFind)
 
     if !requestDto.IsAuthorized() {
         errResponse(w, "Invalid authorize in Find{entity-name}", http.StatusForbidden)
@@ -65,18 +62,17 @@ func {entity-name}Find(w http.ResponseWriter, httpRequest *http.Request) {
         return
     }
 
-    validResponse(w, mdl.Response{
-        Data:mdl.ResponseFind{
+    validResponse(w, mdl.ResponseFind{
             data,
             totalRecords,
-    }})
+    })
 
     return
 }
 
 func {entity-name}Create(w http.ResponseWriter, httpRequest *http.Request) {
 
-    requestDto := types.Get{entity-name}Filter(httpRequest)
+    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeCreate)
 
     if !requestDto.IsAuthorized() {
         errResponse(w, "Invalid authorize in {entity-name}Create", http.StatusForbidden)
@@ -97,17 +93,20 @@ func {entity-name}Create(w http.ResponseWriter, httpRequest *http.Request) {
         return
     }
 
-    validResponse(w, mdl.Response{
-        Data:mdl.ResponseCreate{
-            data,
-    }})
+    validResponse(w, mdl.ResponseCreate{
+        data,
+    })
 
     return
 }
 
 func {entity-name}Read(w http.ResponseWriter, httpRequest *http.Request) {
 
-    requestDto := types.Get{entity-name}Filter(httpRequest)
+    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeRead)
+
+    requestDto.PerPage = 1
+    requestDto.CurrentPage = 1
+
 
     if !requestDto.IsAuthorized() {
         errResponse(w, "Invalid authorize in {entity-name}Read", http.StatusForbidden)
@@ -128,10 +127,9 @@ func {entity-name}Read(w http.ResponseWriter, httpRequest *http.Request) {
         return
     }
 
-    validResponse(w, mdl.Response{
-        Data:mdl.ResponseRead{
-            data,
-        }})
+    validResponse(w, mdl.ResponseRead{
+        data,
+    })
 
     return
 }
@@ -139,7 +137,7 @@ func {entity-name}Read(w http.ResponseWriter, httpRequest *http.Request) {
 
 func {entity-name}Update(w http.ResponseWriter, httpRequest *http.Request) {
 
-    requestDto := types.Get{entity-name}Filter(httpRequest)
+    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeUpdate)
 
     if !requestDto.IsAuthorized() {
         errResponse(w, "Invalid authorize in {entity-name}Update", http.StatusForbidden)
@@ -160,17 +158,16 @@ func {entity-name}Update(w http.ResponseWriter, httpRequest *http.Request) {
         return
     }
 
-    validResponse(w, mdl.Response{
-        Data:mdl.ResponseUpdate{
-            data,
-        }})
+    validResponse(w, mdl.ResponseUpdate{
+        data,
+    })
 
     return
 }
 
 func {entity-name}Delete(w http.ResponseWriter, httpRequest *http.Request) {
 
-    requestDto := types.Get{entity-name}Filter(httpRequest)
+    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeDelete)
 
     if !requestDto.IsAuthorized() {
         errResponse(w, "Invalid authorize in {entity-name}Delete", http.StatusForbidden)
@@ -183,7 +180,7 @@ func {entity-name}Delete(w http.ResponseWriter, httpRequest *http.Request) {
     }
 
     // Получаем список
-    data, err := logic.{entity-name}Delete(requestDto)
+    isOk, err := logic.{entity-name}Delete(requestDto)
 
     // Создаём структуру ответа
     if err != nil {
@@ -191,14 +188,12 @@ func {entity-name}Delete(w http.ResponseWriter, httpRequest *http.Request) {
         return
     }
 
-    validResponse(w, mdl.Response{
-        Data:mdl.ResponseUpdate{
-            data,
-        }})
+    validResponse(w, mdl.ResponseDelete{
+        isOk,
+    })
 
     return
 }
-
 
 `
 
