@@ -14,7 +14,7 @@ func msrpcEntityAdd(c *ishell.Context) {
 
     c.Println(yellow("Hello we start creating api for new entity"))
 
-    entity, err := getName(c)
+    entity, err := getName(c, false)
 
     if err !=nil {
         return

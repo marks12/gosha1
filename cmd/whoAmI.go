@@ -17,6 +17,8 @@ const USUAL_APP_CREATE = "usual:create"
 
 const USUAL_ENTITY_ADD = "usual:entity:add"
 
+const ENTITY_ADD_FIELD = "entity:field:add"
+
 func whoAmI(c *ishell.Context) {
 
     red := color.New(color.FgRed).SprintFunc()
@@ -81,6 +83,9 @@ func whoAmI(c *ishell.Context) {
             c.Println(green(USUAL_ENTITY_ADD), " - Add entity")
             setUsualEntityAdd()
 
+            c.Println(green(ENTITY_ADD_FIELD), " - Add field to model")
+            setModelFieldAdd()
+
             break
 
         default:
@@ -143,5 +148,14 @@ func setUsualEntityAdd() {
         Name: USUAL_ENTITY_ADD,
         Help: "Command add new entity to usual app",
         Func: usualEntityAdd,
+    })
+}
+
+func setModelFieldAdd() {
+
+    shell.AddCmd(&ishell.Cmd{
+        Name: ENTITY_ADD_FIELD,
+        Help: "Command add new field to model",
+        Func: entityFieldAdd,
     })
 }
