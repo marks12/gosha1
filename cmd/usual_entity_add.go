@@ -12,7 +12,7 @@ func usualEntityAdd(c *ishell.Context) {
 
     c.Println(yellow("Hello we start creating new entity and api"))
 
-    entity, err := getName(c)
+    entity, err := getName(c, false)
 
     if err !=nil {
         return

@@ -202,14 +202,20 @@ func getFirstLowerCase(s string) string {
     return string(bytes.Join([][]byte{lc, rest}, nil))
 }
 
-func getName(c *ishell.Context) (string, error) {
+func getName(c *ishell.Context, IsExistsStruct bool) (string, error) {
+
+    var entityName string
 
     green := color.New(color.FgGreen).SprintFunc()
     red := color.New(color.FgRed).SprintFunc()
 
-    c.Println("Please type new entityName, like \"NewEntity\" or \"Entity\" or exit return")
+    if IsExistsStruct {
+        c.Println("Please type exists entityName, like \"NewEntity\" or \"Entity\" or exit return")
+    } else {
+        c.Println("Please type new entityName, like \"NewEntity\" or \"Entity\" or exit return")
+    }
 
-    entityName := strings.Title(c.ReadLine())
+    entityName = strings.Title(c.ReadLine())
 
     if entityName == "exit" {
         return "", errors.New("exit")
@@ -220,7 +226,7 @@ func getName(c *ishell.Context) (string, error) {
         choice := c.MultiChoice([]string{
             "Yes",
             "No",
-            "Cancel creating new entity",
+            "Cancel",
         }, "Correct name " + green(entityName) + " ?")
 
         if choice == 0 {
@@ -235,5 +241,5 @@ func getName(c *ishell.Context) (string, error) {
         }
     }
 
-    return getName(c)
+    return getName(c, IsExistsStruct)
 }
