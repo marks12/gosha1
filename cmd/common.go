@@ -231,7 +231,7 @@ func getName(c *ishell.Context, IsExistsStruct bool) (string, error) {
 
         if choice == 0 {
 
-            c.Println("New entity name is", red(entityName))
+            c.Println("Entity name is:", red(entityName))
 
             return entityName, nil
 
