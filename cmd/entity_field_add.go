@@ -4,33 +4,37 @@ import (
     "gopkg.in/abiosoft/ishell.v2"
     "github.com/fatih/color"
     "fmt"
+    "io/ioutil"
+    "os"
+    "go/parser"
     "go/token"
     "go/ast"
-    "go/parser"
+    "regexp"
 )
 
-type existsModels struct {
+type modelRepository struct {
     list []model
 }
 
 type model struct {
-    File string
-    Name string
+    FilePath string
+    Structures []ast.Decl
 }
 
-func (em *existsModels) getModels() (models []string) {
+func (mr *modelRepository) getModels() (models []string) {
 
-    for _, m := range em.list {
-        models = append(models, m.Name)
+    for _, m := range mr.list {
+        models = append(models, m.FilePath)
     }
+
     return
 }
 
-func (em *existsModels) getModelFile(name string) (fileName string) {
+func (em *modelRepository) getModelFile(name string) (fileName string) {
 
     for _, m := range em.list {
-        if m.Name == name {
-            fileName = m.File
+        if m.FilePath == name {
+            fileName = m.FilePath
             break
         }
     }
@@ -46,6 +50,19 @@ func entityFieldAdd(c *ishell.Context) {
 
     existsModels := getExistsModels()
 
+    dbmodelsList := getDbmodelsList(existsModels)
+
+    for _, m := range dbmodelsList {
+
+        shell.AddCmd(&ishell.Cmd{
+            Name: m,
+            Help: m + " entity",
+            Func: func(c *ishell.Context) {
+                fmt.Println("select predefined function", m)
+            },
+        })
+    }
+
     entity, err := getName(c, true)
 
     if err != nil {
@@ -57,65 +74,117 @@ func entityFieldAdd(c *ishell.Context) {
     defer clearEntities(existsModels)
 }
 
-func getExistsModels() {
+func getDbmodelsList(repository modelRepository) (list []string) {
 
-    fs := token.NewFileSet()
-    pkgs, err := parser.ParseDir(fs, "./dbmodels", nil, 0)
+    for _, model := range repository.list {
 
+        for _, spec := range model.Structures {
+
+            tp, ok := spec.(*ast.GenDecl)
+
+            if !ok {
+                continue
+            }
+
+            for _,md := range tp.Specs {
+
+                _, ok := md.(*ast.TypeSpec)
+                if !ok {
+                    continue
+                }
+
+                //structDecl := md.(*ast.TypeSpec).Type.(*ast.StructType)
+
+                structDecl := md.(*ast.TypeSpec)
+                list = append(list, structDecl.Name.String())
+            }
+        }
+    }
+
+    return
+
+    //structDecl := typeDecl.Specs[0].(*ast.TypeSpec).Type.(*ast.StructType)
+    //
+    //c := &ast.Comment{Text: fmt.Sprint("// ", "Some comment")}
+    //cg := &ast.CommentGroup{List: []*ast.Comment{c}}
+    //field := &ast.Field{
+    //   Doc:   cg,
+    //   Names: []*ast.Ident{ast.NewIdent("Field4")},
+    //   Type:  ast.NewIdent("float"),
+    //}
+    //
+    //structDecl.Fields.List = append(structDecl.Fields.List, field)
+    //
+    //return
+}
+
+func getExistsModels() (repo modelRepository) {
+
+    dir, err := os.Getwd()
     if err != nil {
-        fmt.Println("error reading dbmodels", err)
+        fmt.Println(err)
+    }
+
+    workFolder := dir + "/dbmodels"
+
+    files, err := ioutil.ReadDir(workFolder)
+    if err != nil {
         return
     }
 
-    pkg, ok := pkgs["dbmodels"]
+    validFileName := regexp.MustCompile(`^[a-zA-Z0-9_]+\.go$`)
 
-    if ! ok {
-        fmt.Println("error reading package dbmodels", err)
-        return
-    }
+    for _, f := range files {
 
-    ast.Walk(VisitorFunc(FindTypes), pkg)
+        isValidFile := validFileName.MatchString(f.Name())
 
-    for _, model := range existsModels {
+        if f.IsDir() || ! isValidFile {
+            fmt.Println("invalid file " + f.Name())
+            continue
+        }
 
-        shell.AddCmd(&ishell.Cmd{
-            Name: model,
-            Help: model + " entity",
-            Func: func(c *ishell.Context) {
-                fmt.Println("select predefined function", model)
-            },
+        fmt.Println("Valid file " + f.Name())
+
+        filePath := workFolder + "/" + f.Name()
+
+        models := getFileModels(filePath)
+
+        repo.list = append(repo.list, model{
+            FilePath: filePath,
+            Structures: models,
         })
     }
 
     return
 }
 
+func getFileModels(filePath string) []ast.Decl {
 
-func clearEntities(entities []string) {
+    b, err := ioutil.ReadFile(filePath) // just pass the file name
 
-    for _, entity := range entities {
-        shell.DeleteCmd(entity)
+    if err != nil {
+        fmt.Print(err)
     }
+
+    src := string(b) // convert content to a 'string'
+
+    fset := token.NewFileSet()
+    f, err := parser.ParseFile(fset, "", src, 0)
+
+    if err != nil {
+        panic(err)
+    }
+
+    // hard coding looking these up
+    typeDecl := f.Decls
+
+    return typeDecl
+
 }
 
-func FindTypes(s ast.Node) ast.Visitor {
+func clearEntities(repo modelRepository) {
 
-    switch n := s.(type) {
-
-        case *ast.Package:
-            return VisitorFunc(FindTypes)
-        case *ast.File:
-
-            fmt.Println("found file in pkg")
-
-            return VisitorFunc(FindTypes)
-        case *ast.GenDecl:
-            if n.Tok == token.TYPE {
-                return VisitorFunc(FindTypes)
-            }
-        case *ast.TypeSpec:
-            existsModels = append(existsModels, n.Name.Name)
-    }
-
-    return nil
+    //for _, entity := range repo.list {
+    //    shell.DeleteCmd(entity.FilePath)
+    //}
 }
