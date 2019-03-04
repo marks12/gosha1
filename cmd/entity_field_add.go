@@ -30,6 +30,45 @@ func (mr *modelRepository) getModels() (models []string) {
     return
 }
 
+func (mr *modelRepository) ShowFields(modelName string) {
+
+    for _, model := range mr.list {
+
+        for _, spec := range model.Structures {
+
+            tp, ok := spec.(*ast.GenDecl)
+
+            if !ok {
+                continue
+            }
+
+            for _,md := range tp.Specs {
+
+                _, ok := md.(*ast.TypeSpec)
+                if !ok {
+                    continue
+                }
+
+                structDecl := md.(*ast.TypeSpec)
+                if structDecl.Name.String() == modelName {
+
+                    structDecl := md.(*ast.TypeSpec).Type.(*ast.StructType)
+
+                    for _, field := range structDecl.Fields.List {
+
+                        if len(field.Names) > 0 {
+                            fmt.Println(field.Names)
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return
+}
+
 func (em *modelRepository) getModelFile(name string) (fileName string) {
 
     for _, m := range em.list {
@@ -45,6 +84,7 @@ func (em *modelRepository) getModelFile(name string) (fileName string) {
 func entityFieldAdd(c *ishell.Context) {
 
     green := color.New(color.FgGreen).SprintFunc()
+    yellow := color.New(color.FgYellow).SprintFunc()
 
     c.Println(green("Hello we start adding new field to entity"))
 
@@ -63,13 +103,28 @@ func entityFieldAdd(c *ishell.Context) {
         })
     }
 
-    entity, err := getName(c, true)
+    if len(dbmodelsList) > 0 {
+        c.Println(yellow("Found some entities:"))
+        c.Println(dbmodelsList)
+    }
+
+    entity, err := getName(c, true, "Entity")
 
     if err != nil {
         return
     }
 
-    fmt.Println("select model", entity)
+    fmt.Println(green("select model: ", entity))
+
+    existsModels.ShowFields(entity)
+
+    fmt.Println("Please enter name of new field:")
+
+    field, err := getName(c, false, "Field")
+
+    if err != nil {
+        return
+    }
 
     defer clearEntities(existsModels)
 }
@@ -93,8 +148,6 @@ func getDbmodelsList(repository modelRepository) (list []string) {
                     continue
                 }
 
-                //structDecl := md.(*ast.TypeSpec).Type.(*ast.StructType)
-
                 structDecl := md.(*ast.TypeSpec)
                 list = append(list, structDecl.Name.String())
             }
@@ -102,20 +155,6 @@ func getDbmodelsList(repository modelRepository) (list []string) {
     }
 
     return
-
-    //structDecl := typeDecl.Specs[0].(*ast.TypeSpec).Type.(*ast.StructType)
-    //
-    //c := &ast.Comment{Text: fmt.Sprint("// ", "Some comment")}
-    //cg := &ast.CommentGroup{List: []*ast.Comment{c}}
-    //field := &ast.Field{
-    //   Doc:   cg,
-    //   Names: []*ast.Ident{ast.NewIdent("Field4")},
-    //   Type:  ast.NewIdent("float"),
-    //}
-    //
-    //structDecl.Fields.List = append(structDecl.Fields.List, field)
-    //
-    //return
 }
 
 func getExistsModels() (repo modelRepository) {
@@ -179,12 +218,11 @@ func getFileModels(filePath string) []ast.Decl {
     typeDecl := f.Decls
 
     return typeDecl
-
 }
 
 func clearEntities(repo modelRepository) {
 
-    //for _, entity := range repo.list {
-    //    shell.DeleteCmd(entity.FilePath)
-    //}
+    for _, entity := range getDbmodelsList(repo) {
+       shell.DeleteCmd(entity)
+    }
 }

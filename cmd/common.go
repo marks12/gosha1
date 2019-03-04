@@ -202,24 +202,30 @@ func getFirstLowerCase(s string) string {
     return string(bytes.Join([][]byte{lc, rest}, nil))
 }
 
-func getName(c *ishell.Context, IsExistsStruct bool) (string, error) {
+func getName(c *ishell.Context, IsExistsStruct bool, targetName string) (string, error) {
 
     var entityName string
+
+    TargetName := strings.Title(targetName)
 
     green := color.New(color.FgGreen).SprintFunc()
     red := color.New(color.FgRed).SprintFunc()
 
     if IsExistsStruct {
-        c.Println("Please type exists entityName, like \"NewEntity\" or \"Entity\" or exit return")
+        c.Println("Please type exists " + TargetName + ", like \"New" + TargetName + "\" or \"" + TargetName + "\" or exit return")
     } else {
-        c.Println("Please type new entityName, like \"NewEntity\" or \"Entity\" or exit return")
+        c.Println("Please type new " + TargetName + ", like \"New" + TargetName + "\" or \"" + TargetName + "\" or exit return")
     }
 
-    entityName = strings.Title(c.ReadLine())
+    char := c.ReadLine()
 
-    if entityName == "exit" {
+    entityName = strings.Title(char)
+
+    if entityName == "Exit" {
+        c.Println("Operation canceled!")
         return "", errors.New("exit")
     }
+
 
     if len(entityName) > 0 {
 
@@ -231,15 +237,26 @@ func getName(c *ishell.Context, IsExistsStruct bool) (string, error) {
 
         if choice == 0 {
 
-            c.Println("Entity name is:", red(entityName))
+            c.Println(TargetName + " name is:", red(entityName))
 
             return entityName, nil
 
         } else if choice == 2 {
 
+            c.Println("Operation canceled!")
             return "", errors.New("exit")
         }
+
+        return getName(c, IsExistsStruct, targetName)
     }
 
-    return getName(c, IsExistsStruct)
+    _, b := c.ReadLineErr()
+    if b != nil && b.Error() == "Interrupt" {
+        c.Println("Operation canceled!")
+        return "", errors.New("exit")
+    }
+
+    fmt.Println(TargetName + " name is empty. Please type CTRL + C for cancel operation!")
+
+    return getName(c, IsExistsStruct, targetName)
 }
