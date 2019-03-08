@@ -10,6 +10,8 @@ import (
     "go/token"
     "go/ast"
     "regexp"
+    "go/printer"
+    "bufio"
 )
 
 type modelRepository struct {
@@ -18,6 +20,7 @@ type modelRepository struct {
 
 type model struct {
     FilePath string
+    ParsedFile *ast.File
     Structures []ast.Decl
 }
 
@@ -25,6 +28,56 @@ func (mr *modelRepository) getModels() (models []string) {
 
     for _, m := range mr.list {
         models = append(models, m.FilePath)
+    }
+
+    return
+}
+
+func (mr *modelRepository) addField(modelName string, field string, dataType string) (err error) {
+
+    for _, model := range mr.list {
+
+        for _, spec := range model.Structures {
+
+            tp, ok := spec.(*ast.GenDecl)
+
+            if !ok {
+                continue
+            }
+
+            for _,md := range tp.Specs {
+
+                _, ok := md.(*ast.TypeSpec)
+                if !ok {
+                    continue
+                }
+
+                structDecl := md.(*ast.TypeSpec)
+                if structDecl.Name.String() == modelName {
+
+                    fset := token.NewFileSet()
+
+                    structDecl := md.(*ast.TypeSpec).Type.(*ast.StructType)
+
+                    field := &ast.Field{
+                        Doc:   nil,
+                        Names: []*ast.Ident{ast.NewIdent(field)},
+                        Type:  ast.NewIdent(dataType),
+                    }
+
+                    structDecl.Fields.List = append(structDecl.Fields.List, field)
+
+                    f, _ := os.OpenFile(model.FilePath, os.O_WRONLY)
+                    w := bufio.NewWriter(f)
+
+                    printer.Fprint(w, fset, model.ParsedFile)
+
+                    err := w.Flush()
+
+                    fmt.Println("err", err)
+                }
+            }
+        }
     }
 
     return
@@ -126,7 +179,27 @@ func entityFieldAdd(c *ishell.Context) {
         return
     }
 
+    dataType, err := getDataType(c)
+
+    if err != nil {
+        return
+    }
+
+    existsModels.addField(entity, field, dataType)
+
     defer clearEntities(existsModels)
+}
+func getDataType(c *ishell.Context) (dataType string, err error) {
+
+    dataTypes := []string{
+        "string",
+        "int",
+        "float",
+    }
+
+    choice := c.MultiChoice(dataTypes, "Please select data type")
+
+    return dataTypes[choice], nil
 }
 
 func getDbmodelsList(repository modelRepository) (list []string) {
@@ -182,14 +255,13 @@ func getExistsModels() (repo modelRepository) {
             continue
         }
 
-        fmt.Println("Valid file " + f.Name())
-
         filePath := workFolder + "/" + f.Name()
 
-        models := getFileModels(filePath)
+        models, parsedFile := getFileModels(filePath)
 
         repo.list = append(repo.list, model{
             FilePath: filePath,
+            ParsedFile: parsedFile,
             Structures: models,
         })
     }
@@ -197,7 +269,7 @@ func getExistsModels() (repo modelRepository) {
     return
 }
 
-func getFileModels(filePath string) []ast.Decl {
+func getFileModels(filePath string) ([]ast.Decl, *ast.File) {
 
     b, err := ioutil.ReadFile(filePath) // just pass the file name
 
@@ -217,7 +289,7 @@ func getFileModels(filePath string) []ast.Decl {
     // hard coding looking these up
     typeDecl := f.Decls
 
-    return typeDecl
+    return typeDecl, f
 }
 
 func clearEntities(repo modelRepository) {
