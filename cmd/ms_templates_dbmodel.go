@@ -18,6 +18,11 @@ type Entity struct {
     validator
 }
 
+
+func (entity *Entity) FillFromRequest(request api.Entity) {
+    
+}
+
 func (entity *Entity) Validate()  {
 
 }

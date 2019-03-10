@@ -33,7 +33,7 @@ func (mr *modelRepository) getModels() (models []string) {
     return
 }
 
-func (mr *modelRepository) addField(modelName string, field string, dataType string) (err error) {
+func (mr *modelRepository) addField(modelName string, fieldName string, dataType string) (err error) {
 
     for _, model := range mr.list {
 
@@ -61,20 +61,19 @@ func (mr *modelRepository) addField(modelName string, field string, dataType str
 
                     field := &ast.Field{
                         Doc:   nil,
-                        Names: []*ast.Ident{ast.NewIdent(field)},
+                        Names: []*ast.Ident{ast.NewIdent(fieldName)},
                         Type:  ast.NewIdent(dataType),
                     }
 
                     structDecl.Fields.List = append(structDecl.Fields.List, field)
 
-                    f, _ := os.OpenFile(model.FilePath, os.O_WRONLY)
+                    f, _ := os.OpenFile(model.FilePath, os.O_WRONLY, 0666)
                     w := bufio.NewWriter(f)
 
                     printer.Fprint(w, fset, model.ParsedFile)
+                    w.Flush()
 
-                    err := w.Flush()
-
-                    fmt.Println("err", err)
+                    fmt.Println("Field " + fieldName + " was added to model " + modelName)
                 }
             }
         }
@@ -194,7 +193,9 @@ func getDataType(c *ishell.Context) (dataType string, err error) {
     dataTypes := []string{
         "string",
         "int",
+        "time.Time",
         "float",
+        "uuid.UUID",
     }
 
     choice := c.MultiChoice(dataTypes, "Please select data type")

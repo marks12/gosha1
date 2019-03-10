@@ -67,7 +67,8 @@ func Create{entity-name}(app mdl.Application, {entity-name}Data api.{entity-name
 
     db{entity-name} := dbmodels.{entity-name}{}
 
-    db{entity-name}.AppId         = appGuid
+    db{entity-name}.AppId = appGuid
+    db{entity-name}.FillFromRequest({entity-name}Data)
 
     db{entity-name}.Validate()
 
@@ -125,7 +126,7 @@ func Update{entity-name}(app mdl.Application, {entity-name}Data api.{entity-name
     }
 
     db{entity-name}.AppId         = appGuid
-    db{entity-name}.Title		    = {entity-name}Data.Title
+    db{entity-name}.FillFromRequest({entity-name}Data)
 
     db{entity-name}.Validate()
 
@@ -191,13 +192,6 @@ func fillApi{entity-name}FromDb(db{entity-name} dbmodels.{entity-name}) api.{ent
             UpdatedAt:        db{entity-name}.UpdatedAt.String(),
             DeletedAt:        db{entity-name}.DeletedAt.String(),
         },
-    }
-}
-
-func fillDb{entity-name}FromApi(api{entity-name} api.{entity-name}) dbmodels.{entity-name} {
-
-    return dbmodels.{entity-name}{
-        ID:    api{entity-name}.GetGuid(),
     }
 }
 
