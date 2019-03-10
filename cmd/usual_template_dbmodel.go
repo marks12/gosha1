@@ -4,6 +4,7 @@ const usualDbmodelEntity = `package dbmodels
 
 import (
     "time"
+    "../types"
 )
 
 type Entity struct {
@@ -17,6 +18,10 @@ type Entity struct {
 
 func (entity *Entity) Validate()  {
 
+}
+
+func (entity *Entity) FillFromRequest(request types.Entity) {
+    
 }
 `
 
