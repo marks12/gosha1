@@ -34,7 +34,7 @@ const usualWebappEntity = `package webapp
 import (
     "{ms-name}/logic"
     "net/http"
-    "msrpc/mdl"
+    "{ms-name}/mdl"
     "{ms-name}/types"
     "{ms-name}/settings"
 )
