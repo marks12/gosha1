@@ -3,6 +3,11 @@ package cmd
 import (
     "gopkg.in/abiosoft/ishell.v2"
     "github.com/fatih/color"
+    "gosha/mode"
+    "gosha/common"
+    "fmt"
+    "os"
+    "strings"
 )
 
 const MSCORE_ENTITY_ADD = "core:entity:add"
@@ -19,7 +24,9 @@ const USUAL_ENTITY_ADD = "usual:entity:add"
 
 const ENTITY_ADD_FIELD = "entity:field:add"
 
-func whoAmI(c *ishell.Context) {
+func setAppType(c *ishell.Context) {
+
+    var choice int
 
     red := color.New(color.FgRed).SprintFunc()
     green := color.New(color.FgGreen).SprintFunc()
@@ -28,13 +35,35 @@ func whoAmI(c *ishell.Context) {
     shell.DeleteCmd(MSCORE_ENTITY_ADD)
     shell.DeleteCmd(MSRPC_ENTITY_ADD)
 
-    choice := c.MultiChoice([]string{
-        "MsCore",
-        "MsRpcApi",
-        "Microservice instance",
-        "App using MsRpcApi [not available]",
-        "Usual app",
-    }, "Please select type of current app")
+    supportedTypes :=  []string{"MsCore", "MsRpcApi", "Usual"}
+
+    if mode.IsInteractive() {
+
+        choice = c.MultiChoice([]string{
+            "MsCore",
+            "MsRpcApi",
+            "Microservice instance",
+            "App using MsRpcApi [not available]",
+            "Usual app",
+        }, "Please select type of current app")
+
+    } else {
+
+        arg, er := common.GetOsArgument("type")
+
+        if er != nil {
+            fmt.Println(red("Not enough arguments. Please add for ex.: --type=MsCore to command"))
+            os.Exit(1)
+        }
+
+        InArr, _ := common.InArray(arg.StringResult, supportedTypes)
+
+        if ! InArr {
+            fmt.Println(red("You set unsupported type " + arg.StringResult + ". Please use one of: " + strings.Join(supportedTypes,", ")))
+            os.Exit(1)
+        }
+    }
+
 
     switch choice {
 
