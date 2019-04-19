@@ -8,19 +8,19 @@ type mode struct {
 	isInteractive bool
 }
 
-func (m mode) setInteractive() {
+func (m *mode) setInteractive() {
 	m.isInteractive = true
 }
 
-func (m mode) setNonInteractive() {
+func (m *mode) setNonInteractive() {
 	m.isInteractive = false
 }
 
-func (m mode) isInteractiveMode() bool {
+func (m *mode) isInteractiveMode() bool {
 	return m.isInteractive == true
 }
 
-func (m mode) isNonInteractiveMode() bool {
+func (m *mode) isNonInteractiveMode() bool {
 	return m.isInteractive == false
 }
 
