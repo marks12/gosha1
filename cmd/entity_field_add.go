@@ -24,6 +24,11 @@ type model struct {
     Structures []ast.Decl
 }
 
+type field struct {
+    Name string
+    Type string
+}
+
 func (mr *modelRepository) getModels() (models []string) {
 
     for _, m := range mr.list {
@@ -110,7 +115,58 @@ func (mr *modelRepository) ShowFields(modelName string) {
 
                         if len(field.Names) > 0 {
                             fmt.Println(field.Names)
+                        }
+                    }
+                }
+            }
+        }
+    }
 
+    return
+}
+
+func (mr *modelRepository) GetFields(modelName string) (fields []field) {
+
+    for _, model := range mr.list {
+
+        for _, spec := range model.Structures {
+
+            tp, ok := spec.(*ast.GenDecl)
+
+            if !ok {
+                continue
+            }
+
+            for _,md := range tp.Specs {
+
+                _, ok := md.(*ast.TypeSpec)
+                if !ok {
+                    continue
+                }
+
+                structDecl := md.(*ast.TypeSpec)
+                if structDecl.Name.String() == modelName {
+
+                    structDecl := md.(*ast.TypeSpec).Type.(*ast.StructType)
+
+                    for _, ft := range structDecl.Fields.List {
+
+                        if len(ft.Names) > 0 {
+
+                            typeString := ""
+
+                            if ident, ok := ft.Type.(*ast.Ident); ok { // allow subsequent panic to provide a more descriptive error
+                                typeString = ident.Name
+                            }
+
+                            if _, ok := ft.Type.(*ast.ArrayType); ok { // allow subsequent panic to provide a more descriptive error
+                                typeString = "Array"
+                            }
+
+                            fields = append(fields, field{
+                                Type: typeString,
+                                Name: ft.Names[0].Name,
+                            })
                         }
                     }
                 }
@@ -142,7 +198,7 @@ func entityFieldAdd(c *ishell.Context) {
 
     existsModels := getExistsModels()
 
-    dbmodelsList := getDbmodelsList(existsModels)
+    dbmodelsList := getModelsList(existsModels)
 
     for _, m := range dbmodelsList {
 
@@ -203,7 +259,7 @@ func getDataType(c *ishell.Context) (dataType string, err error) {
     return dataTypes[choice], nil
 }
 
-func getDbmodelsList(repository modelRepository) (list []string) {
+func getModelsList(repository modelRepository) (list []string) {
 
     for _, model := range repository.list {
 
@@ -232,13 +288,21 @@ func getDbmodelsList(repository modelRepository) (list []string) {
 }
 
 func getExistsModels() (repo modelRepository) {
+    return getPackageModels("/dbmodels")
+}
+
+func getExistsTypes() (repo modelRepository) {
+    return getPackageModels("/types")
+}
+
+func getPackageModels(path string) (repo modelRepository) {
 
     dir, err := os.Getwd()
     if err != nil {
         fmt.Println(err)
     }
 
-    workFolder := dir + "/dbmodels"
+    workFolder := dir + path
 
     files, err := ioutil.ReadDir(workFolder)
     if err != nil {
@@ -295,7 +359,7 @@ func getFileModels(filePath string) ([]ast.Decl, *ast.File) {
 
 func clearEntities(repo modelRepository) {
 
-    for _, entity := range getDbmodelsList(repo) {
+    for _, entity := range getModelsList(repo) {
        shell.DeleteCmd(entity)
     }
 }

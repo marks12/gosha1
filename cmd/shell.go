@@ -9,6 +9,8 @@ import (
 
 var shell = ishell.New()
 
+const SET_APP_TYPE = "setAppType"
+const GENERATE_TYPES_JS = "gen:types:js"
 
 func RunShell() {
 
@@ -34,9 +36,15 @@ func RunShell() {
     })
 
     shell.AddCmd(&ishell.Cmd{
-        Name: "setAppType",
-        Help: "Set app type.\n \t\t\t\t NIM: setAppType --type=[MsCore | MsRpcApi | Microservice | Usual]",
+        Name: SET_APP_TYPE,
+        Help: "Set app type.\n \t\t\t\t NIM: "+SET_APP_TYPE+" --type=[MsCore | MsRpcApi | Microservice | Usual]",
         Func: setAppType,
+    })
+
+    shell.AddCmd(&ishell.Cmd{
+        Name: GENERATE_TYPES_JS,
+        Help: "Generate types structs to JS for using in frontend\n \t\t\t\t NIM: "+GENERATE_TYPES_JS+" --dst=/some/destination/path",
+        Func: genTypesJs,
     })
 
     // run shell
