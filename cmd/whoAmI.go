@@ -4,13 +4,14 @@ import (
     "gopkg.in/abiosoft/ishell.v2"
     "github.com/fatih/color"
     "gosha/mode"
-    "gosha/common"
     "fmt"
     "os"
     "strings"
 )
 
 const MSCORE_ENTITY_ADD = "core:entity:add"
+
+const MSCORE_TEST = "test-shell-command"
 
 const MSRPC_ENTITY_ADD = "rpc:entity:add"
 
@@ -28,100 +29,133 @@ func setAppType(c *ishell.Context) {
 
     var choice int
 
+    shell.DeleteCmd(MSCORE_ENTITY_ADD)
+    shell.DeleteCmd(MSRPC_ENTITY_ADD)
+
+    if mode.IsInteractive() {
+        choice = getAppTypeFromChoice(c)
+    } else {
+        choice = getAppTypeFromArgs()
+    }
+
+    setAppCommands(choice, c)
+
+    if IsNextCommand(choice) {
+         runSecondLevelProgram(c)
+    }
+}
+
+func runSecondLevelProgram(c *ishell.Context) {
+
+    for _, command := range c.Cmds() {
+        if command.Name == os.Args[4] {
+            command.Func(c)
+        }
+    }
+}
+
+func IsNextCommand(choice int) bool {
+
+    return  choice > -1 &&
+            mode.IsNonInteractive() &&
+            len(os.Args) > 4
+}
+
+func getAppTypeFromArgs() int {
+
+    red := color.New(color.FgRed).SprintFunc()
+    supportedTypes :=  []string{"MsCore", "MsRpcApi", "Microservice", "", "Usual"}
+
+
+    arg, er := GetOsArgument("type")
+
+    if er != nil {
+        fmt.Println(red("Not enough arguments. Please add for ex.: --type=MsCore to command"))
+        os.Exit(1)
+    }
+
+    InArr, choice := InArray(arg.StringResult, supportedTypes)
+
+    if ! InArr {
+        fmt.Println(red("You set unsupported type " + arg.StringResult + ". Please use one of: " + strings.Join(supportedTypes,", ")))
+        os.Exit(1)
+    }
+
+    return choice
+}
+
+func getAppTypeFromChoice(c *ishell.Context) int {
+
+    return c.MultiChoice([]string{
+        "MsCore",
+        "MsRpcApi",
+        "Microservice instance",
+        "App using MsRpcApi [not available]",
+        "Usual app",
+    }, "Please select type of current app")
+}
+
+func setAppCommands(choice int, c *ishell.Context) {
+
     red := color.New(color.FgRed).SprintFunc()
     green := color.New(color.FgGreen).SprintFunc()
     blue := color.New(color.FgBlue).SprintFunc()
 
-    shell.DeleteCmd(MSCORE_ENTITY_ADD)
-    shell.DeleteCmd(MSRPC_ENTITY_ADD)
-
-    supportedTypes :=  []string{"MsCore", "MsRpcApi", "Usual"}
-
-    if mode.IsInteractive() {
-
-        choice = c.MultiChoice([]string{
-            "MsCore",
-            "MsRpcApi",
-            "Microservice instance",
-            "App using MsRpcApi [not available]",
-            "Usual app",
-        }, "Please select type of current app")
-
-    } else {
-
-        arg, er := common.GetOsArgument("type")
-
-        if er != nil {
-            fmt.Println(red("Not enough arguments. Please add for ex.: --type=MsCore to command"))
-            os.Exit(1)
-        }
-
-        InArr, _ := common.InArray(arg.StringResult, supportedTypes)
-
-        if ! InArr {
-            fmt.Println(red("You set unsupported type " + arg.StringResult + ". Please use one of: " + strings.Join(supportedTypes,", ")))
-            os.Exit(1)
-        }
-    }
-
-
     switch choice {
 
-        // mscore
-        case 0:
+    // mscore
+    case 0:
 
-            c.Println("Hello " + blue("MsCore") + " you have some command:")
-            c.Println(green(MSCORE_ENTITY_ADD), " - Creating new Entity and CRUD")
+        InteractiveEcho([]string{
+            "Hello " + blue("MsCore") + " you have some command:",
+            MSCORE_ENTITY_ADD + " - Creating new Entity and CRUD",
+            green(MSCORE_TEST) + " - Test run command",
+        })
 
-            setMscoreEntityAdd()
-
-            break
+        setMscoreEntityAdd()
+        break
 
         //msrpc
-        case 1:
+    case 1:
 
-            c.Println("Hello " + blue("MsRpcApi") + " you have some commands:")
-            c.Println(green(MSRPC_ENTITY_ADD), " - Creating new Entity and CRUD")
+        c.Println("Hello " + blue("MsRpcApi") + " you have some commands:")
+        c.Println(green(MSRPC_ENTITY_ADD), " - Creating new Entity and CRUD")
 
-            setMsrpcEntityAdd()
-
-            break
+        setMsrpcEntityAdd()
+        break
 
         //ms instance
-        case 2:
+    case 2:
 
-            c.Println("Hello " + blue("Microservice instance") + " you have some commands:")
-            c.Println(green(MS_INIT), " - Create new microservice")
+        c.Println("Hello " + blue("Microservice instance") + " you have some commands:")
+        c.Println(green(MS_INIT), " - Create new microservice")
 
-            setMsInit()
+        setMsInit()
 
-            c.Println(green(MS_ENTITY_ADD), " - Add entity witch CRUD to microservice")
+        c.Println(green(MS_ENTITY_ADD), " - Add entity witch CRUD to microservice")
 
-            setMsEntityAdd()
-
-            break
+        setMsEntityAdd()
+        break
 
         //uisual app
-        case 4:
+    case 4:
 
-            c.Println("Hello " + blue("autonomic") + " application:")
+        c.Println("Hello " + blue("usual") + " application:")
 
-            c.Println(green(USUAL_APP_CREATE), " - Create new app")
-            setUsualAppCreate()
+        c.Println(green(USUAL_APP_CREATE), " - Create new app")
+        setUsualAppCreate()
 
-            c.Println(green(USUAL_ENTITY_ADD), " - Add entity")
-            setUsualEntityAdd()
+        c.Println(green(USUAL_ENTITY_ADD), " - Add entity")
+        setUsualEntityAdd()
 
-            c.Println(green(ENTITY_ADD_FIELD), " - Add field to model")
-            setModelFieldAdd()
+        c.Println(green(ENTITY_ADD_FIELD), " - Add field to model")
+        setModelFieldAdd()
 
-            break
+        break
 
-        default:
-
-            c.Println(red("You cancel select app. I dont know who are you. Sorry"))
-
-            break
+    default:
+        c.Println(red("You cancel select app. I dont know who are you. Sorry"))
+        break
     }
 }
 
@@ -131,6 +165,12 @@ func setMscoreEntityAdd() {
         Name: MSCORE_ENTITY_ADD,
         Help: "Command create new entity in mscore",
         Func: mscoreEntityAdd,
+    })
+
+    shell.AddCmd(&ishell.Cmd{
+        Name: MSCORE_TEST,
+        Help: "Command test create in mscore",
+        Func: mscoreTestCommand,
     })
 }
 

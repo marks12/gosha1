@@ -9,17 +9,22 @@ import (
 
 var shell = ishell.New()
 
+
 func RunShell() {
 
     green := color.New(color.FgGreen).SprintFunc()
     red := color.New(color.FgRed).SprintFunc()
 
-    // display welcome info.
-    shell.Println("Welcome to interactive shell")
-    shell.Println("If you want execute shell command in non-interacive mode " + red("(NIM)") + " please type command:")
-    shell.Println(red("$"), green(" gosha exit someCommand"))
+    // display welcome info in interactive mode.
+    InteractiveEcho([]string{
+        "Welcome to interactive shell",
+        "If you want execute shell command in non-interacive mode " + red("(NIM)") + " please type command:",
+        red("$") + green(" gosha exit someCommand"),
+    })
 
-    shell.Println("type help for help")
+    InteractiveEcho([]string{
+        "type help for help",
+    })
 
     // register a function for "greet" command.
     shell.AddCmd(&ishell.Cmd{
@@ -37,12 +42,19 @@ func RunShell() {
     // run shell
     if len(os.Args) > 1 && os.Args[1] == "exit" {
 
-        mode.SetNonInteractiveMode()
         shell.Process(os.Args[2:]...)
 
     } else {
         // start shell
-        mode.SetInteractiveMode()
         shell.Run()
+    }
+}
+
+func setMode() {
+
+    if len(os.Args) > 1 && os.Args[1] == "exit" {
+        mode.SetNonInteractiveMode()
+    } else {
+        mode.SetInteractiveMode()
     }
 }
