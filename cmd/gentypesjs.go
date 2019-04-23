@@ -4,6 +4,8 @@ import (
 	"gopkg.in/abiosoft/ishell.v2"
 	"os"
 	"io/ioutil"
+	"sort"
+	"strings"
 )
 
 func genTypesJs (c *ishell.Context) {
@@ -33,18 +35,34 @@ func getFileContent(repository modelRepository, typeNames []string) (content str
 
 	for _, t := range typeNames {
 
-		content += "const " + t + " = {\n"
+
+		fields := []string{}
+
+		validFieldsCount := 0
 
 		for _, field := range repository.GetFields(t) {
-			content += "    " + field.Name + ": " + getFiledJsVal(field.Type, typeNames) + ",\n"
+
+			if field.Name[0:1] == strings.ToUpper(field.Name[0:1]) {
+
+				validFieldsCount = validFieldsCount + 1
+				fields = append(fields, "    this." + field.Name + " = " + getFiledJsVal(field.Type, typeNames) + ";\n")
+			}
 		}
 
-		content += "};\n\n"
+		if validFieldsCount < 1 {
+			continue
+		}
+
+		content += "\nexport function " + t + "() {\n\n"
+
+		sort.Sort(ByCase(fields))
+		content += strings.Join(fields, "")
+
+		content += "\n    return this;\n}\n"
 	}
 
 	return
 }
-
 
 func getFiledJsVal(s string, typeNames []string) (val string) {
 
@@ -58,7 +76,7 @@ func getFiledJsVal(s string, typeNames []string) (val string) {
 			break
 
 		case "string":
-			val = "''"
+			val = "\"\""
 			break
 
 		case "bool":
