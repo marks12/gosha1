@@ -100,6 +100,9 @@ func {Entity}Create(filter types.{Entity}Filter)  (data types.{Entity}, err erro
 
 func {Entity}Update(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
 
+    filter.Pagination.CurrentPage = 1
+    filter.Pagination.PerPage = 1
+
     existsModel, err := {Entity}Read(filter)
 
     if existsModel.Id < 1 || err != nil {
@@ -130,6 +133,9 @@ func {Entity}Update(filter types.{Entity}Filter)  (data types.{Entity}, err erro
 }
 
 func {Entity}Delete(filter types.{Entity}Filter)  (isOk bool, err error) {
+
+    filter.Pagination.CurrentPage = 1
+    filter.Pagination.PerPage = 1
 
     existsModel, err := {Entity}Read(filter)
 
