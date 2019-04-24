@@ -116,6 +116,8 @@ func {Entity}Update(filter types.{Entity}Filter)  (data types.{Entity}, err erro
     updateModel := assign{Entity}DbFromType(filter.Get{Entity}Model())
     updateModel.ID = existsModel.Id
 
+    updateModel.Validate()
+
     if !updateModel.IsValid() {
         err = errors.New(updateModel.GetValidationErrors())
         return
