@@ -165,6 +165,11 @@ func generatePassword(n int) string {
     return string(b)
 }
 
+func assignVar(template string, variable string, value string) string {
+    var microserviceNameRegexp = regexp.MustCompile(variable)
+    return microserviceNameRegexp.ReplaceAllString(template, value)
+}
+
 func assignMsName(template string) string {
     var microserviceNameRegexp = regexp.MustCompile("{ms-name}")
     return microserviceNameRegexp.ReplaceAllString(template, getCurrentDirName())

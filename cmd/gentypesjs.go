@@ -8,21 +8,37 @@ import (
 	"strings"
 )
 
+type store struct {
+	name string
+	jscode string
+}
+
 func genTypesJs (c *ishell.Context) {
 
 	folder := "./jstypes"
+	folderStore := folder + "/store"
 	file := folder + "/apiModel.js"
+	apiFile := folder + "/api.js"
 
 	os.RemoveAll(folder)
 	os.MkdirAll(folder,0755)
+	os.MkdirAll(folderStore,0755)
 
-	content := getTypesJs()
+	modelContent, stores := getTypesJs()
 
-	cb := []byte(content)
+	cb := []byte(modelContent)
 	ioutil.WriteFile(file, cb, 0644)
+
+	api := []byte(apiContent)
+	ioutil.WriteFile(apiFile, api, 0644)
+
+	for _, store := range stores {
+		ioutil.WriteFile(folderStore + "/" + store.name + ".js" , []byte(store.jscode), 0644)
+	}
 }
 
-func getTypesJs () string {
+
+func getTypesJs () (string, []store) {
 
 	existsTypes := getExistsTypes()
 	typeNames := getModelsList(existsTypes)
@@ -31,10 +47,9 @@ func getTypesJs () string {
 
 }
 
-func getFileContent(repository modelRepository, typeNames []string) (content string) {
+func getFileContent(repository modelRepository, typeNames []string) (content string, stores []store) {
 
 	for _, t := range typeNames {
-
 
 		fields := []string{}
 
@@ -46,12 +61,18 @@ func getFileContent(repository modelRepository, typeNames []string) (content str
 
 				validFieldsCount = validFieldsCount + 1
 				fields = append(fields, "    this." + field.Name + " = " + getFiledJsVal(field.Type, typeNames) + ";\n")
+
 			}
 		}
 
 		if validFieldsCount < 1 {
 			continue
 		}
+
+		stores = append(stores, store{
+			name: t,
+			jscode: getStoreJsCode(t),
+		})
 
 		content += "\nexport function " + t + "() {\n\n"
 
@@ -62,6 +83,13 @@ func getFileContent(repository modelRepository, typeNames []string) (content str
 	}
 
 	return
+}
+
+func getStoreJsCode(entity string) string {
+
+	return assignVar(
+		assignVar(storeTemplate, "{Entity}", entity),
+		"{entity}", getFirstLowerCase(entity))
 }
 
 func getFiledJsVal(s string, typeNames []string) (val string) {
