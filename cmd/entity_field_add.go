@@ -125,7 +125,7 @@ func (mr *modelRepository) ShowFields(modelName string) {
     return
 }
 
-func (mr *modelRepository) GetFields(modelName string) (fields []field) {
+func (mr *modelRepository) GetFields(modelName string, fields []field) []field {
 
     for _, model := range mr.list {
 
@@ -167,6 +167,12 @@ func (mr *modelRepository) GetFields(modelName string) (fields []field) {
                                 Type: typeString,
                                 Name: ft.Names[0].Name,
                             })
+                        } else {
+
+                            if ident, ok := ft.Type.(*ast.Ident); ok { // allow subsequent panic to provide a more descriptive error
+
+                                fields = mr.GetFields(ident.Name, fields)
+                            }
                         }
                     }
                 }
@@ -174,7 +180,7 @@ func (mr *modelRepository) GetFields(modelName string) (fields []field) {
         }
     }
 
-    return
+    return fields
 }
 
 func (em *modelRepository) getModelFile(name string) (fileName string) {

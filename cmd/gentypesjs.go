@@ -55,7 +55,7 @@ func getFileContent(repository modelRepository, typeNames []string) (content str
 
 		validFieldsCount := 0
 
-		for _, field := range repository.GetFields(t) {
+		for _, field := range repository.GetFields(t, []field{}) {
 
 			if field.Name[0:1] == strings.ToUpper(field.Name[0:1]) {
 
@@ -99,8 +99,28 @@ func getFiledJsVal(s string, typeNames []string) (val string) {
 			val = "[]"
 			break
 
+		case "int64":
+            val = "0"
+            break
+
+		case "int32":
+            val = "0"
+            break
+
 		case "int":
 			val = "0"
+			break
+
+		case "float":
+            val = "0"
+            break
+
+		case "float32":
+            val = "0"
+            break
+
+		case "float64":
+			val = "0.0"
 			break
 
 		case "string":
