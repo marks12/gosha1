@@ -1,8 +1,8 @@
 package cmd
 
 const storeTemplate = `
-import {{Entity}} from "../../../jstypes/apiModel";
-import api from "./api";
+import {{Entity}} from "../apiModel";
+import api from "../api";
 
 let findUrl = "http://localhost:48080/api/v1/{entity}";
 let readUrl = "http://localhost:48080/api/v1/{entity}/"; // + id
