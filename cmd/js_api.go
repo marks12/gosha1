@@ -17,10 +17,28 @@ const apiContent = `function request(method, url, getParams, data, headerParams)
                 u = u + (u.includes("?") ? "" : "?");
 
                 for (const f of Object.keys(params)) {
+                    
                     if (uparams !== "") {
                         uparams += "&";
                     }
-                    uparams += f + "=" + encodeURIComponent(params[f]);
+    
+                    switch (typeof params[f]) {
+    
+                        case "object":
+        
+                            let list = "";
+        
+                            for (let j = 0; j < params[f].length; j++) {
+                                list += f + "[]=" + encodeURIComponent(params[f][j]);
+                            }
+        
+                            uparams += list;
+                            break;
+    
+                        default:
+                            uparams += f + "=" + encodeURIComponent(params[f]);
+                            break;
+                    }
                 }
 
                 break;
