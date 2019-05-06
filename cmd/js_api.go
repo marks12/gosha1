@@ -90,7 +90,7 @@ function request(method, url, getParams, data, headerParams) {
 
 function BackendApi() {
 
-    this.serverUrl = 'http://localhost:48080';
+    this.serverUrl = "http://localhost:48080";
 
     this.getRouteUrl = (url) => {
         return this.serverUrl + url;
