@@ -1,105 +1,121 @@
 package cmd
 
 const storeTemplate = `
-import {{Entity}} from "../apiModel";
-import api from "../api";
+function request(method, url, getParams, data, headerParams) {
 
-let findUrl = "http://localhost:48080/api/v1/{entity}";
-let readUrl = "http://localhost:48080/api/v1/{entity}/"; // + id
-let createUrl = "http://localhost:48080/api/v1/{entity}";
-let updateUrl = "http://localhost:48080/api/v1/{entity}/"; // + id
-let deleteUrl = "http://localhost:48080/api/v1/{entity}/"; // + id
+    function appendParams(u, params) {
 
-const {entity} = {
-    actions: {
-        find{Entity}(context, {filter, header}) {
+        let uparams = "";
 
-            return api.find(findUrl, filter, header)
-                .then(function(response) {
+        switch (typeof params) {
 
-                    context.commit("set{Entity}List", response.List);
+            case "object":
 
-                    return response;
-                })
-                .catch(function(err) {
-                    return err;
+                if (Object.keys(params).length < 1) {
+                    return u;
+                }
+
+                u = u + (u.includes("?") ? "" : "?");
+
+                for (const f of Object.keys(params)) {
+                    if (uparams !== "") {
+                        uparams += "&";
+                    }
+                    switch (typeof params[f]) {
+                        case "object":
+                            let list = "";
+                            for (let j = 0; j < params[f].length; j++) {
+                                list += f + "[]=" + encodeURIComponent(params[f][j]);
+                            }
+                            uparams += list;
+                            break;
+                        default:
+                            uparams += f + "=" + encodeURIComponent(params[f]);
+                            break;
+                    }
+                }
+
+                break;
+        }
+
+        return u + uparams;
+    }
+
+    function setHeader(req) {
+        for (const f of Object.keys(headerParams)) {
+            req.setRequestHeader(f, headerParams[f]);
+        }
+    }
+
+    return new Promise(function(resolve, reject) {
+
+        let xhr = new XMLHttpRequest();
+
+        url = appendParams(url, getParams);
+
+        xhr.open(method, url);
+        xhr.onload = function() {
+
+            if (this.status >= 200 && this.status < 300) {
+
+                resolve(JSON.parse(xhr.response));
+
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText,
                 });
+            }
+        };
+        xhr.onerror = function() {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText,
+            });
+        };
+
+        if (data) {
+
+            if (headerParams) {
+                setHeader(xhr);
+            }
+
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify(data));
+        } else {
+            xhr.send();
+        }
+    });
+}
+
+function BackendApi() {
+
+    this.serverUrl = 'http://localhost:48080';
+
+    return {
+        create(url, data, getParams, headerParams) {
+            return request("POST", url, getParams, data, headerParams);
         },
-        load{Entity}(context, {id, filter, header}) {
-
-            return api.find(readUrl + id, filter, header)
-                .then(function(response) {
-
-                    context.commit("set{Entity}", response.Model);
-
-                    return response;
-                })
-                .catch(function(err) {
-                    return err;
-                });
+        update(url, data, getParams, headerParams) {
+            return request("PUT", url, getParams, data, headerParams);
         },
-        create{Entity}(context, {data, filter, header}) {
-
-            return api.create(createUrl, data, filter, header)
-                .then(function(response) {
-
-                    context.commit("set{Entity}", response.Model);
-
-                    return response;
-                })
-                .catch(function(err) {
-                    return err;
-                });
+        find(url, getParams, headerParams) {
+            return request("GET", url, getParams, null, headerParams);
         },
-        update{Entity}(context, {id, data, filter, header}) {
+        remove(url, getParams, headerParams) {
+            return request("DELETE", url, getParams, null, headerParams);
+        },
+        getServerUrl: () => {
+            return this.serverUrl;
+        },
+        setServerUrl: (url) => {
+            this.serverUrl = url;
+            return this;
+        },
+    };
+}
 
-            return api.update(updateUrl + id, data, filter, header)
-                .then(function(response) {
+let api = new BackendApi();
 
-                    context.commit("set{Entity}", response.Model);
-
-                    return response;
-                })
-                .catch(function(err) {
-                    return err;
-                });
-        },
-        delete{Entity}(context, {id, header}) {
-
-            return api.remove(deleteUrl + id, header)
-                .then(function(response) {
-                    context.commit("clear{Entity}");
-                    return response;
-                })
-                .catch(function(err) {
-                    return err;
-                });
-        },
-    },
-    getters: {
-        get{Entity}: (state) => {
-            return state.{Entity};
-        },
-        get{Entity}List: (state) => {
-            return state.{Entity}List;
-        },
-    },
-    mutations: {
-        set{Entity}(state, data) {
-            state.{Entity} = data;
-        },
-        set{Entity}List(state, data) {
-            state.{Entity}List = data;
-        },
-        clear{Entity}(state) {
-            state.{Entity} = new {Entity}();
-        },
-    },
-    state: {
-        {Entity}: new {Entity}(),
-        {Entity}List: [],
-    },
-};
-
-export default {entity};
+export default api;
 `
