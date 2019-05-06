@@ -100,21 +100,21 @@ function BackendApi() {
         create: (url, data, getParams, headerParams) => {
             return request("POST", this.getRouteUrl(url), getParams, data, headerParams);
         },
-        update: (url, data, getParams, headerParams) => {
-            return request("PUT", this.getRouteUrl(url), getParams, data, headerParams);
-        },
         find: (url, getParams, headerParams) => {
             return request("GET", this.getRouteUrl(url), getParams, null, headerParams);
-        },
-        remove: (url, getParams, headerParams) => {
-            return request("DELETE", this.getRouteUrl(url), getParams, null, headerParams);
         },
         getServerUrl: () => {
             return this.serverUrl;
         },
+        remove: (url, getParams, headerParams) => {
+            return request("DELETE", this.getRouteUrl(url), getParams, null, headerParams);
+        },
         setServerUrl: (url) => {
             this.serverUrl = url;
             return this;
+        },
+        update: (url, data, getParams, headerParams) => {
+            return request("PUT", this.getRouteUrl(url), getParams, data, headerParams);
         },
     };
 }
