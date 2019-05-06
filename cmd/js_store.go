@@ -1,121 +1,105 @@
 package cmd
 
 const storeTemplate = `
-function request(method, url, getParams, data, headerParams) {
+import {{Entity}} from "../apiModel";
+import api from "../api";
 
-    function appendParams(u, params) {
+let findUrl = "http://localhost:48080/api/v1/{entity}";
+let readUrl = "http://localhost:48080/api/v1/{entity}/"; // + id
+let createUrl = "http://localhost:48080/api/v1/{entity}";
+let updateUrl = "http://localhost:48080/api/v1/{entity}/"; // + id
+let deleteUrl = "http://localhost:48080/api/v1/{entity}/"; // + id
 
-        let uparams = "";
+const {entity} = {
+    actions: {
+        find{Entity}(context, {filter, header}) {
 
-        switch (typeof params) {
+            return api.find(findUrl, filter, header)
+                .then(function(response) {
 
-            case "object":
+                    context.commit("set{Entity}List", response.List);
 
-                if (Object.keys(params).length < 1) {
-                    return u;
-                }
-
-                u = u + (u.includes("?") ? "" : "?");
-
-                for (const f of Object.keys(params)) {
-                    if (uparams !== "") {
-                        uparams += "&";
-                    }
-                    switch (typeof params[f]) {
-                        case "object":
-                            let list = "";
-                            for (let j = 0; j < params[f].length; j++) {
-                                list += f + "[]=" + encodeURIComponent(params[f][j]);
-                            }
-                            uparams += list;
-                            break;
-                        default:
-                            uparams += f + "=" + encodeURIComponent(params[f]);
-                            break;
-                    }
-                }
-
-                break;
-        }
-
-        return u + uparams;
-    }
-
-    function setHeader(req) {
-        for (const f of Object.keys(headerParams)) {
-            req.setRequestHeader(f, headerParams[f]);
-        }
-    }
-
-    return new Promise(function(resolve, reject) {
-
-        let xhr = new XMLHttpRequest();
-
-        url = appendParams(url, getParams);
-
-        xhr.open(method, url);
-        xhr.onload = function() {
-
-            if (this.status >= 200 && this.status < 300) {
-
-                resolve(JSON.parse(xhr.response));
-
-            } else {
-                reject({
-                    status: this.status,
-                    statusText: xhr.statusText,
+                    return response;
+                })
+                .catch(function(err) {
+                    return err;
                 });
-            }
-        };
-        xhr.onerror = function() {
-            reject({
-                status: this.status,
-                statusText: xhr.statusText,
-            });
-        };
-
-        if (data) {
-
-            if (headerParams) {
-                setHeader(xhr);
-            }
-
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.send(JSON.stringify(data));
-        } else {
-            xhr.send();
-        }
-    });
-}
-
-function BackendApi() {
-
-    this.serverUrl = 'http://localhost:48080';
-
-    return {
-        create(url, data, getParams, headerParams) {
-            return request("POST", url, getParams, data, headerParams);
         },
-        update(url, data, getParams, headerParams) {
-            return request("PUT", url, getParams, data, headerParams);
-        },
-        find(url, getParams, headerParams) {
-            return request("GET", url, getParams, null, headerParams);
-        },
-        remove(url, getParams, headerParams) {
-            return request("DELETE", url, getParams, null, headerParams);
-        },
-        getServerUrl: () => {
-            return this.serverUrl;
-        },
-        setServerUrl: (url) => {
-            this.serverUrl = url;
-            return this;
-        },
-    };
-}
+        load{Entity}(context, {id, filter, header}) {
 
-let api = new BackendApi();
+            return api.find(readUrl + id, filter, header)
+                .then(function(response) {
 
-export default api;
+                    context.commit("set{Entity}", response.Model);
+
+                    return response;
+                })
+                .catch(function(err) {
+                    return err;
+                });
+        },
+        create{Entity}(context, {data, filter, header}) {
+
+            return api.create(createUrl, data, filter, header)
+                .then(function(response) {
+
+                    context.commit("set{Entity}", response.Model);
+
+                    return response;
+                })
+                .catch(function(err) {
+                    return err;
+                });
+        },
+        update{Entity}(context, {id, data, filter, header}) {
+
+            return api.update(updateUrl + id, data, filter, header)
+                .then(function(response) {
+
+                    context.commit("set{Entity}", response.Model);
+
+                    return response;
+                })
+                .catch(function(err) {
+                    return err;
+                });
+        },
+        delete{Entity}(context, {id, header}) {
+
+            return api.remove(deleteUrl + id, header)
+                .then(function(response) {
+                    context.commit("clear{Entity}");
+                    return response;
+                })
+                .catch(function(err) {
+                    return err;
+                });
+        },
+    },
+    getters: {
+        get{Entity}: (state) => {
+            return state.{Entity};
+        },
+        get{Entity}List: (state) => {
+            return state.{Entity}List;
+        },
+    },
+    mutations: {
+        set{Entity}(state, data) {
+            state.{Entity} = data;
+        },
+        set{Entity}List(state, data) {
+            state.{Entity}List = data;
+        },
+        clear{Entity}(state) {
+            state.{Entity} = new {Entity}();
+        },
+    },
+    state: {
+        {Entity}: new {Entity}(),
+        {Entity}List: [],
+    },
+};
+
+export default {entity};
 `
