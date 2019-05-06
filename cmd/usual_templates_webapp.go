@@ -123,7 +123,11 @@ func {entity-name}Read(w http.ResponseWriter, httpRequest *http.Request) {
 
     // Создаём структуру ответа
     if err != nil {
-        errResponse(w, err.Error(), http.StatusBadRequest)
+        code := http.StatusBadRequest
+        if err.Error() == "Not found" {
+            code = http.StatusNotFound
+        }
+        errResponse(w, err.Error(), code)
         return
     }
 
