@@ -4,19 +4,13 @@ const apiContent = `
 function request(method, url, getParams, data, headerParams) {
 
     function appendParams(u, params) {
-
         let uparams = "";
-
         switch (typeof params) {
-
             case "object":
-
                 if (Object.keys(params).length < 1) {
                     return u;
                 }
-
                 u = u + (u.includes("?") ? "" : "?");
-
                 for (const f of Object.keys(params)) {
                     if (uparams !== "") {
                         uparams += "&";
@@ -34,10 +28,8 @@ function request(method, url, getParams, data, headerParams) {
                             break;
                     }
                 }
-
                 break;
         }
-
         return u + uparams;
     }
 
