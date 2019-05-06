@@ -83,7 +83,12 @@ func Read{entity-name}(cmdRequest api.CommandRequest) (mdl.Response) {
 
         // Создаём структуру ответа
         if err != nil {
-            return errMakeResponse(err.Error())
+            code := http.StatusBadRequest
+            if err.Error() == "Not found" {
+                code = http.StatusNotFound
+            }
+            errResponse(w, err.Error(), code)
+            return
         }
 
         return mdl.Response{Data: data}
