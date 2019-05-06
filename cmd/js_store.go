@@ -66,7 +66,7 @@ const {entity} = {
         },
         delete{Entity}(context, {id, header}) {
 
-            return api.remove(updateUrl + id, header)
+            return api.remove(deleteUrl + id, header)
                 .then(function(response) {
                     context.commit("clear{Entity}");
                     return response;
