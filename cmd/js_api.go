@@ -1,6 +1,7 @@
 package cmd
 
-const apiContent = `function request(method, url, getParams, data, headerParams) {
+const apiContent = `
+function request(method, url, getParams, data, headerParams) {
 
     function appendParams(u, params) {
 
@@ -87,20 +88,38 @@ const apiContent = `function request(method, url, getParams, data, headerParams)
     });
 }
 
-const api = {
-    create(url, data, getParams, headerParams) {
-        return request("POST", url, getParams, data, headerParams);
-    },
-    update(url, data, getParams, headerParams) {
-        return request("PUT", url, getParams, data, headerParams);
-    },
-    find(url, getParams, headerParams) {
-        return request("GET", url, getParams, null, headerParams);
-    },
-    remove(url, getParams, headerParams) {
-        return request("DELETE", url, getParams, null, headerParams);
-    },
-};
+function BackendApi() {
+
+    this.serverUrl = 'http://localhost:48080';
+
+    this.getRouteUrl = (url) => {
+        return this.serverUrl + url;
+    };
+
+    return {
+        create: (url, data, getParams, headerParams) => {
+            return request("POST", this.getRouteUrl(url), getParams, data, headerParams);
+        },
+        update: (url, data, getParams, headerParams) => {
+            return request("PUT", this.getRouteUrl(url), getParams, data, headerParams);
+        },
+        find: (url, getParams, headerParams) => {
+            return request("GET", this.getRouteUrl(url), getParams, null, headerParams);
+        },
+        remove: (url, getParams, headerParams) => {
+            return request("DELETE", this.getRouteUrl(url), getParams, null, headerParams);
+        },
+        getServerUrl: () => {
+            return this.serverUrl;
+        },
+        setServerUrl: (url) => {
+            this.serverUrl = url;
+            return this;
+        },
+    };
+}
+
+let api = new BackendApi();
 
 export default api;
 `
