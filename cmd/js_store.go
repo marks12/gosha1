@@ -4,11 +4,11 @@ const storeTemplate = `
 import {{Entity}} from "../apiModel";
 import api from "../api";
 
-let findUrl = "http://localhost:48080/api/v1/{entity}";
-let readUrl = "http://localhost:48080/api/v1/{entity}/"; // + id
-let createUrl = "http://localhost:48080/api/v1/{entity}";
-let updateUrl = "http://localhost:48080/api/v1/{entity}/"; // + id
-let deleteUrl = "http://localhost:48080/api/v1/{entity}/"; // + id
+let findUrl = "/api/v1/{entity}";
+let readUrl = "/api/v1/{entity}/"; // + id
+let createUrl = "/api/v1/{entity}";
+let updateUrl = "/api/v1/{entity}/"; // + id
+let deleteUrl = "/api/v1/{entity}/"; // + id
 
 const {entity} = {
     actions: {
