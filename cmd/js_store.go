@@ -12,6 +12,30 @@ let deleteUrl = "/api/v1/{entity}/"; // + id
 
 const {entity} = {
     actions: {
+        create{Entity}(context, {data, filter, header}) {
+
+            return api.create(createUrl, data, filter, header)
+                .then(function(response) {
+
+                    context.commit("set{Entity}", response.Model);
+
+                    return response;
+                })
+                .catch(function(err) {
+                    return err;
+                });
+        },
+        delete{Entity}(context, {id, header}) {
+
+            return api.remove(deleteUrl + id, header)
+                .then(function(response) {
+                    context.commit("clear{Entity}");
+                    return response;
+                })
+                .catch(function(err) {
+                    return err;
+                });
+        },
         find{Entity}(context, {filter, header}) {
 
             return api.find(findUrl, filter, header)
@@ -38,19 +62,6 @@ const {entity} = {
                     return err;
                 });
         },
-        create{Entity}(context, {data, filter, header}) {
-
-            return api.create(createUrl, data, filter, header)
-                .then(function(response) {
-
-                    context.commit("set{Entity}", response.Model);
-
-                    return response;
-                })
-                .catch(function(err) {
-                    return err;
-                });
-        },
         update{Entity}(context, {id, data, filter, header}) {
 
             return api.update(updateUrl + id, data, filter, header)
@@ -58,17 +69,6 @@ const {entity} = {
 
                     context.commit("set{Entity}", response.Model);
 
-                    return response;
-                })
-                .catch(function(err) {
-                    return err;
-                });
-        },
-        delete{Entity}(context, {id, header}) {
-
-            return api.remove(deleteUrl + id, header)
-                .then(function(response) {
-                    context.commit("clear{Entity}");
                     return response;
                 })
                 .catch(function(err) {
