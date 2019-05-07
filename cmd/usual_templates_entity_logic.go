@@ -51,7 +51,7 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
 
     //формирование результатов
     for _, item := range dbmodelData {
-       result = append(result, assign{Entity}TypeFromDb(item))
+       result = append(result, Assign{Entity}TypeFromDb(item))
     }
 
     return result, count, nil
@@ -74,7 +74,7 @@ func {Entity}Create(filter types.{Entity}Filter)  (data types.{Entity}, err erro
     query := core.Db
 
     typeModel := filter.Get{Entity}Model()
-    dbModel := assign{Entity}DbFromType(typeModel)
+    dbModel := Assign{Entity}DbFromType(typeModel)
     dbModel.ID = 0
 
     dbModel.Validate()
@@ -94,7 +94,7 @@ func {Entity}Create(filter types.{Entity}Filter)  (data types.{Entity}, err erro
         return types.{Entity}{}, errors.New("cant create {Entity}")
     }
 
-    return assign{Entity}TypeFromDb(dbModel), nil
+    return Assign{Entity}TypeFromDb(dbModel), nil
 }
 
 
@@ -113,8 +113,9 @@ func {Entity}Update(filter types.{Entity}Filter)  (data types.{Entity}, err erro
         return
     }
 
-    updateModel := assign{Entity}DbFromType(filter.Get{Entity}Model())
+    updateModel := Assign{Entity}DbFromType(filter.Get{Entity}Model())
     updateModel.ID = existsModel.Id
+    //updateModel.field ` + removeLineComment + `
 
     updateModel.Validate()
 
@@ -130,7 +131,7 @@ func {Entity}Update(filter types.{Entity}Filter)  (data types.{Entity}, err erro
         return
     }
 
-    data = assign{Entity}TypeFromDb(updateModel)
+    data = Assign{Entity}TypeFromDb(updateModel)
     return
 }
 

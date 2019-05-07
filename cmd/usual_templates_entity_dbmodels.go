@@ -9,7 +9,7 @@ import (
 type {Entity} struct {
 
     ID        int       ` + "`" + `gorm:"primary_key"` + "`" + `
-    Name      string
+    //{Entity} ` + removeLineComment + `
 
     CreatedAt time.Time
     UpdatedAt time.Time
@@ -18,8 +18,8 @@ type {Entity} struct {
     validator
 }
 
-func ({entity} *{Entity}) Validate()  {
-
+func ({entity} *{Entity}) Validate() {
+    //Validate ` + removeLineComment + `
 }
 
 `

@@ -2,7 +2,12 @@ package cmd
 
 const usualTypesAuthenticator = `package types
 
-import "{ms-name}/settings"
+import (
+    "{ms-name}/settings"
+    "{ms-name}/dbmodels"
+    "net/http"
+    "{ms-name}/core"
+)
 
 type Authenticator struct {
     Token string
@@ -10,10 +15,31 @@ type Authenticator struct {
 }
 
 func (auth *Authenticator) IsAuthorized() bool {
+
+	return true
+
+    if len(auth.Token) < 1 {
+        return false
+    }
+
+    dbUser := dbmodels.User{}
+    core.Db.Where(dbmodels.User{Token: auth.Token}).Find(&dbUser)
+
+    if len(dbUser.Token) < 1 {
+        return false
+    }
+
     return  true
 }
 
-func (authenticator Authenticator) Validate(functionType string) {
+func (auth *Authenticator) SetToken(r *http.Request) error {
+
+    auth.Token = r.Header.Get("Token")
+
+    return  nil
+}
+
+func (authenticator *Authenticator) Validate(functionType string) {
 
     switch functionType {
 
@@ -54,6 +80,8 @@ import (
 // default entity will used when create new entity
 type Entity struct {
     ID        int       ` + "`" + `gorm:"primary_key"` + "`" + `
+    //Entity ` + removeLineComment + `
+
     CreatedAt time.Time
     UpdatedAt time.Time
     DeletedAt *time.Time ` + "`" + `sql:"index" json:"-"` + "`" + `
@@ -62,7 +90,7 @@ type Entity struct {
 }
 
 func (entity *Entity) Validate()  {
-
+    //Validate ` + removeLineComment + `
 }
 `
 
@@ -170,8 +198,9 @@ func GetAbstractFilter(request *http.Request, functionType string) AbstractFilte
     filter.Pagination.CurrentPage,_  = strconv.Atoi(request.FormValue("CurrentPage"))
     filter.Pagination.PerPage,_  = strconv.Atoi(request.FormValue("PerPage"))
 
+    filter.SetToken(request)
+
     ReadJSON(filter.request, &filter.validator)
-    ReadJSON(filter.request, &filter.Authenticator)
 
     vars := mux.Vars(request)
     id, _ := strconv.Atoi(vars["id"])

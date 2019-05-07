@@ -9,10 +9,9 @@ import (
 func usualEntityAdd(c *ishell.Context) {
 
     yellow := color.New(color.FgYellow).SprintFunc()
+    c.Println(yellow("Start creating new entity and api"))
 
-    c.Println(yellow("Hello we start creating new entity and api"))
-
-    entity, err := getName(c, false, "Entity")
+    entity, err := getEntity(c)
 
     if err !=nil {
         return
@@ -29,7 +28,7 @@ func usualEntityAdd(c *ishell.Context) {
         sourceFile,
         destinationFile,
         []string{"router-generator here dont touch this line", "{Entity}", "{entity}"},
-        []string{usualTemplateRouteEntity.Content, CamelCase, firstLowerCase},
+        []string{getRouteContent(), CamelCase, firstLowerCase},
         c)
 
 
@@ -46,7 +45,7 @@ func usualEntityAdd(c *ishell.Context) {
     sourceFile = "./webapp/" + snakeCase + ".go"
     destinationFile = "./webapp/" + snakeCase + ".go"
 
-    CreateFile(sourceFile, usualTemplateWebappEntity.Content, c)
+    CreateFile(sourceFile, getWebAppContent(), c)
 
     CopyFile(
         sourceFile,
@@ -107,23 +106,60 @@ func usualEntityAdd(c *ishell.Context) {
         []string{replaceTo},
         c)
 
-    //
-    //CopyFile(
-    //    sourceFile,
-    //    destinationFile2,
-    //    []string{"NewEntity", "newEntity", "QueueNameCore"},
-    //    []string{camelCase, FirstLowerCase, QueueConstant},
-    //    c)
-    //
-    //if isNew {
-    //    AppendFile("./cnf/queue.go", "\n// generated code\nconst " + QueueConstant + " = \"" + strings.ToLower(camelCase) + "\"")
-    //}
-    //
-    //c.Println("Created files:" )
-    //
-    //c.Println(destinationFile1)
-    //c.Println(destinationFile2)
+    c.Println("New entity " + CamelCase + " was created" )
+}
 
-    c.Println("Конгретулэйшенс плеер уан, Ю уин. New entity " + CamelCase + " was created. Bye" )
+func getWebAppContent() (webappContent string) {
 
+    webappContent = usualTemplateWebappEntity.Content
+    crudArgs, _ := GetOsArgument("check-auth")
+
+    if len(crudArgs.StringResult) > 0 {
+
+        crudParams := Crud{}
+        crudParams.IsFind = strings.Contains(crudArgs.StringResult, "f")
+        crudParams.IsCreate = strings.Contains(crudArgs.StringResult, "c")
+        crudParams.IsRead = strings.Contains(crudArgs.StringResult, "r")
+        crudParams.IsUpdate = strings.Contains(crudArgs.StringResult, "u")
+        crudParams.IsDelete = strings.Contains(crudArgs.StringResult, "d")
+
+        webappContent = assignMsName(GetUsualTemplateWebAppContent(crudParams))
+    }
+    return
+}
+
+func getEntity(c *ishell.Context) (entity string, err error) {
+
+    var arguments RegularFind
+
+    arguments, err = GetOsArgument("entity")
+
+    if len(arguments.StringResult) < 1 || err != nil {
+        return getName(c, false, "Entity")
+    }
+
+    entity = arguments.StringResult
+
+    return
+}
+
+func getRouteContent() string {
+
+    routeContent := usualTemplateRouteEntity.Content
+
+    crudArgs, _ := GetOsArgument("crud")
+
+    if len(crudArgs.StringResult) > 0 {
+
+        crudParams := Crud{}
+        crudParams.IsFind = strings.Contains(crudArgs.StringResult, "f")
+        crudParams.IsCreate = strings.Contains(crudArgs.StringResult, "c")
+        crudParams.IsRead = strings.Contains(crudArgs.StringResult, "r")
+        crudParams.IsUpdate = strings.Contains(crudArgs.StringResult, "u")
+        crudParams.IsDelete = strings.Contains(crudArgs.StringResult, "d")
+
+        routeContent = GetUsualTemplateRouteEntity(crudParams)
+    }
+
+    return routeContent
 }

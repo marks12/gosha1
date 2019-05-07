@@ -4,22 +4,21 @@ const usualWebappEntityType = `package types
 
 import (
     "net/http"
-    "strconv"
 )
 
 type {Entity} struct {
     Id   int
-    Name string
+    //{Entity} ` + removeLineComment + `
 }
 
 func ({entity} *{Entity}) Validate()  {
-
+    //Validate ` + removeLineComment + `
 }
 
 type {Entity}Filter struct {
-
-    TestFilter int
     model {Entity}
+    //{Entity}Filter ` + removeLineComment + `
+
     AbstractFilter
 }
 
@@ -28,7 +27,9 @@ func Get{Entity}Filter(request *http.Request, functionType string) {Entity}Filte
     var filter {Entity}Filter
 
     filter.request = request
-    filter.TestFilter, _ = strconv.Atoi(request.FormValue("TestFilter"))
+    //filter.TestFilter, _ = strconv.Atoi(request.FormValue("TestFilter"))
+
+    //Get{Entity}Filter ` + removeLineComment + `
 
     ReadJSON(request, &filter.model)
 
