@@ -26,7 +26,6 @@ func FillDBTestData()  {
 	if isDropTables == true {
 
 		core.Db.DropTableIfExists(
-          &dbmodels.Entity{},
           //generator insert entity
 		)
 
@@ -35,7 +34,6 @@ func FillDBTestData()  {
 	}
 
 	core.Db.AutoMigrate(
-		&dbmodels.Entity{},
         //generator insert entity
 	)
 

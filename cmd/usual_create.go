@@ -26,6 +26,7 @@ func usualAppInit(c *ishell.Context) {
             c.Println(green("Creating app structure"))
 
             usualCreate(c)
+            usualAuthAdd(c)
 
             break
 
@@ -50,7 +51,7 @@ func usualCreate(c *ishell.Context) {
     CreateFile(msTemplateCoreDb.Path, msTemplateCoreDb.Content, c)
 
     //dbmodels
-    CreateFile(usualTemplateDbmodelsEntity.Path, usualTemplateDbmodelsEntity.Content, c)
+    //CreateFile(usualTemplateDbmodelsEntity.Path, usualTemplateDbmodelsEntity.Content, c)
     CreateFile(usualTemplateDbmodelsValidator.Path, usualTemplateDbmodelsValidator.Content, c)
 
     //logic
@@ -70,11 +71,16 @@ func usualCreate(c *ishell.Context) {
 
     //types
     CreateFile(usualTemplateTypesAuthenticator.Path, usualTemplateTypesAuthenticator.Content, c)
-    CreateFile(usualTemplateTypesEntity.Path, usualTemplateTypesEntity.Content, c)
+    //CreateFile(usualTemplateTypesEntity.Path, usualTemplateTypesEntity.Content, c)
     CreateFile(usualTemplateTypesFilter.Path, usualTemplateTypesFilter.Content, c)
     CreateFile(usualTemplateTypesRequest.Path, usualTemplateTypesRequest.Content, c)
     CreateFile(usualTemplateTypesValidator.Path, usualTemplateTypesValidator.Content, c)
     CreateFile(usualTemplateTypesResponse.Path, usualTemplateTypesResponse.Content, c)
+
+    //mdl
+    CreateFile(usualTemplateMdlPagination.Path, usualTemplateMdlPagination.Content, c)
+    CreateFile(usualTemplateMdlRequest.Path, usualTemplateMdlRequest.Content, c)
+    CreateFile(usualTemplateMdlResponse.Path, usualTemplateMdlResponse.Content, c)
 
     //webapp
     CreateFile(usualTemplateWebappErrors.Path, usualTemplateWebappErrors.Content, c)
@@ -104,6 +110,7 @@ func usualCreateMain(c *ishell.Context) {
         "filters",
         "types",
         "webapp",
+        "mdl",
     } {
         if _, err := os.Stat(folder); os.IsNotExist(err) {
             os.Mkdir(folder, 0755)

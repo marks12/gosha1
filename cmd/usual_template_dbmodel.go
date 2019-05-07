@@ -9,6 +9,8 @@ import (
 
 type Entity struct {
     ID        int       ` + "`" + `gorm:"primary_key"` + "`" + `
+    //Entity ` + removeLineComment + `
+
     CreatedAt time.Time
     UpdatedAt time.Time
     DeletedAt *time.Time ` + "`" + `sql:"index" json:"-"` + "`" + `
@@ -17,11 +19,11 @@ type Entity struct {
 }
 
 func (entity *Entity) Validate()  {
-
+    //Validate ` + removeLineComment + `
 }
 
 func (entity *Entity) FillFromRequest(request types.Entity) {
-    
+    //FillFromRequest ` + removeLineComment + `
 }
 `
 

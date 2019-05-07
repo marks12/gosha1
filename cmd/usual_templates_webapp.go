@@ -29,7 +29,20 @@ func validResponse (w http.ResponseWriter, data interface{}) {
     return
 }`
 
-const usualWebappEntity = `package webapp
+
+var usualTemplateWebappErrors = template{
+    Path:    "./webapp/errors.go",
+    Content: assignMsName(usualWebappErrors),
+}
+
+var usualTemplateWebappEntity = template{
+    Path:    "./webapp/{entity-name}.go",
+    Content: assignMsName(GetUsualTemplateWebAppContent(Crud{true, true, true, true, true})),
+}
+
+func GetUsualTemplateWebAppContent(crud Crud) string {
+
+    var usualWebappEntity = `package webapp
 
 import (
     "{ms-name}/logic"
@@ -43,10 +56,7 @@ func {entity-name}Find(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeFind)
 
-    if !requestDto.IsAuthorized() {
-        errResponse(w, "Invalid authorize in Find{entity-name}", http.StatusForbidden)
-        return
-    }
+    ` + getAuth("Find", crud) + `
 
     if !requestDto.IsValid() {
         errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
@@ -74,10 +84,7 @@ func {entity-name}Create(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeCreate)
 
-    if !requestDto.IsAuthorized() {
-        errResponse(w, "Invalid authorize in {entity-name}Create", http.StatusForbidden)
-        return
-    }
+    ` + getAuth("Create", crud) + `
 
     if !requestDto.IsValid() {
         errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
@@ -104,14 +111,10 @@ func {entity-name}Read(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeRead)
 
+    ` + getAuth("Read", crud) + `
+
     requestDto.PerPage = 1
     requestDto.CurrentPage = 1
-
-
-    if !requestDto.IsAuthorized() {
-        errResponse(w, "Invalid authorize in {entity-name}Read", http.StatusForbidden)
-        return
-    }
 
     if !requestDto.IsValid() {
         errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
@@ -143,10 +146,7 @@ func {entity-name}Update(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeUpdate)
 
-    if !requestDto.IsAuthorized() {
-        errResponse(w, "Invalid authorize in {entity-name}Update", http.StatusForbidden)
-        return
-    }
+    ` + getAuth("Update", crud) + `
 
     if !requestDto.IsValid() {
         errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
@@ -173,10 +173,7 @@ func {entity-name}Delete(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeDelete)
 
-    if !requestDto.IsAuthorized() {
-        errResponse(w, "Invalid authorize in {entity-name}Delete", http.StatusForbidden)
-        return
-    }
+    ` + getAuth("Delete", crud) + `
 
     if !requestDto.IsValid() {
         errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
@@ -198,15 +195,47 @@ func {entity-name}Delete(w http.ResponseWriter, httpRequest *http.Request) {
 
     return
 }
-
 `
-
-var usualTemplateWebappErrors = template{
-    Path:    "./webapp/errors.go",
-    Content: assignMsName(usualWebappErrors),
+    return usualWebappEntity
 }
 
-var usualTemplateWebappEntity = template{
-    Path:    "./webapp/{entity-name}.go",
-    Content: assignMsName(usualWebappEntity),
+func getAuth(method string, crud Crud) (auth string) {
+
+    switch method {
+
+        case "Find":
+            if ! crud.IsFind {
+                return
+            }
+            break
+
+        case "Create":
+            if ! crud.IsCreate {
+                return
+            }
+            break
+
+        case "Read":
+            if ! crud.IsRead {
+                return
+            }
+            break
+
+        case "Update":
+            if ! crud.IsUpdate {
+                return
+            }
+            break
+
+        case "Delete":
+            if ! crud.IsDelete {
+                return
+            }
+            break
+    }
+
+    return `if !requestDto.IsAuthorized() {
+        errResponse(w, "Invalid authorize in {entity-name}` + method +`", http.StatusForbidden)
+        return
+    }`
 }

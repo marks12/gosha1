@@ -21,7 +21,9 @@ const MS_ENTITY_ADD = "ms:entity:add"
 
 const USUAL_APP_CREATE = "usual:create"
 
-const USUAL_ENTITY_ADD = "usual:entity:add"
+const USUAL_ENTITY_ADD  = "usual:entity:add"
+
+const USUAL_AUTH_ADD    = "usual:auth:add"
 
 const ENTITY_ADD_FIELD = "entity:field:add"
 
@@ -145,8 +147,11 @@ func setAppCommands(choice int, c *ishell.Context) {
         c.Println(green(USUAL_APP_CREATE), " - Create new app")
         setUsualAppCreate()
 
-        c.Println(green(USUAL_ENTITY_ADD), " - Add entity")
+        c.Println(green(USUAL_ENTITY_ADD), ` - Add entity. NIM: --entity=SomeName --crud=fcrud --check-auth=fcrud`)
         setUsualEntityAdd()
+
+        c.Println(green(USUAL_AUTH_ADD), " - Add user, roles, auth, to app")
+		//setUsualAuthAdd()
 
         c.Println(green(ENTITY_ADD_FIELD), " - Add field to model")
         setModelFieldAdd()
@@ -215,8 +220,21 @@ func setUsualEntityAdd() {
 
     shell.AddCmd(&ishell.Cmd{
         Name: USUAL_ENTITY_ADD,
-        Help: "Command add new entity to usual app",
+        Help: `Command add new entity to usual app
+                    			  NIM. use follow arguments
+                    			  --entity=SomeName - create entity with name SomeName
+	                    		  --crud=fcrud - add follow methods to route 
+                	    		  --check-auth=fcrud  - add check auth in follow methods`,
         Func: usualEntityAdd,
+    })
+}
+
+func setUsualAuthAdd() {
+
+    shell.AddCmd(&ishell.Cmd{
+        Name: USUAL_AUTH_ADD,
+        Help: `Command add auth, users, role, userRoles for app`,
+        Func: usualAuthAdd,
     })
 }
 

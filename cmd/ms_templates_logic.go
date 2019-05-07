@@ -2,6 +2,13 @@ package cmd
 
 const msLogicAssigner = `package logic
 
+import (
+	"{ms-name}/dbmodels"
+	"golang.org/x/crypto/bcrypt"
+	"{ms-name}/types"
+	"{ms-name}/settings"
+)
+
 // add all assign functions
 `
 
@@ -199,7 +206,7 @@ func fillApi{entity-name}FromDb(db{entity-name} dbmodels.{entity-name}) api.{ent
 
 var msTemplateLogicAssigner = template{
     Path:    "./logic/assigner.go",
-    Content: msLogicAssigner,
+    Content: assignMsName(msLogicAssigner),
 }
 
 var msTemplateLogicEntity = template{

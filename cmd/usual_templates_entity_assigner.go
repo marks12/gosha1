@@ -3,19 +3,23 @@ package cmd
 const usualWebappEntityAssigner = `
 // add all assign functions
 
-func assign{Entity}TypeFromDb(db{Entity} dbmodels.{Entity}) types.{Entity} {
+func Assign{Entity}TypeFromDb(db{Entity} dbmodels.{Entity}) types.{Entity} {
+
+    //Assign{Entity}TypeFromDb predefine ` + removeLineComment + `
 
     return types.{Entity}{
         Id: db{Entity}.ID,
-        Name: db{Entity}.Name,
+        //Assign{Entity}TypeFromDb.Field ` + removeLineComment + `
     }
 }
 
-func assign{Entity}DbFromType(typeModel types.{Entity}) dbmodels.{Entity} {
+func Assign{Entity}DbFromType(typeModel types.{Entity}) dbmodels.{Entity} {
 
+    //Assign{Entity}DbFromType predefine ` + removeLineComment + `
+    
     return dbmodels.{Entity}{
         ID: typeModel.Id,
-        Name: typeModel.Name,
+        //Assign{Entity}DbFromType.Field ` + removeLineComment + `
     }
 }
 

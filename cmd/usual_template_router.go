@@ -7,12 +7,12 @@ import (
     "github.com/gorilla/mux"
     "github.com/rs/cors"
     "encoding/json"
+    "{ms-name}/webapp"
 )
 
 // Router - маршрутизатор
 func Router() http.Handler {
 
-    // [about]
     router := mux.NewRouter().StrictSlash(true)
     router.HandleFunc("/api", homePage).Methods("GET")
 
@@ -41,5 +41,5 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 
 var usualTemplateRouter = template{
     Path:    "./router/router.go",
-    Content: assignCurrentDateTime(usualRouter),
+    Content: assignCurrentDateTime(assignMsName(usualRouter)),
 }
