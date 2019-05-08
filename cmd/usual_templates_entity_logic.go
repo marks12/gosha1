@@ -1,16 +1,6 @@
 package cmd
 
-const usualEntityLogic = `package logic
-
-import (
-    "{ms-name}/types"
-    "{ms-name}/dbmodels"
-    "{ms-name}/core"
-    "log"
-    "errors"
-    "fmt"
-)
-
+const usualEntityLogicFind = `
 func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalRecords int, err error) {
 
     foundIds 	:= []int{}
@@ -56,19 +46,9 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
 
     return result, count, nil
 }
+`
 
-
-func {Entity}Read(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
-
-    findData, _, err := {Entity}Find(filter)
-
-    if len(findData) > 0 {
-        return findData[0], nil
-    }
-
-    return types.{Entity}{}, errors.New("Not found")
-}
-
+const usualEntityLogicCreate = `
 func {Entity}Create(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
 
     query := core.Db
@@ -96,8 +76,22 @@ func {Entity}Create(filter types.{Entity}Filter)  (data types.{Entity}, err erro
 
     return Assign{Entity}TypeFromDb(dbModel), nil
 }
+`
 
+const usualEntityLogicRead = `
+func {Entity}Read(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
 
+    findData, _, err := {Entity}Find(filter)
+
+    if len(findData) > 0 {
+        return findData[0], nil
+    }
+
+    return types.{Entity}{}, errors.New("Not found")
+}
+`
+
+const usualEntityLogicUpdate = `
 func {Entity}Update(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
 
     filter.Pagination.CurrentPage = 1
@@ -135,6 +129,8 @@ func {Entity}Update(filter types.{Entity}Filter)  (data types.{Entity}, err erro
     return
 }
 
+`
+const usualEntityLogicDelete = `
 func {Entity}Delete(filter types.{Entity}Filter)  (isOk bool, err error) {
 
     filter.Pagination.CurrentPage = 1
@@ -160,10 +156,50 @@ func {Entity}Delete(filter types.{Entity}Filter)  (isOk bool, err error) {
     isOk = true
     return
 }
+`
 
+const usualEntityLogic = `package logic
+
+import (
+    "{ms-name}/types"
+    "{ms-name}/dbmodels"
+    "{ms-name}/core"
+    "log"
+    "errors"
+    "fmt"
+)
 `
 
 var usualTemplateEntityLogic = template{
     Path:    "",
-    Content: assignMsName(usualEntityLogic),
+    Content: assignMsName(GetUsualTemplateLogicContent(Crud{true, true, true, true, true,})),
+}
+
+func GetUsualTemplateLogicContent(crud Crud) (content string) {
+
+    content = usualEntityLogic
+
+    if crud.IsFind {
+        content += usualEntityLogicFind
+    }
+
+    if crud.IsCreate {
+        content += usualEntityLogicCreate
+    }
+
+    if crud.IsRead {
+        content += usualEntityLogicRead
+    }
+
+    if crud.IsUpdate {
+        content += usualEntityLogicUpdate
+    }
+
+    if crud.IsDelete {
+        content += usualEntityLogicDelete
+    }
+
+    content = assignMsName(content)
+
+    return
 }

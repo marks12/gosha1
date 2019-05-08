@@ -26,9 +26,11 @@ func usualAuthAdd(c *ishell.Context) {
 
 	os.Args = append(os.Args,"--entity=Auth")
 	os.Args = append(os.Args,"--crud=cd")
-	os.Args = append(os.Args,"--check-auth=frud")
+	os.Args = append(os.Args,"--check-auth=d")
+	os.Args = append(os.Args,"--no-id")
+	os.Args = append(os.Args,"--no-assign")
 	usualEntityAdd(c)
-	os.Args = os.Args[:len(os.Args)-3]
+	os.Args = os.Args[:len(os.Args)-5]
 
 	c.Println("Models created success")
 
@@ -142,20 +144,6 @@ func fillUser(c *ishell.Context) {
     //User `+ removeLineComment},
 		c)
 
-	AppendFile(
-		"dbmodels/user.go",
-		`func ValidateEmail(email string) bool {
-    Re := regexp.MustCompile(` + "`" + `^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$` + "`" + `)
-    return Re.MatchString(email)
-}
-
-func ValidateMobile(phone string) bool {
-    Re := regexp.MustCompile(` + "`" + `^[+][0-9]{11,}` + "`" + `)
-    return Re.MatchString(phone)
-}
-`,
-	)
-
 	CopyFile(
 		"dbmodels/user.go",
 		"dbmodels/user.go",
@@ -170,21 +158,25 @@ func ValidateMobile(phone string) bool {
         user.validationErrors = append(user.validationErrors, "User last name is empty")
     }
 
-    if len(user.Email) < 3 || ! ValidateEmail(user.Email)  {
+    if len(user.Email) < 3 || ! common.ValidateEmail(user.Email)  {
         user.validationErrors = append(user.validationErrors, "User email not valid")
     }
 
-    if len(user.MobilePhone) > 3 &&  ! ValidateMobile(user.MobilePhone)  {
+    if len(user.MobilePhone) > 3 &&  ! common.ValidateMobile(user.MobilePhone)  {
         user.validationErrors = append(user.validationErrors, "User mobile phone should be valid or empty. Format +0123456789... ")
     }
 
     //Validate `+ removeLineComment + `
 `},
 		c)
-
 }
 
 func fillAuth(c *ishell.Context) {
+
+	CreateFile(
+		"logic/auth.go",
+		usualTemplateAuthLogic.Content,
+		c)
 
 	CopyFile(
 		"types/auth.go",
@@ -192,9 +184,52 @@ func fillAuth(c *ishell.Context) {
 		[]string{`//Auth `+ removeLineComment},
 		[]string{
 			`Email     string
+    Password  string	` + "`" + `json:"-"` + "`" + `
+    Token     string
+    //Auth `+ removeLineComment},
+		c)
+
+	CopyFile(
+		"dbmodels/auth.go",
+		"dbmodels/auth.go",
+		[]string{`//Auth `+ removeLineComment},
+		[]string{
+			`Email     string
     Password  string
     Token     string
-    //Auth  `+ removeLineComment},
+    //Auth `+ removeLineComment},
+		c)
+
+	CopyFile(
+		"dbmodels/auth.go",
+		"dbmodels/auth.go",
+		[]string{`import \(`},
+		[]string{`import (
+	` + assignMsName(`"{ms-name}/common"`)},
+		c)
+
+	CopyFile(
+		"dbmodels/user.go",
+		"dbmodels/user.go",
+		[]string{`import \(`},
+		[]string{`import (
+	` + assignMsName(`"{ms-name}/common"`)},
+		c)
+
+	CopyFile(
+		"dbmodels/auth.go",
+		"dbmodels/auth.go",
+		[]string{`//Validate `+ removeLineComment},
+		[]string{
+			`if len(auth.Email) < 3 || ! common.ValidateEmail(auth.Email)  {
+        auth.validationErrors = append(auth.validationErrors, "User email not valid")
+    }
+
+    if len(auth.Password) < 1 {
+        auth.validationErrors = append(auth.validationErrors, "User password is empty")
+    }
+
+    //Validate `+ removeLineComment},
 		c)
 
 

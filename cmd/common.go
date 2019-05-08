@@ -65,7 +65,7 @@ func GetOsArgument(arg string) (RegularFind, error) {
 
     for _, a := range os.Args {
 
-        if a == arg {
+        if a == arg || a == `--` + arg {
             return RegularFind{BoolResult:true}, nil
         }
 

@@ -31,7 +31,6 @@ func usualEntityAdd(c *ishell.Context) {
         []string{getRouteContent(), CamelCase, firstLowerCase},
         c)
 
-
     sourceFile = "./logic/assigner.go"
     destinationFile = "./logic/assigner.go"
 
@@ -39,7 +38,7 @@ func usualEntityAdd(c *ishell.Context) {
         sourceFile,
         destinationFile,
         []string{"// add all assign functions", "{Entity}", "{entity}"},
-        []string{usualTemplateLogicAssignerEntity.Content, CamelCase, firstLowerCase},
+        []string{getAssignContent(), CamelCase, firstLowerCase},
         c)
 
     sourceFile = "./webapp/" + snakeCase + ".go"
@@ -54,11 +53,10 @@ func usualEntityAdd(c *ishell.Context) {
         []string{CamelCase, CamelCase, firstLowerCase},
         c)
 
-
     sourceFile = "./types/" + snakeCase + ".go"
     destinationFile = "./types/" + snakeCase + ".go"
 
-    CreateFile(sourceFile, usualTemplateWebappEntityType.Content, c)
+    CreateFile(sourceFile, getTypeContent(), c)
 
     CopyFile(
         sourceFile,
@@ -82,7 +80,7 @@ func usualEntityAdd(c *ishell.Context) {
     sourceFile = "./logic/" + snakeCase + ".go"
     destinationFile = "./logic/" + snakeCase + ".go"
 
-    CreateFile(sourceFile, usualTemplateEntityLogic.Content, c)
+    CreateFile(sourceFile, getLogicContent(), c)
 
     CopyFile(
         sourceFile,
@@ -109,22 +107,81 @@ func usualEntityAdd(c *ishell.Context) {
     c.Println("New entity " + CamelCase + " was created" )
 }
 
-func getWebAppContent() (webappContent string) {
+func getLogicContent() (c string) {
 
-    webappContent = usualTemplateWebappEntity.Content
-    crudArgs, _ := GetOsArgument("check-auth")
+    crudArgs, _ := GetOsArgument("crud")
+    crudParams := Crud{}
 
     if len(crudArgs.StringResult) > 0 {
 
-        crudParams := Crud{}
         crudParams.IsFind = strings.Contains(crudArgs.StringResult, "f")
         crudParams.IsCreate = strings.Contains(crudArgs.StringResult, "c")
         crudParams.IsRead = strings.Contains(crudArgs.StringResult, "r")
         crudParams.IsUpdate = strings.Contains(crudArgs.StringResult, "u")
         crudParams.IsDelete = strings.Contains(crudArgs.StringResult, "d")
-
-        webappContent = assignMsName(GetUsualTemplateWebAppContent(crudParams))
+    } else {
+        crudParams = Crud{true, true, true, true, true, }
     }
+
+    c = GetUsualTemplateLogicContent(crudParams)
+    return
+}
+
+
+func getAssignContent() (c string) {
+
+    cfg := TypeConfig{}
+
+    hasId, _ := GetOsArgument("no-id")
+    cfg.IsId = ! hasId.BoolResult
+
+    c = GetUsualTemplateAssignContent(cfg)
+    return
+}
+
+func getTypeContent() (c string) {
+
+    cfg := TypeConfig{}
+
+    hasId, _ := GetOsArgument("no-id")
+    cfg.IsId = ! hasId.BoolResult
+
+    c = GetUsualTemplateTypeContent(cfg)
+    return
+}
+
+func getWebAppContent() (webappContent string) {
+
+    webappContent = usualTemplateWebappEntity.Content
+
+    AuthcrudArgs, _ := GetOsArgument("check-auth")
+    authParams := Crud{true, true, true, true, true, }
+
+    if len(AuthcrudArgs.StringResult) > 0 {
+
+        authParams.IsFind = strings.Contains(AuthcrudArgs.StringResult, "f")
+        authParams.IsCreate = strings.Contains(AuthcrudArgs.StringResult, "c")
+        authParams.IsRead = strings.Contains(AuthcrudArgs.StringResult, "r")
+        authParams.IsUpdate = strings.Contains(AuthcrudArgs.StringResult, "u")
+        authParams.IsDelete = strings.Contains(AuthcrudArgs.StringResult, "d")
+
+    }
+
+    methodCrudArgs, _ := GetOsArgument("crud")
+    methodCrudParams := Crud{true, true, true, true, true, }
+
+    if len(methodCrudArgs.StringResult) > 0 {
+
+        methodCrudParams.IsFind = strings.Contains(methodCrudArgs.StringResult, "f")
+        methodCrudParams.IsCreate = strings.Contains(methodCrudArgs.StringResult, "c")
+        methodCrudParams.IsRead = strings.Contains(methodCrudArgs.StringResult, "r")
+        methodCrudParams.IsUpdate = strings.Contains(methodCrudArgs.StringResult, "u")
+        methodCrudParams.IsDelete = strings.Contains(methodCrudArgs.StringResult, "d")
+
+    }
+
+    webappContent = assignMsName(GetUsualTemplateWebAppContent(authParams, methodCrudParams))
+
     return
 }
 

@@ -85,6 +85,10 @@ func usualCreate(c *ishell.Context) {
     //webapp
     CreateFile(usualTemplateWebappErrors.Path, usualTemplateWebappErrors.Content, c)
 
+    //common
+    CreateFile(usualTemplateCommonValidator.Path, usualTemplateCommonValidator.Content, c)
+    CreateFile(usualTemplateCommonGenerator.Path, usualTemplateCommonGenerator.Content, c)
+
     ////ms folder
     //CreateFile(msTemplateMsTicket.Path, msTemplateMsTicket.Content, c)
 
@@ -107,10 +111,10 @@ func usualCreateMain(c *ishell.Context) {
         "services",
         "settings",
         "static",
-        "filters",
         "types",
         "webapp",
         "mdl",
+        "common",
     } {
         if _, err := os.Stat(folder); os.IsNotExist(err) {
             os.Mkdir(folder, 0755)
