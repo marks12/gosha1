@@ -1,13 +1,20 @@
 package cmd
 
-const usualWebappEntityType = `package types
+var usualTemplateWebappEntityType = template{
+    Path:    "",
+    Content: GetUsualTemplateTypeContent(TypeConfig{true}),
+}
+
+func GetUsualTemplateTypeContent(cfg TypeConfig) string {
+
+    var usualWebappEntityType = `package types
 
 import (
     "net/http"
 )
 
 type {Entity} struct {
-    Id   int
+    ` + getTypeId(cfg) + `
     //{Entity} ` + removeLineComment + `
 }
 
@@ -47,7 +54,15 @@ func (filter *{Entity}Filter) Get{Entity}Model() {Entity} {
 }
 `
 
-var usualTemplateWebappEntityType = template{
-    Path:    "",
-    Content: assignMsName(usualWebappEntityType),
+
+    return assignMsName(usualWebappEntityType)
+}
+
+func getTypeId(config TypeConfig) string {
+
+    if config.IsId {
+        return `Id   int`
+    }
+
+    return ""
 }

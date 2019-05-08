@@ -151,7 +151,7 @@ func setAppCommands(choice int, c *ishell.Context) {
         setUsualEntityAdd()
 
         c.Println(green(USUAL_AUTH_ADD), " - Add user, roles, auth, to app")
-		//setUsualAuthAdd()
+		setUsualAuthAdd()
 
         c.Println(green(ENTITY_ADD_FIELD), " - Add field to model")
         setModelFieldAdd()

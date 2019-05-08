@@ -1,5 +1,9 @@
 package cmd
 
+type TypeConfig struct {
+    IsId bool
+}
+
 const usualTypesAuthenticator = `package types
 
 import (

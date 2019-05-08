@@ -37,10 +37,13 @@ var usualTemplateWebappErrors = template{
 
 var usualTemplateWebappEntity = template{
     Path:    "./webapp/{entity-name}.go",
-    Content: assignMsName(GetUsualTemplateWebAppContent(Crud{true, true, true, true, true})),
+    Content: assignMsName(GetUsualTemplateWebAppContent(
+        Crud{true, true, true, true, true},
+        Crud{true, true, true, true, true},
+    )),
 }
 
-func GetUsualTemplateWebAppContent(crud Crud) string {
+func GetUsualTemplateWebAppContent(authCrud Crud, methodsCrud Crud) string {
 
     var usualWebappEntity = `package webapp
 
@@ -52,11 +55,30 @@ import (
     "{ms-name}/settings"
 )
 
+    ` + getWebappFind(methodsCrud, authCrud) + `
+
+    ` + getWebappCreate(methodsCrud, authCrud) + `
+
+    ` + getWebappRead(methodsCrud, authCrud) + `
+
+    ` + getWebappUpdate(methodsCrud, authCrud) + `
+
+    ` + getWebappDelete(methodsCrud, authCrud) + `
+
+`
+    return usualWebappEntity
+}
+
+func getWebappFind(methodCrud Crud, authCrud Crud) (c string) {
+
+    if methodCrud.IsFind {
+        c = `
+
 func {entity-name}Find(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeFind)
 
-    ` + getAuth("Find", crud) + `
+    ` + getAuth("Find", authCrud) + `
 
     if !requestDto.IsValid() {
         errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
@@ -78,13 +100,22 @@ func {entity-name}Find(w http.ResponseWriter, httpRequest *http.Request) {
     })
 
     return
+}`
+    }
+
+    return
 }
+
+func getWebappCreate(methodCrud Crud, authCrud Crud) (c string) {
+
+    if methodCrud.IsCreate {
+        c = `
 
 func {entity-name}Create(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeCreate)
 
-    ` + getAuth("Create", crud) + `
+    ` + getAuth("Create", authCrud) + `
 
     if !requestDto.IsValid() {
         errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
@@ -105,13 +136,22 @@ func {entity-name}Create(w http.ResponseWriter, httpRequest *http.Request) {
     })
 
     return
+}`
+    }
+
+    return
 }
+
+func getWebappRead(methodCrud Crud, authCrud Crud) (c string) {
+
+    if methodCrud.IsRead {
+        c = `
 
 func {entity-name}Read(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeRead)
 
-    ` + getAuth("Read", crud) + `
+    ` + getAuth("Read", authCrud) + `
 
     requestDto.PerPage = 1
     requestDto.CurrentPage = 1
@@ -139,14 +179,22 @@ func {entity-name}Read(w http.ResponseWriter, httpRequest *http.Request) {
     })
 
     return
+}`
+    }
+
+    return
 }
 
+func getWebappUpdate(methodCrud Crud, authCrud Crud) (c string) {
+
+    if methodCrud.IsUpdate {
+        c = `
 
 func {entity-name}Update(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeUpdate)
 
-    ` + getAuth("Update", crud) + `
+    ` + getAuth("Update", authCrud) + `
 
     if !requestDto.IsValid() {
         errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
@@ -167,13 +215,22 @@ func {entity-name}Update(w http.ResponseWriter, httpRequest *http.Request) {
     })
 
     return
+}`
+    }
+
+    return
 }
+
+func getWebappDelete(methodCrud Crud, authCrud Crud) (c string) {
+
+    if methodCrud.IsDelete {
+        c = `
 
 func {entity-name}Delete(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeDelete)
 
-    ` + getAuth("Delete", crud) + `
+    ` + getAuth("Delete", authCrud) + `
 
     if !requestDto.IsValid() {
         errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
@@ -194,9 +251,10 @@ func {entity-name}Delete(w http.ResponseWriter, httpRequest *http.Request) {
     })
 
     return
-}
-`
-    return usualWebappEntity
+}`
+    }
+
+    return
 }
 
 func getAuth(method string, crud Crud) (auth string) {
