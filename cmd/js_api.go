@@ -19,6 +19,9 @@ function request(method, url, getParams, data, headerParams) {
                         case "object":
                             let list = "";
                             for (let j = 0; j < params[f].length; j++) {
+                                if (list.length) {
+                                    list += "&";
+                                }
                                 list += f + "[]=" + encodeURIComponent(params[f][j]);
                             }
                             uparams += list;
