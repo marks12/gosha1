@@ -241,7 +241,7 @@ func getFileLines(filepath string) (strArr []string) {
     return
 }
 
-func CopyFile(sourceFile, destinationFile string, replaceFrom []string, replaceTo []string, c *ishell.Context) {
+func CopyFile(sourceFile, destinationFile string, replaceFrom []string, replaceTo []string, c interface{}) {
 
     input, err := ioutil.ReadFile(sourceFile)
     if err != nil {
@@ -309,7 +309,7 @@ func getFirstLowerCase(s string) string {
 
 func getName(c *ishell.Context, IsExistsStruct bool, targetName string) (string, error) {
 
-    var entityName string
+    var selectedName string
 
     TargetName := strings.Title(targetName)
 
@@ -317,34 +317,39 @@ func getName(c *ishell.Context, IsExistsStruct bool, targetName string) (string,
     red := color.New(color.FgRed).SprintFunc()
 
     if IsExistsStruct {
-        c.Println("Please type exists " + TargetName + ", like \"New" + TargetName + "\" or \"" + TargetName + "\" or exit return")
+        InteractiveEcho([]string{
+            "Please type exists " + TargetName + ", like \"New" + TargetName + "\" or \"" + TargetName + "\" or exit return",
+        })
     } else {
-        c.Println("Please type new " + TargetName + ", like \"New" + TargetName + "\" or \"" + TargetName + "\" or exit return")
+        InteractiveEcho([]string{
+            "Please type new " + TargetName + ", like \"New" + TargetName + "\" or \"" + TargetName + "\" or exit return",
+        })
     }
 
     char := c.ReadLine()
 
-    entityName = strings.Title(char)
+    selectedName = strings.Title(char)
 
-    if entityName == "Exit" {
+    if selectedName == "Exit" {
         c.Println("Operation canceled!")
         return "", errors.New("exit")
     }
 
-
-    if len(entityName) > 0 {
+    if len(selectedName) > 0 {
 
         choice := c.MultiChoice([]string{
             "Yes",
             "No",
             "Cancel",
-        }, "Correct name " + green(entityName) + " ?")
+        }, "Correct name " + green(selectedName) + " ?")
 
         if choice == 0 {
 
-            c.Println(TargetName + " name is:", red(entityName))
+            InteractiveEcho([]string{
+                TargetName + " name is:", red(selectedName),
+            })
 
-            return entityName, nil
+            return selectedName, nil
 
         } else if choice == 2 {
 

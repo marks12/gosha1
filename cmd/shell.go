@@ -37,13 +37,15 @@ func RunShell() {
 
     shell.AddCmd(&ishell.Cmd{
         Name: SET_APP_TYPE,
-        Help: "Set app type.\n \t\t\t\t NIM: "+SET_APP_TYPE+" --type=[MsCore | MsRpcApi | Microservice | Usual]",
+        Help: "Set app type. " +
+              "\n\t\t\t\tNIM: "+SET_APP_TYPE+" --type=[MsCore | MsRpcApi | Microservice | Usual]",
         Func: setAppType,
     })
 
     shell.AddCmd(&ishell.Cmd{
         Name: GENERATE_TYPES_JS,
-        Help: "Generate types structs to JS for using in frontend\n \t\t\t\t NIM: "+GENERATE_TYPES_JS+" --dst=/some/destination/path",
+        Help: "Generate types structs to JS for using in frontend " +
+            "\n\t\t\t\tNIM: "+GENERATE_TYPES_JS+" --dst=/some/destination/path",
         Func: genTypesJs,
     })
 

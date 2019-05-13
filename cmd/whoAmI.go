@@ -142,18 +142,20 @@ func setAppCommands(choice int, c *ishell.Context) {
         //uisual app
     case 4:
 
-        c.Println("Hello " + blue("usual") + " application:")
+        InteractiveEcho([]string{
+            "Hello " + blue("usual") + " application:",
+            green(USUAL_APP_CREATE), " - Create new app",
+            green(USUAL_ENTITY_ADD), " - Add entity. NIM: --entity=SomeName --crud=fcrud --check-auth=fcrud",
+            green(USUAL_AUTH_ADD), " - Add user, roles, auth, to app",
+            green(ENTITY_ADD_FIELD), " - Add field to model. NIM: --entity=SomeName2 --field=SomeField --data-type=string",
+        })
 
-        c.Println(green(USUAL_APP_CREATE), " - Create new app")
         setUsualAppCreate()
 
-        c.Println(green(USUAL_ENTITY_ADD), ` - Add entity. NIM: --entity=SomeName --crud=fcrud --check-auth=fcrud`)
         setUsualEntityAdd()
 
-        c.Println(green(USUAL_AUTH_ADD), " - Add user, roles, auth, to app")
 		setUsualAuthAdd()
 
-        c.Println(green(ENTITY_ADD_FIELD), " - Add field to model")
         setModelFieldAdd()
 
         break
@@ -220,11 +222,10 @@ func setUsualEntityAdd() {
 
     shell.AddCmd(&ishell.Cmd{
         Name: USUAL_ENTITY_ADD,
-        Help: `Command add new entity to usual app
-                    			  NIM. use follow arguments
-                    			  --entity=SomeName - create entity with name SomeName
-	                    		  --crud=fcrud - add follow methods to route 
-                	    		  --check-auth=fcrud  - add check auth in follow methods`,
+        Help: "Command add new entity to usual app NIM. Use follow arguments:" +
+            "\n\t\t\t\t--entity=SomeName - create entity with name SomeName" +
+            "\n\t\t\t\t--crud=fcrud - add follow methods to route" +
+            "\n\t\t\t\t--check-auth=fcrud  - add check auth in follow methods",
         Func: usualEntityAdd,
     })
 }
@@ -233,7 +234,7 @@ func setUsualAuthAdd() {
 
     shell.AddCmd(&ishell.Cmd{
         Name: USUAL_AUTH_ADD,
-        Help: `Command add auth, users, role, userRoles for app`,
+        Help: "Command add auth, users, role, userRoles for app",
         Func: usualAuthAdd,
     })
 }
@@ -242,7 +243,11 @@ func setModelFieldAdd() {
 
     shell.AddCmd(&ishell.Cmd{
         Name: ENTITY_ADD_FIELD,
-        Help: "Command add new field to model",
+        Help: "Command add new field to model." +
+            "NIM:" +
+            "--entity=SomeName2" +
+            "--field=SomeField" +
+            "--data-type=string",
         Func: entityFieldAdd,
     })
 }
