@@ -46,11 +46,11 @@ func fillUserRole(c *ishell.Context) {
 	CopyFile(
 		"types/user_role.go",
 		"types/user_role.go",
-		[]string{`//UserRole `+ removeLineComment},
+		[]string{getRemoveLine("UserRole")},
 		[]string{
 			`RoleID int
 	UserID int
-    //UserRole  `+ removeLineComment},
+    ` + getRemoveLine("UserRole")},
 		c)
 }
 
@@ -58,11 +58,11 @@ func fillRole(c *ishell.Context) {
 	CopyFile(
 		"types/role.go",
 		"types/role.go",
-		[]string{`//Role `+ removeLineComment},
+		[]string{getRemoveLine("Role")},
 		[]string{
 			`Name        string
 	Description string
-    //Role `+ removeLineComment},
+    `+ getRemoveLine("Role")},
 		c)
 }
 
@@ -74,7 +74,7 @@ func fillUser(c *ishell.Context) {
 	CopyFile(
 		"types/user.go",
 		"types/user.go",
-		[]string{`//User `+ removeLineComment},
+		[]string{getRemoveLine("User")},
 		[]string{
 			`Email       string
     FirstName   string
@@ -83,23 +83,23 @@ func fillUser(c *ishell.Context) {
     MobilePhone string
     Password    string  ` + "`" + `json:"-"` + "`" + `
     Token       string
-    //User  `+ removeLineComment},
+    `+ getRemoveLine("User")},
 		c)
 
 	CopyFile(
 		"logic/assigner.go",
 		"logic/assigner.go",
-		[]string{`//AssignUserDbFromType predefine `+ removeLineComment},
+		[]string{getRemoveLine("AssignUserDbFromType predefine")},
 		[]string{
 			`password := []byte(typeModel.Password + settings.PASSWORD_SALT)
 	hashedPassword, _ := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
-    //AssignUserDbFromType predefine `+ removeLineComment},
+    ` + getRemoveLine("AssignUserDbFromType predefine")},
 		c)
 
 	CopyFile(
 		"logic/assigner.go",
 		"logic/assigner.go",
-		[]string{`//AssignUserDbFromType.Field `+ removeLineComment},
+		[]string{getRemoveLine("AssignUserDbFromType.Field")},
 		[]string{
 			`FirstName:   typeModel.FirstName,
 		LastName:    typeModel.LastName,
@@ -107,13 +107,13 @@ func fillUser(c *ishell.Context) {
 		Email:       typeModel.Email,
 		Password:    string(hashedPassword),
 		IsActive:    typeModel.IsActive,
-	    //AssignUserDbFromType.Field `+ removeLineComment},
+	    ` + getRemoveLine("AssignUserDbFromType.Field")},
 		c)
 
 	CopyFile(
 		"logic/assigner.go",
 		"logic/assigner.go",
-		[]string{`//AssignUserTypeFromDb.Field `+ removeLineComment},
+		[]string{getRemoveLine("AssignUserTypeFromDb.Field")},
 		[]string{
 			`FirstName:   dbUser.FirstName,
 		LastName:    dbUser.LastName,
@@ -122,13 +122,13 @@ func fillUser(c *ishell.Context) {
 		Password:    "*****",
 		IsActive:    dbUser.IsActive,
 		Token:       dbUser.Token,
-    	//AssignUserTypeFromDb.Field `+ removeLineComment},
+    	` + getRemoveLine("AssignUserTypeFromDb.Field")},
 		c)
 
 	CopyFile(
 		"dbmodels/user.go",
 		"dbmodels/user.go",
-		[]string{`//User `+ removeLineComment},
+		[]string{getRemoveLine("User")},
 		[]string{
 			`Email       string
     FirstName   string
@@ -137,13 +137,13 @@ func fillUser(c *ishell.Context) {
     MobilePhone string
     Password    string
     Token       string
-    //User `+ removeLineComment},
+    ` + getRemoveLine("User")},
 		c)
 
 	CopyFile(
 		"dbmodels/user.go",
 		"dbmodels/user.go",
-		[]string{`//Validate `+ removeLineComment},
+		[]string{getRemoveLine("Validate")},
 		[]string{`
 
     if len(user.FirstName) < 1 {
@@ -162,7 +162,7 @@ func fillUser(c *ishell.Context) {
         user.validationErrors = append(user.validationErrors, "User mobile phone should be valid or empty. Format +0123456789... ")
     }
 
-    //Validate `+ removeLineComment + `
+    `+ getRemoveLine("Validate") + `
 `},
 		c)
 }
@@ -177,23 +177,23 @@ func fillAuth(c *ishell.Context) {
 	CopyFile(
 		"types/auth.go",
 		"types/auth.go",
-		[]string{`//Auth `+ removeLineComment},
+		[]string{getRemoveLine("Auth")},
 		[]string{
 			`Email     string
     Password  string	` + "`" + `json:"-"` + "`" + `
     Token     string
-    //Auth `+ removeLineComment},
+    `+ getRemoveLine("Auth")},
 		c)
 
 	CopyFile(
 		"dbmodels/auth.go",
 		"dbmodels/auth.go",
-		[]string{`//Auth `+ removeLineComment},
+		[]string{getRemoveLine("Auth")},
 		[]string{
 			`Email     string
     Password  string
     Token     string
-    //Auth `+ removeLineComment},
+    ` + getRemoveLine("Auth")},
 		c)
 
 	CopyFile(
@@ -215,7 +215,7 @@ func fillAuth(c *ishell.Context) {
 	CopyFile(
 		"dbmodels/auth.go",
 		"dbmodels/auth.go",
-		[]string{`//Validate `+ removeLineComment},
+		[]string{getRemoveLine("Validate")},
 		[]string{
 			`if len(auth.Email) < 3 || ! common.ValidateEmail(auth.Email)  {
         auth.validationErrors = append(auth.validationErrors, "User email not valid")
@@ -225,7 +225,7 @@ func fillAuth(c *ishell.Context) {
         auth.validationErrors = append(auth.validationErrors, "User password is empty")
     }
 
-    //Validate `+ removeLineComment},
+    `+ getRemoveLine("Validate")},
 		c)
 
 

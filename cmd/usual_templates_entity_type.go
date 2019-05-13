@@ -15,16 +15,16 @@ import (
 
 type {Entity} struct {
     ` + getTypeId(cfg) + `
-    //{Entity} ` + removeLineComment + `
+    ` + getRemoveLine("{Entity}") + `
 }
 
 func ({entity} *{Entity}) Validate()  {
-    //Validate ` + removeLineComment + `
+    ` + getRemoveLine("Validate") + `
 }
 
 type {Entity}Filter struct {
     model {Entity}
-    //{Entity}Filter ` + removeLineComment + `
+    ` + getRemoveLine("{Entity}Filter") + `
 
     AbstractFilter
 }
@@ -36,7 +36,7 @@ func Get{Entity}Filter(request *http.Request, functionType string) {Entity}Filte
     filter.request = request
     //filter.TestFilter, _ = strconv.Atoi(request.FormValue("TestFilter"))
 
-    //Get{Entity}Filter ` + removeLineComment + `
+    ` + getRemoveLine("Get{Entity}Filter") + `
 
     ReadJSON(request, &filter.model)
 

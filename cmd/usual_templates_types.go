@@ -20,8 +20,6 @@ type Authenticator struct {
 
 func (auth *Authenticator) IsAuthorized() bool {
 
-	return true
-
     if len(auth.Token) < 1 {
         return false
     }
@@ -76,7 +74,7 @@ func (authenticator *Authenticator) Validate(functionType string) {
 }
 `
 
-const usualTypesEntity = `package types
+var usualTypesEntity = `package types
 
 import (
     "time"
@@ -84,7 +82,7 @@ import (
 // default entity will used when create new entity
 type Entity struct {
     ID        int       ` + "`" + `gorm:"primary_key"` + "`" + `
-    //Entity ` + removeLineComment + `
+    ` + getRemoveLine("Entity") + `
 
     CreatedAt time.Time
     UpdatedAt time.Time
@@ -94,7 +92,7 @@ type Entity struct {
 }
 
 func (entity *Entity) Validate()  {
-    //Validate ` + removeLineComment + `
+    ` + getRemoveLine("Validate") + `
 }
 `
 

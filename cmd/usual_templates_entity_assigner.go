@@ -12,21 +12,21 @@ func GetUsualTemplateAssignContent(config TypeConfig) string {
 
 func Assign{Entity}TypeFromDb(db{Entity} dbmodels.{Entity}) types.{Entity} {
 
-    //Assign{Entity}TypeFromDb predefine ` + removeLineComment + `
+    ` + getRemoveLine("Assign{Entity}TypeFromDb predefine") + `
 
     return types.{Entity}{
         ` + getIdFromDB(config) + `
-        //Assign{Entity}TypeFromDb.Field ` + removeLineComment + `
+        ` + getRemoveLine("Assign{Entity}TypeFromDb.Field") + `
     }
 }
 
 func Assign{Entity}DbFromType(typeModel types.{Entity}) dbmodels.{Entity} {
 
-    //Assign{Entity}DbFromType predefine ` + removeLineComment + `
+    ` + getRemoveLine("Assign{Entity}DbFromType predefine") + `
     
     return dbmodels.{Entity}{
         ` + getIdFromType(config) + `
-        //Assign{Entity}DbFromType.Field ` + removeLineComment + `
+        ` + getRemoveLine("Assign{Entity}DbFromType.Field") + `
     }
 }
 
