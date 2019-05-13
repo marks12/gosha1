@@ -91,7 +91,7 @@ func {Entity}Read(filter types.{Entity}Filter)  (data types.{Entity}, err error)
 }
 `
 
-const usualEntityLogicUpdate = `
+var usualEntityLogicUpdate = `
 func {Entity}Update(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
 
     filter.Pagination.CurrentPage = 1
@@ -109,7 +109,7 @@ func {Entity}Update(filter types.{Entity}Filter)  (data types.{Entity}, err erro
 
     updateModel := Assign{Entity}DbFromType(filter.Get{Entity}Model())
     updateModel.ID = existsModel.Id
-    //updateModel.field ` + removeLineComment + `
+    ` + getRemoveLine("updateModel.field") + `
 
     updateModel.Validate()
 

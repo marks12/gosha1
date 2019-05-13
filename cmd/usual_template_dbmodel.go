@@ -1,6 +1,6 @@
 package cmd
 
-const usualDbmodelEntity = `package dbmodels
+var usualDbmodelEntity = `package dbmodels
 
 import (
     "time"
@@ -9,7 +9,7 @@ import (
 
 type Entity struct {
     ID        int       ` + "`" + `gorm:"primary_key"` + "`" + `
-    //Entity ` + removeLineComment + `
+    ` + getRemoveLine("Entity") + `
 
     CreatedAt time.Time
     UpdatedAt time.Time
@@ -19,11 +19,11 @@ type Entity struct {
 }
 
 func (entity *Entity) Validate()  {
-    //Validate ` + removeLineComment + `
+    ` + getRemoveLine("Validate") + `
 }
 
 func (entity *Entity) FillFromRequest(request types.Entity) {
-    //FillFromRequest ` + removeLineComment + `
+    ` + getRemoveLine("FillFromRequest") + `
 }
 `
 

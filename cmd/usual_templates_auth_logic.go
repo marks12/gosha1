@@ -32,9 +32,7 @@ func AuthCreate(filter types.AuthFilter)  (data types.Auth, err error) {
             return types.Auth{}, errors.New("cant create Auth")
         }
 
-        hashErr := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(dbAuth.Password))
-
-        fmt.Println("hashErr", hashErr)
+        hashErr := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(typeModel.Password + settings.PASSWORD_SALT))
 
         if hashErr == nil {
 
@@ -50,6 +48,7 @@ func AuthCreate(filter types.AuthFilter)  (data types.Auth, err error) {
             } else {
 
                 typeModel.Token = token
+                typeModel.Password = "******"
 
                 return typeModel, nil
             }
