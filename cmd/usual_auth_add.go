@@ -62,7 +62,7 @@ func fillRole(c *ishell.Context) {
 		[]string{
 			`Name        string
 	Description string
-    //Role  `+ removeLineComment},
+    //Role `+ removeLineComment},
 		c)
 }
 

@@ -1,17 +1,18 @@
 package cmd
 
 import (
+    "fmt"
+    "go/ast"
     "gopkg.in/abiosoft/ishell.v2"
     "github.com/fatih/color"
-    "fmt"
-    "io/ioutil"
     "os"
-    "go/parser"
-    "go/token"
-    "go/ast"
+    "io/ioutil"
     "regexp"
-    "go/printer"
-    "bufio"
+    "go/token"
+    "go/parser"
+    "gosha/mode"
+    "errors"
+    "strings"
 )
 
 type modelRepository struct {
@@ -40,6 +41,58 @@ func (mr *modelRepository) getModels() (models []string) {
 
 func (mr *modelRepository) addField(modelName string, fieldName string, dataType string) (err error) {
 
+    fmt.Println("adding new field to model: ", modelName, "field: ", fieldName, "type:", dataType)
+
+    CamelCase := strings.Title(modelName)
+    snakeCase := getLowerCase(modelName)
+
+    sourceFile := "./types/" + snakeCase + ".go"
+
+    CopyFile(
+        sourceFile,
+        sourceFile,
+        []string{getRemoveLine(CamelCase)},
+        []string{fieldName + " " + dataType + "\n\t" + getRemoveLine(CamelCase)},
+        nil)
+
+    sourceFile = "./dbmodels/" + snakeCase + ".go"
+
+    CopyFile(
+        sourceFile,
+        sourceFile,
+        []string{getRemoveLine(CamelCase)},
+        []string{fieldName + " " + dataType + "\n\t" + getRemoveLine(CamelCase)},
+        nil)
+
+    sourceFile = "./logic/assigner.go"
+
+    CopyFile(
+        sourceFile,
+        sourceFile,
+        []string{getRemoveLine("Assign" + CamelCase + "TypeFromDb.Field"), getRemoveLine("Assign" + CamelCase + "DbFromType.Field"), },
+        []string{
+            fieldName + ": db" + CamelCase +"." + fieldName + ",\n\t" + getRemoveLine("Assign" + CamelCase + "TypeFromDb.Field"),
+            fieldName + ": typeModel." + fieldName + ",\n\t" + getRemoveLine("Assign" + CamelCase + "DbFromType.Field"),
+        },
+        nil)
+
+    sourceFile = "./logic/" + snakeCase +".go"
+
+    CopyFile(
+        sourceFile,
+        sourceFile,
+        []string{getRemoveLine("updateModel.field")},
+        []string{"updateModel." + fieldName + " = existsModel." + fieldName + "\n\t" + getRemoveLine("updateModel.field")},
+        nil)
+
+    return
+}
+
+/**
+ * Check structure exists in repo
+ */
+func (mr *modelRepository) IsStructExists(modelName string) bool {
+
     for _, model := range mr.list {
 
         for _, spec := range model.Structures {
@@ -50,7 +103,7 @@ func (mr *modelRepository) addField(modelName string, fieldName string, dataType
                 continue
             }
 
-            for _,md := range tp.Specs {
+            for _, md := range tp.Specs {
 
                 _, ok := md.(*ast.TypeSpec)
                 if !ok {
@@ -58,33 +111,15 @@ func (mr *modelRepository) addField(modelName string, fieldName string, dataType
                 }
 
                 structDecl := md.(*ast.TypeSpec)
+
                 if structDecl.Name.String() == modelName {
-
-                    fset := token.NewFileSet()
-
-                    structDecl := md.(*ast.TypeSpec).Type.(*ast.StructType)
-
-                    field := &ast.Field{
-                        Doc:   nil,
-                        Names: []*ast.Ident{ast.NewIdent(fieldName)},
-                        Type:  ast.NewIdent(dataType),
-                    }
-
-                    structDecl.Fields.List = append(structDecl.Fields.List, field)
-
-                    f, _ := os.OpenFile(model.FilePath, os.O_WRONLY, 0666)
-                    w := bufio.NewWriter(f)
-
-                    printer.Fprint(w, fset, model.ParsedFile)
-                    w.Flush()
-
-                    fmt.Println("Field " + fieldName + " was added to model " + modelName)
+                    return true
                 }
             }
         }
     }
 
-    return
+    return false
 }
 
 func (mr *modelRepository) ShowFields(modelName string) {
@@ -197,44 +232,78 @@ func (em *modelRepository) getModelFile(name string) (fileName string) {
 
 func entityFieldAdd(c *ishell.Context) {
 
+    var field string
+    var entity string
+    var err error
+    var reg RegularFind
+
     green := color.New(color.FgGreen).SprintFunc()
     yellow := color.New(color.FgYellow).SprintFunc()
+    red := color.New(color.FgRed).SprintFunc()
 
-    c.Println(green("Hello we start adding new field to entity"))
+    InteractiveEcho([]string{
+        green("Hello we start adding new field to entity"),
+    })
 
     existsModels := getExistsModels()
 
     dbmodelsList := getModelsList(existsModels)
 
-    for _, m := range dbmodelsList {
+    if mode.IsInteractive() {
 
-        shell.AddCmd(&ishell.Cmd{
-            Name: m,
-            Help: m + " entity",
-            Func: func(c *ishell.Context) {
-                fmt.Println("select predefined function", m)
-            },
-        })
+        for _, m := range dbmodelsList {
+
+            shell.AddCmd(&ishell.Cmd{
+                Name: m,
+                Help: m + " entity",
+                Func: func(c *ishell.Context) {
+                    fmt.Println("select predefined function", m)
+                },
+            })
+        }
+
+        if len(dbmodelsList) > 0 {
+            c.Println(yellow("Found some entities:"))
+            c.Println(dbmodelsList)
+        }
+
+        entity, err = getName(c, true, "Entity")
+
+    } else {
+
+        reg, err = GetOsArgument("entity")
+        entity = reg.StringResult
     }
-
-    if len(dbmodelsList) > 0 {
-        c.Println(yellow("Found some entities:"))
-        c.Println(dbmodelsList)
-    }
-
-    entity, err := getName(c, true, "Entity")
 
     if err != nil {
         return
     }
 
-    fmt.Println(green("select model: ", entity))
+    InteractiveEcho([]string{
+        green("select model: ", entity),
+    })
+
+
+    if ! existsModels.IsStructExists(entity) {
+        c.Println(red("You select entity: '", entity, "', but this struct is not exists"))
+        os.Exit(1)
+    }
 
     existsModels.ShowFields(entity)
 
-    fmt.Println("Please enter name of new field:")
+    InteractiveEcho([]string{
+        "Please enter name of new field:",
+    })
 
-    field, err := getName(c, false, "Field")
+    if mode.IsNonInteractive() {
+
+        reg, err = GetOsArgument("field")
+        field = reg.StringResult
+
+    } else {
+
+        field, err = getName(c, false, "Field")
+    }
 
     if err != nil {
         return
@@ -243,6 +312,8 @@ func entityFieldAdd(c *ishell.Context) {
     dataType, err := getDataType(c)
 
     if err != nil {
+
+        fmt.Println(err.Error())
         return
     }
 
@@ -250,7 +321,12 @@ func entityFieldAdd(c *ishell.Context) {
 
     defer clearEntities(existsModels)
 }
+
 func getDataType(c *ishell.Context) (dataType string, err error) {
+
+    var choice int
+    var exists bool
+    var reg RegularFind
 
     dataTypes := []string{
         "string",
@@ -260,9 +336,30 @@ func getDataType(c *ishell.Context) (dataType string, err error) {
         "uuid.UUID",
     }
 
-    choice := c.MultiChoice(dataTypes, "Please select data type")
+    if mode.IsInteractive() {
 
-    return dataTypes[choice], nil
+        choice = c.MultiChoice(dataTypes, "Please select data type")
+
+    } else {
+
+        reg, err = GetOsArgument("data-type")
+
+        if err != nil {
+            return  "", err
+        }
+
+        exists, choice = InArray(reg.StringResult, dataTypes)
+
+        if ! exists {
+            return"", errors.New("unsupported type " + reg.StringResult + " need: " + strings.Join(dataTypes, ","))
+        }
+    }
+
+    if choice > -1 && choice < len(dataTypes) {
+        return dataTypes[choice], nil
+    }
+
+    return "", errors.New("cancel")
 }
 
 func getModelsList(repository modelRepository) (list []string) {
