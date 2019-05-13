@@ -93,7 +93,6 @@ func fillUser(c *ishell.Context) {
 		[]string{
 			`password := []byte(typeModel.Password + settings.PASSWORD_SALT)
 	hashedPassword, _ := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
-
     //AssignUserDbFromType predefine `+ removeLineComment},
 		c)
 
@@ -108,8 +107,7 @@ func fillUser(c *ishell.Context) {
 		Email:       typeModel.Email,
 		Password:    string(hashedPassword),
 		IsActive:    typeModel.IsActive,
-
-    //AssignUserDbFromType.Field `+ removeLineComment},
+	    //AssignUserDbFromType.Field `+ removeLineComment},
 		c)
 
 	CopyFile(
@@ -124,8 +122,7 @@ func fillUser(c *ishell.Context) {
 		Password:    "*****",
 		IsActive:    dbUser.IsActive,
 		Token:       dbUser.Token,
-
-    //AssignUserTypeFromDb.Field `+ removeLineComment},
+    	//AssignUserTypeFromDb.Field `+ removeLineComment},
 		c)
 
 	CopyFile(
@@ -140,7 +137,6 @@ func fillUser(c *ishell.Context) {
     MobilePhone string
     Password    string
     Token       string
-
     //User `+ removeLineComment},
 		c)
 

@@ -71,8 +71,8 @@ func (mr *modelRepository) addField(modelName string, fieldName string, dataType
         sourceFile,
         []string{getRemoveLine("Assign" + CamelCase + "TypeFromDb.Field"), getRemoveLine("Assign" + CamelCase + "DbFromType.Field"), },
         []string{
-            fieldName + ": db" + CamelCase +"." + fieldName + ",\n\t" + getRemoveLine("Assign" + CamelCase + "TypeFromDb.Field"),
-            fieldName + ": typeModel." + fieldName + ",\n\t" + getRemoveLine("Assign" + CamelCase + "DbFromType.Field"),
+            fieldName + ": db" + CamelCase +"." + fieldName + ",\n\t\t" + getRemoveLine("Assign" + CamelCase + "TypeFromDb.Field"),
+            fieldName + ": typeModel." + fieldName + ",\n\t\t" + getRemoveLine("Assign" + CamelCase + "DbFromType.Field"),
         },
         nil)
 
