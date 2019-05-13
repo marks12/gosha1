@@ -52,6 +52,11 @@ func (filter *{Entity}Filter) Get{Entity}Model() {Entity} {
 
     return  filter.model
 }
+
+func (filter *{Entity}Filter) Set{Entity}Model(typeModel {Entity}) {
+
+    filter.model = typeModel
+}
 `
 
 
