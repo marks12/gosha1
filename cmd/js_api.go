@@ -49,6 +49,9 @@ function request(method, url, getParams, data, headerParams) {
         url = appendParams(url, getParams);
 
         xhr.open(method, url);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Token", localStorage.getItem("Token"));
+
         xhr.onload = function() {
 
             if (this.status >= 200 && this.status < 300) {
