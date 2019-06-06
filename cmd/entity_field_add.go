@@ -333,6 +333,7 @@ func getDataType(c *ishell.Context) (dataType string, err error) {
         "int",
         "time.Time",
         "float",
+        "bool",
         "uuid.UUID",
     }
 
