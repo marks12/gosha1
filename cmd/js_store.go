@@ -80,7 +80,7 @@ const {entity} = {
         get{Entity}: (state) => {
             return state.{Entity};
         },
-        get{Entity}List: (state) => {
+        getList{Entity}: (state) => {
             return state.{Entity}List;
         },
     },
