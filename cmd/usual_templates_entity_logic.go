@@ -146,7 +146,7 @@ func {Entity}Delete(filter types.{Entity}Filter)  (isOk bool, err error) {
         return
     }
 
-    q := core.Db.Where(dbmodels.{Entity}{ID: existsModel.Id}).Delete(&existsModel)
+    q := core.Db.Model(dbmodels.{Entity}{}).Where(dbmodels.{Entity}{ID: existsModel.Id}).Delete(&existsModel)
 
     if q.Error != nil {
         err = q.Error
