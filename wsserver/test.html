@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+
+    let socket = new WebSocket("ws://localhost:5050/ws");
+
+    socket.onopen = function() {
+                console.log("Соединение установлено.");
+            };
+
+    socket.onclose = function(event) {
+        if (event.wasClean) {
+            console.log('Соединение закрыто чисто');
+        } else {
+            console.log('Обрыв соединения'); // например, "убит" процесс сервера
+        }
+        console.log('Код: ' + event.code + ' причина: ' + event.reason);
+    };
+
+    socket.onmessage = function(event) {
+        console.log("Получены данные " + event.data);
+    };
+
+    socket.onerror = function(error) {
+        console.log("Ошибка " + error.message);
+    };
+
+    function send(m) {
+        console.log('Отправлено', m);
+        socket.send(m);
+    }
+
+</script>
+
+<input id="text">
+<input type="button" onclick="send(document.getElementById('text').value)" value="Отправить">
+
+</body>
+</html>
