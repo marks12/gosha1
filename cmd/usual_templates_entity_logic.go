@@ -200,7 +200,7 @@ import (
 
 var usualTemplateEntityLogic = template{
     Path:    "",
-    Content: assignMsName(GetUsualTemplateLogicContent(Crud{true, true, true, true, true,})),
+    Content: assignMsName(GetUsualTemplateLogicContent(Crud{true, true, true, true, true, true})),
 }
 
 func GetUsualTemplateLogicContent(crud Crud) (content string) {
