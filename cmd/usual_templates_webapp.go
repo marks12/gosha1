@@ -65,6 +65,8 @@ import (
 
     ` + getWebappDelete(methodsCrud, authCrud) + `
 
+    ` + getWebappFindOrCreate(methodsCrud, authCrud) + `
+
 `
     return usualWebappEntity
 }
@@ -257,6 +259,43 @@ func {entity-name}Delete(w http.ResponseWriter, httpRequest *http.Request) {
     return
 }
 
+
+func getWebappFindOrCreate(methodCrud Crud, authCrud Crud) (c string) {
+
+    if methodCrud.IsFindOrCreate {
+        c = `
+
+func {entity-name}FindOrCreate(w http.ResponseWriter, httpRequest *http.Request) {
+
+    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeDelete)
+
+    ` + getAuth("FindOrCreate", authCrud) + `
+
+    if !requestDto.IsValid() {
+        errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+        return
+    }
+
+    // Получаем список
+    isOk, err := logic.{entity-name}FindOrCreate(requestDto)
+
+    // Создаём структуру ответа
+    if err != nil {
+        errResponse(w, err.Error(), http.StatusBadRequest)
+        return
+    }
+
+    validResponse(w, mdl.ResponseFindOrCreate{
+        data,
+    })
+
+    return
+}`
+    }
+
+    return
+}
+
 func getAuth(method string, crud Crud) (auth string) {
 
     switch method {
@@ -287,6 +326,12 @@ func getAuth(method string, crud Crud) (auth string) {
 
         case "Delete":
             if ! crud.IsDelete {
+                return
+            }
+            break
+
+        case "FindOrCreate":
+            if ! crud.IsFindOrCreate {
                 return
             }
             break

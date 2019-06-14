@@ -6,6 +6,7 @@ type Crud struct {
     IsRead bool
     IsUpdate bool
     IsDelete bool
+    IsFindOrCreate bool
 }
 
 const usualRouteEntityComment = `[ {Entity} ]`
@@ -15,6 +16,7 @@ const usualRouteEntityCreate = `    router.HandleFunc("/api/v1/{entity}",       
 const usualRouteEntityRead = `    router.HandleFunc("/api/v1/{entity}/{id}",      webapp.{Entity}Read).Methods("GET")`
 const usualRouteEntityUpdate = `    router.HandleFunc("/api/v1/{entity}/{id}",      webapp.{Entity}Update).Methods("PUT")`
 const usualRouteEntityDelete = `    router.HandleFunc("/api/v1/{entity}/{id}",      webapp.{Entity}Delete).Methods("DELETE")`
+const usualRouteEntityFindOrCreate = `    router.HandleFunc("/api/v1/{entity}",      webapp.{Entity}FindOrCreate).Methods("PUT")`
 
 const usualRouteEntityGen = `
 
@@ -22,7 +24,7 @@ const usualRouteEntityGen = `
 
 var usualTemplateRouteEntity = template{
     Path:    "./path_error.txt",
-    Content: GetUsualTemplateRouteEntity(Crud{true,true,true,true,true,}),
+    Content: GetUsualTemplateRouteEntity(Crud{true,true,true,true,true, true}),
 }
 
 func GetUsualTemplateRouteEntity(c Crud) (res string) {
@@ -47,6 +49,10 @@ func GetUsualTemplateRouteEntity(c Crud) (res string) {
 
     if c.IsDelete {
         res += "\n" + usualRouteEntityDelete
+    }
+
+    if c.IsFindOrCreate {
+        res += "\n" + usualRouteEntityFindOrCreate
     }
 
     res += usualRouteEntityGen
