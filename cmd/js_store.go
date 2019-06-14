@@ -9,6 +9,7 @@ let readUrl = "/api/v1/{entity}/"; // + id
 let createUrl = "/api/v1/{entity}";
 let updateUrl = "/api/v1/{entity}/"; // + id
 let deleteUrl = "/api/v1/{entity}/"; // + id
+let findOrCreateUrl = "/api/v1/{entity}"; // + id
 
 const {entity} = {
     actions: {
@@ -65,6 +66,19 @@ const {entity} = {
         update{Entity}(context, {id, data, filter, header}) {
 
             return api.update(updateUrl + id, data, filter, header)
+                .then(function(response) {
+
+                    context.commit("set{Entity}", response.Model);
+
+                    return response;
+                })
+                .catch(function(err) {
+                    return err;
+                });
+        },
+        findOrCreate{Entity}(context, {id, data, filter, header}) {
+
+            return api.update(findOrCreateUrl, data, filter, header)
                 .then(function(response) {
 
                     context.commit("set{Entity}", response.Model);

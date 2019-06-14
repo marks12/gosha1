@@ -38,8 +38,8 @@ var usualTemplateWebappErrors = template{
 var usualTemplateWebappEntity = template{
     Path:    "./webapp/{entity-name}.go",
     Content: assignMsName(GetUsualTemplateWebAppContent(
-        Crud{true, true, true, true, true},
-        Crud{true, true, true, true, true},
+        Crud{true, true, true, true, true, true},
+        Crud{true, true, true, true, true, true},
     )),
 }
 
