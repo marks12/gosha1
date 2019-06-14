@@ -92,6 +92,10 @@ type ResponseCreate struct {
 	Model 	interface{}
 }
 
+type ResponseFindOrCreate struct {
+	Model 	interface{}
+}
+
 type ResponseRead struct {
 	Model 	interface{}
 }

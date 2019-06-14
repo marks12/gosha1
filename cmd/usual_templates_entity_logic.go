@@ -158,6 +158,34 @@ func {Entity}Delete(filter types.{Entity}Filter)  (isOk bool, err error) {
 }
 `
 
+const usualEntityLogicFindOrCreate = `
+func {Entity}FindOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
+
+    filter.Pagination.CurrentPage = 1
+    filter.Pagination.PerPage = 1
+
+    findOrCreateModel := Assign{Entity}DbFromType(filter.Get{Entity}Model())
+	//findOrCreateModel.field remove this line for disable generator functionality
+
+    findOrCreateModel.Validate()
+
+    if !findOrCreateModel.IsValid() {
+        err = errors.New(findOrCreateModel.GetValidationErrors())
+        return
+    }
+
+    q := core.Db.Model(dbmodels.{Entity}{}).Where(dbmodels.{Entity}{InsertCriteriaHere}).FirstOrCreate(&findOrCreateModel)
+
+    if q.Error != nil {
+        err = q.Error
+        return
+    }
+
+    data = Assign{Entity}TypeFromDb(findOrCreateModel)
+    return
+}
+
+`
 const usualEntityLogic = `package logic
 
 import (
@@ -197,6 +225,10 @@ func GetUsualTemplateLogicContent(crud Crud) (content string) {
 
     if crud.IsDelete {
         content += usualEntityLogicDelete
+    }
+
+    if crud.IsFindOrCreate {
+        content += usualEntityLogicFindOrCreate
     }
 
     content = assignMsName(content)

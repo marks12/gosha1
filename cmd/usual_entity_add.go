@@ -119,8 +119,9 @@ func getLogicContent() (c string) {
         crudParams.IsRead = strings.Contains(crudArgs.StringResult, "r")
         crudParams.IsUpdate = strings.Contains(crudArgs.StringResult, "u")
         crudParams.IsDelete = strings.Contains(crudArgs.StringResult, "d")
+        crudParams.IsFindOrCreate = strings.Contains(crudArgs.StringResult, "a")
     } else {
-        crudParams = Crud{true, true, true, true, true, }
+        crudParams = Crud{true, true, true, true, true, true}
     }
 
     c = GetUsualTemplateLogicContent(crudParams)
@@ -155,7 +156,7 @@ func getWebAppContent() (webappContent string) {
     webappContent = usualTemplateWebappEntity.Content
 
     AuthcrudArgs, _ := GetOsArgument("check-auth")
-    authParams := Crud{true, true, true, true, true, }
+    authParams := Crud{true, true, true, true, true, true}
 
     if len(AuthcrudArgs.StringResult) > 0 {
 
@@ -164,11 +165,12 @@ func getWebAppContent() (webappContent string) {
         authParams.IsRead = strings.Contains(AuthcrudArgs.StringResult, "r")
         authParams.IsUpdate = strings.Contains(AuthcrudArgs.StringResult, "u")
         authParams.IsDelete = strings.Contains(AuthcrudArgs.StringResult, "d")
+        authParams.IsFindOrCreate = strings.Contains(AuthcrudArgs.StringResult, "a")
 
     }
 
     methodCrudArgs, _ := GetOsArgument("crud")
-    methodCrudParams := Crud{true, true, true, true, true, }
+    methodCrudParams := Crud{true, true, true, true, true, true}
 
     if len(methodCrudArgs.StringResult) > 0 {
 
@@ -214,6 +216,7 @@ func getRouteContent() string {
         crudParams.IsRead = strings.Contains(crudArgs.StringResult, "r")
         crudParams.IsUpdate = strings.Contains(crudArgs.StringResult, "u")
         crudParams.IsDelete = strings.Contains(crudArgs.StringResult, "d")
+        crudParams.IsFindOrCreate = strings.Contains(crudArgs.StringResult, "a")
 
         routeContent = GetUsualTemplateRouteEntity(crudParams)
     }
