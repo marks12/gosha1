@@ -109,7 +109,7 @@ type ResponseDelete struct {
 }
 
 type ResponseFindOrCreate struct {
-	IsSuccess	bool
+	Model 	interface{}
 }
 
 `
