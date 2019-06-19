@@ -107,6 +107,11 @@ type ResponseUpdate struct {
 type ResponseDelete struct {
 	IsSuccess	bool
 }
+
+type ResponseFindOrCreate struct {
+	IsSuccess	bool
+}
+
 `
 
 var usualTemplateMdlPagination = template{
