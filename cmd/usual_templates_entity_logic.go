@@ -107,8 +107,13 @@ func {Entity}Update(filter types.{Entity}Filter)  (data types.{Entity}, err erro
         return
     }
 
+    newModel := filter.Get{Entity}Model()
+
     updateModel := Assign{Entity}DbFromType(filter.Get{Entity}Model())
     updateModel.ID = existsModel.Id
+
+    //updateModel.Some = newModel.Some
+
     ` + getRemoveLine("updateModel.field") + `
 
     updateModel.Validate()
@@ -118,7 +123,7 @@ func {Entity}Update(filter types.{Entity}Filter)  (data types.{Entity}, err erro
         return
     }
 
-    q := core.Db.Where(dbmodels.{Entity}{ID: updateModel.ID}).Update(&updateModel)
+    q := core.Db.Model(dbmodels.{Entity}{}).Where(dbmodels.{Entity}{ID: updateModel.ID}).Update(&updateModel)
 
     if q.Error != nil {
         err = q.Error
