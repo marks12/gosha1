@@ -82,7 +82,7 @@ func (mr *modelRepository) addField(modelName string, fieldName string, dataType
         sourceFile,
         sourceFile,
         []string{getRemoveLine("updateModel.field")},
-        []string{"updateModel." + fieldName + " = existsModel." + fieldName + "\n\t" + getRemoveLine("updateModel.field")},
+        []string{"updateModel." + fieldName + " = newModel." + fieldName + "\n\t" + getRemoveLine("updateModel.field")},
         nil)
 
     return
