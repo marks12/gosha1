@@ -108,6 +108,9 @@ const {entity} = {
         clear{Entity}(state) {
             state.{Entity} = new {Entity}();
         },
+        clearList{Entity}(state) {
+            state.{Entity}List = [];
+        },
     },
     state: {
         {Entity}: new {Entity}(),
