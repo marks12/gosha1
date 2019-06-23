@@ -89,6 +89,9 @@ const {entity} = {
                     return err;
                 });
         },
+        clearList{Entity}(context) {
+            context.commit("clearList{Entity}");
+        },
     },
     getters: {
         get{Entity}: (state) => {
