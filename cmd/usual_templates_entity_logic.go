@@ -109,7 +109,7 @@ func {Entity}Update(filter types.{Entity}Filter)  (data types.{Entity}, err erro
 
     newModel := filter.Get{Entity}Model()
 
-    updateModel := Assign{Entity}DbFromType(filter.Get{Entity}Model())
+    updateModel := Assign{Entity}DbFromType(newModel)
     updateModel.ID = existsModel.Id
 
     //updateModel.Some = newModel.Some
