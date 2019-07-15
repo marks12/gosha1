@@ -277,7 +277,7 @@ func {entity-name}FindOrCreate(w http.ResponseWriter, httpRequest *http.Request)
     }
 
     // Получаем список
-    isOk, err := logic.{entity-name}FindOrCreate(requestDto)
+    data, err := logic.{entity-name}FindOrCreate(requestDto)
 
     // Создаём структуру ответа
     if err != nil {

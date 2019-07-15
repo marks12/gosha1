@@ -89,6 +89,9 @@ const {entity} = {
                     return err;
                 });
         },
+        clearList{Entity}(context) {
+            context.commit("clearList{Entity}");
+        },
     },
     getters: {
         get{Entity}: (state) => {
@@ -107,6 +110,9 @@ const {entity} = {
         },
         clear{Entity}(state) {
             state.{Entity} = new {Entity}();
+        },
+        clearList{Entity}(state) {
+            state.{Entity}List = [];
         },
     },
     state: {
