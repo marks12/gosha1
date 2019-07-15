@@ -70,10 +70,10 @@ func AuthDelete(filter types.AuthFilter)  (isOk bool, err error) {
 
     query := core.Db
 
-    q := query.Where(dbmodels.User{Token: filter.Token}).Find(&dbUser)
+    q := query.Model(dbmodels.User{}).Where(dbmodels.User{Token: filter.Token}).Find(&dbUser)
 
     dbUser.Token = ""
-    q = core.Db.Save(&dbUser)
+    q = core.Db.Model(dbmodels.User{}).Save(&dbUser)
 
     if q.Error != nil {
         err = q.Error
