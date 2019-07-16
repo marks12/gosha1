@@ -13,18 +13,32 @@ type store struct {
 	jscode string
 }
 
+type vueComponent struct {
+	name string
+	jscode string
+}
+
+type vueComponentData struct {
+	name string
+	jscode string
+}
+
 func genTypesJs (c *ishell.Context) {
 
 	folder := "./jstypes"
 	folderStore := folder + "/store"
+	folderComponent := folder + "/components"
+	folderData := folder + "/data"
 	file := folder + "/apiModel.js"
 	apiFile := folder + "/api.js"
 
 	os.RemoveAll(folder)
 	os.MkdirAll(folder,0755)
 	os.MkdirAll(folderStore,0755)
+	os.MkdirAll(folderComponent,0755)
+	os.MkdirAll(folderData,0755)
 
-	modelContent, stores := getTypesJs()
+	modelContent, stores, tpls, data := getTypesJs()
 
 	cb := []byte(modelContent)
 	ioutil.WriteFile(file, cb, 0644)
@@ -35,10 +49,18 @@ func genTypesJs (c *ishell.Context) {
 	for _, store := range stores {
 		ioutil.WriteFile(folderStore + "/" + store.name + ".js" , []byte(store.jscode), 0644)
 	}
+
+	for _, tpl := range tpls {
+		ioutil.WriteFile(folderComponent + "/" + tpl.name + ".vue" , []byte(tpl.jscode), 0644)
+	}
+
+	for _, d := range data {
+		ioutil.WriteFile(folderData + "/" + d.name + ".js" , []byte(d.jscode), 0644)
+	}
 }
 
 
-func getTypesJs () (string, []store) {
+func getTypesJs () (string, []store, []vueComponent, []vueComponentData) {
 
 	existsTypes := getExistsTypes()
 	typeNames := getModelsList(existsTypes)
@@ -47,7 +69,7 @@ func getTypesJs () (string, []store) {
 
 }
 
-func getFileContent(repository modelRepository, typeNames []string) (content string, stores []store) {
+func getFileContent(repository modelRepository, typeNames []string) (content string, stores []store, vueComponentTemplates []vueComponent, vueData []vueComponentData) {
 
 	for _, t := range typeNames {
 
@@ -74,6 +96,16 @@ func getFileContent(repository modelRepository, typeNames []string) (content str
 			jscode: getStoreJsCode(t),
 		})
 
+		vueComponentTemplates = append(vueComponentTemplates, vueComponent{
+			name: t,
+			jscode: getTemplateJsCode(t),
+		})
+
+		vueData = append(vueData, vueComponentData{
+			name: t,
+			jscode: getTemplateDataJsCode(t),
+		})
+
 		content += "\nexport function " + t + "() {\n\n"
 
 		sort.Sort(ByCase(fields))
@@ -89,6 +121,20 @@ func getStoreJsCode(entity string) string {
 
 	return assignVar(
 		assignVar(storeTemplate, "{Entity}", entity),
+		"{entity}", getFirstLowerCase(entity))
+}
+
+func getTemplateJsCode(entity string) string {
+
+	return assignVar(
+		assignVar(usualEntityVueComponent, "{Entity}", entity),
+		"{entity}", getFirstLowerCase(entity))
+}
+
+func getTemplateDataJsCode(entity string) string {
+
+	return assignVar(
+		assignVar(usualEntityVueComponentData, "{Entity}", entity),
 		"{entity}", getFirstLowerCase(entity))
 }
 
