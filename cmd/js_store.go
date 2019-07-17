@@ -3,6 +3,7 @@ package cmd
 const storeTemplate = `
 import {{Entity}} from "../apiModel";
 import api from "../api";
+import {findItemIndex} from "../common";
 
 let findUrl = "/api/v1/{entity}";
 let readUrl = "/api/v1/{entity}/"; // + id
@@ -114,6 +115,27 @@ const {entity} = {
         clearList{Entity}(state) {
             state.{Entity}List = [];
         },
+		update{Entity}ById(state, data) {
+    		let index = findItemIndex(state.{Entity}List, function(item) {
+	        	return item.Id === data.Id;
+	    	});
+	    
+	    	if (index && index !== 0) {
+		        state.{Entity}List.splice(index, 1, data);
+    		}
+		},
+		delete{Entity}FromList(state, id) {
+		    let index = findItemIndex(state.{Entity}List, function(item) {
+		        return item.Id === id;
+		    });
+		    
+		    if (index && index !== 0) {
+		        state.{Entity}List.splice(index, 1);
+		    }
+		},
+		add{Entity}ItemToList(state, item) {
+		    state.{Entity}List.push(item);
+		},
     },
     state: {
         {Entity}: new {Entity}(),
