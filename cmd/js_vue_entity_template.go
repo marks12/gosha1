@@ -20,14 +20,14 @@ const usualEntityVueComponent = `
             
                     <tbody>
                         <tr
-                            v-for="setting in {entity}List"
-                            :key="setting.Id"
-                            @click="selectSetting(setting)"
+                            v-for="{entity}Item in {entity}List"
+                            :key="{entity}Item.Id"
+                            @click="select{Entity}Item({entity}Item)"
                             class="sw-table__row_can-select"
-                            :class="{'sw-table__row_is-selected': setting.Id === {entity}Data.currentSetting.item.Id}"
+                            :class="{'sw-table__row_is-selected': {entity}Item.Id === current{Entity}Item.item.Id}"
                         >
                             <td v-for="(value, key) in fields">
-                                <VText>{{ setting[key] }}</VText>
+                                <VText>{{ {entity}Item[key] }}</VText>
                             </td>
                         </tr>
                     </tbody>
@@ -36,7 +36,7 @@ const usualEntityVueComponent = `
             
             <slot name="panel">
                 <VPanel
-                    v-if="{entity}Data.panel.show"
+                    v-if="panel.show"
                     width="col3"
                     @close="closePanel"
                 >
@@ -53,17 +53,17 @@ const usualEntityVueComponent = `
                                 >
                                     <VLabel
                                         width="col4"
-                                        :for="` + "`" + `currentSetting${key}` + "`" + `"
+                                        :for="` + "`" + `current{Entity}Item${key}` + "`" + `"
                                     >{{ filed }}</VLabel>
                                     <VInput
-                                        v-model="{entity}Data.currentSetting.item[key]"
+                                        v-model="current{Entity}Item.item[key]"
                                         width="dyn"
-                                        :id="` + "`" + `currentSetting${key}` + "`" + `"
-                                        @input="changeCurrentSetting"
+                                        :id="` + "`" + `current{Entity}Item${key}` + "`" + `"
+                                        @input="changeCurrent{Entity}Item"
                                     />
                                 </VSet>
                             </VSet>
-                            <button type="submit" :disabled="!{entity}Data.currentSetting.hasChange" hidden></button>
+                            <button type="submit" :disabled="!current{Entity}Item.hasChange" hidden></button>
                         </form>
                     </template>
 
@@ -73,7 +73,7 @@ const usualEntityVueComponent = `
                                 @click="saveChangesSubmit"
                                 accent
                                 :text="panelSubmitButtonText"
-                                :disabled="!{entity}Data.currentSetting.hasChange"
+                                :disabled="!current{Entity}Item.hasChange"
                             />
                             <VButton
                                 @click="cancelChanges"
@@ -86,7 +86,7 @@ const usualEntityVueComponent = `
 
             <slot name="confirmationPanel">
                 <VPanel
-                    v-if="{entity}Data.currentSetting.showDeleteConfirmation"
+                    v-if="current{Entity}Item.showDeleteConfirmation"
                     modal
                     @close="closeConfirmationPanel"
                 >
@@ -117,12 +117,12 @@ const usualEntityVueComponent = `
                     <VButton
                         text="Добавить"
                         accent
-                        @click="showPanel({entity}Data.panel.create)"
+                        @click="showPanel(panel.create)"
                     />
                     <VButton
                         text="Удалить"
-                        :disabled="!{entity}Data.currentSetting.isSelected"
-                        @click="deleteSettingHandler"
+                        :disabled="!current{Entity}Item.isSelected"
+                        @click="delete{Entity}ItemHandler"
                     />
                 </VSet>
             </slot>
@@ -131,7 +131,7 @@ const usualEntityVueComponent = `
 </template>
 
 <script>
-    import {entity}Data from "../data/{entity}Data";
+    import {entity}Data from "../data/{Entity}Data";
     import { {Entity} } from '../apiModel';
     import { mapGetters, mapMutations, mapActions } from 'vuex';
     import WorkSpace from "swui/src/components/WorkSpace";
@@ -155,12 +155,12 @@ const usualEntityVueComponent = `
             fields: {
                 type: Object,
                 default() {
-                    const setting = new {Entity}();
+                    const {entity}Item = new {Entity}();
                     const fieldsObj = {};
 
-                    for (let prop in setting) {
+                    for (let prop in {entity}Item) {
 
-                        if (setting.hasOwnProperty(prop)) {
+                        if ({entity}Item.hasOwnProperty(prop)) {
                             fieldsObj[prop] = prop;
                         }
 
@@ -172,13 +172,10 @@ const usualEntityVueComponent = `
         },
 
         data() {
-            return {
-                {entity}Data: {}
-            }
+            return {entity}Data;
         },
 
         created() {
-            this.{entity}Data = {entity}Data;
             this.fill{Entity}Filter();
             this.fetch{Entity}Data();
         },
@@ -188,29 +185,29 @@ const usualEntityVueComponent = `
                 {entity}List: 'getList{Entity}'
             }),
             isPanelCreate() {
-                return {entity}Data.panel.type === {entity}Data.panel.create;
+                return this.panel.type === this.panel.create;
             },
             isPanelEdit() {
-                return {entity}Data.panel.type === {entity}Data.panel.edit;
+                return this.panel.type === this.panel.edit;
             },
             panelHeader() {
                 if (this.isPanelCreate) {
-                    return {entity}Data.panelHeaderCreate;
+                    return this.panelHeaderCreate;
                 }
 
                 if (this.isPanelEdit) {
-                    return {entity}Data.panelHeaderEdit;
+                    return this.panelHeaderEdit;
                 }
 
                 return  '';
             },
             panelSubmitButtonText() {
                 if (this.isPanelCreate) {
-                    return {entity}Data.panelSubmitButtonTextCreate;
+                    return this.panelSubmitButtonTextCreate;
                 }
 
                 if (this.isPanelEdit) {
-                    return {entity}Data.panelSubmitButtonTextEdit;
+                    return this.panelSubmitButtonTextEdit;
                 }
 
                 return  '';
@@ -226,19 +223,19 @@ const usualEntityVueComponent = `
             ]),
 
             ...mapMutations([
-                'addSettingToList',
+                'add{Entity}ItemToList',
                 'delete{Entity}FromList',
                 'update{Entity}ById',
             ]),
 
             fill{Entity}Filter() {
-                this.{entity}Data.{entity}Filter.CurrentPage = 1;
-                this.{entity}Data.{entity}Filter.PerPage = 1000;
+                this.{entity}Filter.CurrentPage = 1;
+                this.{entity}Filter.PerPage = 1000;
             },
 
             fetch{Entity}Data() {
                 return this.find{Entity}({
-                    filter: this.{entity}Data.{entity}Filter
+                    filter: this.{entity}Filter
                 });
             },
 
@@ -247,66 +244,66 @@ const usualEntityVueComponent = `
              * @param type
              */
             showPanel(type) {
-                if (type === {entity}Data.panel.create) {
-                    {entity}Data.panel.type = {entity}Data.panel.create;
-                    this.clearPanelSetting();
-                } else if (type === {entity}Data.panel.edit) {
-                    {entity}Data.panel.type = {entity}Data.panel.edit;
-                    {entity}Data.currentSetting.isSelected = true;
+                if (type === this.panel.create) {
+                    this.panel.type = this.panel.create;
+                    this.clearPanel{Entity}Item();
+                } else if (type === this.panel.edit) {
+                    this.panel.type = this.panel.edit;
+                    this.current{Entity}Item.isSelected = true;
                 }
 
-                {entity}Data.panel.show = true;
+                this.panel.show = true;
             },
 
             closePanel() {
-                this.{entity}Data.panel.show = false;
-                this.{entity}Data.currentSetting.isSelected = false;
-                this.clearPanelSetting();
+                this.panel.show = false;
+                this.current{Entity}Item.isSelected = false;
+                this.clearPanel{Entity}Item();
             },
 
-            selectSetting(setting) {
-                this.showPanel({entity}Data.panel.edit);
-                this.{entity}Data.currentSetting.isSelected = true;
-                Object.assign(this.{entity}Data.currentSetting.item, setting);
+            select{Entity}Item({entity}Item) {
+                this.showPanel(this.panel.edit);
+                this.current{Entity}Item.isSelected = true;
+                Object.assign(this.current{Entity}Item.item, {entity}Item);
             },
 
-            changeCurrentSetting() {
-                this.{entity}Data.currentSetting.hasChange = true;
+            changeCurrent{Entity}Item() {
+                this.current{Entity}Item.hasChange = true;
             },
 
             cancelChanges() {
-                this.clearPanelSetting();
+                this.clearPanel{Entity}Item();
                 this.closePanel();
             },
 
-            clearPanelSetting() {
-                this.{entity}Data.currentSetting.item = new {Entity}();
-                this.{entity}Data.currentSetting.hasChange = false;
+            clearPanel{Entity}Item() {
+                this.current{Entity}Item.item = new {Entity}();
+                this.current{Entity}Item.hasChange = false;
             },
 
             saveChangesSubmit() {
                 if (this.isPanelCreate) {
-                    this.createSettingSubmit();
+                    this.create{Entity}ItemSubmit();
                     return;
                 }
 
                 if (this.isPanelEdit) {
-                    this.editSettingSubmit();
+                    this.edit{Entity}ItemSubmit();
                 }
             },
 
-            createSettingSubmit() {
+            create{Entity}ItemSubmit() {
                 this.create{Entity}({
                     data: {
-                        Name: this.{entity}Data.currentSetting.item.Name,
-                        Value: this.{entity}Data.currentSetting.item.Value,
-                        Description: this.{entity}Data.currentSetting.item.Description,
+                        Name: this.current{Entity}Item.item.Name,
+                        Value: this.current{Entity}Item.item.Value,
+                        Description: this.current{Entity}Item.item.Description,
                     }
                 }).then((response) => {
 
                     if (response.Model) {
-                        this.addSettingToList(response.Model);
-                        this.clearPanelSetting();
+                        this.add{Entity}ItemToList(response.Model);
+                        this.clearPanel{Entity}Item();
                     } else {
                         console.error('Ошибка создания записи: ', response.Error);
                     }
@@ -316,17 +313,17 @@ const usualEntityVueComponent = `
                 });
             },
 
-            editSettingSubmit() {
-                if (this.{entity}Data.currentSetting.hasChange) {
+            edit{Entity}ItemSubmit() {
+                if (this.current{Entity}Item.hasChange) {
                     this.update{Entity}({
-                        id: this.{entity}Data.currentSetting.item.Id,
-                        data: this.{entity}Data.currentSetting.item,
+                        id: this.current{Entity}Item.item.Id,
+                        data: this.current{Entity}Item.item,
                     }).then((response) => {
 
                         if (response.Model) {
                             this.update{Entity}ById(response.Model);
-                            this.{entity}Data.currentSetting.hasChange = false;
-                            this.clearPanelSetting();
+                            this.current{Entity}Item.hasChange = false;
+                            this.clearPanel{Entity}Item();
                             this.closePanel();
                         } else {
                             console.error('Ошибка изменения записи: ', response.Error);
@@ -338,11 +335,11 @@ const usualEntityVueComponent = `
                 }
             },
 
-            deleteSettingHandler() {
-                let deletedItemId = this.{entity}Data.currentSetting.item.Id;
+            delete{Entity}ItemHandler() {
+                let deletedItemId = this.current{Entity}Item.item.Id;
 
-                if (!this.{entity}Data.currentSetting.canDelete) {
-                    this.{entity}Data.currentSetting.showDeleteConfirmation = true;
+                if (!this.current{Entity}Item.canDelete) {
+                    this.current{Entity}Item.showDeleteConfirmation = true;
                     return;
                 }
 
@@ -352,10 +349,10 @@ const usualEntityVueComponent = `
 
                     if (response.IsSuccess) {
                         this.delete{Entity}FromList(deletedItemId);
-                        this.clearPanelSetting();
-                        this.{entity}Data.currentSetting.canDelete = false;
-                        this.{entity}Data.currentSetting.isSelected = false;
-                        this.{entity}Data.panel.show = false;
+                        this.clearPanel{Entity}Item();
+                        this.current{Entity}Item.canDelete = false;
+                        this.current{Entity}Item.isSelected = false;
+                        this.panel.show = false;
                     } else {
                         console.error('Ошибка удаления элемента: ', response.Error);
                     }
@@ -366,17 +363,19 @@ const usualEntityVueComponent = `
             },
 
             confirmDeleteHandler() {
-                this.{entity}Data.currentSetting.showDeleteConfirmation = false;
-                this.{entity}Data.currentSetting.canDelete = true;
-                this.deleteSettingHandler();
+                this.current{Entity}Item.showDeleteConfirmation = false;
+                this.current{Entity}Item.canDelete = true;
+                this.delete{Entity}ItemHandler();
             },
 
             closeConfirmationPanel() {
-                {entity}Data.currentSetting.showDeleteConfirmation = false;
+                this.current{Entity}Item.showDeleteConfirmation = false;
             },
         },
     }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+
+</style>
 `

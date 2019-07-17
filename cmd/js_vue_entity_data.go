@@ -16,7 +16,7 @@ let {entity}Data = function () {
         panelHeaderEdit: 'Изменить',
         panelSubmitButtonTextCreate: 'Создать',
         panelSubmitButtonTextEdit: 'Изменить',
-        currentSetting: {
+        current{Entity}Item: {
             item: new {Entity}(),
             hasChange: false,
             isSelected: false,
