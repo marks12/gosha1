@@ -120,7 +120,7 @@ const {entity} = {
 	        	return item.Id === data.Id;
 	    	});
 	    
-	    	if (index && index !== 0) {
+	    	if (index || index === 0) {
 		        state.{Entity}List.splice(index, 1, data);
     		}
 		},
@@ -129,7 +129,7 @@ const {entity} = {
 		        return item.Id === id;
 		    });
 		    
-		    if (index && index !== 0) {
+		    if (index || index === 0) {
 		        state.{Entity}List.splice(index, 1);
 		    }
 		},

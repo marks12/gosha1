@@ -123,7 +123,7 @@ func {Entity}Update(filter types.{Entity}Filter)  (data types.{Entity}, err erro
         return
     }
 
-    q := core.Db.Model(dbmodels.{Entity}{}).Where(dbmodels.{Entity}{ID: updateModel.ID}).Update(&updateModel)
+    q := core.Db.Model(dbmodels.{Entity}{}).Save(&updateModel)
 
     if q.Error != nil {
         err = q.Error
