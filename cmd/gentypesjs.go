@@ -31,6 +31,7 @@ func genTypesJs (c *ishell.Context) {
 	folderData := folder + "/data"
 	file := folder + "/apiModel.js"
 	apiFile := folder + "/api.js"
+	commonFile := folder + "/common.js"
 
 	os.RemoveAll(folder)
 	os.MkdirAll(folder,0755)
@@ -46,16 +47,19 @@ func genTypesJs (c *ishell.Context) {
 	api := []byte(apiContent)
 	ioutil.WriteFile(apiFile, api, 0644)
 
+	common := []byte(commonContent)
+	ioutil.WriteFile(commonFile, common, 0644)
+
 	for _, store := range stores {
 		ioutil.WriteFile(folderStore + "/" + store.name + ".js" , []byte(store.jscode), 0644)
 	}
 
 	for _, tpl := range tpls {
-		ioutil.WriteFile(folderComponent + "/" + tpl.name + ".vue" , []byte(tpl.jscode), 0644)
+		ioutil.WriteFile(folderComponent + "/" + tpl.name + "Gen.vue" , []byte(tpl.jscode), 0644)
 	}
 
 	for _, d := range data {
-		ioutil.WriteFile(folderData + "/" + d.name + ".js" , []byte(d.jscode), 0644)
+		ioutil.WriteFile(folderData + "/" + d.name + "Data.js" , []byte(d.jscode), 0644)
 	}
 }
 
