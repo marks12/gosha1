@@ -1,5 +1,5 @@
 #!/bin/bash
 
-env GOOS=linux GOARCH=arm go build -o ./gosha-mac -v ./main.go
+env GOOS=darwin GOARCH=amd64 go build -o ./gosha-mac -v ./main.go
 
 go build -v

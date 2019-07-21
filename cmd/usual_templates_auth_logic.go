@@ -8,6 +8,7 @@ import (
     "{ms-name}/dbmodels"
     "{ms-name}/core"
     "{ms-name}/common"
+    "{ms-name}/settings"
     "errors"
     "fmt"
     "golang.org/x/crypto/bcrypt"
