@@ -179,7 +179,7 @@ func {Entity}FindOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, er
         return
     }
 
-    q := core.Db.Model(dbmodels.{Entity}{}).Where(dbmodels.{Entity}{ID: findOrCreateModel.Id}).FirstOrCreate(&findOrCreateModel)
+    q := core.Db.Model(dbmodels.{Entity}{}).Where(dbmodels.{Entity}{ID: findOrCreateModel.ID}).FirstOrCreate(&findOrCreateModel)
 
     if q.Error != nil {
         err = q.Error
