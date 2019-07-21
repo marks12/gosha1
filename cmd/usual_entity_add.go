@@ -179,6 +179,7 @@ func getWebAppContent() (webappContent string) {
         methodCrudParams.IsRead = strings.Contains(methodCrudArgs.StringResult, "r")
         methodCrudParams.IsUpdate = strings.Contains(methodCrudArgs.StringResult, "u")
         methodCrudParams.IsDelete = strings.Contains(methodCrudArgs.StringResult, "d")
+        methodCrudParams.IsFindOrCreate = strings.Contains(methodCrudArgs.StringResult, "a")
 
     }
 
