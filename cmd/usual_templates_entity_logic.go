@@ -18,6 +18,10 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
         critery = critery.Where("id in (?)", filterIds)
     }
 
+//    if len(filter.Search) > 0 {
+//        critery = critery.Where("name like ?", ("%" + filter.Search + "%"), filter.Search)
+//    }
+
     q := critery.Model(dbmodels.{Entity}{}).Count(&count)
 
     if q.Error != nil {

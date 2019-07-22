@@ -181,6 +181,7 @@ func (filter *FilterIds) Validate(functionType string) {
 type AbstractFilter struct {
 
     request *http.Request
+    Search string
 
     FilterIds
     Pagination
@@ -199,6 +200,7 @@ func GetAbstractFilter(request *http.Request, functionType string) AbstractFilte
 
     filter.Pagination.CurrentPage,_  = strconv.Atoi(request.FormValue("CurrentPage"))
     filter.Pagination.PerPage,_  = strconv.Atoi(request.FormValue("PerPage"))
+    filter.Search,_  = request.FormValue("Search")
 
     filter.SetToken(request)
 
