@@ -4,7 +4,6 @@ import (
 	"gopkg.in/abiosoft/ishell.v2"
 	"os"
 	"io/ioutil"
-	"sort"
 	"strings"
 )
 
@@ -81,9 +80,23 @@ func getFileContent(repository modelRepository, typeNames []string) (content str
 
 		validFieldsCount := 0
 
+		isInvaliFilters, _ := InArray(t, []string{"AuthFilter", "AbstractFilter", "SearchFilter"})
+
+		// except token
+		if isInvaliFilters == true {
+			continue
+		}
+
 		for _, field := range repository.GetFields(t, []field{}) {
 
 			if field.Name[0:1] == strings.ToUpper(field.Name[0:1]) {
+
+				isInvalidField, _ := InArray(field.Name, []string{"TotalRecords", "Token", "TotalPages"})
+
+				// except token
+				if isInvalidField == true {
+					continue
+				}
 
 				validFieldsCount = validFieldsCount + 1
 				fields = append(fields, "    this." + field.Name + " = " + getFiledJsVal(field.Type, typeNames) + ";\n")
@@ -112,7 +125,7 @@ func getFileContent(repository modelRepository, typeNames []string) (content str
 
 		content += "\nexport function " + t + "() {\n\n"
 
-		sort.Sort(ByCase(fields))
+		//sort.Sort(ByCase(fields))
 		content += strings.Join(fields, "")
 
 		content += "\n    return this;\n}\n"
@@ -187,7 +200,7 @@ func getFiledJsVal(s string, typeNames []string) (val string) {
 
 			if isExists {
 
-				val = typeNames[index]
+				val = "new " + typeNames[index] + "()"
 
 			} else {
 
