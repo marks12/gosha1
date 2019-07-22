@@ -134,6 +134,11 @@ const {entity} = {
 		    }
 		},
 		add{Entity}ItemToList(state, item) {
+
+			if (state.{Entity}List === null) {
+				state.{Entity}List = [];
+			}
+
 		    state.{Entity}List.push(item);
 		},
     },
