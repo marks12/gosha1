@@ -87,7 +87,7 @@ func Read{entity-name}(cmdRequest api.CommandRequest) (mdl.Response) {
             if err.Error() == "Not found" {
                 code = http.StatusNotFound
             }
-            errResponse(w, err.Error(), code)
+            ErrResponse(w, err.Error(), code)
             return
         }
 
