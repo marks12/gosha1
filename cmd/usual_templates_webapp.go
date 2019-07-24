@@ -21,7 +21,7 @@ func ErrResponse (w http.ResponseWriter, err string, status int) {
     return
 }
 
-func validResponse (w http.ResponseWriter, data interface{}) {
+func ValidResponse (w http.ResponseWriter, data interface{}) {
 
     w.WriteHeader(http.StatusOK)
     json.NewEncoder(w).Encode(data)
@@ -96,7 +96,7 @@ func {entity-name}Find(w http.ResponseWriter, httpRequest *http.Request) {
         return
     }
 
-    validResponse(w, mdl.ResponseFind{
+    ValidResponse(w, mdl.ResponseFind{
             data,
             totalRecords,
     })
@@ -133,7 +133,7 @@ func {entity-name}Create(w http.ResponseWriter, httpRequest *http.Request) {
         return
     }
 
-    validResponse(w, mdl.ResponseCreate{
+    ValidResponse(w, mdl.ResponseCreate{
         data,
     })
 
@@ -176,7 +176,7 @@ func {entity-name}Read(w http.ResponseWriter, httpRequest *http.Request) {
         return
     }
 
-    validResponse(w, mdl.ResponseRead{
+    ValidResponse(w, mdl.ResponseRead{
         data,
     })
 
@@ -212,7 +212,7 @@ func {entity-name}Update(w http.ResponseWriter, httpRequest *http.Request) {
         return
     }
 
-    validResponse(w, mdl.ResponseUpdate{
+    ValidResponse(w, mdl.ResponseUpdate{
         data,
     })
 
@@ -248,7 +248,7 @@ func {entity-name}Delete(w http.ResponseWriter, httpRequest *http.Request) {
         return
     }
 
-    validResponse(w, mdl.ResponseDelete{
+    ValidResponse(w, mdl.ResponseDelete{
         isOk,
     })
 
@@ -285,7 +285,7 @@ func {entity-name}FindOrCreate(w http.ResponseWriter, httpRequest *http.Request)
         return
     }
 
-    validResponse(w, mdl.ResponseFindOrCreate{
+    ValidResponse(w, mdl.ResponseFindOrCreate{
         data,
     })
 
