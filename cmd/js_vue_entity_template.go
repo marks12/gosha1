@@ -49,7 +49,7 @@ const usualEntityVueComponent = `
                         <form @submit.prevent="saveChangesSubmit">
                             <VSet direction="vertical">
                                 <VSet
-                                    v-for="(filed, key) in fields"
+                                    v-for="(filed, key) in editFields"
                                     vertical-align="center"
                                 >
                                     <VLabel
@@ -163,6 +163,23 @@ const usualEntityVueComponent = `
 
         props: {
             fields: {
+                type: Object,
+                default() {
+                    const {entity}Item = new {Entity}();
+                    const fieldsObj = {};
+
+                    for (let prop in {entity}Item) {
+
+                        if ({entity}Item.hasOwnProperty(prop)) {
+                            fieldsObj[prop] = prop;
+                        }
+
+                    }
+
+                    return fieldsObj;
+                }
+            },
+            editFields: {
                 type: Object,
                 default() {
                     const {entity}Item = new {Entity}();
