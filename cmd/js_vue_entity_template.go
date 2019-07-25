@@ -27,7 +27,8 @@ const usualEntityVueComponent = `
                             :class="{'sw-table__row_is-selected': {entity}Item.Id === current{Entity}Item.item.Id}"
                         >
                             <td v-for="(value, key) in fields">
-                                <VText>{{ {entity}Item[key] }}</VText>
+                                <VCheckbox v-if="isCheckbox(applicationItem[key])" :checked="applicationItem[key]" disabled></VCheckbox>
+                                <VText v-else>{{ applicationItem[key] }}</VText>
                             </td>
                         </tr>
                     </tbody>
@@ -63,6 +64,7 @@ const usualEntityVueComponent = `
                                         @input="changeCurrent{Entity}Item"
                                     />
 									<VCheckbox
+										@input="changeCurrentApplicationItem"
 										v-if="isCheckbox(current{Entity}Item.item[key])"
                                         v-model="current{Entity}Item.item[key]"
 									/>
