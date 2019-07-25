@@ -56,11 +56,17 @@ const usualEntityVueComponent = `
                                         :for="` + "`" + `current{Entity}Item${key}` + "`" + `"
                                     >{{ filed }}</VLabel>
                                     <VInput
+										v-if="isInput(current{Entity}Item.item[key])"
                                         v-model="current{Entity}Item.item[key]"
                                         width="dyn"
                                         :id="` + "`" + `current{Entity}Item${key}` + "`" + `"
                                         @input="changeCurrent{Entity}Item"
                                     />
+									<VCheckbox
+										v-if="isCheckbox(current{Entity}Item.item[key])"
+                                        v-model="current{Entity}Item.item[key]"
+									/>
+									
                                 </VSet>
                             </VSet>
                             <button type="submit" :disabled="!current{Entity}Item.hasChange" hidden></button>
@@ -211,7 +217,17 @@ const usualEntityVueComponent = `
                 }
 
                 return  '';
-            }
+            },
+            isCheckbox() {
+                return data => {
+                    return typeof data === "boolean";
+                }
+            },
+            isInput() {
+                return data => {
+                    return ! this.isCheckbox(data);
+                }
+            },
         },
 
         methods: {
