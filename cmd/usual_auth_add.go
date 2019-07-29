@@ -4,7 +4,7 @@ import (
 	"gopkg.in/abiosoft/ishell.v2"
 	"github.com/fatih/color"
 	"os"
-	"lucy/common"
+	"gosha/common"
 )
 
 func usualAuthAdd(c *ishell.Context) {
