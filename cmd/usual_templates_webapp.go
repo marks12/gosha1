@@ -8,7 +8,7 @@ import (
     "encoding/json"
 )
 
-func errResponse (w http.ResponseWriter, err string, status int) {
+func ErrResponse (w http.ResponseWriter, err string, status int) {
 
     response := types.APIError{}
 
@@ -21,7 +21,7 @@ func errResponse (w http.ResponseWriter, err string, status int) {
     return
 }
 
-func validResponse (w http.ResponseWriter, data interface{}) {
+func ValidResponse (w http.ResponseWriter, data interface{}) {
 
     w.WriteHeader(http.StatusOK)
     json.NewEncoder(w).Encode(data)
@@ -83,7 +83,7 @@ func {entity-name}Find(w http.ResponseWriter, httpRequest *http.Request) {
     ` + getAuth("Find", authCrud) + `
 
     if !requestDto.IsValid() {
-        errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+        ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
         return
     }
 
@@ -92,11 +92,11 @@ func {entity-name}Find(w http.ResponseWriter, httpRequest *http.Request) {
 
     // Создаём структуру ответа
     if err != nil {
-        errResponse(w, err.Error(), http.StatusBadRequest)
+        ErrResponse(w, err.Error(), http.StatusBadRequest)
         return
     }
 
-    validResponse(w, mdl.ResponseFind{
+    ValidResponse(w, mdl.ResponseFind{
             data,
             totalRecords,
     })
@@ -120,7 +120,7 @@ func {entity-name}Create(w http.ResponseWriter, httpRequest *http.Request) {
     ` + getAuth("Create", authCrud) + `
 
     if !requestDto.IsValid() {
-        errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+        ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
         return
     }
 
@@ -129,11 +129,11 @@ func {entity-name}Create(w http.ResponseWriter, httpRequest *http.Request) {
 
     // Создаём структуру ответа
     if err != nil {
-        errResponse(w, err.Error(), http.StatusBadRequest)
+        ErrResponse(w, err.Error(), http.StatusBadRequest)
         return
     }
 
-    validResponse(w, mdl.ResponseCreate{
+    ValidResponse(w, mdl.ResponseCreate{
         data,
     })
 
@@ -159,7 +159,7 @@ func {entity-name}Read(w http.ResponseWriter, httpRequest *http.Request) {
     requestDto.CurrentPage = 1
 
     if !requestDto.IsValid() {
-        errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+        ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
         return
     }
 
@@ -172,11 +172,11 @@ func {entity-name}Read(w http.ResponseWriter, httpRequest *http.Request) {
         if err.Error() == "Not found" {
             code = http.StatusNotFound
         }
-        errResponse(w, err.Error(), code)
+        ErrResponse(w, err.Error(), code)
         return
     }
 
-    validResponse(w, mdl.ResponseRead{
+    ValidResponse(w, mdl.ResponseRead{
         data,
     })
 
@@ -199,7 +199,7 @@ func {entity-name}Update(w http.ResponseWriter, httpRequest *http.Request) {
     ` + getAuth("Update", authCrud) + `
 
     if !requestDto.IsValid() {
-        errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+        ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
         return
     }
 
@@ -208,11 +208,11 @@ func {entity-name}Update(w http.ResponseWriter, httpRequest *http.Request) {
 
     // Создаём структуру ответа
     if err != nil {
-        errResponse(w, err.Error(), http.StatusBadRequest)
+        ErrResponse(w, err.Error(), http.StatusBadRequest)
         return
     }
 
-    validResponse(w, mdl.ResponseUpdate{
+    ValidResponse(w, mdl.ResponseUpdate{
         data,
     })
 
@@ -235,7 +235,7 @@ func {entity-name}Delete(w http.ResponseWriter, httpRequest *http.Request) {
     ` + getAuth("Delete", authCrud) + `
 
     if !requestDto.IsValid() {
-        errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+        ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
         return
     }
 
@@ -244,11 +244,11 @@ func {entity-name}Delete(w http.ResponseWriter, httpRequest *http.Request) {
 
     // Создаём структуру ответа
     if err != nil {
-        errResponse(w, err.Error(), http.StatusBadRequest)
+        ErrResponse(w, err.Error(), http.StatusBadRequest)
         return
     }
 
-    validResponse(w, mdl.ResponseDelete{
+    ValidResponse(w, mdl.ResponseDelete{
         isOk,
     })
 
@@ -272,7 +272,7 @@ func {entity-name}FindOrCreate(w http.ResponseWriter, httpRequest *http.Request)
     ` + getAuth("FindOrCreate", authCrud) + `
 
     if !requestDto.IsValid() {
-        errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+        ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
         return
     }
 
@@ -281,11 +281,11 @@ func {entity-name}FindOrCreate(w http.ResponseWriter, httpRequest *http.Request)
 
     // Создаём структуру ответа
     if err != nil {
-        errResponse(w, err.Error(), http.StatusBadRequest)
+        ErrResponse(w, err.Error(), http.StatusBadRequest)
         return
     }
 
-    validResponse(w, mdl.ResponseFindOrCreate{
+    ValidResponse(w, mdl.ResponseFindOrCreate{
         data,
     })
 
@@ -338,7 +338,7 @@ func getAuth(method string, crud Crud) (auth string) {
     }
 
     return `if !requestDto.IsAuthorized() {
-        errResponse(w, "Invalid authorize in {entity-name}` + method +`", http.StatusForbidden)
+        ErrResponse(w, "Invalid authorize in {entity-name}` + method +`", http.StatusForbidden)
         return
     }`
 }
