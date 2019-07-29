@@ -27,7 +27,8 @@ const usualEntityVueComponent = `
                             :class="{'sw-table__row_is-selected': {entity}Item.Id === current{Entity}Item.item.Id}"
                         >
                             <td v-for="(value, key) in fields">
-                                <VText>{{ {entity}Item[key] }}</VText>
+                                <VCheckbox v-if="isCheckbox(applicationItem[key])" :checked="applicationItem[key]" disabled></VCheckbox>
+                                <VText v-else>{{ applicationItem[key] }}</VText>
                             </td>
                         </tr>
                     </tbody>
@@ -48,7 +49,7 @@ const usualEntityVueComponent = `
                         <form @submit.prevent="saveChangesSubmit">
                             <VSet direction="vertical">
                                 <VSet
-                                    v-for="(filed, key) in fields"
+                                    v-for="(filed, key) in editFields"
                                     vertical-align="center"
                                 >
                                     <VLabel
@@ -56,11 +57,19 @@ const usualEntityVueComponent = `
                                         :for="` + "`" + `current{Entity}Item${key}` + "`" + `"
                                     >{{ filed }}</VLabel>
                                     <VInput
+										v-if="isInput(current{Entity}Item.item[key])"
                                         v-model="current{Entity}Item.item[key]"
                                         width="dyn"
                                         :id="` + "`" + `current{Entity}Item${key}` + "`" + `"
                                         @input="changeCurrent{Entity}Item"
                                     />
+									<VCheckbox
+										v-if="isCheckbox(current{Entity}Item.item[key])"
+                                        v-model="current{Entity}Item.item[key]"
+                                        :id="` + "`" + `current{Entity}Item${key}` + "`" + `"
+										@input="changeCurrentApplicationItem"
+									/>
+									
                                 </VSet>
                             </VSet>
                             <button type="submit" :disabled="!current{Entity}Item.hasChange" hidden></button>
@@ -139,6 +148,7 @@ const usualEntityVueComponent = `
     import VSet from "swui/src/components/VSet";
     import VLabel from "swui/src/components/VLabel";
     import VInput from "swui/src/components/VInput";
+    import VCheckbox from "swui/src/components/VCheckbox";
     import VText from "swui/src/components/VText";
     import VPanel from "swui/src/components/VPanel";
     import VButton from "swui/src/components/VButton";
@@ -149,10 +159,27 @@ const usualEntityVueComponent = `
     export default {
         name: '{Entity}Gen',
 
-        components: {VSelect, VSign, VIcon, VButton, VPanel, VText, VInput, VLabel, VSet, VHead, WorkSpace},
+        components: {VSelect, VSign, VIcon, VButton, VPanel, VText, VInput, VLabel, VSet, VHead, WorkSpace, VCheckbox},
 
         props: {
             fields: {
+                type: Object,
+                default() {
+                    const {entity}Item = new {Entity}();
+                    const fieldsObj = {};
+
+                    for (let prop in {entity}Item) {
+
+                        if ({entity}Item.hasOwnProperty(prop)) {
+                            fieldsObj[prop] = prop;
+                        }
+
+                    }
+
+                    return fieldsObj;
+                }
+            },
+            editFields: {
                 type: Object,
                 default() {
                     const {entity}Item = new {Entity}();
@@ -211,7 +238,17 @@ const usualEntityVueComponent = `
                 }
 
                 return  '';
-            }
+            },
+            isCheckbox() {
+                return data => {
+                    return typeof data === "boolean";
+                }
+            },
+            isInput() {
+                return data => {
+                    return ! this.isCheckbox(data);
+                }
+            },
         },
 
         methods: {
