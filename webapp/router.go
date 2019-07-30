@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"encoding/base64"
 	"strings"
+	"regexp"
 )
 
 // Router - маршрутизатор
@@ -22,24 +23,12 @@ func Router() http.Handler {
 
 	router.HandleFunc("/api", homePage).Methods("GET")
 
-
 	//[ Entity ]
 	router.HandleFunc("/api/v1/entity/{id}", EntityRead).Methods("GET")
 	router.HandleFunc("/api/v1/entity", EntityFind).Methods("GET")
 	router.HandleFunc("/api/v1/entity", EntityCreate).Methods("POST")
 	router.HandleFunc("/api/v1/entity/{id}", EntityUpdate).Methods("PUT")
 	router.HandleFunc("/api/v1/entity/{id}", EntityDelete).Methods("DELETE")
-
-
-	//router.HandleFunc("/", MainPage).Methods("GET")
-	//router.HandleFunc("/{route}.html", MainPage).Methods("GET")
-	//router.HandleFunc("/js/{route}.js", MainPage).Methods("GET")
-	//router.HandleFunc("/js/{route}.js.map", MainPage).Methods("GET")
-	//router.HandleFunc("/css/{route}.css", MainPage).Methods("GET")
-	//router.HandleFunc("/img/{route}.jpg", MainPage).Methods("GET")
-	//router.HandleFunc("/img/{route}.jpeg", MainPage).Methods("GET")
-	//router.HandleFunc("/img/{route}.png", MainPage).Methods("GET")
-
 
 	handler := cors.New(cors.Options{
 		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
@@ -77,6 +66,9 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 				fmt.Println("decode error:", err)
 			}
 
+			contentType := GetContentType(r.URL.Path)
+			w.Header().Add("Content-Type", contentType)
+
 			decoded = string(dbyte)
 			w.Write([]byte(decoded))
 			return
@@ -86,6 +78,54 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 	NotFound(w, r)
 	return
 
+}
+
+func GetContentType(url string) string {
+
+	re := regexp.MustCompile("\\.css$")
+	css := re.FindSubmatch([]byte(url))
+
+	if len(css) > 0 {
+		return "text/css"
+	}
+
+	re = regexp.MustCompile("\\.js$")
+	js := re.FindSubmatch([]byte(url))
+
+	if len(js) > 0 {
+		return "application/javascript"
+	}
+
+	re = regexp.MustCompile("\\.htm?$")
+	html := re.FindSubmatch([]byte(url))
+
+	if len(html) > 0 || url == "/" {
+		return "text/html"
+	}
+
+	re = regexp.MustCompile("\\.png$")
+	png := re.FindSubmatch([]byte(url))
+
+	if len(png) > 0 {
+		return "image/png"
+	}
+
+	re = regexp.MustCompile("\\.jp?g$")
+	jpg := re.FindSubmatch([]byte(url))
+
+	if len(jpg) > 0 {
+		return "image/jpeg"
+	}
+
+	re = regexp.MustCompile("\\.ico$")
+	ico := re.FindSubmatch([]byte(url))
+
+	if len(ico) > 0 {
+		return "image/x-icon"
+	}
+
+
+	return "text/plain"
 }
 
 
