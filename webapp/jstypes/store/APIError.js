@@ -41,7 +41,7 @@ const aPIError = {
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAPIErrorList", response.List);
+                    context.commit("setAPIError__List", response.List);
 
                     return response;
                 })
@@ -97,52 +97,52 @@ const aPIError = {
             return state.APIError;
         },
         getListAPIError: (state) => {
-            return state.APIErrorList;
+            return state.APIError__List;
         },
     },
     mutations: {
         setAPIError(state, data) {
             state.APIError = data;
         },
-        setAPIErrorList(state, data) {
-            state.APIErrorList = data;
+        setAPIError__List(state, data) {
+            state.APIError__List = data;
         },
         clearAPIError(state) {
             state.APIError = new APIError();
         },
         clearListAPIError(state) {
-            state.APIErrorList = [];
+            state.APIError__List = [];
         },
 		updateAPIErrorById(state, data) {
-    		let index = findItemIndex(state.APIErrorList, function(item) {
+    		let index = findItemIndex(state.APIError__List, function(item) {
 	        	return item.Id === data.Id;
 	    	});
 	    
 	    	if (index || index === 0) {
-		        state.APIErrorList.splice(index, 1, data);
+		        state.APIError__List.splice(index, 1, data);
     		}
 		},
 		deleteAPIErrorFromList(state, id) {
-		    let index = findItemIndex(state.APIErrorList, function(item) {
+		    let index = findItemIndex(state.APIError__List, function(item) {
 		        return item.Id === id;
 		    });
 		    
 		    if (index || index === 0) {
-		        state.APIErrorList.splice(index, 1);
+		        state.APIError__List.splice(index, 1);
 		    }
 		},
 		addAPIErrorItemToList(state, item) {
 
-			if (state.APIErrorList === null) {
-				state.APIErrorList = [];
+			if (state.APIError__List === null) {
+				state.APIError__List = [];
 			}
 
-		    state.APIErrorList.push(item);
+		    state.APIError__List.push(item);
 		},
     },
     state: {
         APIError: new APIError(),
-        APIErrorList: [],
+        APIError__List: [],
     },
 };
 

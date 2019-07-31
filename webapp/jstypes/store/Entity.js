@@ -41,7 +41,7 @@ const entity = {
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setEntityList", response.List);
+                    context.commit("setEntity__List", response.List);
 
                     return response;
                 })
@@ -97,52 +97,52 @@ const entity = {
             return state.Entity;
         },
         getListEntity: (state) => {
-            return state.EntityList;
+            return state.Entity__List;
         },
     },
     mutations: {
         setEntity(state, data) {
             state.Entity = data;
         },
-        setEntityList(state, data) {
-            state.EntityList = data;
+        setEntity__List(state, data) {
+            state.Entity__List = data;
         },
         clearEntity(state) {
             state.Entity = new Entity();
         },
         clearListEntity(state) {
-            state.EntityList = [];
+            state.Entity__List = [];
         },
 		updateEntityById(state, data) {
-    		let index = findItemIndex(state.EntityList, function(item) {
+    		let index = findItemIndex(state.Entity__List, function(item) {
 	        	return item.Id === data.Id;
 	    	});
 	    
 	    	if (index || index === 0) {
-		        state.EntityList.splice(index, 1, data);
+		        state.Entity__List.splice(index, 1, data);
     		}
 		},
 		deleteEntityFromList(state, id) {
-		    let index = findItemIndex(state.EntityList, function(item) {
+		    let index = findItemIndex(state.Entity__List, function(item) {
 		        return item.Id === id;
 		    });
 		    
 		    if (index || index === 0) {
-		        state.EntityList.splice(index, 1);
+		        state.Entity__List.splice(index, 1);
 		    }
 		},
 		addEntityItemToList(state, item) {
 
-			if (state.EntityList === null) {
-				state.EntityList = [];
+			if (state.Entity__List === null) {
+				state.Entity__List = [];
 			}
 
-		    state.EntityList.push(item);
+		    state.Entity__List.push(item);
 		},
     },
     state: {
         Entity: new Entity(),
-        EntityList: [],
+        Entity__List: [],
     },
 };
 

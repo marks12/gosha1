@@ -21,5 +21,10 @@ export default new Router({
       name: 'entity',
       component: () => import(/* webpackChunkName: "about" */ './views/Entity.vue')
     },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: () => import(/* webpackChunkName: "about" */ './views/Entity.vue')
+    },
   ]
 })

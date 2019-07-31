@@ -41,7 +41,7 @@ const entityFilter = {
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setEntityFilterList", response.List);
+                    context.commit("setEntityFilter__List", response.List);
 
                     return response;
                 })
@@ -97,52 +97,52 @@ const entityFilter = {
             return state.EntityFilter;
         },
         getListEntityFilter: (state) => {
-            return state.EntityFilterList;
+            return state.EntityFilter__List;
         },
     },
     mutations: {
         setEntityFilter(state, data) {
             state.EntityFilter = data;
         },
-        setEntityFilterList(state, data) {
-            state.EntityFilterList = data;
+        setEntityFilter__List(state, data) {
+            state.EntityFilter__List = data;
         },
         clearEntityFilter(state) {
             state.EntityFilter = new EntityFilter();
         },
         clearListEntityFilter(state) {
-            state.EntityFilterList = [];
+            state.EntityFilter__List = [];
         },
 		updateEntityFilterById(state, data) {
-    		let index = findItemIndex(state.EntityFilterList, function(item) {
+    		let index = findItemIndex(state.EntityFilter__List, function(item) {
 	        	return item.Id === data.Id;
 	    	});
 	    
 	    	if (index || index === 0) {
-		        state.EntityFilterList.splice(index, 1, data);
+		        state.EntityFilter__List.splice(index, 1, data);
     		}
 		},
 		deleteEntityFilterFromList(state, id) {
-		    let index = findItemIndex(state.EntityFilterList, function(item) {
+		    let index = findItemIndex(state.EntityFilter__List, function(item) {
 		        return item.Id === id;
 		    });
 		    
 		    if (index || index === 0) {
-		        state.EntityFilterList.splice(index, 1);
+		        state.EntityFilter__List.splice(index, 1);
 		    }
 		},
 		addEntityFilterItemToList(state, item) {
 
-			if (state.EntityFilterList === null) {
-				state.EntityFilterList = [];
+			if (state.EntityFilter__List === null) {
+				state.EntityFilter__List = [];
 			}
 
-		    state.EntityFilterList.push(item);
+		    state.EntityFilter__List.push(item);
 		},
     },
     state: {
         EntityFilter: new EntityFilter(),
-        EntityFilterList: [],
+        EntityFilter__List: [],
     },
 };
 
