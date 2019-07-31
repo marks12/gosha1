@@ -43,7 +43,7 @@ const {entity} = {
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("set{Entity}List", response.List);
+                    context.commit("set{Entity}__List", response.List);
 
                     return response;
                 })
@@ -99,52 +99,52 @@ const {entity} = {
             return state.{Entity};
         },
         getList{Entity}: (state) => {
-            return state.{Entity}List;
+            return state.{Entity}__List;
         },
     },
     mutations: {
         set{Entity}(state, data) {
             state.{Entity} = data;
         },
-        set{Entity}List(state, data) {
-            state.{Entity}List = data;
+        set{Entity}__List(state, data) {
+            state.{Entity}__List = data;
         },
         clear{Entity}(state) {
             state.{Entity} = new {Entity}();
         },
         clearList{Entity}(state) {
-            state.{Entity}List = [];
+            state.{Entity}__List = [];
         },
 		update{Entity}ById(state, data) {
-    		let index = findItemIndex(state.{Entity}List, function(item) {
+    		let index = findItemIndex(state.{Entity}__List, function(item) {
 	        	return item.Id === data.Id;
 	    	});
 	    
 	    	if (index || index === 0) {
-		        state.{Entity}List.splice(index, 1, data);
+		        state.{Entity}__List.splice(index, 1, data);
     		}
 		},
 		delete{Entity}FromList(state, id) {
-		    let index = findItemIndex(state.{Entity}List, function(item) {
+		    let index = findItemIndex(state.{Entity}__List, function(item) {
 		        return item.Id === id;
 		    });
 		    
 		    if (index || index === 0) {
-		        state.{Entity}List.splice(index, 1);
+		        state.{Entity}__List.splice(index, 1);
 		    }
 		},
 		add{Entity}ItemToList(state, item) {
 
-			if (state.{Entity}List === null) {
-				state.{Entity}List = [];
+			if (state.{Entity}__List === null) {
+				state.{Entity}__List = [];
 			}
 
-		    state.{Entity}List.push(item);
+		    state.{Entity}__List.push(item);
 		},
     },
     state: {
         {Entity}: new {Entity}(),
-        {Entity}List: [],
+        {Entity}__List: [],
     },
 };
 
