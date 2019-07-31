@@ -1,40 +1,12 @@
 <template>
-    <WorkSpace width="dyn">
-        <template #header>
-            <VHead level="h1" align="left">Entity</VHead>
-        </template>
-        <template #content>
-            <table slot="content" cellpadding="5" cellspacing="5">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Fields</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Name</td>
-                        <td>Fields</td>
-                    </tr>
-                </tbody>
-            </table>
-        </template>
-        <template #footer>
-            <VSet>
-                <VButton text="Создать"></VButton>
-            </VSet>
-        </template>
-    </WorkSpace>
+    <EntityGen></EntityGen>
 </template>
 
 <script>
-    import WorkSpace from "swtui/src/components/WorkSpace";
-    import VHead from "swtui/src/components/VHead";
-    import VButton from "swtui/src/components/VButton";
-    import VSet from "swtui/src/components/VSet";
+    import EntityGen from "../../../webapp/jstypes/components/EntityGen";
     export default {
         name: "Entity",
-        components: {VSet, VButton, VHead, WorkSpace}
+        components: {EntityGen}
     }
 </script>
 
