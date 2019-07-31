@@ -41,7 +41,7 @@ const aPIStatus = {
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAPIStatusList", response.List);
+                    context.commit("setAPIStatus__List", response.List);
 
                     return response;
                 })
@@ -97,52 +97,52 @@ const aPIStatus = {
             return state.APIStatus;
         },
         getListAPIStatus: (state) => {
-            return state.APIStatusList;
+            return state.APIStatus__List;
         },
     },
     mutations: {
         setAPIStatus(state, data) {
             state.APIStatus = data;
         },
-        setAPIStatusList(state, data) {
-            state.APIStatusList = data;
+        setAPIStatus__List(state, data) {
+            state.APIStatus__List = data;
         },
         clearAPIStatus(state) {
             state.APIStatus = new APIStatus();
         },
         clearListAPIStatus(state) {
-            state.APIStatusList = [];
+            state.APIStatus__List = [];
         },
 		updateAPIStatusById(state, data) {
-    		let index = findItemIndex(state.APIStatusList, function(item) {
+    		let index = findItemIndex(state.APIStatus__List, function(item) {
 	        	return item.Id === data.Id;
 	    	});
 	    
 	    	if (index || index === 0) {
-		        state.APIStatusList.splice(index, 1, data);
+		        state.APIStatus__List.splice(index, 1, data);
     		}
 		},
 		deleteAPIStatusFromList(state, id) {
-		    let index = findItemIndex(state.APIStatusList, function(item) {
+		    let index = findItemIndex(state.APIStatus__List, function(item) {
 		        return item.Id === id;
 		    });
 		    
 		    if (index || index === 0) {
-		        state.APIStatusList.splice(index, 1);
+		        state.APIStatus__List.splice(index, 1);
 		    }
 		},
 		addAPIStatusItemToList(state, item) {
 
-			if (state.APIStatusList === null) {
-				state.APIStatusList = [];
+			if (state.APIStatus__List === null) {
+				state.APIStatus__List = [];
 			}
 
-		    state.APIStatusList.push(item);
+		    state.APIStatus__List.push(item);
 		},
     },
     state: {
         APIStatus: new APIStatus(),
-        APIStatusList: [],
+        APIStatus__List: [],
     },
 };
 
