@@ -1,5 +1,8 @@
 <template>
     <TheLayout id="app">
+        <template #branding>
+            {{projectName}}
+        </template>
         <template #navigation>
             <MainMenu></MainMenu>
         </template>

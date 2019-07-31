@@ -41,7 +41,7 @@ const pagination = {
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setPaginationList", response.List);
+                    context.commit("setPagination__List", response.List);
 
                     return response;
                 })
@@ -97,52 +97,52 @@ const pagination = {
             return state.Pagination;
         },
         getListPagination: (state) => {
-            return state.PaginationList;
+            return state.Pagination__List;
         },
     },
     mutations: {
         setPagination(state, data) {
             state.Pagination = data;
         },
-        setPaginationList(state, data) {
-            state.PaginationList = data;
+        setPagination__List(state, data) {
+            state.Pagination__List = data;
         },
         clearPagination(state) {
             state.Pagination = new Pagination();
         },
         clearListPagination(state) {
-            state.PaginationList = [];
+            state.Pagination__List = [];
         },
 		updatePaginationById(state, data) {
-    		let index = findItemIndex(state.PaginationList, function(item) {
+    		let index = findItemIndex(state.Pagination__List, function(item) {
 	        	return item.Id === data.Id;
 	    	});
 	    
 	    	if (index || index === 0) {
-		        state.PaginationList.splice(index, 1, data);
+		        state.Pagination__List.splice(index, 1, data);
     		}
 		},
 		deletePaginationFromList(state, id) {
-		    let index = findItemIndex(state.PaginationList, function(item) {
+		    let index = findItemIndex(state.Pagination__List, function(item) {
 		        return item.Id === id;
 		    });
 		    
 		    if (index || index === 0) {
-		        state.PaginationList.splice(index, 1);
+		        state.Pagination__List.splice(index, 1);
 		    }
 		},
 		addPaginationItemToList(state, item) {
 
-			if (state.PaginationList === null) {
-				state.PaginationList = [];
+			if (state.Pagination__List === null) {
+				state.Pagination__List = [];
 			}
 
-		    state.PaginationList.push(item);
+		    state.Pagination__List.push(item);
 		},
     },
     state: {
         Pagination: new Pagination(),
-        PaginationList: [],
+        Pagination__List: [],
     },
 };
 
