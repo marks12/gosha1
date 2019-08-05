@@ -12,24 +12,31 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
 
     var count int
 
-    critery := core.Db.Where(dbmodels.{Entity}{})
+    criteria := core.Db.Where(dbmodels.{Entity}{})
 
     if len(filterIds) > 0 {
-        critery = critery.Where("id in (?)", filterIds)
+        criteria = criteria.Where("id in (?)", filterIds)
     }
 
 //    if len(filter.Search) > 0 {
-//        critery = critery.Where("name like ?", ("%" + filter.Search + "%"), filter.Search)
+//        criteria = criteria.Where("name like ?", ("%" + filter.Search + "%"), filter.Search)
 //    }
 
-    q := critery.Model(dbmodels.{Entity}{}).Count(&count)
+    q := criteria.Model(dbmodels.{Entity}{}).Count(&count)
 
     if q.Error != nil {
        log.Println("Find{Entity} > Ошибка получения данных:", q.Error)
        return result, 0, nil
     }
 
-    q = critery.Limit(limit).Offset(offset).Find(&dbmodelData)
+    // order global criteria
+    if len(filter.Order) > 0  {
+        for index, field := range filter.Order {
+            criteria = criteria.Order(field + " " + filter.OrderDirection[index])
+        }
+    }
+
+    q = criteria.Limit(limit).Offset(offset).Find(&dbmodelData)
 
     if q.Error != nil {
        log.Println("FindProduct > Ошибка получения данных2:", q.Error)

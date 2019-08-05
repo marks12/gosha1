@@ -38,16 +38,16 @@ func Find{entity-name}(app mdl.Application, filter api.{entity-name}Filter) (pro
 
     var count int
 
-    critery := core.Db.Where(dbmodels.{entity-name}{AppId: appGuid})
+    criteria := core.Db.Where(dbmodels.{entity-name}{AppId: appGuid})
 
-    q := critery.Model(dbmodels.{entity-name}{}).Count(&count)
+    q := criteria.Model(dbmodels.{entity-name}{}).Count(&count)
 
     if q.Error != nil {
         log.Println("Find{entity-name} > Ошибка получения данных1:", q.Error)
         return []api.{entity-name}{}, 0, nil
     }
 
-    q = critery.Limit(limit).Offset(offset).Find(&data)
+    q = criteria.Limit(limit).Offset(offset).Find(&data)
 
     if q.Error != nil {
         log.Println("Find{entity-name} > Ошибка получения данных2:", q.Error)
@@ -105,9 +105,9 @@ func Read{entity-name}(app mdl.Application, filter api.{entity-name}Filter) (pro
     data        := dbmodels.{entity-name}{}
     guid        := filter.GetGuid()
 
-    critery := core.Db.Where(dbmodels.{entity-name}{AppId: appGuid, ID: guid})
+    criteria := core.Db.Where(dbmodels.{entity-name}{AppId: appGuid, ID: guid})
 
-    q := critery.First(&data)
+    q := criteria.First(&data)
 
     if q.Error != nil {
         log.Println("Read{entity-name} > Ошибка получения данных2:", q.Error)
@@ -123,9 +123,9 @@ func Update{entity-name}(app mdl.Application, {entity-name}Data api.{entity-name
 
     db{entity-name} := dbmodels.{entity-name}{}
 
-    critery := core.Db.Where(dbmodels.{entity-name}{AppId: appGuid, ID: {entity-name}Data.GetGuid()})
+    criteria := core.Db.Where(dbmodels.{entity-name}{AppId: appGuid, ID: {entity-name}Data.GetGuid()})
 
-    q := critery.First(&db{entity-name})
+    q := criteria.First(&db{entity-name})
 
     if q.Error != nil {
         log.Println("Read{entity-name} > Ошибка получения данных2:", q.Error)
@@ -162,9 +162,9 @@ func Delete{entity-name}(app mdl.Application, filter api.{entity-name}Filter) er
     data        := dbmodels.{entity-name}{}
     guid        := filter.GetGuid()
 
-    critery := core.Db.Where(dbmodels.{entity-name}{AppId: appGuid, ID: guid})
+    criteria := core.Db.Where(dbmodels.{entity-name}{AppId: appGuid, ID: guid})
 
-    q := critery.First(&data)
+    q := criteria.First(&data)
 
     if q.Error != nil {
 
@@ -173,7 +173,7 @@ func Delete{entity-name}(app mdl.Application, filter api.{entity-name}Filter) er
 
     } else {
 
-        q = critery.Delete(&data)
+        q = criteria.Delete(&data)
 
         if q.Error != nil {
 
