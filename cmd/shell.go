@@ -75,3 +75,7 @@ func setMode() {
         mode.SetInteractiveMode()
     }
 }
+
+func GetShell() *ishell.Shell {
+    return shell
+}
