@@ -7,12 +7,8 @@ import (
 
 type Entity struct {
 	Id int
-
-	Desc     string
-	Model    string
 	Name     string
-	VendorID int
-	URL string
+	Fields	 []EntityField
 	//Entity remove this line for disable generator functionality
 }
 

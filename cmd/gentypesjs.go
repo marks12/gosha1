@@ -80,7 +80,7 @@ func getFileContent(repository modelRepository, typeNames []string) (content str
 
 		validFieldsCount := 0
 
-		isInvaliFilters, _ := InArray(t, []string{"AuthFilter", "AbstractFilter", "SearchFilter"})
+		isInvaliFilters, _ := InArray(t, []string{"AbstractFilter", "SearchFilter"})
 
 		// except token
 		if isInvaliFilters == true {
