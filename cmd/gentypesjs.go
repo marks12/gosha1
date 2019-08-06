@@ -65,14 +65,14 @@ func genTypesJs (c *ishell.Context) {
 
 func getTypesJs () (string, []store, []vueComponent, []vueComponentData) {
 
-	existsTypes := getExistsTypes()
-	typeNames := getModelsList(existsTypes)
+	existsTypes := GetExistsTypes()
+	typeNames := GetModelsList(existsTypes)
 
 	return getFileContent(existsTypes, typeNames)
 
 }
 
-func getFileContent(repository modelRepository, typeNames []string) (content string, stores []store, vueComponentTemplates []vueComponent, vueData []vueComponentData) {
+func getFileContent(repository ModelRepository, typeNames []string) (content string, stores []store, vueComponentTemplates []vueComponent, vueData []vueComponentData) {
 
 	for _, t := range typeNames {
 
@@ -87,7 +87,7 @@ func getFileContent(repository modelRepository, typeNames []string) (content str
 			continue
 		}
 
-		for _, field := range repository.GetFields(t, []field{}) {
+		for _, field := range repository.GetFields(t, []Field{}) {
 
 			if field.Name[0:1] == strings.ToUpper(field.Name[0:1]) {
 

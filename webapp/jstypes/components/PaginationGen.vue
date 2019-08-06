@@ -25,8 +25,8 @@
                             :class="{'sw-table__row_is-selected': paginationItem.Id === currentPaginationItem.item.Id}"
                         >
                             <td v-for="(value, key) in fields">
-                                <VCheckbox v-if="isCheckbox(applicationItem[key])" :checked="applicationItem[key]" disabled></VCheckbox>
-                                <VText v-else>{{ applicationItem[key] }}</VText>
+                                <VCheckbox v-if="isCheckbox(paginationItem[key])" :checked="paginationItem[key]" disabled></VCheckbox>
+                                <VText v-else>{{ paginationItem[key] }}</VText>
                             </td>
                         </tr>
                     </tbody>

@@ -3,7 +3,7 @@
     <WorkSpace>
         <template #header>
             <slot name="pageHeader">
-                <VHead level="h1">APIError</VHead>
+                <VHead level="h1">ProjectInfo</VHead>
             </slot>
         </template>
 
@@ -18,15 +18,15 @@
             
                     <tbody>
                         <tr
-                            v-for="aPIErrorItem in aPIErrorList"
-                            :key="aPIErrorItem.Id"
-                            @click="selectAPIErrorItem(aPIErrorItem)"
+                            v-for="projectInfoItem in projectInfoList"
+                            :key="projectInfoItem.Id"
+                            @click="selectProjectInfoItem(projectInfoItem)"
                             class="sw-table__row_can-select"
-                            :class="{'sw-table__row_is-selected': aPIErrorItem.Id === currentAPIErrorItem.item.Id}"
+                            :class="{'sw-table__row_is-selected': projectInfoItem.Id === currentProjectInfoItem.item.Id}"
                         >
                             <td v-for="(value, key) in fields">
-                                <VCheckbox v-if="isCheckbox(aPIErrorItem[key])" :checked="aPIErrorItem[key]" disabled></VCheckbox>
-                                <VText v-else>{{ aPIErrorItem[key] }}</VText>
+                                <VCheckbox v-if="isCheckbox(projectInfoItem[key])" :checked="projectInfoItem[key]" disabled></VCheckbox>
+                                <VText v-else>{{ projectInfoItem[key] }}</VText>
                             </td>
                         </tr>
                     </tbody>
@@ -52,25 +52,25 @@
                                 >
                                     <VLabel
                                         width="col4"
-                                        :for="`currentAPIErrorItem${key}`"
+                                        :for="`currentProjectInfoItem${key}`"
                                     >{{ filed }}</VLabel>
                                     <VInput
-										v-if="isInput(currentAPIErrorItem.item[key])"
-                                        v-model="currentAPIErrorItem.item[key]"
+										v-if="isInput(currentProjectInfoItem.item[key])"
+                                        v-model="currentProjectInfoItem.item[key]"
                                         width="dyn"
-                                        :id="`currentAPIErrorItem${key}`"
-                                        @input="changeCurrentAPIErrorItem"
+                                        :id="`currentProjectInfoItem${key}`"
+                                        @input="changeCurrentProjectInfoItem"
                                     />
 									<VCheckbox
-										v-if="isCheckbox(currentAPIErrorItem.item[key])"
-                                        v-model="currentAPIErrorItem.item[key]"
-                                        :id="`currentAPIErrorItem${key}`"
+										v-if="isCheckbox(currentProjectInfoItem.item[key])"
+                                        v-model="currentProjectInfoItem.item[key]"
+                                        :id="`currentProjectInfoItem${key}`"
 										@input="changeCurrentApplicationItem"
 									/>
 									
                                 </VSet>
                             </VSet>
-                            <button type="submit" :disabled="!currentAPIErrorItem.hasChange" hidden></button>
+                            <button type="submit" :disabled="!currentProjectInfoItem.hasChange" hidden></button>
                         </form>
                     </template>
 
@@ -80,7 +80,7 @@
                                 @click="saveChangesSubmit"
                                 accent
                                 :text="panelSubmitButtonText"
-                                :disabled="!currentAPIErrorItem.hasChange"
+                                :disabled="!currentProjectInfoItem.hasChange"
                             />
                             <VButton
                                 @click="cancelChanges"
@@ -93,7 +93,7 @@
 
             <slot name="confirmationPanel">
                 <VPanel
-                    v-if="currentAPIErrorItem.showDeleteConfirmation"
+                    v-if="currentProjectInfoItem.showDeleteConfirmation"
                     modal
                     @close="closeConfirmationPanel"
                 >
@@ -128,8 +128,8 @@
                     />
                     <VButton
                         text="Удалить"
-                        :disabled="!currentAPIErrorItem.isSelected"
-                        @click="deleteAPIErrorItemHandler"
+                        :disabled="!currentProjectInfoItem.isSelected"
+                        @click="deleteProjectInfoItemHandler"
                     />
                 </VSet>
             </slot>
@@ -138,8 +138,8 @@
 </template>
 
 <script>
-    import aPIErrorData from "../data/APIErrorData";
-    import { APIError } from '../apiModel';
+    import projectInfoData from "../data/ProjectInfoData";
+    import { ProjectInfo } from '../apiModel';
     import { mapGetters, mapMutations, mapActions } from 'vuex';
     import WorkSpace from "swui/src/components/WorkSpace";
     import VHead from "swui/src/components/VHead";
@@ -155,7 +155,7 @@
     import VSelect from "swui/src/components/VSelect";
 
     export default {
-        name: 'APIErrorGen',
+        name: 'ProjectInfoGen',
 
         components: {VSelect, VSign, VIcon, VButton, VPanel, VText, VInput, VLabel, VSet, VHead, WorkSpace, VCheckbox},
 
@@ -163,12 +163,12 @@
             fields: {
                 type: Object,
                 default() {
-                    const aPIErrorItem = new APIError();
+                    const projectInfoItem = new ProjectInfo();
                     const fieldsObj = {};
 
-                    for (let prop in aPIErrorItem) {
+                    for (let prop in projectInfoItem) {
 
-                        if (aPIErrorItem.hasOwnProperty(prop)) {
+                        if (projectInfoItem.hasOwnProperty(prop)) {
                             fieldsObj[prop] = prop;
                         }
 
@@ -180,12 +180,12 @@
             editFields: {
                 type: Object,
                 default() {
-                    const aPIErrorItem = new APIError();
+                    const projectInfoItem = new ProjectInfo();
                     const fieldsObj = {};
 
-                    for (let prop in aPIErrorItem) {
+                    for (let prop in projectInfoItem) {
 
-                        if (aPIErrorItem.hasOwnProperty(prop)) {
+                        if (projectInfoItem.hasOwnProperty(prop)) {
                             fieldsObj[prop] = prop;
                         }
 
@@ -197,17 +197,17 @@
         },
 
         data() {
-            return aPIErrorData;
+            return projectInfoData;
         },
 
         created() {
-            this.fillAPIErrorFilter();
-            this.fetchAPIErrorData();
+            this.fillProjectInfoFilter();
+            this.fetchProjectInfoData();
         },
 
         computed: {
             ...mapGetters({
-                aPIErrorList: 'getListAPIError'
+                projectInfoList: 'getListProjectInfo'
             }),
             isPanelCreate() {
                 return this.panel.type === this.panel.create;
@@ -251,26 +251,26 @@
 
         methods: {
             ...mapActions([
-                'findAPIError',
-                'updateAPIError',
-                'deleteAPIError',
-                'createAPIError',
+                'findProjectInfo',
+                'updateProjectInfo',
+                'deleteProjectInfo',
+                'createProjectInfo',
             ]),
 
             ...mapMutations([
-                'addAPIErrorItemToList',
-                'deleteAPIErrorFromList',
-                'updateAPIErrorById',
+                'addProjectInfoItemToList',
+                'deleteProjectInfoFromList',
+                'updateProjectInfoById',
             ]),
 
-            fillAPIErrorFilter() {
-                this.aPIErrorFilter.CurrentPage = 1;
-                this.aPIErrorFilter.PerPage = 1000;
+            fillProjectInfoFilter() {
+                this.projectInfoFilter.CurrentPage = 1;
+                this.projectInfoFilter.PerPage = 1000;
             },
 
-            fetchAPIErrorData() {
-                return this.findAPIError({
-                    filter: this.aPIErrorFilter
+            fetchProjectInfoData() {
+                return this.findProjectInfo({
+                    filter: this.projectInfoFilter
                 });
             },
 
@@ -281,10 +281,10 @@
             showPanel(type) {
                 if (type === this.panel.create) {
                     this.panel.type = this.panel.create;
-                    this.clearPanelAPIErrorItem();
+                    this.clearPanelProjectInfoItem();
                 } else if (type === this.panel.edit) {
                     this.panel.type = this.panel.edit;
-                    this.currentAPIErrorItem.isSelected = true;
+                    this.currentProjectInfoItem.isSelected = true;
                 }
 
                 this.panel.show = true;
@@ -292,53 +292,53 @@
 
             closePanel() {
                 this.panel.show = false;
-                this.currentAPIErrorItem.isSelected = false;
-                this.clearPanelAPIErrorItem();
+                this.currentProjectInfoItem.isSelected = false;
+                this.clearPanelProjectInfoItem();
             },
 
-            selectAPIErrorItem(aPIErrorItem) {
+            selectProjectInfoItem(projectInfoItem) {
                 this.showPanel(this.panel.edit);
-                this.currentAPIErrorItem.isSelected = true;
-                Object.assign(this.currentAPIErrorItem.item, aPIErrorItem);
+                this.currentProjectInfoItem.isSelected = true;
+                Object.assign(this.currentProjectInfoItem.item, projectInfoItem);
             },
 
-            changeCurrentAPIErrorItem() {
-                this.currentAPIErrorItem.hasChange = true;
+            changeCurrentProjectInfoItem() {
+                this.currentProjectInfoItem.hasChange = true;
             },
 
             cancelChanges() {
-                this.clearPanelAPIErrorItem();
+                this.clearPanelProjectInfoItem();
                 this.closePanel();
             },
 
-            clearPanelAPIErrorItem() {
-                this.currentAPIErrorItem.item = new APIError();
-                this.currentAPIErrorItem.hasChange = false;
+            clearPanelProjectInfoItem() {
+                this.currentProjectInfoItem.item = new ProjectInfo();
+                this.currentProjectInfoItem.hasChange = false;
             },
 
             saveChangesSubmit() {
                 if (this.isPanelCreate) {
-                    this.createAPIErrorItemSubmit();
+                    this.createProjectInfoItemSubmit();
                     return;
                 }
 
                 if (this.isPanelEdit) {
-                    this.editAPIErrorItemSubmit();
+                    this.editProjectInfoItemSubmit();
                 }
             },
 
-            createAPIErrorItemSubmit() {
-                this.createAPIError({
+            createProjectInfoItemSubmit() {
+                this.createProjectInfo({
                     data: {
-                        Name: this.currentAPIErrorItem.item.Name,
-                        Value: this.currentAPIErrorItem.item.Value,
-                        Description: this.currentAPIErrorItem.item.Description,
+                        Name: this.currentProjectInfoItem.item.Name,
+                        Value: this.currentProjectInfoItem.item.Value,
+                        Description: this.currentProjectInfoItem.item.Description,
                     }
                 }).then((response) => {
 
                     if (response.Model) {
-                        this.addAPIErrorItemToList(response.Model);
-                        this.clearPanelAPIErrorItem();
+                        this.addProjectInfoItemToList(response.Model);
+                        this.clearPanelProjectInfoItem();
                     } else {
                         console.error('Ошибка создания записи: ', response.Error);
                     }
@@ -348,17 +348,17 @@
                 });
             },
 
-            editAPIErrorItemSubmit() {
-                if (this.currentAPIErrorItem.hasChange) {
-                    this.updateAPIError({
-                        id: this.currentAPIErrorItem.item.Id,
-                        data: this.currentAPIErrorItem.item,
+            editProjectInfoItemSubmit() {
+                if (this.currentProjectInfoItem.hasChange) {
+                    this.updateProjectInfo({
+                        id: this.currentProjectInfoItem.item.Id,
+                        data: this.currentProjectInfoItem.item,
                     }).then((response) => {
 
                         if (response.Model) {
-                            this.updateAPIErrorById(response.Model);
-                            this.currentAPIErrorItem.hasChange = false;
-                            this.clearPanelAPIErrorItem();
+                            this.updateProjectInfoById(response.Model);
+                            this.currentProjectInfoItem.hasChange = false;
+                            this.clearPanelProjectInfoItem();
                             this.closePanel();
                         } else {
                             console.error('Ошибка изменения записи: ', response.Error);
@@ -370,23 +370,23 @@
                 }
             },
 
-            deleteAPIErrorItemHandler() {
-                let deletedItemId = this.currentAPIErrorItem.item.Id;
+            deleteProjectInfoItemHandler() {
+                let deletedItemId = this.currentProjectInfoItem.item.Id;
 
-                if (!this.currentAPIErrorItem.canDelete) {
-                    this.currentAPIErrorItem.showDeleteConfirmation = true;
+                if (!this.currentProjectInfoItem.canDelete) {
+                    this.currentProjectInfoItem.showDeleteConfirmation = true;
                     return;
                 }
 
-                this.deleteAPIError({
+                this.deleteProjectInfo({
                     id: deletedItemId
                 }).then(response => {
 
                     if (response.IsSuccess) {
-                        this.deleteAPIErrorFromList(deletedItemId);
-                        this.clearPanelAPIErrorItem();
-                        this.currentAPIErrorItem.canDelete = false;
-                        this.currentAPIErrorItem.isSelected = false;
+                        this.deleteProjectInfoFromList(deletedItemId);
+                        this.clearPanelProjectInfoItem();
+                        this.currentProjectInfoItem.canDelete = false;
+                        this.currentProjectInfoItem.isSelected = false;
                         this.panel.show = false;
                     } else {
                         console.error('Ошибка удаления элемента: ', response.Error);
@@ -398,13 +398,13 @@
             },
 
             confirmDeleteHandler() {
-                this.currentAPIErrorItem.showDeleteConfirmation = false;
-                this.currentAPIErrorItem.canDelete = true;
-                this.deleteAPIErrorItemHandler();
+                this.currentProjectInfoItem.showDeleteConfirmation = false;
+                this.currentProjectInfoItem.canDelete = true;
+                this.deleteProjectInfoItemHandler();
             },
 
             closeConfirmationPanel() {
-                this.currentAPIErrorItem.showDeleteConfirmation = false;
+                this.currentProjectInfoItem.showDeleteConfirmation = false;
             },
         },
     }
