@@ -3,12 +3,13 @@ package types
 import (
 	"net/http"
 	"strconv"
+	"gosha/cmd"
 )
 
 type Entity struct {
 	Id int
 	Name     string
-	Fields	 []EntityField
+	Fields	 []cmd.Field
 	//Entity remove this line for disable generator functionality
 }
 

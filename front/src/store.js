@@ -1,16 +1,18 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import projectInfo from "../../webapp/jstypes/store/ProjectInfo";
+import entity from "../../webapp/jstypes/store/Entity";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
-export default new Vuex.Store({
-  state: {
+const store = {
+    modules: {
+        projectInfo,
+        entity,
+    },
+    state: {
+        version: "1.0.0", // a simple property
+    },
+};
 
-  },
-  mutations: {
-
-  },
-  actions: {
-
-  }
-})
+export default new Vuex.Store(store);

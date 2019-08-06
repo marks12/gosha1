@@ -31,11 +31,11 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
 
     // order global criteria
     if len(filter.Order) > 0  {
-        for index, field := range filter.Order {
-             if core.Db.NewScope(&dbmodels.{Entity}{}).HasColumn(field) {
-                criteria = criteria.Order(` + `"` + "`" + `"` + ` + field + ` + `"` + "`" + `"` + ` + " " + filter.OrderDirection[index])
+        for index, Field := range filter.Order {
+             if core.Db.NewScope(&dbmodels.{Entity}{}).HasColumn(Field) {
+                criteria = criteria.Order(` + `"` + "`" + `"` + ` + Field + ` + `"` + "`" + `"` + ` + " " + filter.OrderDirection[index])
             } else {
-                err = errors.New("Ordering by unknown field " + field)
+                err = errors.New("Ordering by unknown Field " + Field)
                 return
             }
         }
@@ -130,7 +130,7 @@ func {Entity}Update(filter types.{Entity}Filter)  (data types.{Entity}, err erro
 
     //updateModel.Some = newModel.Some
 
-    ` + getRemoveLine("updateModel.field") + `
+    ` + getRemoveLine("updateModel.Field") + `
 
     updateModel.Validate()
 
@@ -186,7 +186,7 @@ func {Entity}FindOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, er
     filter.Pagination.PerPage = 1
 
     findOrCreateModel := Assign{Entity}DbFromType(filter.Get{Entity}Model())
-	//findOrCreateModel.field remove this line for disable generator functionality
+	//findOrCreateModel.Field remove this line for disable generator functionality
 
     findOrCreateModel.Validate()
 

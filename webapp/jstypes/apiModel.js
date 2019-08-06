@@ -35,6 +35,23 @@ export function EntityFieldFilter() {
     return this;
 }
 
+export function ProjectInfo() {
+
+    this.Id = 0;
+    this.Name = "";
+    this.Value = "";
+
+    return this;
+}
+
+export function ProjectInfoFilter() {
+
+    this.CurrentPage = 0;
+    this.PerPage = 0;
+
+    return this;
+}
+
 export function APIStatus() {
 
     this.Status = "";
