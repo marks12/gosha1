@@ -33,7 +33,7 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
     if len(filter.Order) > 0  {
         for index, field := range filter.Order {
              if core.Db.NewScope(&dbmodels.{Entity}{}).HasColumn(field) {
-                criteria = criteria.Order(` + `"` + "`" + `"` + `field` + `"` + "`" + `"` + ` + " " + filter.OrderDirection[index])
+                criteria = criteria.Order(` + `"` + "`" + `"` + ` + field + ` + `"` + "`" + `"` + ` + " " + filter.OrderDirection[index])
             } else {
                 err = errors.New("Ordering by unknown field " + field)
                 return
