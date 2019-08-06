@@ -28,7 +28,7 @@ const usualEntityVueComponent = `
                         >
                             <td v-for="(value, key) in fields">
                                 <VCheckbox v-if="isCheckbox({entity}Item[key])" :checked="{entity}Item[key]" disabled></VCheckbox>
-                                <VText v-else>{{ applicationItem[key] }}</VText>
+                                <VText v-else>{{ {entity}Item[key] }}</VText>
                             </td>
                         </tr>
                     </tbody>
