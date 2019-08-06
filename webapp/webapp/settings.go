@@ -12,12 +12,12 @@ func SettingFind(w http.ResponseWriter, httpRequest *http.Request) {
 	requestDto := types.GetSettingFilter(httpRequest, settings.FunctionTypeFind)
 
 	if !requestDto.IsAuthorized() {
-		errResponse(w, "Invalid authorize in FindSetting", http.StatusForbidden)
+		ErrResponse(w, "Invalid authorize in FindSetting", http.StatusForbidden)
 		return
 	}
 
 	if !requestDto.IsValid() {
-		errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+		ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
 		return
 	}
 
@@ -26,11 +26,11 @@ func SettingFind(w http.ResponseWriter, httpRequest *http.Request) {
 
 	// Создаём структуру ответа
 	if err != nil {
-		errResponse(w, err.Error(), http.StatusBadRequest)
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	validResponse(w, mdl.ResponseFind{
+	ValidResponse(w, mdl.ResponseFind{
 		data,
 		totalRecords,
 	})
@@ -43,12 +43,12 @@ func SettingCreate(w http.ResponseWriter, httpRequest *http.Request) {
 	requestDto := types.GetSettingFilter(httpRequest, settings.FunctionTypeCreate)
 
 	if !requestDto.IsAuthorized() {
-		errResponse(w, "Invalid authorize in SettingCreate", http.StatusForbidden)
+		ErrResponse(w, "Invalid authorize in SettingCreate", http.StatusForbidden)
 		return
 	}
 
 	if !requestDto.IsValid() {
-		errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+		ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
 		return
 	}
 
@@ -57,11 +57,11 @@ func SettingCreate(w http.ResponseWriter, httpRequest *http.Request) {
 
 	// Создаём структуру ответа
 	if err != nil {
-		errResponse(w, err.Error(), http.StatusBadRequest)
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	validResponse(w, mdl.ResponseCreate{
+	ValidResponse(w, mdl.ResponseCreate{
 		data,
 	})
 
@@ -77,12 +77,12 @@ func SettingRead(w http.ResponseWriter, httpRequest *http.Request) {
 
 
 	if !requestDto.IsAuthorized() {
-		errResponse(w, "Invalid authorize in SettingRead", http.StatusForbidden)
+		ErrResponse(w, "Invalid authorize in SettingRead", http.StatusForbidden)
 		return
 	}
 
 	if !requestDto.IsValid() {
-		errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+		ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
 		return
 	}
 
@@ -91,11 +91,11 @@ func SettingRead(w http.ResponseWriter, httpRequest *http.Request) {
 
 	// Создаём структуру ответа
 	if err != nil {
-		errResponse(w, err.Error(), http.StatusBadRequest)
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	validResponse(w, mdl.ResponseRead{
+	ValidResponse(w, mdl.ResponseRead{
 		data,
 	})
 
@@ -108,12 +108,12 @@ func SettingUpdate(w http.ResponseWriter, httpRequest *http.Request) {
 	requestDto := types.GetSettingFilter(httpRequest, settings.FunctionTypeUpdate)
 
 	if !requestDto.IsAuthorized() {
-		errResponse(w, "Invalid authorize in SettingUpdate", http.StatusForbidden)
+		ErrResponse(w, "Invalid authorize in SettingUpdate", http.StatusForbidden)
 		return
 	}
 
 	if !requestDto.IsValid() {
-		errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+		ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
 		return
 	}
 
@@ -122,11 +122,11 @@ func SettingUpdate(w http.ResponseWriter, httpRequest *http.Request) {
 
 	// Создаём структуру ответа
 	if err != nil {
-		errResponse(w, err.Error(), http.StatusBadRequest)
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	validResponse(w, mdl.ResponseUpdate{
+	ValidResponse(w, mdl.ResponseUpdate{
 		data,
 	})
 
@@ -138,12 +138,12 @@ func SettingDelete(w http.ResponseWriter, httpRequest *http.Request) {
 	requestDto := types.GetSettingFilter(httpRequest, settings.FunctionTypeDelete)
 
 	if !requestDto.IsAuthorized() {
-		errResponse(w, "Invalid authorize in SettingDelete", http.StatusForbidden)
+		ErrResponse(w, "Invalid authorize in SettingDelete", http.StatusForbidden)
 		return
 	}
 
 	if !requestDto.IsValid() {
-		errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+		ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
 		return
 	}
 
@@ -152,11 +152,11 @@ func SettingDelete(w http.ResponseWriter, httpRequest *http.Request) {
 
 	// Создаём структуру ответа
 	if err != nil {
-		errResponse(w, err.Error(), http.StatusBadRequest)
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	validResponse(w, mdl.ResponseDelete{
+	ValidResponse(w, mdl.ResponseDelete{
 		isOk,
 	})
 

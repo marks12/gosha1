@@ -1,7 +1,7 @@
 <template>
     <TheLayout id="app">
         <template #branding>
-            {{projectName}}
+            <VHead>{{projectName}}</VHead>
         </template>
         <template #navigation>
             <MainMenu></MainMenu>
@@ -34,7 +34,44 @@
 <script>
     import TheLayout from "swtui/src/components/TheLayout";
     import MainMenu from "./components/MainMenu";
+    import {mapGetters, mapActions} from 'vuex';
+    import {ProjectInfoFilter} from "../../webapp/jstypes/apiModel";
+    import VButton from "swtui/src/components/VButton";
+    import VHead from "swtui/src/components/VHead";
+
     export default {
-        components: {MainMenu, TheLayout}
+        components: {VHead, VButton, MainMenu, TheLayout},
+        methods: {
+            ...mapGetters([
+                'getListProjectInfo',
+            ]),
+            ...mapActions([
+                'findProjectInfo',
+            ])
+        },
+        data() {
+            return {
+                piFileter: new ProjectInfoFilter(),
+            };
+        },
+        created() {
+
+            this.piFileter.CurrentPage = 1;
+            this.piFileter.PerPage = 1000;
+
+            this.findProjectInfo({filter: this.piFileter});
+        },
+        computed: {
+
+            projectName() {
+
+                let infoList = this.getListProjectInfo();
+
+                let name = infoList.find(item => item.Name === "ProjectName");
+
+                return name ? name.Value : '';
+            },
+        },
+
     }
 </script>

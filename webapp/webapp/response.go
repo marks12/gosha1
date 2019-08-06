@@ -6,7 +6,7 @@ import (
 	"gosha/webapp/types"
 )
 
-func errResponse (w http.ResponseWriter, err string, status int) {
+func ErrResponse(w http.ResponseWriter, err string, status int) {
 
 	response := types.APIError{}
 
@@ -19,7 +19,7 @@ func errResponse (w http.ResponseWriter, err string, status int) {
 	return
 }
 
-func validResponse (w http.ResponseWriter, data interface{}) {
+func ValidResponse(w http.ResponseWriter, data interface{}) {
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(data)

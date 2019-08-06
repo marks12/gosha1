@@ -25,7 +25,7 @@ const USUAL_ENTITY_ADD  = "usual:entity:add"
 
 const USUAL_AUTH_ADD    = "usual:auth:add"
 
-const ENTITY_ADD_FIELD = "entity:field:add"
+const ENTITY_ADD_FIELD = "entity:Field:add"
 
 func setAppType(c *ishell.Context) {
 
@@ -147,7 +147,7 @@ func setAppCommands(choice int, c *ishell.Context) {
             green(USUAL_APP_CREATE), " - Create new app",
             green(USUAL_ENTITY_ADD), " - Add entity. NIM: --entity=SomeName --crud=fcruda --check-auth=fcruda, where a=findOrCreate",
             green(USUAL_AUTH_ADD), " - Add user, roles, auth, to app",
-            green(ENTITY_ADD_FIELD), " - Add field to model. NIM: --entity=SomeName2 --field=SomeField --data-type=string",
+            green(ENTITY_ADD_FIELD), " - Add Field to model. NIM: --entity=SomeName2 --Field=SomeField --data-type=string",
         })
 
         setUsualAppCreate()
@@ -243,10 +243,10 @@ func setModelFieldAdd() {
 
     shell.AddCmd(&ishell.Cmd{
         Name: ENTITY_ADD_FIELD,
-        Help: "Command add new field to model." +
+        Help: "Command add new Field to model." +
             "NIM:" +
             "--entity=SomeName2" +
-            "--field=SomeField" +
+            "--Field=SomeField" +
             "--data-type=string",
         Func: entityFieldAdd,
     })

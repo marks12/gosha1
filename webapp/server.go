@@ -2,13 +2,18 @@ package webapp
 
 import (
 	"fmt"
-	"net/http"
 	"gosha/settings"
+	"net/http"
 )
 
 func Run() {
 
-	fmt.Println("API сервер запущен :" + settings.ServerPort)
-	http.ListenAndServe("0.0.0.0:" + settings.ServerPort, Router())
+	fmt.Println("API server running :" + settings.ServerPort)
+	fmt.Println("Try to open: http://localhost:" + settings.ServerPort)
+	e := http.ListenAndServe("0.0.0.0:" + settings.ServerPort, Router())
+
+	if e != nil {
+		fmt.Println("error running server: "  + e.Error())
+	}
 }
 

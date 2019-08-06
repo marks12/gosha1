@@ -15,7 +15,7 @@ import (
     "strings"
 )
 
-type modelRepository struct {
+type ModelRepository struct {
     list []model
 }
 
@@ -25,12 +25,12 @@ type model struct {
     Structures []ast.Decl
 }
 
-type field struct {
+type Field struct {
     Name string
     Type string
 }
 
-func (mr *modelRepository) getModels() (models []string) {
+func (mr *ModelRepository) GetModels() (models []string) {
 
     for _, m := range mr.list {
         models = append(models, m.FilePath)
@@ -39,9 +39,9 @@ func (mr *modelRepository) getModels() (models []string) {
     return
 }
 
-func (mr *modelRepository) addField(modelName string, fieldName string, dataType string) (err error) {
+func (mr *ModelRepository) addField(modelName string, fieldName string, dataType string) (err error) {
 
-    fmt.Println("adding new field to model: ", modelName, "field: ", fieldName, "type:", dataType)
+    fmt.Println("adding new Field to model: ", modelName, "Field: ", fieldName, "type:", dataType)
 
     CamelCase := strings.Title(modelName)
     snakeCase := getLowerCase(modelName)
@@ -81,8 +81,8 @@ func (mr *modelRepository) addField(modelName string, fieldName string, dataType
     CopyFile(
         sourceFile,
         sourceFile,
-        []string{getRemoveLine("updateModel.field")},
-        []string{"updateModel." + fieldName + " = newModel." + fieldName + "\n\t" + getRemoveLine("updateModel.field")},
+        []string{getRemoveLine("updateModel.Field")},
+        []string{"updateModel." + fieldName + " = newModel." + fieldName + "\n\t" + getRemoveLine("updateModel.Field")},
         nil)
 
     return
@@ -91,7 +91,7 @@ func (mr *modelRepository) addField(modelName string, fieldName string, dataType
 /**
  * Check structure exists in repo
  */
-func (mr *modelRepository) IsStructExists(modelName string) bool {
+func (mr *ModelRepository) IsStructExists(modelName string) bool {
 
     for _, model := range mr.list {
 
@@ -122,7 +122,7 @@ func (mr *modelRepository) IsStructExists(modelName string) bool {
     return false
 }
 
-func (mr *modelRepository) ShowFields(modelName string) {
+func (mr *ModelRepository) ShowFields(modelName string) {
 
     for _, model := range mr.list {
 
@@ -160,7 +160,7 @@ func (mr *modelRepository) ShowFields(modelName string) {
     return
 }
 
-func (mr *modelRepository) GetFields(modelName string, fields []field) []field {
+func (mr *ModelRepository) GetFields(modelName string, fields []Field) []Field {
 
     for _, model := range mr.list {
 
@@ -198,7 +198,7 @@ func (mr *modelRepository) GetFields(modelName string, fields []field) []field {
                                 typeString = "Array"
                             }
 
-                            fields = append(fields, field{
+                            fields = append(fields, Field{
                                 Type: typeString,
                                 Name: ft.Names[0].Name,
                             })
@@ -218,7 +218,7 @@ func (mr *modelRepository) GetFields(modelName string, fields []field) []field {
     return fields
 }
 
-func (em *modelRepository) getModelFile(name string) (fileName string) {
+func (em *ModelRepository) getModelFile(name string) (fileName string) {
 
     for _, m := range em.list {
         if m.FilePath == name {
@@ -242,12 +242,12 @@ func entityFieldAdd(c *ishell.Context) {
     red := color.New(color.FgRed).SprintFunc()
 
     InteractiveEcho([]string{
-        green("Hello we start adding new field to entity"),
+        green("Hello we start adding new Field to entity"),
     })
 
-    existsModels := getExistsModels()
+    existsModels := GetExistsModels()
 
-    dbmodelsList := getModelsList(existsModels)
+    dbmodelsList := GetModelsList(existsModels)
 
     if mode.IsInteractive() {
 
@@ -292,12 +292,12 @@ func entityFieldAdd(c *ishell.Context) {
     existsModels.ShowFields(entity)
 
     InteractiveEcho([]string{
-        "Please enter name of new field:",
+        "Please enter name of new Field:",
     })
 
     if mode.IsNonInteractive() {
 
-        reg, err = GetOsArgument("field")
+        reg, err = GetOsArgument("Field")
         field = reg.StringResult
 
     } else {
@@ -363,7 +363,7 @@ func getDataType(c *ishell.Context) (dataType string, err error) {
     return "", errors.New("cancel")
 }
 
-func getModelsList(repository modelRepository) (list []string) {
+func GetModelsList(repository ModelRepository) (list []string) {
 
     for _, model := range repository.list {
 
@@ -391,15 +391,15 @@ func getModelsList(repository modelRepository) (list []string) {
     return
 }
 
-func getExistsModels() (repo modelRepository) {
+func GetExistsModels() (repo ModelRepository) {
     return getPackageModels("/dbmodels")
 }
 
-func getExistsTypes() (repo modelRepository) {
+func GetExistsTypes() (repo ModelRepository) {
     return getPackageModels("/types")
 }
 
-func getPackageModels(path string) (repo modelRepository) {
+func getPackageModels(path string) (repo ModelRepository) {
 
     dir, err := os.Getwd()
     if err != nil {
@@ -461,9 +461,9 @@ func getFileModels(filePath string) ([]ast.Decl, *ast.File) {
     return typeDecl, f
 }
 
-func clearEntities(repo modelRepository) {
+func clearEntities(repo ModelRepository) {
 
-    for _, entity := range getModelsList(repo) {
+    for _, entity := range GetModelsList(repo) {
        shell.DeleteCmd(entity)
     }
 }
