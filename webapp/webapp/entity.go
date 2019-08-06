@@ -5,6 +5,8 @@ import (
 	"gosha/settings"
 	"gosha/webapp/mdl"
 	"gosha/webapp/types"
+	"gosha/cmd"
+	"strings"
 )
 
 func EntityFind(w http.ResponseWriter, httpRequest *http.Request) {
@@ -12,12 +14,12 @@ func EntityFind(w http.ResponseWriter, httpRequest *http.Request) {
 	requestDto := types.GetEntityFilter(httpRequest, settings.FunctionTypeFind)
 
 	if !requestDto.IsAuthorized() {
-		errResponse(w, "Invalid authorize in FindEntity", http.StatusForbidden)
+		ErrResponse(w, "Invalid authorize in FindEntity", http.StatusForbidden)
 		return
 	}
 
 	if !requestDto.IsValid() {
-		errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+		ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
 		return
 	}
 
@@ -26,11 +28,11 @@ func EntityFind(w http.ResponseWriter, httpRequest *http.Request) {
 
 	// Создаём структуру ответа
 	if err != nil {
-		errResponse(w, err.Error(), http.StatusBadRequest)
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	validResponse(w, mdl.ResponseFind{
+	ValidResponse(w, mdl.ResponseFind{
 		data,
 		totalRecords,
 	})
@@ -43,12 +45,12 @@ func EntityCreate(w http.ResponseWriter, httpRequest *http.Request) {
 	requestDto := types.GetEntityFilter(httpRequest, settings.FunctionTypeCreate)
 
 	if !requestDto.IsAuthorized() {
-		errResponse(w, "Invalid authorize in EntityCreate", http.StatusForbidden)
+		ErrResponse(w, "Invalid authorize in EntityCreate", http.StatusForbidden)
 		return
 	}
 
 	if !requestDto.IsValid() {
-		errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+		ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
 		return
 	}
 
@@ -57,11 +59,11 @@ func EntityCreate(w http.ResponseWriter, httpRequest *http.Request) {
 
 	// Создаём структуру ответа
 	if err != nil {
-		errResponse(w, err.Error(), http.StatusBadRequest)
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	validResponse(w, mdl.ResponseCreate{
+	ValidResponse(w, mdl.ResponseCreate{
 		data,
 	})
 
@@ -77,12 +79,12 @@ func EntityRead(w http.ResponseWriter, httpRequest *http.Request) {
 
 
 	if !requestDto.IsAuthorized() {
-		errResponse(w, "Invalid authorize in EntityRead", http.StatusForbidden)
+		ErrResponse(w, "Invalid authorize in EntityRead", http.StatusForbidden)
 		return
 	}
 
 	if !requestDto.IsValid() {
-		errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+		ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
 		return
 	}
 
@@ -91,11 +93,11 @@ func EntityRead(w http.ResponseWriter, httpRequest *http.Request) {
 
 	// Создаём структуру ответа
 	if err != nil {
-		errResponse(w, err.Error(), http.StatusBadRequest)
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	validResponse(w, mdl.ResponseRead{
+	ValidResponse(w, mdl.ResponseRead{
 		data,
 	})
 
@@ -108,12 +110,12 @@ func EntityUpdate(w http.ResponseWriter, httpRequest *http.Request) {
 	requestDto := types.GetEntityFilter(httpRequest, settings.FunctionTypeUpdate)
 
 	if !requestDto.IsAuthorized() {
-		errResponse(w, "Invalid authorize in EntityUpdate", http.StatusForbidden)
+		ErrResponse(w, "Invalid authorize in EntityUpdate", http.StatusForbidden)
 		return
 	}
 
 	if !requestDto.IsValid() {
-		errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+		ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
 		return
 	}
 
@@ -122,11 +124,11 @@ func EntityUpdate(w http.ResponseWriter, httpRequest *http.Request) {
 
 	// Создаём структуру ответа
 	if err != nil {
-		errResponse(w, err.Error(), http.StatusBadRequest)
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	validResponse(w, mdl.ResponseUpdate{
+	ValidResponse(w, mdl.ResponseUpdate{
 		data,
 	})
 
@@ -138,12 +140,12 @@ func EntityDelete(w http.ResponseWriter, httpRequest *http.Request) {
 	requestDto := types.GetEntityFilter(httpRequest, settings.FunctionTypeDelete)
 
 	if !requestDto.IsAuthorized() {
-		errResponse(w, "Invalid authorize in EntityDelete", http.StatusForbidden)
+		ErrResponse(w, "Invalid authorize in EntityDelete", http.StatusForbidden)
 		return
 	}
 
 	if !requestDto.IsValid() {
-		errResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+		ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
 		return
 	}
 
@@ -152,11 +154,11 @@ func EntityDelete(w http.ResponseWriter, httpRequest *http.Request) {
 
 	// Создаём структуру ответа
 	if err != nil {
-		errResponse(w, err.Error(), http.StatusBadRequest)
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	validResponse(w, mdl.ResponseDelete{
+	ValidResponse(w, mdl.ResponseDelete{
 		isOk,
 	})
 
@@ -164,6 +166,31 @@ func EntityDelete(w http.ResponseWriter, httpRequest *http.Request) {
 }
 
 func logicEntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords int, err error) {
+
+	existsTypes := cmd.GetExistsTypes()
+	typeNames := cmd.GetModelsList(existsTypes)
+
+	id := 1
+
+	for _, t := range typeNames {
+
+		fields := []cmd.Field{}
+
+		for _, field := range existsTypes.GetFields(t, []cmd.Field{}) {
+
+			if field.Name == strings.Title(field.Name) {
+				fields = append(fields, field)
+			}
+
+		}
+
+		result = append(result, types.Entity{
+			Id: id,
+			Name: t,
+			Fields: fields,
+		})
+		id++
+	}
 
 	return
 }

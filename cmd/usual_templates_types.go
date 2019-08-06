@@ -224,8 +224,8 @@ func GetAbstractFilter(request *http.Request, functionType string) AbstractFilte
         }
     }
 
-    for index, field := range arr["Order[]"] {
-        filter.Order = append(filter.Order, field)
+    for index, Field := range arr["Order[]"] {
+        filter.Order = append(filter.Order, Field)
         if len(dirs) > index && dirs[index] == "desc" {
             filter.OrderDirection = append(filter.OrderDirection, "desc")
         } else {

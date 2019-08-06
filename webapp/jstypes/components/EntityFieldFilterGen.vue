@@ -25,8 +25,8 @@
                             :class="{'sw-table__row_is-selected': entityFieldFilterItem.Id === currentEntityFieldFilterItem.item.Id}"
                         >
                             <td v-for="(value, key) in fields">
-                                <VCheckbox v-if="isCheckbox(applicationItem[key])" :checked="applicationItem[key]" disabled></VCheckbox>
-                                <VText v-else>{{ applicationItem[key] }}</VText>
+                                <VCheckbox v-if="isCheckbox(entityFieldFilterItem[key])" :checked="entityFieldFilterItem[key]" disabled></VCheckbox>
+                                <VText v-else>{{ entityFieldFilterItem[key] }}</VText>
                             </td>
                         </tr>
                     </tbody>

@@ -5,7 +5,6 @@ import (
     "os"
     "github.com/fatih/color"
     "gosha/mode"
-    "gosha/webapp"
 )
 
 var shell = ishell.New()
@@ -14,11 +13,6 @@ const SET_APP_TYPE = "setAppType"
 const GENERATE_TYPES_JS = "gen:types:js"
 
 func RunShell() {
-
-    if len(os.Args) > 1 && os.Args[1] == "serve" {
-        webapp.Run()
-        return
-    }
 
     green := color.New(color.FgGreen).SprintFunc()
     red := color.New(color.FgRed).SprintFunc()
