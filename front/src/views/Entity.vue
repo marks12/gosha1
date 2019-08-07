@@ -39,7 +39,118 @@
             </table>
         </template>
     </EntityGen>
+
+
+    <!--<template>-->
+        <!--<VSet vertical>-->
+            <!--<VGroup width="dyn" control color="bg-light" selected>-->
+                <!--<VSet  vertical indent-size="M">-->
+                    <!--<VHead>Заголовок</VHead>-->
+                    <!--<VSet indent-size="L" wrap>-->
+                        <!--<VSet vertical indent-size="XS" width="fit">-->
+                            <!--<VText width="fit">Группа</VText >-->
+                            <!--<VBadge>Бэйдж</VBadge>-->
+                        <!--</VSet>-->
+                        <!--<VSet vertical indent-size="XS" width="fit">-->
+                            <!--<VText>Гр hgf hgf h hgf hfg уппа</VText>-->
+                            <!--<VBadge>Бэйдж</VBadge>-->
+                        <!--</VSet>-->
+                        <!--<VSet vertical indent-size="XS" width="fit">-->
+                            <!--<VText>Группа</VText>-->
+                            <!--<VBadge>Бэйдж</VBadge>-->
+                        <!--</VSet>-->
+                        <!--<VSet vertical indent-size="XS" width="fit">-->
+                            <!--<VText>Группа</VText>-->
+                            <!--<VBadge>Бэйдж</VBadge>-->
+                        <!--</VSet>          <VSet vertical indent-size="XS" width="fit">-->
+                        <!--<VText>Группа</VText>-->
+                        <!--<VBadge>Бэйдж</VBadge>-->
+                    <!--</VSet>-->
+                        <!--<VSet vertical indent-size="XS" width="fit">-->
+                            <!--<VText>Группа</VText>-->
+                            <!--<VBadge>Бэйдж</VBadge>-->
+                        <!--</VSet>          <VSet vertical indent-size="XS" width="fit">-->
+                        <!--<VText>Группа</VText>-->
+                        <!--<VBadge>Бэйдж</VBadge>-->
+                    <!--</VSet>-->
+                        <!--<VSet vertical indent-size="XS" width="fit">-->
+                            <!--<VText>Группа</VText>-->
+                            <!--<VBadge>Бэйдж</VBadge>-->
+                        <!--</VSet>          <VSet vertical indent-size="XS" width="fit">-->
+                        <!--<VText>Группа</VText>-->
+                        <!--<VBadge>Бэйдж</VBadge>-->
+                    <!--</VSet>-->
+                        <!--<VSet vertical indent-size="XS" width="fit">-->
+                            <!--<VText>Группа</VText>-->
+                            <!--<VBadge>Бэйдж</VBadge>-->
+                        <!--</VSet>          <VSet vertical indent-size="XS" width="fit">-->
+                        <!--<VText>Группа</VText>-->
+                        <!--<VBadge>Бэйдж</VBadge>-->
+                    <!--</VSet>-->
+                        <!--<VSet vertical indent-size="XS" width="fit">-->
+                            <!--<VText>Группа</VText>-->
+                            <!--<VBadge>Бэйдж</VBadge>-->
+                        <!--</VSet>-->
+                    <!--</VSet>-->
+                <!--</VSet>-->
+            <!--</VGroup>-->
+            <!--<VGroup>-->
+                <!--<VSet  vertical indent-size="S">-->
+                    <!--<VHead>Заголовок</VHead>-->
+                    <!--<VSet indent-size="L">-->
+                        <!--<VSet vertical indent-size="XS">-->
+                            <!--<VText>Группа</VText>-->
+                            <!--<VBadge>Бэйдж</VBadge>-->
+                        <!--</VSet>-->
+                        <!--<VSet vertical indent-size="XS">-->
+                            <!--<VText>Группа</VText>-->
+                            <!--<VBadge>Бэйдж</VBadge>-->
+                        <!--</VSet>-->
+                        <!--<VSet vertical indent-size="XS">-->
+                            <!--<VText>Группа</VText>-->
+                            <!--<VBadge>Бэйдж</VBadge>-->
+                        <!--</VSet>-->
+                        <!--<VSet vertical indent-size="XS">-->
+                            <!--<VText>Группа</VText>-->
+                            <!--<VBadge>Бэйдж</VBadge>-->
+                        <!--</VSet>-->
+                    <!--</VSet>-->
+                <!--</VSet>-->
+            <!--</VGroup>-->
+
+            <!--<VGroup>-->
+                <!--<VSet  vertical indent-size="S">-->
+                    <!--<VHead>Заголовок</VHead>-->
+                    <!--<VSet indent-size="L">-->
+                        <!--<VSet vertical indent-size="XS">-->
+                            <!--<VText>Группа</VText>-->
+                            <!--<VBadge>Бэйдж</VBadge>-->
+                        <!--</VSet>-->
+                        <!--<VSet vertical indent-size="XS">-->
+                            <!--<VText>Группа</VText>-->
+                            <!--<VBadge>Бэйдж</VBadge>-->
+                        <!--</VSet>-->
+                        <!--<VSet vertical indent-size="XS">-->
+                            <!--<VText>Группа</VText>-->
+                            <!--<VBadge>Бэйдж</VBadge>-->
+                        <!--</VSet>-->
+                        <!--<VSet vertical indent-size="XS">-->
+                            <!--<VText>Группа</VText>-->
+                            <!--<VBadge>Бэйдж</VBadge>-->
+                        <!--</VSet>-->
+                    <!--</VSet>-->
+                <!--</VSet>-->
+            <!--</VGroup>-->
+
+        <!--</VSet>-->
+    <!--</template>-->
+
+
 </template>
+
+
+
+
 
 <script>
     import EntityGen from "../../../webapp/jstypes/components/EntityGen";
