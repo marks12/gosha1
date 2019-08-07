@@ -9,7 +9,8 @@ import (
 type Entity struct {
 	Id int
 	Name     string
-	Fields	 []cmd.Field
+	TypeFields	 []cmd.Field
+	ModelFields	 []cmd.Field
 	//Entity remove this line for disable generator functionality
 }
 
