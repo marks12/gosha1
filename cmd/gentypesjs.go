@@ -87,7 +87,9 @@ func getFileContent(repository ModelRepository, typeNames []string) (content str
 			continue
 		}
 
-		for _, field := range repository.GetFields(t, []Field{}) {
+		fieldsList := repository.GetFields(t, []Field{})
+
+		for _, field := range fieldsList {
 
 			if field.Name[0:1] == strings.ToUpper(field.Name[0:1]) {
 
@@ -157,8 +159,10 @@ func getTemplateDataJsCode(entity string) string {
 
 func getFiledJsVal(s string, typeNames []string) (val string) {
 
+	s = strings.ToLower(s)
+
 	switch s {
-		case "Array":
+		case "array":
 			val = "[]"
 			break
 
