@@ -7,6 +7,8 @@ import (
 	"gosha/webapp/types"
 	"gosha/cmd"
 	"strings"
+	"github.com/jinzhu/gorm"
+	"regexp"
 )
 
 func EntityFind(w http.ResponseWriter, httpRequest *http.Request) {
@@ -216,39 +218,92 @@ func logicEntityFind(filter types.EntityFilter) (result []types.Entity, totalRec
 		id++
 	}
 
-	//for _, et := range resTypes {
-	//
-	//	typeFields := []cmd.Field{}
-	//	modelFields := []cmd.Field{}
-	//
-	//	em := getExistsModel(et.Name, resModels)
-	//
-	//	if len(em.Name) > 0 {
-	//
-	//		for _, etf := range et.TypeFields {
-	//
-	//			emf := getExistsField(etf.Name, em.ModelFields)
-	//
-	//
-	//		}
-	//
-	//	} else {
-	//		result = append(result, et)
-	//	}
-	//}
+	for _, et := range resTypes {
+
+		em, _ := getExistsModel(et.Name, resModels)
+
+		if len(em.Name) > 0 {
+
+			for _, etf := range et.TypeFields {
+				emf := getExistsField(etf.Name, em.ModelFields)
+				et.ModelFields = append(et.ModelFields, emf)
+			}
+
+		} else {
+
+			for i := 0; i < len(et.TypeFields); i++ {
+				et.ModelFields = append(et.ModelFields, cmd.Field{})
+			}
+		}
+
+		result = append(result, et)
+	}
+
+	for _, em := range resModels {
+
+		eres, index := getExistsModel(em.Name, result)
+
+		if len(eres.Name) > 0 {
+
+			for _, emf := range  em.ModelFields {
+
+				etf := getExistsField(emf.Name, eres.TypeFields)
+
+				if len(etf.Name) < 1 {
+					result[index].TypeFields = append(result[index].TypeFields, cmd.Field{})
+					result[index].ModelFields = append(result[index].ModelFields, emf)
+				}
+			}
+
+		} else {
+
+			for i := 0; i < len(em.ModelFields); i++ {
+				em.TypeFields = append(em.TypeFields, cmd.Field{})
+			}
+
+			result = append(result, em)
+		}
+	}
+
+	if len(filter.Search) > 0 {
+
+		filtered := []types.Entity{}
+
+		for _, entity := range result {
+
+			matched, _ := regexp.Match(`[a-zA-Z0-9]*` + filter.Search + `[a-zA-Z0-9]*`, []byte(entity.Name))
+
+			if matched {
+				filtered = append(filtered, entity)
+			}
+		}
+
+		result = filtered
+	}
 
 	return
 }
 
-func getExistsModel(s string, entities []types.Entity) (types.Entity) {
+func getExistsField(name string, fields []cmd.Field) cmd.Field {
 
-	for _, ent := range entities {
-		if ent.Name == s {
-			return ent
+	for _, f := range fields {
+		if gorm.ToColumnName(f.Name) == gorm.ToColumnName(name) {
+			return f
 		}
 	}
 
-	return types.Entity{}
+	return cmd.Field{}
+}
+
+func getExistsModel(s string, entities []types.Entity) (types.Entity, int) {
+
+	for i, ent := range entities {
+		if ent.Name == s {
+			return ent, i
+		}
+	}
+
+	return types.Entity{}, 0
 }
 
 func logicEntityRead(filter types.EntityFilter) (data types.Entity, err error) {

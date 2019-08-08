@@ -1,10 +1,16 @@
 <template>
     <EntityGen>
+
+        <template #pageHeader>
+            <VSet vertical  indent-size="XS">
+                <VHead level="h1">Entity</VHead>
+                <VInput  placeholder="Поиск" v-model="searchModel" @input="search"></VInput>
+            </VSet>
+        </template>
+
         <template #data>
 
-            <VSet vertical>
-
-
+            <VSet vertical v-if="entityList && entityList.length">
 
                 <VGroup width="dyn" control v-for="entityItem in entityList" :key="entityItem.Id">
 
@@ -14,46 +20,44 @@
 
                             <VHead>{{ entityItem.Name }}</VHead>
 
-                            <template  v-if="entityItem.TypeFields && entityItem.TypeFields.length">
-
-                                <VSet>
-                                    <VLabel :width="'col2'">Types.Entity</VLabel>
-                                    <VSet vertical indent-size="XS" width="fit" v-for="f in entityItem.TypeFields" :key="f.Id">
-                                        <VText width="fit">{{f.Name}}</VText>
-                                        <VBadge>{{f.Type}}</VBadge>
-                                    </VSet>
-                                </VSet>
-
-                            </template>
-
-                            <template  v-if="entityItem.TypeFields && entityItem.TypeFields.length">
-
-                                <VSet>
-                                    <VLabel :width="'col2'">Dbmodels.Entity</VLabel>
-                                    <VSet vertical indent-size="XS" width="fit" v-for="f in entityItem.TypeFields" :key="f.Id">
-                                        <VText width="fit">{{f.Name}}</VText>
-                                        <VBadge>{{f.Type}}</VBadge>
-                                    </VSet>
-                                </VSet>
-
-                            </template>
-
-                            <VText v-else>No  fields</VText>
+                            <table style="width: auto;">
+                                <tr v-if="entityItem.TypeFields && entityItem.TypeFields.length">
+                                    <td>Types.Entity</td>
+                                    <td  v-for="f in entityItem.TypeFields" :key="f.Id">
+                                        <VSet vertical indent-size="XS">
+                                            <VText width="fit">{{f.Name}}</VText>
+                                            <VBadge>{{f.Type}}</VBadge>
+                                        </VSet>
+                                    </td>
+                                </tr>
+                                <tr v-if="entityItem.TypeFields && entityItem.TypeFields.length">
+                                    <td>Dbmodels.Entity</td>
+                                    <td  v-for="f in entityItem.ModelFields" :key="f.Id">
+                                        <VSet vertical indent-size="XS">
+                                            <VText width="fit">{{f.Name}}</VText>
+                                            <VBadge>{{f.Type}}</VBadge>
+                                        </VSet>
+                                    </td>
+                                </tr>
+                                <tr v-else>
+                                    <td>
+                                        <VText v-else>No  fields</VText>
+                                    </td>
+                                </tr>
+                            </table>
 
                         </VSet>
                     </VSet>
                 </VGroup>
             </VSet>
 
+            <VText v-else>Models not loaded</VText>
+
         </template>
     </EntityGen>
 
 
 </template>
-
-
-
-
 
 <script>
     import EntityGen from "../../../webapp/jstypes/components/EntityGen";
@@ -67,6 +71,21 @@
         mixins: [
             EntityGen,
         ],
+        data() {
+            return {
+                searchModel: "",
+            };
+        },
+        methods: {
+            search() {
+
+                this.entityFilter.Search = this.searchModel;
+
+                this.findEntity({
+                    filter: this.entityFilter
+                })
+            },
+        },
     }
 </script>
 

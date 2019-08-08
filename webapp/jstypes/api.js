@@ -1,4 +1,6 @@
 
+
+
 function request(method, url, getParams, data, headerParams) {
 
     function appendParams(u, params) {
@@ -10,12 +12,15 @@ function request(method, url, getParams, data, headerParams) {
                 }
                 u = u + (u.includes("?") ? "" : "?");
                 for (const f of Object.keys(params)) {
+
                     if (uparams !== "") {
                         uparams += "&";
                     }
+
+                    let list = "";
+
                     switch (typeof params[f]) {
                         case "object":
-                            let list = "";
                             for (let j = 0; j < params[f].length; j++) {
                                 if (list.length) {
                                     list += "&";
