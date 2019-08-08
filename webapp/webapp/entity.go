@@ -170,29 +170,85 @@ func logicEntityFind(filter types.EntityFilter) (result []types.Entity, totalRec
 	existsTypes := cmd.GetExistsTypes()
 	typeNames := cmd.GetModelsList(existsTypes)
 
-	id := 1
+	existsModels := cmd.GetExistsModels()
+	modelsNames := cmd.GetModelsList(existsModels)
 
+	resModels := []types.Entity{}
+	resTypes := []types.Entity{}
+
+	id := 1
 	for _, t := range typeNames {
 
-		fields := []cmd.Field{}
+		typeFields := []cmd.Field{}
 
 		for _, field := range existsTypes.GetFields(t, []cmd.Field{}) {
 
 			if field.Name == strings.Title(field.Name) {
-				fields = append(fields, field)
+				typeFields = append(typeFields, field)
 			}
-
 		}
 
-		result = append(result, types.Entity{
+		resTypes = append(resTypes, types.Entity{
 			Id: id,
 			Name: t,
-			Fields: fields,
+			TypeFields: typeFields,
 		})
 		id++
 	}
 
+	id = 1
+	for _, t := range modelsNames {
+
+		modelFields := []cmd.Field{}
+
+		for _, field := range existsModels.GetFields(t, []cmd.Field{}) {
+
+			if field.Name == strings.Title(field.Name) {
+				modelFields = append(modelFields, field)
+			}
+		}
+
+		resModels = append(resModels, types.Entity{
+			Id: id,
+			Name: t,
+			ModelFields: modelFields,
+		})
+		id++
+	}
+
+	//for _, et := range resTypes {
+	//
+	//	typeFields := []cmd.Field{}
+	//	modelFields := []cmd.Field{}
+	//
+	//	em := getExistsModel(et.Name, resModels)
+	//
+	//	if len(em.Name) > 0 {
+	//
+	//		for _, etf := range et.TypeFields {
+	//
+	//			emf := getExistsField(etf.Name, em.ModelFields)
+	//
+	//
+	//		}
+	//
+	//	} else {
+	//		result = append(result, et)
+	//	}
+	//}
+
 	return
+}
+
+func getExistsModel(s string, entities []types.Entity) (types.Entity) {
+
+	for _, ent := range entities {
+		if ent.Name == s {
+			return ent
+		}
+	}
+
+	return types.Entity{}
 }
 
 func logicEntityRead(filter types.EntityFilter) (data types.Entity, err error) {
