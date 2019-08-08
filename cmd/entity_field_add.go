@@ -192,14 +192,36 @@ func (mr *ModelRepository) GetFields(modelName string, fields []Field) []Field {
 
                             if ident, ok := ft.Type.(*ast.Ident); ok { // allow subsequent panic to provide a more descriptive error
                                 typeString = ident.Name
-                            }
+                            } else if _, ok := ft.Type.(*ast.ArrayType); ok { // allow subsequent panic to provide a more descriptive error
+                                typeString = "array"
+                            } else {
 
-                            if _, ok := ft.Type.(*ast.ArrayType); ok { // allow subsequent panic to provide a more descriptive error
-                                typeString = "Array"
+                                switch x := ft.Type.(type) {
+                                    case *ast.BasicLit:
+                                        typeString = x.Value
+                                    case *ast.Ident:
+                                        typeString = x.Name
+                                    case *ast.StarExpr: {
+                                        //typeString = x.Star
+                                        if i, ok := x.X.(*ast.SelectorExpr); ok { // allow subsequent panic to provide a more descriptive error
+                                            if ident, ok := i.X.(*ast.Ident); ok { // allow subsequent panic to provide a more descriptive error
+                                                typeString = ident.Name
+                                            }
+                                        }
+
+                                    }
+                                    case *ast.SelectorExpr: {
+                                        if ident, ok := x.X.(*ast.Ident); ok { // allow subsequent panic to provide a more descriptive error
+                                            typeString = ident.Name
+                                        }
+                                    }
+                                    default:
+                                        typeString = "unknown"
+                                }
                             }
 
                             fields = append(fields, Field{
-                                Type: typeString,
+                                Type: strings.Title(typeString),
                                 Name: ft.Names[0].Name,
                             })
                         } else {
