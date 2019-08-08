@@ -21,7 +21,7 @@
                             <VHead>{{ entityItem.Name }}</VHead>
 
                             <table style="width: auto;">
-                                <tr v-if="entityItem.TypeFields && entityItem.TypeFields.length">
+                                <tr v-if="hasFields(entityItem)">
                                     <td>Types.Entity</td>
                                     <td  v-for="f in entityItem.TypeFields" :key="f.Id">
                                         <VSet vertical indent-size="XS">
@@ -30,7 +30,7 @@
                                         </VSet>
                                     </td>
                                 </tr>
-                                <tr v-if="entityItem.TypeFields && entityItem.TypeFields.length">
+                                <tr v-if="hasFields(entityItem)">
                                     <td>Dbmodels.Entity</td>
                                     <td  v-for="f in entityItem.ModelFields" :key="f.Id">
                                         <VSet vertical indent-size="XS">
@@ -39,9 +39,9 @@
                                         </VSet>
                                     </td>
                                 </tr>
-                                <tr v-else>
+                                <tr v-if="! hasFields(entityItem)">
                                     <td>
-                                        <VText v-else>No  fields</VText>
+                                        <VText>No  fields</VText>
                                     </td>
                                 </tr>
                             </table>
@@ -50,10 +50,60 @@
                     </VSet>
                 </VGroup>
             </VSet>
-
             <VText v-else>Models not loaded</VText>
 
         </template>
+
+        <template #pageFooter>
+            <VSet>
+                <VButton
+                        text="Добавить"
+                        accent
+                        @click="showPanel(panel.create)"
+                />
+            </VSet>
+        </template>
+
+        <template #panel>
+            <VPanel
+                    v-if="panel.show"
+                    width="col3"
+                    @close="closePanel"
+            >
+                <template #header>
+                    <VHead level="h3">{{ panelHeader }}</VHead>
+                </template>
+
+                <template #content>
+                    <form @submit.prevent="saveChangesSubmit">
+                        <VSet direction="vertical">
+                            <VSet vertical-align="center">
+                                <VLabel width="col4">{{ filed }}</VLabel>
+                                <VInput v-model="currentEntityItem.item.Name" width="fit"/>
+                                {{currentEntityItem.item.Name}}
+                            </VSet>
+                        </VSet>
+                        <button type="submit" :disabled="!currentEntityItem.hasChange" hidden></button>
+                    </form>
+                </template>
+
+                <template #footer>
+                    <VSet>
+                        <VButton
+                                @click="saveChangesSubmit"
+                                accent
+                                :text="panelSubmitButtonText"
+                                :disabled="!currentEntityItem.hasChange"
+                        />
+                        <VButton
+                                @click="cancelChanges"
+                                text="Отменить"
+                        />
+                    </VSet>
+                </template>
+            </VPanel>
+        </template>
+
     </EntityGen>
 
 
@@ -84,6 +134,15 @@
                 this.findEntity({
                     filter: this.entityFilter
                 })
+            },
+        },
+        computed: {
+            hasFields(entityItem) {
+                return (entityItem) => {
+                    return  entityItem &&
+                            entityItem.TypeFields &&
+                            entityItem.TypeFields.length;
+                }
             },
         },
     }
