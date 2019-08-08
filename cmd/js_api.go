@@ -2,6 +2,7 @@ package cmd
 
 const apiContent = `
 
+
 function request(method, url, getParams, data, headerParams) {
 
     function appendParams(u, params) {
@@ -124,5 +125,4 @@ function BackendApi() {
 let api = new BackendApi();
 
 export default api;
-
 `
