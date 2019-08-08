@@ -7,6 +7,8 @@ import (
     "strconv"
     "github.com/gorilla/mux"
     "gosha/settings"
+    "net/url"
+    "github.com/jinzhu/gorm"
 )
 
 type FilterIds struct {
@@ -79,12 +81,25 @@ func (filter *FilterIds) Validate(functionType string) {
     }
 }
 
+type SearchFilter struct {
+
+    Search string
+    SearchBy []string
+}
+
+type OrderFilter struct {
+
+    Order []string
+    OrderDirection []string
+}
 
 type AbstractFilter struct {
 
     request *http.Request
     functionType string
 
+    SearchFilter
+    OrderFilter
     FilterIds
     Pagination
     validator
@@ -102,6 +117,31 @@ func GetAbstractFilter(request *http.Request, functionType string) AbstractFilte
 
     filter.Pagination.CurrentPage,_  = strconv.Atoi(request.FormValue("CurrentPage"))
     filter.Pagination.PerPage,_  = strconv.Atoi(request.FormValue("PerPage"))
+    filter.Search  = request.FormValue("Search")
+
+    arr, _ := url.ParseQuery(request.RequestURI)
+
+    dirs := []string{}
+
+    for _, dir := range arr["OrderDirection[]"] {
+
+        if strings.ToLower(dir) == "desc" {
+            dirs = append(dirs, "desc")
+        } else {
+            dirs = append(dirs, "asc")
+        }
+    }
+
+    for index, field := range arr["Order[]"] {
+
+        filter.Order = append(filter.Order, gorm.ToColumnName(field))
+
+        if len(dirs) > index && dirs[index] == "desc" {
+            filter.OrderDirection = append(filter.OrderDirection, "desc")
+        } else {
+            filter.OrderDirection = append(filter.OrderDirection, "asc")
+        }
+    }
 
     filter.SetToken(request)
 

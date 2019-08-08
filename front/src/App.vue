@@ -1,9 +1,7 @@
 <template>
     <TheLayout id="app">
-        <template #branding>
-            <VHead>{{projectName}}</VHead>
-        </template>
         <template #navigation>
+            <VHead style="width: 200px;">{{projectName}}</VHead>
             <MainMenu></MainMenu>
         </template>
         <template #content>
