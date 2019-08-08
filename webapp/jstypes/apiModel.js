@@ -1,8 +1,8 @@
 
 export function Entity() {
 
-    this.Id = {};
-    this.Name = {};
+    this.Id = 0;
+    this.Name = "";
     this.TypeFields = [];
     this.ModelFields = [];
 
@@ -12,21 +12,21 @@ export function Entity() {
 export function EntityFilter() {
 
     this.Cats = [];
-    this.Search = {};
+    this.Search = "";
     this.SearchBy = [];
     this.Order = [];
     this.OrderDirection = [];
-    this.CurrentPage = {};
-    this.PerPage = {};
+    this.CurrentPage = 0;
+    this.PerPage = 0;
 
     return this;
 }
 
 export function EntityField() {
 
-    this.Id = {};
-    this.Name = {};
-    this.DataType = {};
+    this.Id = 0;
+    this.Name = "";
+    this.DataType = "";
 
     return this;
 }
@@ -34,12 +34,12 @@ export function EntityField() {
 export function EntityFieldFilter() {
 
     this.Cats = [];
-    this.Search = {};
+    this.Search = "";
     this.SearchBy = [];
     this.Order = [];
     this.OrderDirection = [];
-    this.CurrentPage = {};
-    this.PerPage = {};
+    this.CurrentPage = 0;
+    this.PerPage = 0;
 
     return this;
 }
@@ -54,63 +54,63 @@ export function OrderFilter() {
 
 export function ProjectInfo() {
 
-    this.Id = {};
-    this.Name = {};
-    this.Value = {};
+    this.Id = 0;
+    this.Name = "";
+    this.Value = "";
 
     return this;
 }
 
 export function ProjectInfoFilter() {
 
-    this.Search = {};
+    this.Search = "";
     this.SearchBy = [];
     this.Order = [];
     this.OrderDirection = [];
-    this.CurrentPage = {};
-    this.PerPage = {};
+    this.CurrentPage = 0;
+    this.PerPage = 0;
 
     return this;
 }
 
 export function APIStatus() {
 
-    this.Status = {};
+    this.Status = "";
 
     return this;
 }
 
 export function APIError() {
 
-    this.Error = {};
-    this.ErrorMessage = {};
+    this.Error = false;
+    this.ErrorMessage = "";
 
     return this;
 }
 
 export function Pagination() {
 
-    this.CurrentPage = {};
-    this.PerPage = {};
+    this.CurrentPage = 0;
+    this.PerPage = 0;
 
     return this;
 }
 
 export function Setting() {
 
-    this.Id = {};
+    this.Id = 0;
 
     return this;
 }
 
 export function SettingFilter() {
 
-    this.Search = {};
+    this.Search = "";
     this.SearchBy = [];
     this.Order = [];
     this.OrderDirection = [];
-    this.CurrentPage = {};
-    this.PerPage = {};
+    this.CurrentPage = 0;
+    this.PerPage = 0;
 
     return this;
 }
