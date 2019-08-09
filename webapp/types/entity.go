@@ -6,11 +6,20 @@ import (
 	"gosha/cmd"
 )
 
+
+type Field struct {
+	Name string
+	Type string
+	IsDb bool
+	IsType bool
+}
+
 type Entity struct {
 	Id int
 	Name     string
 	TypeFields	 []cmd.Field
 	ModelFields	 []cmd.Field
+	Fields	 []Field
 	//Entity remove this line for disable generator functionality
 }
 
