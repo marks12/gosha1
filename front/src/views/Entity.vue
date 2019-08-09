@@ -1,5 +1,5 @@
 <template>
-    <EntityGen>
+    <EntityGen v-if="entityList && entityList.length">
 
         <template #pageHeader>
             <VSet vertical  indent-size="XS">
@@ -10,48 +10,34 @@
 
         <template #data>
 
-            <VSet vertical v-if="entityList && entityList.length">
-
-                <VGroup width="dyn" control v-for="entityItem in entityList" :key="entityItem.Id">
-
-                    <VSet vertical>
-
-                        <VSet indent-size="L" wrap style="margin-bottom: 30px;">
-
-                            <VHead>{{ entityItem.Name }}</VHead>
-
-                            <table style="width: auto;">
-                                <tr v-if="hasFields(entityItem)">
-                                    <td>Types.Entity</td>
-                                    <td  v-for="f in entityItem.TypeFields" :key="f.Id">
-                                        <VSet vertical indent-size="XS">
-                                            <VText width="fit">{{f.Name}}</VText>
-                                            <VBadge>{{f.Type}}</VBadge>
-                                        </VSet>
-                                    </td>
-                                </tr>
-                                <tr v-if="hasFields(entityItem)">
-                                    <td>Dbmodels.Entity</td>
-                                    <td  v-for="f in entityItem.ModelFields" :key="f.Id">
-                                        <VSet vertical indent-size="XS">
-                                            <VText width="fit">{{f.Name}}</VText>
-                                            <VBadge>{{f.Type}}</VBadge>
-                                        </VSet>
-                                    </td>
-                                </tr>
-                                <tr v-if="! hasFields(entityItem)">
-                                    <td>
-                                        <VText>No  fields</VText>
-                                    </td>
-                                </tr>
-                            </table>
-
+            <VSet width="fit" :isControl="false">
+                <div id="masonry">
+                    <VGroup height="dyn" class="entity" v-for="entityItem in entityList" :key="entityItem.Id">
+                        <VSet divider vertical>
+                            <VSet>
+                                <VText width="col9">{{entityItem.Name}}</VText>
+                                <VSign width="col1">Db</VSign>
+                                <VSign width="col2">Types</VSign>
+                            </VSet>
+                            <VSet vertical hasNoIndent>
+                                <VSet v-for="(field, i) in entityItem.Fields" :key="entityItem.Id + i+ field.Name">
+                                    <VText width="col9">
+                                        {{ field.Name }}
+                                    </VText>
+                                    <VText width="col1">
+                                        <VIcon name="check" v-if="field.IsDb"></VIcon>
+                                        <VIcon name="minus" v-else></VIcon>
+                                    </VText>
+                                    <VText width="col2" align="center">
+                                        <VIcon name="check" v-if="field.IsType"></VIcon>
+                                        <VIcon name="minus" v-else></VIcon>
+                                    </VText>
+                                </VSet>
+                            </VSet>
                         </VSet>
-                    </VSet>
-                </VGroup>
+                    </VGroup>
+                </div>
             </VSet>
-            <VText v-else>Models not loaded</VText>
-
         </template>
 
         <template #pageFooter>
@@ -149,7 +135,34 @@
 </script>
 
 <style scoped>
-    .h100 {
-        height: 100vh;
+
+    div#masonry {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        font-size: 0;
     }
+    div#masonry img {
+        width: 33.3%;
+        transition: .8s opacity;
+    }
+
+    div#masonry:hover img { opacity: 0.3; }
+    div#masonry:hover img:hover { opacity: 1; }
+
+    /* fallback for earlier versions of Firefox */
+
+    @supports not (flex-wrap: wrap) {
+        div#masonry { display: block; }
+        div#masonry img {
+            display: inline-block;
+            vertical-align: top;
+        }
+    }
+
+    .entity {
+        width:  270px;
+        margin: 50px;
+    }
+
 </style>
