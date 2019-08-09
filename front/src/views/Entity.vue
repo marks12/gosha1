@@ -1,5 +1,5 @@
 <template>
-    <EntityGen v-if="entityList && entityList.length">
+    <EntityGen>
 
         <template #pageHeader>
             <VSet vertical  indent-size="XS">
@@ -10,12 +10,12 @@
 
         <template #data>
 
-            <VSet width="fit" :isControl="false">
+            <VSet width="fit" :isControl="false" v-if="entityList && entityList.length">
                 <div id="masonry">
                     <VGroup height="dyn" class="entity" v-for="entityItem in entityList" :key="entityItem.Id">
                         <VSet divider vertical>
                             <VSet>
-                                <VText width="col9">{{entityItem.Name}}</VText>
+                                <VText width="col9" style="overflow: hidden" :title="entityItem.Name">{{entityItem.Name}}</VText>
                                 <VSign width="col1">Db</VSign>
                                 <VSign width="col2">Types</VSign>
                             </VSet>
@@ -38,6 +38,8 @@
                     </VGroup>
                 </div>
             </VSet>
+            <VText class="loading"></VText>
+
         </template>
 
         <template #pageFooter>
@@ -161,8 +163,11 @@
     }
 
     .entity {
-        width:  270px;
+        width:  250px;
         margin: 50px;
+    }
+
+    .loading {
     }
 
 </style>
