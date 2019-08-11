@@ -259,7 +259,7 @@ func logicEntityFind(filter types.EntityFilter) (result []types.Entity, totalRec
 				})
 			}
 
-			result = append(result, em)
+			res = append(res, em)
 		}
 	}
 
