@@ -6,7 +6,7 @@ import (
 
 type Auth struct {
 
-    Email     string
+    Email     string    `gorm:"many2many:PersonAccount;association_foreignkey:idAccount;foreignkey:idPerson"`
     Password  string
     Token     string
     //Auth remove this line for disable generator functionality
