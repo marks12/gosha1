@@ -28,6 +28,12 @@ type model struct {
 type Field struct {
     Name string
     Type string
+    Relation Relation
+}
+
+type Relation struct {
+    ModelName string
+    FieldName string
 }
 
 func (mr *ModelRepository) GetModels() (models []string) {
@@ -35,6 +41,23 @@ func (mr *ModelRepository) GetModels() (models []string) {
     for _, m := range mr.list {
         models = append(models, m.FilePath)
     }
+
+    return
+}
+
+func (mr *ModelRepository) GetFieldRelation(field *ast.Field) (relation Relation) {
+
+    //fmt.Println("structDecl", ft.Tag.Value)
+    //fmt.Printf("%+v\n\n", ft.Tag.Value)
+    //
+    //st := reflect.StructField{}
+    //st.Tag = reflect.StructTag(strings.Trim(ft.Tag.Value, "`"))
+    //
+    //f, ok := st.Tag.Lookup("gorm"); if ok {
+    //    fmt.Printf("gorm is %+v\n\n", f)
+    //}
+    //
+    //os.Exit(0)
 
     return
 }
@@ -186,6 +209,7 @@ func (mr *ModelRepository) GetFields(modelName string, fields []Field) []Field {
 
                     for _, ft := range structDecl.Fields.List {
 
+
                         if len(ft.Names) > 0 {
 
                             typeString := ""
@@ -223,6 +247,7 @@ func (mr *ModelRepository) GetFields(modelName string, fields []Field) []Field {
                             fields = append(fields, Field{
                                 Type: strings.Title(typeString),
                                 Name: ft.Names[0].Name,
+                                Relation: mr.GetFieldRelation(ft),
                             })
                         } else {
 
@@ -238,6 +263,23 @@ func (mr *ModelRepository) GetFields(modelName string, fields []Field) []Field {
     }
 
     return fields
+}
+
+func GetFieldRelation(repository *ModelRepository, field *ast.Field) (relation Relation) {
+
+    //fmt.Println("structDecl", ft.Tag.Value)
+    //fmt.Printf("%+v\n\n", ft.Tag.Value)
+    //
+    //st := reflect.StructField{}
+    //st.Tag = reflect.StructTag(strings.Trim(ft.Tag.Value, "`"))
+    //
+    //f, ok := st.Tag.Lookup("gorm"); if ok {
+    //    fmt.Printf("gorm is %+v\n\n", f)
+    //}
+    //
+    //os.Exit(0)
+
+    return
 }
 
 func (em *ModelRepository) getModelFile(name string) (fileName string) {
