@@ -154,12 +154,12 @@ const usualEntityVueComponent = `
     import VButton from "swui/src/components/VButton";
     import VIcon from "swui/src/components/VIcon";
     import VSign from "swui/src/components/VSign";
-    import VSelect from "swui/src/components/VSelect";
+    import VSelectSimple from "swui/src/components/VSelectSimple";
 
     export default {
         name: '{Entity}Gen',
 
-        components: {VSelect, VSign, VIcon, VButton, VPanel, VText, VInput, VLabel, VSet, VHead, WorkSpace, VCheckbox},
+        components: {VSelectSimple, VSign, VIcon, VButton, VPanel, VText, VInput, VLabel, VSet, VHead, WorkSpace, VCheckbox},
 
         props: {
             fields: {

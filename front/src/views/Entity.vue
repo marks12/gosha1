@@ -10,33 +10,10 @@
 
         <template #data>
 
-            <VSet width="fit" :isControl="false" v-if="entityList && entityList.length">
-                <div id="masonry">
-                    <VGroup height="dyn" class="entity" v-for="entityItem in entityList" :key="entityItem.Id">
-                        <VSet divider vertical>
-                            <VSet>
-                                <VText width="col9" style="overflow: hidden" :title="entityItem.Name">{{entityItem.Name}}</VText>
-                                <VSign width="col1">Db</VSign>
-                                <VSign width="col2">Types</VSign>
-                            </VSet>
-                            <VSet vertical hasNoIndent>
-                                <VSet v-for="(field, i) in entityItem.Fields" :key="entityItem.Id + i+ field.Name">
-                                    <VText width="col9">
-                                        {{ field.Name }}
-                                    </VText>
-                                    <VText width="col1">
-                                        <VIcon name="check" v-if="field.IsDb"></VIcon>
-                                        <VIcon name="minus" v-else></VIcon>
-                                    </VText>
-                                    <VText width="col2" align="center">
-                                        <VIcon name="check" v-if="field.IsType"></VIcon>
-                                        <VIcon name="minus" v-else></VIcon>
-                                    </VText>
-                                </VSet>
-                            </VSet>
-                        </VSet>
-                    </VGroup>
-                </div>
+            <VSet vertical :isControl="false" v-if="entityList && entityList.length">
+                <template v-for="entityItem in entityList">
+                    <EntityItem :entityItem="entityItem"></EntityItem>
+                </template>
             </VSet>
             <VText class="loading"></VText>
 
@@ -102,10 +79,11 @@
     import VBadge from "swtui/src/components/VBadge";
     import VSpoiler from "swtui/src/components/VSpoiler";
     import VGroup from "swtui/src/components/VGroup";
+    import EntityItem from "../components/EntityItem";
 
     export default {
         name: "Entity",
-        components: {VSpoiler, VBadge, EntityGen, VGroup},
+        components: {EntityItem, VSpoiler, VBadge, EntityGen, VGroup},
         mixins: [
             EntityGen,
         ],
@@ -137,37 +115,5 @@
 </script>
 
 <style scoped>
-
-    div#masonry {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        font-size: 0;
-    }
-    div#masonry img {
-        width: 33.3%;
-        transition: .8s opacity;
-    }
-
-    div#masonry:hover img { opacity: 0.3; }
-    div#masonry:hover img:hover { opacity: 1; }
-
-    /* fallback for earlier versions of Firefox */
-
-    @supports not (flex-wrap: wrap) {
-        div#masonry { display: block; }
-        div#masonry img {
-            display: inline-block;
-            vertical-align: top;
-        }
-    }
-
-    .entity {
-        width:  250px;
-        margin: 50px;
-    }
-
-    .loading {
-    }
 
 </style>
