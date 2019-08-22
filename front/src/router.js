@@ -26,5 +26,10 @@ export default new Router({
       name: 'settings',
       component: () => import(/* webpackChunkName: "about" */ './views/Entity.vue')
     },
+    {
+      path: '/bpm',
+      name: 'bpm',
+      component: () => import(/* webpackChunkName: "about" */ './views/Bpm.vue')
+    },
   ]
 })
