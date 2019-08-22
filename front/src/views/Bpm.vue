@@ -8,6 +8,7 @@
 <script>
 
     import BuBu from '../bubu/main';
+    import {TYPES} from '../bubu/constants';
 
     export default {
         name: "Bpm",
@@ -31,6 +32,7 @@
             );
 
             console.log('names', this.bubu.GetElementsByName("Condition1"));
+            console.log('types', this.bubu.GetElementsByType(TYPES.CONDITION));
 
         },
     }
