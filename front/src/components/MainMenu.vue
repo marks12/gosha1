@@ -2,6 +2,7 @@
     <VSet horizontal>
         <VSet horizontal width="dyn">
             <VLink url="/entity" routerLink>Entity</VLink>
+            <VLink url="/bpm" routerLink>Modeller</VLink>
         </VSet>
         <VSet horizontal width="fit">
             <VLink url="/about" routerLink nowrap>About GOSHA</VLink>
