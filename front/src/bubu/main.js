@@ -2,10 +2,13 @@ import bubuElements from './elements'
 
 function BuBu() {
 
-    let Elements = [];
+    let Elements = {};
 
     function AddElement(element) {
-        Elements.push(element);
+
+        let id = element.GetId();
+
+        Elements[id] = element;
         return this;
     }
 
@@ -13,7 +16,7 @@ function BuBu() {
 
         let names = [];
 
-        for (let i = 0; i < Elements.length; i++) {
+        for (let i in Elements) {
             names.push(Elements[i].GetName());
         }
 
@@ -24,7 +27,7 @@ function BuBu() {
 
         let els = [];
 
-        for (let i = 0; i < Elements.length; i++) {
+        for (let i in Elements) {
             if (Elements[i].GetName() === name) {
                 els.push(Elements[i]);
             }
@@ -46,12 +49,18 @@ function BuBu() {
         return els;
     }
 
+    function GetElementById(id) {
+
+        return Elements[id];
+    }
+
     return {
         Add: AddElement,
         Elements: bubuElements,
         GetNames: GetNames,
         GetElementsByType: GetElementsByType,
         GetElementsByName: GetElementsByName,
+        GetElementById: GetElementById,
     };
 }
 

@@ -1,19 +1,15 @@
+import Id from "../attributes/id";
 import Names from "../attributes/names";
 import Types from "../attributes/types";
 import {TYPES} from "../constants";
 import Coordinates from "../attributes/coordinates";
 
-function Action() {
+function Action(config) {
 
-    let action = {};
-
-    Object.assign(action,
-        new Coordinates(action),
-        new Names(action),
-        new Types(action, TYPES.CONDITION),
-    );
-
-    return action;
+    Id.apply(this, arguments);
+    Coordinates.apply(this, arguments);
+    Names.apply(this, arguments);
+    Types.apply(this, arguments);
 }
 
 export default Action;
