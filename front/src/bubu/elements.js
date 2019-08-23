@@ -3,8 +3,8 @@ import Condition from "./elements/condition";
 
 function Elements () {
 
-    this.CrAction = Action;
-    this.CrCondition = Condition;
+    this.Action = Action;
+    this.Condition = Condition;
 
     return this;
 

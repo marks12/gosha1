@@ -20,20 +20,27 @@
         },
         created() {
 
-            this.bubu.Add(
-                this.bubu.Elements.CrAction()
-                    .SetName("Action1 name")
-                    .SetDescription("action 1 description")
-            );
+            let action = new this.bubu.Elements.Action({
+                name: "Action1 name",
+                description: "Action1 description",
+                Coords: {
+                    X: 2,
+                    Y: 3,
+                },
+            });
+            this.bubu.Add(action);
 
-            this.bubu.Add(
-                this.bubu.Elements.CrCondition()
-                    .SetName("Condition1")
-            );
+            let Condition = new this.bubu.Elements.Condition({
+                name: "Condition name",
+                description: "Condition description",
+            });
+            this.bubu.Add(Condition);
 
-            console.log('names', this.bubu.GetElementsByName("Condition1"));
+            console.log('names', this.bubu.GetElementsByName("Condition name"));
             console.log('types', this.bubu.GetElementsByType(TYPES.CONDITION));
-
+            console.log('names', this.bubu.GetNames());
+            console.log('found element', action.Coords.GetX());
+            console.log('found element', action.Coords.GetY());
         },
     }
 </script>
