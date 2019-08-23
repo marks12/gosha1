@@ -2,18 +2,16 @@ import Names from "../attributes/names";
 import Types from "../attributes/types";
 import {TYPES} from "../constants";
 import Coordinates from "../attributes/coordinates";
+import Id from "../attributes/id";
 
-function Condition() {
+function Condition(config) {
 
-    let condition = {};
+    Id.apply(this, arguments);
+    Coordinates.apply(this, arguments);
+    Names.apply(this, arguments);
+    Types.apply(this, arguments);
 
-    Object.assign(condition,
-        new Coordinates(condition),
-        new Names(condition),
-        new Types(condition, TYPES.CONDITION),
-    );
 
-    return condition;
 }
 
 export default Condition;
