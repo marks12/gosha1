@@ -1,14 +1,13 @@
-function Names(child) {
+function Names(config) {
 
-    let Name = "";
-    let Description = "";
+    let Name = config && config.name && config.name.length ? config.name : "";
+    let Description = config && config.description && config.description.length ? config.description : "";
 
-    return {
-        GetName: () => {return Name},
-        SetName: function (name) { Name = name; return child},
-        GetDescription: () => {return Description},
-        SetDescription: function (desc) { Description = desc; return child},
-    };
+    this.GetName = () => {return Name};
+    this.SetName = (name) => {Name = name; return this;};
+
+    this.GetDescription = () => {return Description};
+    this.SetDescription = (desc) => {Description = desc; return this;};
 }
 
 export default Names;
