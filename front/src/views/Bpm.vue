@@ -1,7 +1,6 @@
 <template>
-    <div>
-        Canvas become
-        {{text}}
+    <div style="width: 100%">
+        <canvas id="SomeCanvas" width="500" height="600"></canvas>
     </div>
 </template>
 
@@ -15,32 +14,40 @@
         data() {
             return {
                 text: "Some asd",
-                bubu: new BuBu(),
+                bubu: {},
             };
         },
         created() {
 
-            let action = new this.bubu.Elements.Action({
-                name: "Action1 name",
-                description: "Action1 description",
-                Coords: {
-                    X: 2,
-                    Y: 3,
-                },
-            });
-            this.bubu.Add(action);
+            setTimeout(()=>{
 
-            let Condition = new this.bubu.Elements.Condition({
-                name: "Condition name",
-                description: "Condition description",
-            });
-            this.bubu.Add(Condition);
+                this.bubu = new BuBu('SomeCanvas');
 
-            console.log('names', this.bubu.GetElementsByName("Condition name"));
-            console.log('types', this.bubu.GetElementsByType(TYPES.CONDITION));
-            console.log('names', this.bubu.GetNames());
-            console.log('found element', action.Coords.GetX());
-            console.log('found element', action.Coords.GetY());
+                let action = new this.bubu.Elements.Action({
+                    name: "Action1 name",
+                    description: "Action1 description",
+                });
+                this.bubu.Add(action);
+
+                let Condition = new this.bubu.Elements.Condition({
+                    name: "Condition name",
+                    description: "Condition description",
+                    Coords: {
+                        X: 110,
+                        Y: 0,
+                    },
+                });
+                this.bubu.Add(Condition);
+
+                console.log('names', this.bubu.GetElementsByName("Condition name"));
+                console.log('types', this.bubu.GetElementsByType(TYPES.CONDITION));
+                console.log('names', this.bubu.GetNames());
+                console.log('found element', action);
+
+                this.bubu.Render();
+
+            });
+
         },
     }
 </script>
