@@ -2,9 +2,9 @@ function Types(child, type) {
 
     let Type = type;
 
-    return {
-        GetType: () => {return Type},
-    };
+
+    this.GetType = () => {return Type};
+    this.SetType = (t) => {Type = t; return this;};
 }
 
 export default Types;
