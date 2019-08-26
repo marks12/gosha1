@@ -2,27 +2,27 @@ package cmd
 
 import (
 	"gopkg.in/abiosoft/ishell.v2"
-	"os"
 	"io/ioutil"
+	"os"
 	"strings"
 )
 
 type store struct {
-	name string
+	name   string
 	jscode string
 }
 
 type vueComponent struct {
-	name string
+	name   string
 	jscode string
 }
 
 type vueComponentData struct {
-	name string
+	name   string
 	jscode string
 }
 
-func genTypesJs (c *ishell.Context) {
+func genTypesJs(c *ishell.Context) {
 
 	folder := "./jstypes"
 	folderStore := folder + "/store"
@@ -33,10 +33,10 @@ func genTypesJs (c *ishell.Context) {
 	commonFile := folder + "/common.js"
 
 	os.RemoveAll(folder)
-	os.MkdirAll(folder,0755)
-	os.MkdirAll(folderStore,0755)
-	os.MkdirAll(folderComponent,0755)
-	os.MkdirAll(folderData,0755)
+	os.MkdirAll(folder, 0755)
+	os.MkdirAll(folderStore, 0755)
+	os.MkdirAll(folderComponent, 0755)
+	os.MkdirAll(folderData, 0755)
 
 	modelContent, stores, tpls, data := getTypesJs()
 
@@ -50,20 +50,19 @@ func genTypesJs (c *ishell.Context) {
 	ioutil.WriteFile(commonFile, common, 0644)
 
 	for _, store := range stores {
-		ioutil.WriteFile(folderStore + "/" + store.name + ".js" , []byte(store.jscode), 0644)
+		ioutil.WriteFile(folderStore+"/"+store.name+".js", []byte(store.jscode), 0644)
 	}
 
 	for _, tpl := range tpls {
-		ioutil.WriteFile(folderComponent + "/" + tpl.name + "Gen.vue" , []byte(tpl.jscode), 0644)
+		ioutil.WriteFile(folderComponent+"/"+tpl.name+"Gen.vue", []byte(tpl.jscode), 0644)
 	}
 
 	for _, d := range data {
-		ioutil.WriteFile(folderData + "/" + d.name + "Data.js" , []byte(d.jscode), 0644)
+		ioutil.WriteFile(folderData+"/"+d.name+"Data.js", []byte(d.jscode), 0644)
 	}
 }
 
-
-func getTypesJs () (string, []store, []vueComponent, []vueComponentData) {
+func getTypesJs() (string, []store, []vueComponent, []vueComponentData) {
 
 	existsTypes := GetExistsTypes()
 	typeNames := GetModelsList(existsTypes)
@@ -101,7 +100,7 @@ func getFileContent(repository ModelRepository, typeNames []string) (content str
 				}
 
 				validFieldsCount = validFieldsCount + 1
-				fields = append(fields, "    this." + field.Name + " = " + getFiledJsVal(field.Type, typeNames) + ";\n")
+				fields = append(fields, "    this."+field.Name+" = "+getFiledJsVal(field.Type, typeNames)+";\n")
 
 			}
 		}
@@ -111,17 +110,17 @@ func getFileContent(repository ModelRepository, typeNames []string) (content str
 		}
 
 		stores = append(stores, store{
-			name: t,
+			name:   t,
 			jscode: getStoreJsCode(t),
 		})
 
 		vueComponentTemplates = append(vueComponentTemplates, vueComponent{
-			name: t,
+			name:   t,
 			jscode: getTemplateJsCode(t),
 		})
 
 		vueData = append(vueData, vueComponentData{
-			name: t,
+			name:   t,
 			jscode: getTemplateDataJsCode(t),
 		})
 
@@ -162,56 +161,60 @@ func getFiledJsVal(s string, typeNames []string) (val string) {
 	s = strings.ToLower(s)
 
 	switch s {
-		case "array":
-			val = "[]"
-			break
+	case "array":
+		val = "[]"
+		break
 
-		case "int64":
-            val = "0"
-            break
+	case "int64":
+		val = "0"
+		break
 
-		case "int32":
-            val = "0"
-            break
+	case "int32":
+		val = "0"
+		break
 
-		case "int":
-			val = "0"
-			break
+	case "int":
+		val = "0"
+		break
 
-		case "float":
-            val = "0"
-            break
+	case "float":
+		val = "0"
+		break
 
-		case "float32":
-            val = "0"
-            break
+	case "*int":
+		val = "null"
+		break
 
-		case "float64":
-			val = "0.0"
-			break
+	case "float32":
+		val = "0"
+		break
 
-		case "string":
-			val = "\"\""
-			break
+	case "float64":
+		val = "0.0"
+		break
 
-		case "bool":
-			val = "false"
-			break
+	case "string":
+		val = "\"\""
+		break
 
-		default:
+	case "bool":
+		val = "false"
+		break
 
-			isExists, index := InArray(s, typeNames)
+	default:
 
-			if isExists {
+		isExists, index := InArray(s, typeNames)
 
-				val = "new " + typeNames[index] + "()"
+		if isExists {
 
-			} else {
+			val = "new " + typeNames[index] + "()"
 
-				val = "{}"
-			}
+		} else {
 
-			break
+			val = "{}"
+		}
+
+		break
 	}
 
 	return
