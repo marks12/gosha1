@@ -4,6 +4,7 @@ import Types from "../attributes/types";
 import {TYPES} from "../constants";
 import Coordinates from "../attributes/coordinates";
 import Draw from "../actions/draw";
+import Size from "../attributes/size";
 
 function Action(config) {
 
@@ -12,6 +13,10 @@ function Action(config) {
     Names.apply(this, arguments);
     Types.apply(this, arguments);
     this.SetType(TYPES.ACTION);
+
+    Size.apply(this, arguments);
+    this.SetSize(100, 100);
+
 
     Draw.apply(this, arguments);
 }

@@ -9,24 +9,65 @@ function BuBu(canvasElementId) {
         return
     }
 
-    let isDown = false;
+    canvas.setAttribute("width", canvas.parentNode.parentElement.clientWidth);
+    canvas.setAttribute("height", canvas.parentNode.parentElement.clientHeight);
 
-    function down() {
-        isDown = true;
+    let isDown = false;
+    let selectedElement = null;
+    let canvasOffsetX = canvas.getBoundingClientRect().left;
+    let canvasOffsetY = canvas.getBoundingClientRect().top;
+    let selectedElementOffsetX = 0;
+    let selectedElementOffsetY = 0;
+    let ctx = canvas.getContext('2d');
+    let Elements = {};
+
+    function getFirstElementByCoordinates(x, y) {
+
+        for (let i in Elements) {
+
+            let x1 = Elements[i].Coords.GetX();
+            let x2 = x1 + Elements[i].GetWidth();
+
+            let y1 = Elements[i].Coords.GetY();
+            let y2 = y1 + Elements[i].GetHeight();
+
+            if (x - canvasOffsetX >= x1 && x - canvasOffsetX <= x2 && y - canvasOffsetY >= y1 && y - canvasOffsetY <= y2) {
+
+                selectedElementOffsetX = x - canvasOffsetX - x1;
+                selectedElementOffsetY = y - canvasOffsetY - y1;
+
+                return Elements[i];
+            }
+        }
+
+        return null;
     }
+
+
+    function down(event) {
+
+        isDown = true;
+        event = assignCoordinates(event);
+
+        let x = event.pageX;
+        let y = event.pageY;
+
+        selectedElement = getFirstElementByCoordinates(x, y);
+    }
+
     function up() {
         isDown = false;
+        selectedElement = null;
+        selectedElementOffsetX = 0;
+        selectedElementOffsetY = 0;
     }
 
-    function mover(event) {
+    function assignCoordinates(event) {
 
         let eventDoc, doc, body;
 
         event = event || window.event; // IE-ism
 
-        // If pageX/Y aren't available and clientX/Y are,
-        // calculate pageX/Y - logic taken from jQuery.
-        // (This is to support old IE)
         if (event.pageX == null && event.clientX != null) {
             eventDoc = (event.target && event.target.ownerDocument) || document;
             doc = eventDoc.documentElement;
@@ -38,29 +79,24 @@ function BuBu(canvasElementId) {
             event.pageY = event.clientY +
                 (doc && doc.scrollTop  || body && body.scrollTop  || 0) -
                 (doc && doc.clientTop  || body && body.clientTop  || 0 );
+
         }
 
+        return event;
+    }
 
-        if (isDown) {
-            for (let i in Elements) {
-                Elements[i].Coords.SetX(event.pageX - 48 - 20);
-                Elements[i].Coords.SetY(event.pageY - 72 - 30);
-                break;
-            }
+    function mover(event) {
+
+        event = assignCoordinates(event);
+
+        if (isDown && selectedElement) {
+
+            selectedElement.Coords.SetX(event.pageX - canvasOffsetX - selectedElementOffsetX);
+            selectedElement.Coords.SetY(event.pageY - canvasOffsetY - selectedElementOffsetY);
 
             Render()
         }
-
     }
-
-
-
-    canvas.addEventListener("mousedown", down);
-    canvas.addEventListener("mousemove", mover);
-    canvas.addEventListener("mouseup", up);
-
-    let ctx = canvas.getContext('2d');
-    let Elements = {};
 
     function AddElement(element) {
 
@@ -124,6 +160,9 @@ function BuBu(canvasElementId) {
         }
     }
 
+    canvas.addEventListener("mousedown", down);
+    canvas.addEventListener("mousemove", mover);
+    canvas.addEventListener("mouseup", up);
 
     return {
         Add: AddElement,
