@@ -2,8 +2,8 @@ import {TYPES} from "../constants";
 
 function Draw(config) {
 
-    let width = 100;
-    let height = 100;
+    let width = this.GetWidth();
+    let height = this.GetHeight();
 
     this.draw = (ctx) => {
 
