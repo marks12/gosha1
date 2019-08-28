@@ -1,6 +1,9 @@
 import bubuElements from './elements'
+import Legend from "./legend";
 
 function BuBu(canvasElementId) {
+
+    Legend.apply(this, arguments);
 
     let canvas = document.getElementById(canvasElementId);
 
@@ -8,6 +11,10 @@ function BuBu(canvasElementId) {
         console.error("Wrong canvas element Id. ELement not found or canvas.getContext function not exists");
         return
     }
+
+    this.GetCanvas = () => {
+        return canvas;
+    };
 
     canvas.setAttribute("width", canvas.parentNode.parentElement.clientWidth);
     canvas.setAttribute("height", canvas.parentNode.parentElement.clientHeight);
@@ -20,6 +27,7 @@ function BuBu(canvasElementId) {
     let selectedElementOffsetY = 0;
     let ctx = canvas.getContext('2d');
     let Elements = {};
+    let Legends = {};
 
     function getFirstElementByCoordinates(x, y) {
 
@@ -157,6 +165,10 @@ function BuBu(canvasElementId) {
 
         for (let i in Elements) {
             Elements[i].draw(ctx);
+        }
+
+        for (let i in Legends) {
+            Legends[i].draw(ctx);
         }
     }
 

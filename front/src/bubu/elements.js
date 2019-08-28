@@ -1,9 +1,9 @@
-import Action from "./elements/action";
+import Task from "./elements/task";
 import Condition from "./elements/condition";
 
 function Elements () {
 
-    this.Action = Action;
+    this.Task = Task;
     this.Condition = Condition;
 
     return this;
