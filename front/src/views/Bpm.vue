@@ -1,5 +1,9 @@
 <template>
     <div style="width: 100%">
+        <VSet>
+            <VButton text="+ Action" @click="addAction()"></VButton>
+            <VButton text="+ Condition" @click="addCondition()"></VButton>
+        </VSet>
         <canvas id="SomeCanvas" width="500" height="600"></canvas>
     </div>
 </template>
@@ -8,9 +12,13 @@
 
     import BuBu from '../bubu/main';
     import {TYPES} from '../bubu/constants';
+    import VLink from "swtui/src/components/VLink";
+    import VButton from "swtui/src/components/VButton";
+    import VSet from "swtui/src/components/VSet";
 
     export default {
         name: "Bpm",
+        components: {VSet, VButton, VLink},
         data() {
             return {
                 text: "Some asd",
@@ -22,32 +30,33 @@
             setTimeout(()=>{
 
                 this.bubu = new BuBu('SomeCanvas');
-
-                let action = new this.bubu.Elements.Action({
-                    name: "Action1 name",
-                    description: "Action1 description",
-                });
-                this.bubu.Add(action);
-
-                let Condition = new this.bubu.Elements.Condition({
-                    name: "Condition name",
-                    description: "Condition description",
-                    Coords: {
-                        X: 110,
-                        Y: 0,
-                    },
-                });
-                this.bubu.Add(Condition);
-
-                console.log('names', this.bubu.GetElementsByName("Condition name"));
-                console.log('types', this.bubu.GetElementsByType(TYPES.CONDITION));
-                console.log('names', this.bubu.GetNames());
-                console.log('found element', action);
-
                 this.bubu.Render();
 
             });
 
+        },
+        methods: {
+            addAction() {
+
+                this.bubu.Add(new this.bubu.Elements.Action({
+                    name: "Action1 name",
+                    description: "Action1 description",
+                })).Render();
+
+            },
+            addCondition() {
+
+                this.bubu.Add(
+                    new this.bubu.Elements.Condition({
+                        name: "Condition name",
+                        description: "Condition description",
+                        Coords: {
+                            X: 110,
+                            Y: 0,
+                        },
+                    })
+                ).Render();
+            },
         },
     }
 </script>

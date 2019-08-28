@@ -17,7 +17,6 @@ function Condition(config) {
     Size.apply(this, arguments);
     this.SetSize(200, 200);
 
-
     Draw.apply(this, arguments);
 
 }
