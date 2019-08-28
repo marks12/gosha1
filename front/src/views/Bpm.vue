@@ -1,7 +1,7 @@
 <template>
     <div style="width: 100%">
         <VSet>
-            <VButton text="+ Action" @click="addAction()"></VButton>
+            <VButton text="+ Task" @click="addAction()"></VButton>
             <VButton text="+ Condition" @click="addCondition()"></VButton>
         </VSet>
         <canvas id="SomeCanvas" width="500" height="600"></canvas>
@@ -38,9 +38,9 @@
         methods: {
             addAction() {
 
-                this.bubu.Add(new this.bubu.Elements.Action({
-                    name: "Action1 name",
-                    description: "Action1 description",
+                this.bubu.Add(new this.bubu.Elements.Task({
+                    name: "Task1 name",
+                    description: "Task1 description",
                 })).Render();
 
             },
