@@ -6,7 +6,7 @@ import Coordinates from "../attributes/coordinates";
 import Draw from "../actions/draw";
 import Size from "../attributes/size";
 
-function Action(config) {
+function Task(config) {
 
     Id.apply(this, arguments);
     Coordinates.apply(this, arguments);
@@ -21,4 +21,4 @@ function Action(config) {
     Draw.apply(this, arguments);
 }
 
-export default Action;
+export default Task;
