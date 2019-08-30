@@ -1,9 +1,11 @@
-import bubuElements from './elements'
-import Legend from "./legend";
+import Elements from './elements'
+import Toolbox from "./toolbox";
+import Store from "./store";
+import Renderer from "./renderer";
 
 function BuBu(canvasElementId) {
 
-    Legend.apply(this, arguments);
+    let self = this;
 
     let canvas = document.getElementById(canvasElementId);
 
@@ -11,6 +13,11 @@ function BuBu(canvasElementId) {
         console.error("Wrong canvas element Id. ELement not found or canvas.getContext function not exists");
         return
     }
+
+    Store.apply(this, arguments);
+
+    Toolbox.apply(this, arguments);
+    Renderer.apply(this, arguments);
 
     this.GetCanvas = () => {
         return canvas;
@@ -20,170 +27,82 @@ function BuBu(canvasElementId) {
     canvas.setAttribute("height", canvas.parentNode.parentElement.clientHeight);
 
     let isDown = false;
-    let selectedElement = null;
+    let selectedItem = null;
     let canvasOffsetX = canvas.getBoundingClientRect().left;
     let canvasOffsetY = canvas.getBoundingClientRect().top;
-    let selectedElementOffsetX = 0;
-    let selectedElementOffsetY = 0;
-    let ctx = canvas.getContext('2d');
-    let Elements = {};
-    let Legends = {};
+    let selectedItemOffsetX = 0;
+    let selectedItemOffsetY = 0;
 
-    function getFirstElementByCoordinates(x, y) {
-
-        for (let i in Elements) {
-
-            let x1 = Elements[i].Coords.GetX();
-            let x2 = x1 + Elements[i].GetWidth();
-
-            let y1 = Elements[i].Coords.GetY();
-            let y2 = y1 + Elements[i].GetHeight();
-
-            if (x - canvasOffsetX >= x1 && x - canvasOffsetX <= x2 && y - canvasOffsetY >= y1 && y - canvasOffsetY <= y2) {
-
-                selectedElementOffsetX = x - canvasOffsetX - x1;
-                selectedElementOffsetY = y - canvasOffsetY - y1;
-
-                return Elements[i];
-            }
-        }
-
-        return null;
-    }
-
+    this.SetCtx(canvas.getContext('2d'));
 
     function down(event) {
 
         isDown = true;
-        event = assignCoordinates(event);
+
+        event = self.AssignCoordinates(event);
 
         let x = event.pageX;
         let y = event.pageY;
 
-        selectedElement = getFirstElementByCoordinates(x, y);
+        selectedItem = getFirstElementByCoordinates(x, y);
     }
 
     function up() {
         isDown = false;
-        selectedElement = null;
-        selectedElementOffsetX = 0;
-        selectedElementOffsetY = 0;
+        selectedItem = null;
+        selectedItemOffsetX = 0;
+        selectedItemOffsetY = 0;
     }
 
-    function assignCoordinates(event) {
+    let getFirstElementByCoordinates = (x, y) => {
 
-        let eventDoc, doc, body;
+        let Items = this.GetItems();
 
-        event = event || window.event; // IE-ism
+        for (let i in Items) {
 
-        if (event.pageX == null && event.clientX != null) {
-            eventDoc = (event.target && event.target.ownerDocument) || document;
-            doc = eventDoc.documentElement;
-            body = eventDoc.body;
+            let x1 = Items[i].Coords.GetX();
+            let x2 = x1 + Items[i].GetWidth();
 
-            event.pageX = event.clientX +
-                (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
-                (doc && doc.clientLeft || body && body.clientLeft || 0);
-            event.pageY = event.clientY +
-                (doc && doc.scrollTop  || body && body.scrollTop  || 0) -
-                (doc && doc.clientTop  || body && body.clientTop  || 0 );
+            let y1 = Items[i].Coords.GetY();
+            let y2 = y1 + Items[i].GetHeight();
 
-        }
+            if (x - canvasOffsetX >= x1 && x - canvasOffsetX <= x2 && y - canvasOffsetY >= y1 && y - canvasOffsetY <= y2) {
 
-        return event;
-    }
+                selectedItemOffsetX = x - canvasOffsetX - x1;
+                selectedItemOffsetY = y - canvasOffsetY - y1;
 
-    function mover(event) {
-
-        event = assignCoordinates(event);
-
-        if (isDown && selectedElement) {
-
-            selectedElement.Coords.SetX(event.pageX - canvasOffsetX - selectedElementOffsetX);
-            selectedElement.Coords.SetY(event.pageY - canvasOffsetY - selectedElementOffsetY);
-
-            Render()
-        }
-    }
-
-    function AddElement(element) {
-
-        let id = element.GetId();
-        Elements[id] = element;
-        return this;
-    }
-
-    function GetNames() {
-
-        let names = [];
-
-        for (let i in Elements) {
-            names.push(Elements[i].GetName());
-        }
-
-        return names;
-    }
-
-    function GetElementsByName(name) {
-
-        let els = [];
-
-        for (let i in Elements) {
-
-            if (Elements[i].GetName() === name) {
-                els.push(Elements[i]);
+                return Items[i];
             }
         }
-        return els;
-    }
 
-    function GetElementsByType(type) {
+        return null;
+    };
 
-        let els = [];
+    this.mover = (event) => {
 
-        for (let i = 0; i < Elements.length; i++) {
+        event = this.AssignCoordinates(event);
 
-            if (Elements[i].GetType() === type) {
-                els.push(Elements[i]);
-            }
+        if (isDown && selectedItem) {
+
+            selectedItem.Coords.SetX(event.pageX - canvasOffsetX - selectedItemOffsetX);
+            selectedItem.Coords.SetY(event.pageY - canvasOffsetY - selectedItemOffsetY);
+
+            this.Render();
         }
-        return els;
-    }
-
-    function GetElementById(id) {
-
-        return Elements[id];
-    }
-
-    function clearAll() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    function Render() {
-
-        clearAll();
-
-        for (let i in Elements) {
-            Elements[i].draw(ctx);
-        }
-
-        for (let i in Legends) {
-            Legends[i].draw(ctx);
-        }
-    }
+    };
 
     canvas.addEventListener("mousedown", down);
-    canvas.addEventListener("mousemove", mover);
+    canvas.addEventListener("mousemove", this.mover);
     canvas.addEventListener("mouseup", up);
 
     return {
-        Add: AddElement,
-        Elements: bubuElements,
-        GetNames: GetNames,
-        GetElementsByType: GetElementsByType,
-        GetElementsByName: GetElementsByName,
-        GetElementById: GetElementById,
-        Render: Render,
+        Add: this.AddItem,
+        Elements: Elements,
+        GetNames: this.GetNames,
+        GetItemsByType: this.GetItemsByType,
+        GetItemsByName: this.GetItemsByName,
+        GetItemById: this.GetItemById,
+        Render: this.Render,
     };
 }
 
