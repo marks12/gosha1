@@ -19,6 +19,7 @@ function Condition(config) {
 
     Draw.apply(this, arguments);
 
+    return this;
 }
 
 export default Condition;
