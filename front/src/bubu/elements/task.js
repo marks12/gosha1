@@ -19,6 +19,8 @@ function Task(config) {
 
 
     Draw.apply(this, arguments);
+
+    return this;
 }
 
 export default Task;
