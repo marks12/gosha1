@@ -1,13 +1,13 @@
 import Task from "./elements/task";
 import Condition from "./elements/condition";
 
-function Elements () {
+function ElementsRegister () {
 
-    this.Task = Task;
-    this.Condition = Condition;
-
-    return this;
+    return {
+        Task,
+        Condition
+    };
 
 }
 
-export default new Elements();
+export default ElementsRegister();
