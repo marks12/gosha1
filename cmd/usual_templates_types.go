@@ -105,6 +105,7 @@ import (
     "strings"
     "strconv"
     "github.com/gorilla/mux"
+    "net/url"
 )
 
 type FilterIds struct {
@@ -213,6 +214,7 @@ func GetAbstractFilter(request *http.Request, functionType string) AbstractFilte
     filter.Pagination.PerPage,_  = strconv.Atoi(request.FormValue("PerPage"))
     filter.Search  = request.FormValue("Search")
 
+    arr, _ := url.ParseQuery(request.RequestURI)
 
     dirs := []string{}
 
