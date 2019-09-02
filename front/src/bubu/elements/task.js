@@ -5,6 +5,7 @@ import {TYPES} from "../constants";
 import Coordinates from "../attributes/coordinates";
 import Draw from "../actions/draw";
 import Size from "../attributes/size";
+import Move from "../actions/move";
 
 function Task(config) {
 
@@ -15,10 +16,8 @@ function Task(config) {
     this.SetType(TYPES.ACTION);
 
     Size.apply(this, arguments);
-    this.SetSize(100, 100);
-
-
     Draw.apply(this, arguments);
+    Move.apply(this, arguments);
 
     return this;
 }

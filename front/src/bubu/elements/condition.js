@@ -5,6 +5,7 @@ import Coordinates from "../attributes/coordinates";
 import Id from "../attributes/id";
 import Draw from "../actions/draw";
 import Size from "../attributes/size";
+import Move from "../actions/move";
 
 function Condition(config) {
 
@@ -15,9 +16,9 @@ function Condition(config) {
     this.SetType(TYPES.CONDITION);
 
     Size.apply(this, arguments);
-    this.SetSize(200, 200);
 
     Draw.apply(this, arguments);
+    Move.apply(this, arguments);
 
     return this;
 }
