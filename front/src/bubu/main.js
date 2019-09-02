@@ -2,10 +2,11 @@ import Elements from './elements'
 import Toolbox from "./toolbox";
 import Store from "./store";
 import Renderer from "./renderer";
+import SelectItem from "./actions/selectItem";
+import Move from "./actions/move";
+import Clone from "./actions/clone";
 
 function BuBu(canvasElementId) {
-
-    let self = this;
 
     let canvas = document.getElementById(canvasElementId);
 
@@ -16,8 +17,13 @@ function BuBu(canvasElementId) {
 
     Store.apply(this, arguments);
 
+    Move.apply(this, arguments);
     Toolbox.apply(this, arguments);
     Renderer.apply(this, arguments);
+    SelectItem.apply(this, arguments);
+    Clone.apply(this, arguments);
+
+    let self = this;
 
     this.GetCanvas = () => {
         return canvas;
@@ -27,7 +33,7 @@ function BuBu(canvasElementId) {
     canvas.setAttribute("height", canvas.parentNode.parentElement.clientHeight);
 
     let isDown = false;
-    let selectedItem = null;
+    this.selectedItem = null;
     let canvasOffsetX = canvas.getBoundingClientRect().left;
     let canvasOffsetY = canvas.getBoundingClientRect().top;
     let selectedItemOffsetX = 0;
@@ -44,12 +50,12 @@ function BuBu(canvasElementId) {
         let x = event.pageX;
         let y = event.pageY;
 
-        selectedItem = getFirstElementByCoordinates(x, y);
+        self.selectedItem = getFirstElementByCoordinates(x, y);
     }
 
     function up() {
         isDown = false;
-        selectedItem = null;
+        self.selectedItem = null;
         selectedItemOffsetX = 0;
         selectedItemOffsetY = 0;
     }
@@ -78,14 +84,28 @@ function BuBu(canvasElementId) {
         return null;
     };
 
+
     this.mover = (event) => {
 
         event = this.AssignCoordinates(event);
 
-        if (isDown && selectedItem) {
+        let newX = event.pageX - canvasOffsetX - selectedItemOffsetX;
+        let newY = event.pageY - canvasOffsetY - selectedItemOffsetY;
 
-            selectedItem.Coords.SetX(event.pageX - canvasOffsetX - selectedItemOffsetX);
-            selectedItem.Coords.SetY(event.pageY - canvasOffsetY - selectedItemOffsetY);
+        if (isDown && self.selectedItem) {
+
+            if (self.selectedItem.getOnMove()) {
+
+                let m = self.selectedItem.getOnMove();
+                console.log(m);
+                m.Run(newX, newY, self);
+
+
+            } else {
+
+                self.selectedItem.Coords.SetX(newX);
+                self.selectedItem.Coords.SetY(newY);
+            }
 
             this.Render();
         }

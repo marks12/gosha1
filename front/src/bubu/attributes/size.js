@@ -1,7 +1,7 @@
 function Size(config) {
 
-    let width = config && config.width ? config.width : 100;
-    let height = config && config.height ? config.height : 100;
+    let width = config && config.Width ? config.Width : 100;
+    let height = config && config.Height ? config.Height : 100;
 
     this.GetWidth = () => {return width};
     this.SetWidth = (w) => {width = w; return this;};
