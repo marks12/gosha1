@@ -2,8 +2,15 @@ import Elements from "./elements";
 
 function Toolbox(config) {
 
-    let defaultTask = new Elements.Task();
-    let defaultCondition = new Elements.Condition();
+    this.AddItem(new Elements.Divider({
+        Coords: {
+            X: 200,
+            Y: 20,
+        },
+        Width: 1,
+        Height: 200,
+        Color: '#ccc'
+    }));
 
     this.AddItem(new Elements.Condition({
         Name: "Condition",
@@ -14,8 +21,9 @@ function Toolbox(config) {
         },
         Width: 60,
         Height: 60,
-        // OnMove: new Elements.Actions.Clone(defaultCondition),
+        OnMove: new Elements.Actions.Clone(Elements.Condition),
     }));
+
 
     this.AddItem(new Elements.Task({
         Name: "Task",
@@ -26,7 +34,7 @@ function Toolbox(config) {
         },
         Width: 100,
         Height: 60,
-        OnMove: new Elements.Actions.Clone(defaultTask),
+        OnMove: new Elements.Actions.Clone(Elements.Task),
     }));
 }
 

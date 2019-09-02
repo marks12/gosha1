@@ -8,9 +8,9 @@ import Clone from "./actions/clone";
 
 function BuBu(canvasElementId) {
 
-    let canvas = document.getElementById(canvasElementId);
+    this.canvas = document.getElementById(canvasElementId);
 
-    if (!canvas || !canvas.getContext) {
+    if (!this.canvas || !this.canvas.getContext) {
         console.error("Wrong canvas element Id. ELement not found or canvas.getContext function not exists");
         return
     }
@@ -26,20 +26,20 @@ function BuBu(canvasElementId) {
     let self = this;
 
     this.GetCanvas = () => {
-        return canvas;
+        return this.canvas;
     };
 
-    canvas.setAttribute("width", canvas.parentNode.parentElement.clientWidth);
-    canvas.setAttribute("height", canvas.parentNode.parentElement.clientHeight);
+    this.canvas.setAttribute("width", this.canvas.parentNode.parentElement.clientWidth);
+    this.canvas.setAttribute("height", this.canvas.parentNode.parentElement.clientHeight);
 
     let isDown = false;
     this.selectedItem = null;
-    let canvasOffsetX = canvas.getBoundingClientRect().left;
-    let canvasOffsetY = canvas.getBoundingClientRect().top;
+    let canvasOffsetX = this.canvas.getBoundingClientRect().left;
+    let canvasOffsetY = this.canvas.getBoundingClientRect().top;
     let selectedItemOffsetX = 0;
     let selectedItemOffsetY = 0;
 
-    this.SetCtx(canvas.getContext('2d'));
+    this.SetCtx(this.canvas.getContext('2d'));
 
     function down(event) {
 
@@ -111,9 +111,9 @@ function BuBu(canvasElementId) {
         }
     };
 
-    canvas.addEventListener("mousedown", down);
-    canvas.addEventListener("mousemove", this.mover);
-    canvas.addEventListener("mouseup", up);
+    this.canvas.addEventListener("mousedown", down);
+    this.canvas.addEventListener("mousemove", this.mover);
+    this.canvas.addEventListener("mouseup", up);
 
     return {
         Add: this.AddItem,

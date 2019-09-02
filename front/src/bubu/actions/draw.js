@@ -27,8 +27,6 @@ function Draw(config) {
 
             case TYPES.CONDITION:
 
-                console.log('draw condition');
-
                 let curX = this.Coords.GetX() + width/2;
                 let curY = this.Coords.GetY();
 
@@ -39,6 +37,19 @@ function Draw(config) {
                 ctx.lineTo(curX - width/2, curY + height / 2);
                 ctx.lineTo(curX, curY);
                 ctx.stroke();
+
+                break;
+
+            case TYPES.DIVIDER:
+
+                ctx.beginPath();
+                ctx.moveTo(this.Coords.GetX(), this.Coords.GetY());
+                ctx.lineTo(this.Coords.GetX() + width, this.Coords.GetY());
+                ctx.lineTo(this.Coords.GetX() + width, this.Coords.GetY() + height);
+                ctx.lineTo(this.Coords.GetX(), this.Coords.GetY() + height);
+                ctx.lineTo(this.Coords.GetX(), this.Coords.GetY());
+                ctx.fillStyle = this.GetColor();
+                ctx.fill();
 
                 break;
         }

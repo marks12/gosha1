@@ -1,9 +1,5 @@
 <template>
     <div style="width: 100%">
-        <VSet>
-            <VButton text="+ Task" @click="addAction()"></VButton>
-            <VButton text="+ Condition" @click="addCondition()"></VButton>
-        </VSet>
         <canvas id="SomeCanvas" width="500" height="600"></canvas>
     </div>
 </template>
