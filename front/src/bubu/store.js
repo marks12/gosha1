@@ -10,6 +10,17 @@ function Store(config) {
         return this;
     };
 
+    this.RemoveItem = (element) => {
+
+        for (let i in Items) {
+            if (Items[i].GetId() === element.GetId()) {
+                delete Items[i];
+                return;
+            }
+        }
+
+    };
+
     this.GetNames = () => {
 
         let names = [];
