@@ -4,6 +4,8 @@ import Draw from "../actions/draw";
 import Size from "../attributes/size";
 import Color from "../attributes/color";
 import Move from "../actions/move";
+import Resize from "../actions/resize";
+import Selection from "../actions/selection";
 
 function BasicSet(config) {
 
@@ -13,6 +15,8 @@ function BasicSet(config) {
     Move.apply(this, arguments);
     Id.apply(this, arguments);
     Coordinates.apply(this, arguments);
+    Selection.apply(this, arguments);
+    Resize.apply(this, arguments);
 
     return this;
 }

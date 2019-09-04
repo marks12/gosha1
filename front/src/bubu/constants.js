@@ -3,4 +3,5 @@ export const TYPES = {
     CONDITION : 200,
     ARROW : 300,
     DIVIDER : 400,
+    MULTISELECTION : 500,
 };

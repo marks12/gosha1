@@ -8,12 +8,13 @@ function Move(config) {
 
     let self = this;
 
-    this.setOnMove = (action) => {
-        self.OnMoveAction = action;
+    this.SetOnMove = (action) => {
+
+        OnMoveAction = action;
         return self;
     };
 
-    this.getOnMove = () => {
+    this.GetOnMove = () => {
         return OnMoveAction;
     };
 
