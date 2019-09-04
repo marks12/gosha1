@@ -1,40 +1,43 @@
-import Elements from "./elements";
+import ElementsRegister from "./elements-register";
 
 function Toolbox(config) {
 
-    this.AddItem(new Elements.Divider({
+    let stdHeight = 40;
+    let spaceBeetween = 20;
+
+    this.AddItem(new ElementsRegister.Divider({
         Coords: {
             X: 200,
-            Y: 20,
+            Y: spaceBeetween,
         },
         Width: 1,
-        Height: 200,
+        Height: this.canvas.parentNode.parentElement.clientHeight,
         Color: '#ccc'
     }));
 
-    this.AddItem(new Elements.Condition({
+    this.AddItem(new ElementsRegister.Condition({
         Name: "Condition",
         Description: "Move this condition to work area for create new Condition",
         Coords: {
             X: 0,
-            Y: 20,
+            Y: spaceBeetween,
         },
-        Width: 60,
-        Height: 60,
-        OnMove: new Elements.Actions.Clone(Elements.Condition),
+        Width: stdHeight,
+        Height: stdHeight,
+        OnMove: new ElementsRegister.Actions.Clone(ElementsRegister.Condition),
     }));
 
 
-    this.AddItem(new Elements.Task({
+    this.AddItem(new ElementsRegister.Task({
         Name: "Task",
         Description: "Move this task to work area for create new Task",
         Coords: {
             X: 80,
-            Y: 20,
+            Y: spaceBeetween,
         },
-        Width: 100,
-        Height: 60,
-        OnMove: new Elements.Actions.Clone(Elements.Task),
+        Width: stdHeight * 1.6,
+        Height: stdHeight,
+        OnMove: new ElementsRegister.Actions.Clone(ElementsRegister.Task),
     }));
 }
 
