@@ -1,10 +1,11 @@
-import Elements from './elements'
+import ElementsRegister from './elements-register'
 import Toolbox from "./toolbox";
 import Store from "./store";
 import Renderer from "./renderer";
 import SelectItem from "./actions/selectItem";
 import Move from "./actions/move";
 import Clone from "./actions/clone";
+import Selection from "./actions/selection";
 
 function BuBu(canvasElementId) {
 
@@ -22,6 +23,7 @@ function BuBu(canvasElementId) {
     Renderer.apply(this, arguments);
     SelectItem.apply(this, arguments);
     Clone.apply(this, arguments);
+    Selection.apply(this, arguments);
 
     let self = this;
 
@@ -51,10 +53,30 @@ function BuBu(canvasElementId) {
         let y = event.pageY;
 
         self.selectedItem = getFirstElementByCoordinates(x, y);
+
+        if (self.selectedItem) {
+            self.selectedItem.SelectSwitch();
+            self.Render();
+        } else {
+
+            self.CreaetMultiSelection();
+
+        }
+
     }
 
     function up() {
         isDown = false;
+
+        if (self.selectedItem) {
+            self.selectedItem.Blur();
+
+            self.RemoveMultiSelection();
+
+            self.Render();
+
+        }
+
         self.selectedItem = null;
         selectedItemOffsetX = 0;
         selectedItemOffsetY = 0;
@@ -94,12 +116,10 @@ function BuBu(canvasElementId) {
 
         if (isDown && self.selectedItem) {
 
-            if (self.selectedItem.getOnMove()) {
+            if (self.selectedItem.GetOnMove()) {
 
-                let m = self.selectedItem.getOnMove();
-                console.log(m);
-                m.Run(newX, newY, self);
-
+                let m = self.selectedItem.GetOnMove();
+                m.Run(newX, newY, self, self.selectedItem);
 
             } else {
 
@@ -109,6 +129,9 @@ function BuBu(canvasElementId) {
 
             this.Render();
         }
+
+
+
     };
 
     this.canvas.addEventListener("mousedown", down);
@@ -117,7 +140,7 @@ function BuBu(canvasElementId) {
 
     return {
         Add: this.AddItem,
-        Elements: Elements,
+        Elements: ElementsRegister,
         GetNames: this.GetNames,
         GetItemsByType: this.GetItemsByType,
         GetItemsByName: this.GetItemsByName,
