@@ -84,7 +84,7 @@ function BuBu(canvasElementId) {
 
     let getFirstElementByCoordinates = (x, y) => {
 
-        let Items = this.GetItems();
+        let Items = this.GetSelectableItems();
 
         for (let i in Items) {
 

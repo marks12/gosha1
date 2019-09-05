@@ -82,6 +82,28 @@ function Draw(config) {
                 ctx.stroke();
 
                 break;
+
+            case TYPES.BACKGROUND:
+
+                ctx.beginPath();
+                ctx.moveTo(this.Coords.GetX(), this.Coords.GetY());
+                ctx.lineTo(this.Coords.GetX() + width, this.Coords.GetY());
+                ctx.lineTo(this.Coords.GetX() + width, this.Coords.GetY() + height);
+                ctx.lineTo(this.Coords.GetX(), this.Coords.GetY() + height);
+                ctx.lineTo(this.Coords.GetX(), this.Coords.GetY());
+
+                if (this.IsSelected()) {
+                    ctx.strokeStyle = 'red';
+                } else {
+                    ctx.strokeStyle = this.GetColorDefault();
+                }
+
+                ctx.fillStyle = this.GetColor();
+
+                ctx.stroke();
+                ctx.fill();
+
+                break;
         }
     };
 }
