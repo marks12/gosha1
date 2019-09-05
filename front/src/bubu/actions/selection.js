@@ -3,6 +3,9 @@ import ElementsRegister from '../elements-register'
 function Selection(config) {
 
     let isSelected = false;
+
+    let isSelectable = config && config.IsSelectable !== undefined ? !!(config.IsSelectable) : true;
+
     let selection = null;
 
     this.Select = () => {
@@ -22,6 +25,15 @@ function Selection(config) {
 
     this.IsSelected = () => {
         return isSelected;
+    };
+
+    this.SetSelectable = (b) => {
+        isSelectable = b;
+        return this;
+    };
+
+    this.IsSelectable = () => {
+        return isSelectable;
     };
 
     this.CreaetMultiSelection = () => {
