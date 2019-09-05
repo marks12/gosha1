@@ -49,12 +49,13 @@ function Store(config) {
 
         let els = [];
 
-        for (let i = 0; i < Items.length; i++) {
+        for (let i in Items) {
 
             if (Items[i].GetType() === type) {
                 els.push(Items[i]);
             }
         }
+
         return els;
     };
 
@@ -74,6 +75,22 @@ function Store(config) {
 
     this.GetItems = () => {
         return Items;
+    };
+
+    this.GetSelectableItems = () => {
+
+        let els = [];
+
+        for (let i in Items) {
+
+            if (! Items[i].IsSelectable()) {
+                continue;
+            }
+
+            els.push(Items[i]);
+        }
+
+        return els;
     }
 
 }

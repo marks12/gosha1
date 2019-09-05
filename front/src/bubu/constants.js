@@ -4,4 +4,5 @@ export const TYPES = {
     ARROW : 300,
     DIVIDER : 400,
     MULTISELECTION : 500,
+    BACKGROUND : 600,
 };
