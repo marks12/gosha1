@@ -10,7 +10,6 @@ function Resize(childElement) {
         root.selectedItem.SetWidth(x - root.selectedItem.Coords.GetX());
         root.selectedItem.SetHeight(y - root.selectedItem.Coords.GetY());
 
-        console.log('resize', x, y);
     };
 }
 
