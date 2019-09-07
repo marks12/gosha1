@@ -1,43 +1,45 @@
 import ElementsRegister from "./elements-register";
+import {TYPES as constants} from "./constants";
 
 function Toolbox(config) {
-
-    let stdHeight = 40;
-    let spaceBeetween = 20;
 
     this.AddItem(new ElementsRegister.Background({
         Name: "toolbox-background",
         Description: "Подложка для тулбокса",
         Coords: {
-            X: 0,
-            Y: 0,
+            X: 1,
+            Y: constants.spaceBetween,
         },
-        Width: 100,
-        Height: this.canvas.parentNode.parentElement.clientHeight,
+        Width: constants.toolboxWidth,
+        Height: this.canvas.parentNode.parentElement.clientHeight - 2 * constants.spaceBetween,
         OnMove: new ElementsRegister.Actions.Nothing(),
         IsSelectable: false,
         Color: '#fff',
     }));
 
-    this.AddItem(new ElementsRegister.Divider({
+    this.AddItem(new ElementsRegister.Background({
+        Name: "work-area-background",
+        Description: "Подложка для рабочей области",
         Coords: {
-            X: 100,
-            Y: spaceBeetween,
+            X: constants.toolboxWidth + constants.spaceBetween,
+            Y: constants.spaceBetween,
         },
-        Width: 1,
-        Height: this.canvas.parentNode.parentElement.clientHeight,
-        Color: '#ccc'
+        Width: this.canvas.parentNode.parentElement.clientWidth - constants.spaceBetween * 2 - constants.toolboxWidth,
+        Height: this.canvas.parentNode.parentElement.clientHeight - constants.spaceBetween * 2,
+        OnMove: new ElementsRegister.Actions.Nothing(),
+        IsSelectable: false,
+        Color: '#fff',
     }));
 
     this.AddItem(new ElementsRegister.Condition({
         Name: "Condition",
         Description: "Move this condition to work area for create new Condition",
         Coords: {
-            X: spaceBeetween,
-            Y: spaceBeetween,
+            X: constants.spaceBetween,
+            Y: constants.spaceBetween * 2,
         },
-        Width: stdHeight,
-        Height: stdHeight,
+        Width: constants.stdHeight,
+        Height: constants.stdHeight,
         OnMove: new ElementsRegister.Actions.Clone(ElementsRegister.Condition),
     }));
 
@@ -45,11 +47,11 @@ function Toolbox(config) {
         Name: "Task",
         Description: "Move this task to work area for create new Task",
         Coords: {
-            X: spaceBeetween,
-            Y: 2 * spaceBeetween + stdHeight,
+            X: constants.spaceBetween,
+            Y: 3 * constants.spaceBetween + constants.stdHeight,
         },
-        Width: stdHeight,
-        Height: stdHeight / 1.6,
+        Width: constants.stdHeight,
+        Height: constants.stdHeight / 1.6,
         OnMove: new ElementsRegister.Actions.Clone(ElementsRegister.Task),
     }));
 }

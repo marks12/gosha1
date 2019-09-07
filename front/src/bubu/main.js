@@ -43,7 +43,24 @@ function BuBu(canvasElementId) {
 
     this.SetCtx(this.canvas.getContext('2d'));
 
+    function isRightButton(e) {
+
+        let isRightMB;
+        e = e || window.event;
+
+        if ("which" in e)  // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
+            isRightMB = e.which === 3;
+        else if ("button" in e)  // IE, Opera
+            isRightMB = e.button === 2;
+
+        return isRightMB;
+    }
+
     function down(event) {
+
+        if (isRightButton(event)) {
+            return false;
+        }
 
         isDown = true;
 
