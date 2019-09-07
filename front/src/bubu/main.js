@@ -1,5 +1,6 @@
 import ElementsRegister from './elements-register'
 import Toolbox from "./toolbox";
+import WorkArea from "./work-area";
 import Store from "./store";
 import Renderer from "./renderer";
 import SelectItem from "./actions/selectItem";
@@ -20,6 +21,7 @@ function BuBu(canvasElementId) {
 
     Move.apply(this, arguments);
     Toolbox.apply(this, arguments);
+    WorkArea.apply(this, arguments);
     Renderer.apply(this, arguments);
     SelectItem.apply(this, arguments);
     Clone.apply(this, arguments);
@@ -146,9 +148,6 @@ function BuBu(canvasElementId) {
 
             this.Render();
         }
-
-
-
     };
 
     this.canvas.addEventListener("mousedown", down);
