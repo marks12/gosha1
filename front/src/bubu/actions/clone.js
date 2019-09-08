@@ -12,7 +12,7 @@ function Clone(childElement) {
 
         root.selectedItem.Blur();
 
-        el.SelectSwitch();
+        el.Blur();
         root.AddItem(el);
         root.setSelectedItem(el);
     };
