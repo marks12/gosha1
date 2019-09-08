@@ -17,8 +17,6 @@ function Toolbox(config) {
         Color: '#fff',
     }));
 
-
-
     this.AddItem(new ElementsRegister.Condition({
         Name: "Condition",
         Description: "Move this condition to work area for create new Condition",
