@@ -41,7 +41,6 @@ function BuBu(canvasElementId) {
 
     let isDown = false;
     this.selectedItem = null;
-    this.selectionMode = false;
     let canvasOffsetX = this.canvas.getBoundingClientRect().left;
     let canvasOffsetY = this.canvas.getBoundingClientRect().top;
     let selectedItemOffsetX = 0;
@@ -80,39 +79,92 @@ function BuBu(canvasElementId) {
         clickCoordsX = x - canvasOffsetX;
         clickCoordsY = y - canvasOffsetY;
 
+        let selectedItems = self.GetSelectedItems();
+
         self.selectedItem = getFirstElementByCoordinates(x, y);
 
         if (self.selectedItem) {
 
+            if (selectedItems.length === 1) {
+                self.BlurAll();
+            }
+
             if (self.selectedItem.IsSelectable()) {
                 self.selectedItem.Select();
             }
-            self.Render();
 
         } else {
             self.CreateMultiSelection(x - canvasOffsetX, y - canvasOffsetY);
-            self.selectionMode = true;
+            self.BlurAll();
         }
 
+        self.Render();
     }
 
     function up() {
+
         isDown = false;
 
         self.RemoveMultiSelection();
 
-        self.Render();
-
-        if (self.selectedItem) {
-            self.selectedItem.Blur();
-        }
-
         self.selectedItem = null;
-        self.selectionMode = false;
 
         selectedItemOffsetX = 0;
         selectedItemOffsetY = 0;
+
+        self.Render();
+
     }
+
+
+
+    this.mover = (event) => {
+
+        event = this.AssignCoordinates(event);
+
+        let newX = event.pageX - canvasOffsetX - selectedItemOffsetX;
+        let newY = event.pageY - canvasOffsetY - selectedItemOffsetY;
+
+        if (isDown && self.selectedItem) {
+
+            if (self.selectedItem.GetOnMove()) {
+
+                let m = self.selectedItem.GetOnMove();
+                m.Run(newX, newY, self, self.selectedItem);
+
+            } else {
+
+                self.selectedItem.Coords.SetX(newX);
+                self.selectedItem.Coords.SetY(newY);
+            }
+
+
+            let items = this.GetSelectedItems();
+            for (let i in items) {
+
+                if (items[i].GetId() === this.selectedItem.GetId()) {
+                    continue;
+                }
+
+                let offsetX = event.pageX - clickCoordsX - canvasOffsetX;
+                let offsetY = event.pageY - clickCoordsY - canvasOffsetY;
+
+                if (items[i].GetOnMove()) {
+
+                    let m = self.selectedItem.GetOnMove();
+                    m.Run(newX, newY, self, items[i]);
+
+                } else {
+
+                    items[i].Coords.SetX(items[i].Coords.GetPreviousX() + offsetX);
+                    items[i].Coords.SetY(items[i].Coords.GetPreviousY() + offsetY);
+                }
+            }
+
+            this.Render();
+        }
+    };
+
 
     let getFirstElementByCoordinates = (x, y) => {
 
@@ -136,55 +188,6 @@ function BuBu(canvasElementId) {
         }
 
         return null;
-    };
-
-
-    this.mover = (event) => {
-
-        event = this.AssignCoordinates(event);
-
-        let newX = event.pageX - canvasOffsetX - selectedItemOffsetX;
-        let newY = event.pageY - canvasOffsetY - selectedItemOffsetY;
-
-        if (isDown && self.selectedItem) {
-
-            if (self.selectedItem.GetOnMove()) {
-
-                let m = self.selectedItem.GetOnMove();
-                m.Run(newX, newY, self, self.selectedItem);
-
-            } else {
-
-                self.selectedItem.Coords.SetX(newX);
-                self.selectedItem.Coords.SetY(newY);
-            }
-
-            if (! self.selectionMode) {
-
-                let items = this.GetSelectedItems();
-                for (let i in items) {
-
-                    if (items[i].GetId() === this.selectedItem.GetId()) {
-                        continue;
-                    }
-
-                    let offsetX = event.pageX - clickCoordsX - canvasOffsetX;
-                    let offsetY = event.pageY - clickCoordsY - canvasOffsetY;
-
-                    if (items[i].GetOnMove()) {
-
-                        let m = self.selectedItem.GetOnMove();
-                        m.Run(newX, newY, self, items[i]);
-
-                    } else {
-
-                        items[i].Coords.SetX(items[i].Coords.GetPreviousX() + offsetX);
-                        items[i].Coords.SetY(items[i].Coords.GetPreviousY() + offsetY);
-                    }
-                }
-            }
-            this.Render();
-        }
     };
 
     this.canvas.addEventListener("mousedown", down);
