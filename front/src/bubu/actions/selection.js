@@ -55,6 +55,8 @@ function Selection(config) {
         selection.SetOnMove(new ElementsRegister.Actions.Resize());
         selection.Coords.SetX(x);
         selection.Coords.SetY(y);
+        selection.SetWidth(0);
+        selection.SetHeight(0);
 
         this.AddItem(selection);
         this.setSelectedItem(selection);
@@ -71,7 +73,8 @@ function Selection(config) {
     this.RemoveMultiSelection = () => {
 
         let items = this.GetSelectableItems();
-        let ctx = this.GetCtx();
+
+        console.log('selection', selection);
 
         if (selection) {
 
