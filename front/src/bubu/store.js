@@ -93,6 +93,22 @@ function Store(config) {
         return els;
     }
 
+    this.GetSelectedItems = () => {
+
+        let els = [];
+
+        for (let i in Items) {
+
+            if (! Items[i].IsSelected()) {
+                continue;
+            }
+
+            els.push(Items[i]);
+        }
+
+        return els;
+    }
+
 }
 
 export default Store;

@@ -7,6 +7,7 @@ import SelectItem from "./actions/selectItem";
 import Move from "./actions/move";
 import Clone from "./actions/clone";
 import Selection from "./actions/selection";
+import ZeroPoint from "./elements/zero-point";
 
 function BuBu(canvasElementId) {
 
@@ -16,6 +17,8 @@ function BuBu(canvasElementId) {
         console.error("Wrong canvas element Id. ELement not found or canvas.getContext function not exists");
         return
     }
+
+    this.ZeroPoint = new ElementsRegister.ZeroPoint();
 
     Store.apply(this, arguments);
 
@@ -38,10 +41,13 @@ function BuBu(canvasElementId) {
 
     let isDown = false;
     this.selectedItem = null;
+    this.selectionMode = false;
     let canvasOffsetX = this.canvas.getBoundingClientRect().left;
     let canvasOffsetY = this.canvas.getBoundingClientRect().top;
     let selectedItemOffsetX = 0;
     let selectedItemOffsetY = 0;
+    let clickCoordsX = 0;
+    let clickCoordsY = 0;
 
     this.SetCtx(this.canvas.getContext('2d'));
 
@@ -71,15 +77,21 @@ function BuBu(canvasElementId) {
         let x = event.pageX;
         let y = event.pageY;
 
+        clickCoordsX = x - canvasOffsetX;
+        clickCoordsY = y - canvasOffsetY;
+
         self.selectedItem = getFirstElementByCoordinates(x, y);
 
         if (self.selectedItem) {
-            self.selectedItem.SelectSwitch();
+
+            if (self.selectedItem.IsSelectable()) {
+                self.selectedItem.Select();
+            }
             self.Render();
+
         } else {
-
-            self.CreaetMultiSelection();
-
+            self.CreateMultiSelection(x - canvasOffsetX, y - canvasOffsetY);
+            self.selectionMode = true;
         }
 
     }
@@ -87,16 +99,17 @@ function BuBu(canvasElementId) {
     function up() {
         isDown = false;
 
+        self.RemoveMultiSelection();
+
+        self.Render();
+
         if (self.selectedItem) {
             self.selectedItem.Blur();
-
-            self.RemoveMultiSelection();
-
-            self.Render();
-
         }
 
         self.selectedItem = null;
+        self.selectionMode = false;
+
         selectedItemOffsetX = 0;
         selectedItemOffsetY = 0;
     }
@@ -146,6 +159,30 @@ function BuBu(canvasElementId) {
                 self.selectedItem.Coords.SetY(newY);
             }
 
+            if (! self.selectionMode) {
+
+                let items = this.GetSelectedItems();
+                for (let i in items) {
+
+                    if (items[i].GetId() === this.selectedItem.GetId()) {
+                        continue;
+                    }
+
+                    let offsetX = event.pageX - clickCoordsX - canvasOffsetX;
+                    let offsetY = event.pageY - clickCoordsY - canvasOffsetY;
+
+                    if (items[i].GetOnMove()) {
+
+                        let m = self.selectedItem.GetOnMove();
+                        m.Run(newX, newY, self, items[i]);
+
+                    } else {
+
+                        items[i].Coords.SetX(items[i].Coords.GetPreviousX() + offsetX);
+                        items[i].Coords.SetY(items[i].Coords.GetPreviousY() + offsetY);
+                    }
+                }
+            }
             this.Render();
         }
     };
