@@ -116,8 +116,6 @@ function BuBu(canvasElementId) {
 
     }
 
-
-
     this.mover = (event) => {
 
         event = this.AssignCoordinates(event);
