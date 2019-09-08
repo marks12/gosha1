@@ -12,6 +12,8 @@ function Clone(childElement) {
 
         root.selectedItem.Blur();
 
+        el.SetText('x:' + el.Coords.GetX() + ' y:' + el.Coords.GetY());
+
         el.Blur();
         root.AddItem(el);
         root.setSelectedItem(el);
