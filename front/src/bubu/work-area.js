@@ -19,6 +19,8 @@ function WorkArea(config) {
 
     this.AddItem(workArea);
 
+    this.ZeroPoint.Coords.SetX(workArea.Coords.GetX());
+    this.ZeroPoint.Coords.SetY(workArea.Coords.GetY());
 }
 
 export default WorkArea;

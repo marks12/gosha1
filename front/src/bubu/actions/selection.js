@@ -13,8 +13,21 @@ function Selection(config) {
         return this;
     };
 
+    this.GetSelection = () => {
+        return selection;
+    };
+
     this.Blur = () => {
         isSelected = false;
+        return this;
+    };
+
+    this.BlurAll = () => {
+        let items = this.GetSelectableItems();
+
+        for (let i in items) {
+            items[i].Blur();
+        }
         return this;
     };
 
@@ -36,13 +49,23 @@ function Selection(config) {
         return isSelectable;
     };
 
-    this.CreaetMultiSelection = () => {
+    this.CreateMultiSelection = (x, y) => {
 
         selection = new ElementsRegister.MultiSelection();
         selection.SetOnMove(new ElementsRegister.Actions.Resize());
+        selection.Coords.SetX(x);
+        selection.Coords.SetY(y);
 
         this.AddItem(selection);
         this.setSelectedItem(selection);
+    };
+
+    this.SavePreviousAll = () => {
+
+        let items = this.GetSelectableItems();
+        for (let i in items) {
+            items[i].Coords.SavePrevious();
+        }
     };
 
     this.RemoveMultiSelection = () => {
@@ -50,61 +73,63 @@ function Selection(config) {
         let items = this.GetSelectableItems();
         let ctx = this.GetCtx();
 
-        if(selection) {
-            console.log('selection.Coords',
-                selection.Coords.GetX(),
-                selection.Coords.GetY(),
-                selection.GetWidth(),
-                selection.GetHeight(),
-            );
+        if (selection) {
 
-        }
+            for (let i in items) {
 
-        for (let i in items) {
-
-            if (selection &&
-                (
+                if (
                     (
                         selection.Coords.GetX() <= items[i].Coords.GetX() &&
                         selection.Coords.GetY() <= items[i].Coords.GetY() &&
-                        selection.GetWidth() > 0 && selection.Coords.GetX() + selection.GetWidth() >= items[i].Coords.GetX() + items[i].GetWidth() &&
-                        selection.GetHeight() > 0 && selection.Coords.GetY() + selection.GetHeight() >= items[i].Coords.GetY() + items[i].GetHeight()
+                        selection.GetWidth() > 0 &&
+                        selection.GetHeight() > 0 &&
+                        selection.Coords.GetX() + selection.GetWidth() >= items[i].Coords.GetX() + items[i].GetWidth() &&
+                        selection.Coords.GetY() + selection.GetHeight() >= items[i].Coords.GetY() + items[i].GetHeight()
                     )
-                        ||
+                    ||
                     (
                         selection.Coords.GetX() >= items[i].Coords.GetX() &&
                         selection.Coords.GetY() <= items[i].Coords.GetY() &&
-                        selection.GetWidth() < 0 && selection.Coords.GetX() + selection.GetWidth() <= items[i].Coords.GetX() + items[i].GetWidth() &&
-                        selection.GetHeight() > 0 && selection.Coords.GetY() + selection.GetHeight() >= items[i].Coords.GetY() + items[i].GetHeight()
+                        selection.GetWidth() < 0 &&
+                        selection.GetHeight() > 0 &&
+                        selection.Coords.GetX() + selection.GetWidth() <= items[i].Coords.GetX() &&
+                        selection.Coords.GetY() + selection.GetHeight() >= items[i].Coords.GetY() + items[i].GetHeight()
                     )
-                        ||
+                    ||
                     (
                         selection.Coords.GetX() >= items[i].Coords.GetX() &&
                         selection.Coords.GetY() >= items[i].Coords.GetY() &&
-                        selection.GetWidth() < 0 && selection.Coords.GetX() + selection.GetWidth() <= items[i].Coords.GetX() + items[i].GetWidth() &&
-                        selection.GetHeight() < 0 && selection.Coords.GetY() + selection.GetHeight() <= items[i].Coords.GetY() + items[i].GetHeight()
+                        selection.GetWidth() < 0 &&
+                        selection.GetHeight() < 0 &&
+                        selection.Coords.GetX() + selection.GetWidth() <= items[i].Coords.GetX() &&
+                        selection.Coords.GetY() + selection.GetHeight() <= items[i].Coords.GetY()
                     )
-                        ||
+                    ||
                     (
                         selection.Coords.GetX() <= items[i].Coords.GetX() &&
                         selection.Coords.GetY() >= items[i].Coords.GetY() &&
-                        selection.GetWidth() > 0 && selection.Coords.GetX() + selection.GetWidth() >= items[i].Coords.GetX() + items[i].GetWidth() &&
-                        selection.GetHeight() < 0 && selection.Coords.GetY() + selection.GetHeight() <= items[i].Coords.GetY() + items[i].GetHeight()
+                        selection.GetWidth() > 0 &&
+                        selection.GetHeight() < 0 &&
+                        selection.Coords.GetX() + selection.GetWidth() >= items[i].Coords.GetX() + items[i].GetWidth() &&
+                        selection.Coords.GetY() + selection.GetHeight() <= items[i].Coords.GetY() + items[i].GetHeight()
                     )
-                )
-            ) {
-                items[i].Select();
-            } else {
-                items[i].Blur();
+                ) {
+                    items[i].Select();
+                } else {
+                    items[i].Blur();
+                }
+
+                items[i].Coords.SavePrevious();
             }
 
+            this.RemoveItem(selection);
+            selection = null;
+
         }
 
-        if (selection) {
-            this.RemoveItem(selection)
-            selection = null;
-        }
+        this.SavePreviousAll();
     };
+
 
 }
 
