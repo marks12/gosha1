@@ -7,7 +7,6 @@ import SelectItem from "./actions/selectItem";
 import Move from "./actions/move";
 import Clone from "./actions/clone";
 import Selection from "./actions/selection";
-import ZeroPoint from "./elements/zero-point";
 
 function BuBu(canvasElementId) {
 
