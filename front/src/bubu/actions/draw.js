@@ -3,7 +3,7 @@ import clone from "../common/objects";
 
 function Draw(config) {
 
-    this.draw = (ctx) => {
+    this.draw = (ctx, root) => {
 
         let width = this.GetWidth();
         let height = this.GetHeight();
