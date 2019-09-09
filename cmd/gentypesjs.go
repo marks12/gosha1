@@ -30,6 +30,8 @@ func genTypesJs(c *ishell.Context) {
 	folderData := folder + "/data"
 	file := folder + "/apiModel.js"
 	apiFile := folder + "/api.js"
+	apiCSRFile := folder + "/apiCSR.js"
+	apiSSRFile := folder + "/apiSSR.js"
 	commonFile := folder + "/common.js"
 
 	os.RemoveAll(folder)
@@ -45,6 +47,12 @@ func genTypesJs(c *ishell.Context) {
 
 	api := []byte(apiContent)
 	ioutil.WriteFile(apiFile, api, 0644)
+
+	apiCSR := []byte(apiCSRContent)
+	ioutil.WriteFile(apiCSRFile, apiCSR, 0644)
+
+	apiSSR := []byte(apiSSRContent)
+	ioutil.WriteFile(apiSSRFile, apiSSR, 0644)
 
 	common := []byte(commonContent)
 	ioutil.WriteFile(commonFile, common, 0644)

@@ -16,7 +16,7 @@ function Renderer(config) {
         let Items = this.GetItems();
 
         for (let i in Items) {
-            Items[i].draw(ctx);
+            Items[i].draw(ctx, this);
         }
     };
 
