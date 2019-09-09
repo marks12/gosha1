@@ -109,24 +109,24 @@ import (
 )
 
 type FilterIds struct {
-    ids []int
+    Ids []int
 
     validator
 }
 
 func (filter *FilterIds) GetFirstId() (int, error) {
-    for _, id := range filter.ids {
+    for _, id := range filter.Ids {
         return id, nil
     }
     return 0, errors.New("Empty array")
 }
 
 func (filter *FilterIds) GetIds() []int {
-    return filter.ids
+    return filter.Ids
 }
 
 func (filter *FilterIds) AddId(id int) *FilterIds {
-    filter.ids = append(filter.ids, id)
+    filter.Ids = append(filter.Ids, id)
     return filter
 }
 
@@ -139,7 +139,7 @@ func (filter *FilterIds) AddIds(ids []int) *FilterIds {
 
 func (filter *FilterIds) Clear() *FilterIds {
 
-    filter.ids = []int{}
+    filter.Ids = []int{}
     return filter
 }
 
