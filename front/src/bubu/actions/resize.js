@@ -2,13 +2,15 @@ function Resize(childElement) {
 
     this.Run = (x, y, root) => {
 
-        if (root.selectedItem.Coords.GetX() === 0 && root.selectedItem.Coords.GetY() === 0) {
-            root.selectedItem.Coords.SetX(x);
-            root.selectedItem.Coords.SetY(y);
+        let sItem = root.GetSelectedItem();
+
+        if (sItem.Coords.GetX() === 0 && sItem.Coords.GetY() === 0) {
+            sItem.Coords.SetX(x);
+            sItem.Coords.SetY(y);
         }
 
-        root.selectedItem.SetWidth(x - root.selectedItem.Coords.GetX());
-        root.selectedItem.SetHeight(y - root.selectedItem.Coords.GetY());
+        sItem.SetWidth(x - sItem.Coords.GetX());
+        sItem.SetHeight(y - sItem.Coords.GetY());
 
     };
 }
