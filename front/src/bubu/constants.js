@@ -9,7 +9,9 @@ export const TYPES = {
 
     //toolbox
     stdHeight: 40,
-    spaceBetween: 20,
-    toolboxWidth: 80,
+    spaceBetween: 0,
+    // spaceBetween: 20,
+    toolboxWidth: 0,
+    // toolboxWidth: 80,
 
 };

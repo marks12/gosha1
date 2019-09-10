@@ -5,11 +5,12 @@ function Draw(config) {
 
     this.draw = (ctx, root) => {
 
-        let width = this.GetWidth();
-        let height = this.GetHeight();
-
+        let W = this.GetWidth();
+        let H = this.GetHeight();
         let lineWidth = 1;
-
+        let X = this.Coords.GetX();
+        let Y = this.Coords.GetY();
+        
         ctx.lineWidth = lineWidth;
 
         switch (this.GetType()) {
@@ -17,11 +18,11 @@ function Draw(config) {
             case TYPES.ACTION:
 
                 ctx.beginPath();
-                ctx.moveTo(this.Coords.GetX(), this.Coords.GetY());
-                ctx.lineTo(this.Coords.GetX() + width, this.Coords.GetY());
-                ctx.lineTo(this.Coords.GetX() + width, this.Coords.GetY() + height);
-                ctx.lineTo(this.Coords.GetX(), this.Coords.GetY() + height);
-                ctx.lineTo(this.Coords.GetX(), this.Coords.GetY());
+                ctx.moveTo(X, Y);
+                ctx.lineTo(X + W, Y);
+                ctx.lineTo(X + W, Y + H);
+                ctx.lineTo(X, Y + H);
+                ctx.lineTo(X, Y);
                 // ctx.shadowBlur = 10;
                 // ctx.shadowOffsetX = 20;
                 // ctx.shadowColor = "black";
@@ -41,14 +42,14 @@ function Draw(config) {
 
             case TYPES.CONDITION:
 
-                let curX = this.Coords.GetX() + width / 2;
-                let curY = this.Coords.GetY();
+                let curX = X + W / 2;
+                let curY = Y;
 
                 ctx.beginPath();
                 ctx.moveTo(curX, curY);
-                ctx.lineTo(curX + width / 2, curY + height / 2);
-                ctx.lineTo(curX, curY + height + (lineWidth / 2) - 1);
-                ctx.lineTo(curX - width / 2, curY + height / 2);
+                ctx.lineTo(curX + W / 2, curY + H / 2);
+                ctx.lineTo(curX, curY + H + (lineWidth / 2) - 1);
+                ctx.lineTo(curX - W / 2, curY + H / 2);
                 ctx.lineTo(curX, curY);
 
                 addText(ctx);
@@ -67,11 +68,11 @@ function Draw(config) {
             case TYPES.DIVIDER:
 
                 ctx.beginPath();
-                ctx.moveTo(this.Coords.GetX(), this.Coords.GetY());
-                ctx.lineTo(this.Coords.GetX() + width, this.Coords.GetY());
-                ctx.lineTo(this.Coords.GetX() + width, this.Coords.GetY() + height);
-                ctx.lineTo(this.Coords.GetX(), this.Coords.GetY() + height);
-                ctx.lineTo(this.Coords.GetX(), this.Coords.GetY());
+                ctx.moveTo(X, Y);
+                ctx.lineTo(X + W, Y);
+                ctx.lineTo(X + W, Y + H);
+                ctx.lineTo(X, Y + H);
+                ctx.lineTo(X, Y);
                 ctx.fillStyle = this.GetColor();
                 ctx.fill();
 
@@ -80,11 +81,11 @@ function Draw(config) {
             case TYPES.MULTISELECTION:
 
                 ctx.beginPath();
-                ctx.moveTo(this.Coords.GetX(), this.Coords.GetY());
-                ctx.lineTo(this.Coords.GetX() + width, this.Coords.GetY());
-                ctx.lineTo(this.Coords.GetX() + width, this.Coords.GetY() + height);
-                ctx.lineTo(this.Coords.GetX(), this.Coords.GetY() + height);
-                ctx.lineTo(this.Coords.GetX(), this.Coords.GetY());
+                ctx.moveTo(X, Y);
+                ctx.lineTo(X + W, Y);
+                ctx.lineTo(X + W, Y + H);
+                ctx.lineTo(X, Y + H);
+                ctx.lineTo(X, Y);
 
                 ctx.strokeStyle = 'red';
 
@@ -95,11 +96,11 @@ function Draw(config) {
             case TYPES.BACKGROUND:
 
                 ctx.beginPath();
-                ctx.moveTo(this.Coords.GetX(), this.Coords.GetY());
-                ctx.lineTo(this.Coords.GetX() + width, this.Coords.GetY());
-                ctx.lineTo(this.Coords.GetX() + width, this.Coords.GetY() + height);
-                ctx.lineTo(this.Coords.GetX(), this.Coords.GetY() + height);
-                ctx.lineTo(this.Coords.GetX(), this.Coords.GetY());
+                ctx.moveTo(X, Y);
+                ctx.lineTo(X + W, Y);
+                ctx.lineTo(X + W, Y + H);
+                ctx.lineTo(X, Y + H);
+                ctx.lineTo(X, Y);
 
                 if (this.IsSelected()) {
                     ctx.strokeStyle = 'red';
