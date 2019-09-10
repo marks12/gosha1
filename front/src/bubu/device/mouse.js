@@ -5,7 +5,7 @@ function Mouse(config) {
 
     Coordinates.apply(this, arguments);
 
-    self = this;
+    let self = this;
 
     this.Mouse = new MouseDevice();
 
@@ -29,7 +29,6 @@ function Mouse(config) {
 
             isDown = true;
 
-
             let x = event.pageX;
             let y = event.pageY;
 
@@ -38,21 +37,20 @@ function Mouse(config) {
 
             let selectedItems = self.GetSelectedItems();
 
-            selectedItem = self.GetFirstElementByCoordinates(x, y);
-            selectedItem = self.SelectItemByCoordinates(x, y);
+            let sItem = self.SelectItemByCoordinates(x, y);
 
-            if (self.selectedItem) {
+            if (sItem) {
 
                 if (selectedItems.length === 1) {
                     self.BlurAll();
                 }
 
-                if (self.selectedItem.IsSelectable()) {
-                    self.selectedItem.Select();
+                if (sItem.IsSelectable()) {
+                    sItem.Select();
                 }
 
             } else {
-                self.CreateMultiSelection(x - canvasOffsetX, y - canvasOffsetY);
+                self.CreateMultiSelection(x - self.GetCanvasOffsetX(), y - self.GetCanvasOffsetY());
                 self.BlurAll();
             }
         };
@@ -73,24 +71,25 @@ function Mouse(config) {
             let newX = event.pageX - self.GetCanvasOffsetX() - self.GetSelectedItemOffsetX();
             let newY = event.pageY - self.GetCanvasOffsetY() - self.GetSelectedItemOffsetY();
 
-            if (self.Mouse.IsDown() && self.GetSelectedItem()) {
+            let sItem = self.GetSelectedItem();
+            
+            if (self.Mouse.IsDown() && sItem) {
 
-                if (self.selectedItem.GetOnMove()) {
+                if (sItem.GetOnMove()) {
 
-                    let m = self.selectedItem.GetOnMove();
-                    m.Run(newX, newY, self, self.selectedItem);
+                    let m = sItem.GetOnMove();
+                    m.Run(newX, newY, self, sItem);
 
                 } else {
 
-                    self.selectedItem.Coords.SetX(newX);
-                    self.selectedItem.Coords.SetY(newY);
+                    sItem.Coords.SetX(newX);
+                    sItem.Coords.SetY(newY);
                 }
 
-
-                let items = this.GetSelectedItems();
+                let items = self.GetSelectedItems();
                 for (let i in items) {
 
-                    if (items[i].GetId() === this.selectedItem.GetId()) {
+                    if (items[i].GetId() === sItem.GetId()) {
                         continue;
                     }
 
@@ -99,7 +98,7 @@ function Mouse(config) {
 
                     if (items[i].GetOnMove()) {
 
-                        let m = self.selectedItem.GetOnMove();
+                        let m = sItem.GetOnMove();
                         m.Run(newX, newY, self, items[i]);
 
                     } else {
