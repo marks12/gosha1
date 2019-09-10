@@ -7,7 +7,7 @@
             </VSet>
         </WorkSpace>
         <WorkSpace width="dyn">
-            <canvas id="SomeCanvas" width="500" height="600"></canvas>
+            <canvas id="SomeCanvas" width="500" height="600" v-on:drop="drop($event)">></canvas>
         </WorkSpace>
     </VSet>
 </template>
