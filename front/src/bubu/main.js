@@ -13,16 +13,16 @@ import Canvas from "./canvas";
 
 function BuBu(canvasElementId) {
 
-    this.canvas = new Canvas(canvasElementId);
+    Store.apply(this, arguments);
+    Canvas.apply(this, arguments);
 
-    if (!this.canvas || !this.canvas.getContext) {
+    if (!this.GetCanvas() || !this.GetContext) {
         console.error("Wrong canvas element Id. ELement not found or canvas.getContext function not exists");
         return
     }
 
     this.ZeroPoint = new ElementsRegister.ZeroPoint();
 
-    Store.apply(this, arguments);
     Move.apply(this, arguments);
     Toolbox.apply(this, arguments);
     WorkArea.apply(this, arguments);
@@ -31,39 +31,6 @@ function BuBu(canvasElementId) {
     Clone.apply(this, arguments);
     Selection.apply(this, arguments);
     Mouse.apply(this, arguments);
-
-    let self = this;
-
-    this.GetCanvas = () => {
-        return this.canvas;
-    };
-
-
-    this.SetCtx(this.canvas.getContext('2d'));
-
-    function down(event) {
-
-        self.Mouse.Down(event);
-        self.Render();
-    }
-
-    function up(event) {
-
-        self.Mouse.Up(event);
-        self.Render();
-
-    }
-
-    function mover (event) {
-
-        this.Mouse.Move(event);
-        self.Render();
-
-    }
-
-    this.canvas.addEventListener("mousedown", down);
-    this.canvas.addEventListener("mousemove", mover);
-    this.canvas.addEventListener("mouseup", up);
 
     return {
         Add: this.AddItem,

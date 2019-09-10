@@ -11,7 +11,7 @@ function Toolbox(config) {
             Y: constants.spaceBetween,
         },
         Width: constants.toolboxWidth,
-        Height: this.canvas.parentNode.parentElement.clientHeight - 2 * constants.spaceBetween,
+        Height: this.GetCanvasHeight() - 2 * constants.spaceBetween,
         OnMove: new ElementsRegister.Actions.Nothing(),
         IsSelectable: false,
         Color: '#fff',

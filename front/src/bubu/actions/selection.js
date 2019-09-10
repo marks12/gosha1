@@ -59,7 +59,7 @@ function Selection(config) {
         selection.SetHeight(0);
 
         this.AddItem(selection);
-        this.setSelectedItem(selection);
+        this.SetSelectedItem(selection);
     };
 
     this.SavePreviousAll = () => {
