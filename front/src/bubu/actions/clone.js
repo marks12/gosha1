@@ -10,7 +10,7 @@ function Clone(childElement) {
             items[i].Blur();
         }
 
-        root.selectedItem.Blur();
+        root.GetSelectedItem().Blur();
 
         el.SetText('x:' + el.Coords.GetX() + ' y:' + el.Coords.GetY());
 
