@@ -4,8 +4,8 @@ function Canvas(canvasElementId) {
 
     let canvas = document.getElementById(canvasElementId);
 
-    canvas.setAttribute("width", canvas.parentNode.parentElement.clientWidth);
-    canvas.setAttribute("height", canvas.parentNode.parentElement.clientHeight);
+    canvas.setAttribute("width", canvas.parentNode.parentElement.clientWidth - 40);
+    canvas.setAttribute("height", canvas.parentNode.parentElement.clientHeight - 40);
 
     let canvasOffsetX = canvas.getBoundingClientRect().left;
     let canvasOffsetY = canvas.getBoundingClientRect().top;

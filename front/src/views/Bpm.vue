@@ -1,7 +1,15 @@
 <template>
-    <div style="width: 100%">
-        <canvas id="SomeCanvas" width="500" height="600"></canvas>
-    </div>
+    <VSet>
+        <WorkSpace width="fit">
+            <VSet vertical>
+                <VText>{{text}}</VText>
+                <VImage :src="src" data-bubu="task" draggable="true" v-on:dragend="drop($event)"></VImage>
+            </VSet>
+        </WorkSpace>
+        <WorkSpace width="dyn">
+            <canvas id="SomeCanvas" width="500" height="600"></canvas>
+        </WorkSpace>
+    </VSet>
 </template>
 
 <script>
@@ -11,14 +19,18 @@
     import VLink from "swtui/src/components/VLink";
     import VButton from "swtui/src/components/VButton";
     import VSet from "swtui/src/components/VSet";
+    import WorkSpace from "swtui/src/components/WorkSpace";
+    import VText from "swtui/src/components/VText";
+    import VImage from "swtui/src/components/VImage";
 
     export default {
         name: "Bpm",
-        components: {VSet, VButton, VLink},
+        components: {VImage, VText, WorkSpace, VSet, VButton, VLink},
         data() {
             return {
                 text: "Some asd",
                 bubu: {},
+                src: "",
             };
         },
         created() {
@@ -28,10 +40,15 @@
                 this.bubu = new BuBu('SomeCanvas');
                 this.bubu.Render();
 
+                this.src = this.bubu.GetSrcImageTask();
+
             });
 
         },
         methods: {
+            drop: function(event) {
+                console.log('event',event);
+            },
             addAction() {
 
                 this.bubu.Add(new this.bubu.Elements.Task({

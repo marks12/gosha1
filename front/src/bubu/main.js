@@ -10,18 +10,20 @@ import Selection from "./actions/selection";
 import IsRightButton from "./common";
 import Mouse from "./device/mouse";
 import Canvas from "./canvas";
+import SrcImage from "./src-image";
 
 function BuBu(canvasElementId) {
 
     Store.apply(this, arguments);
     Canvas.apply(this, arguments);
+    SrcImage.apply(this, arguments);
 
     if (!this.GetCanvas() || !this.GetContext) {
         console.error("Wrong canvas element Id. ELement not found or canvas.getContext function not exists");
         return
     }
 
-    this.ZeroPoint = new ElementsRegister.ZeroPoint();
+    this.Zero = new ElementsRegister.ZeroPoint();
 
     Move.apply(this, arguments);
     Toolbox.apply(this, arguments);
@@ -40,6 +42,7 @@ function BuBu(canvasElementId) {
         GetItemsByName: this.GetItemsByName,
         GetItemById: this.GetItemById,
         Render: this.Render,
+        GetSrcImageTask: this.GetSrcImageTask,
     };
 }
 
