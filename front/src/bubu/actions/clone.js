@@ -16,7 +16,7 @@ function Clone(childElement) {
 
         el.Blur();
         root.AddItem(el);
-        root.setSelectedItem(el);
+        root.SetSelectedItem(el);
     };
 }
 

@@ -4,7 +4,7 @@
             <VHead style="width: 200px;">{{projectName}}</VHead>
             <MainMenu></MainMenu>
         </template>
-        <template #content>
+        <template slot="content">
             <router-view #content/>
         </template>
     </TheLayout>

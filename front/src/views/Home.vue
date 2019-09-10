@@ -1,7 +1,7 @@
 <template>
   <WorkSpace>
     <template #content>
-      Some content
+      {{data}}
     </template>
   </WorkSpace>
 </template>
@@ -12,6 +12,11 @@
 import WorkSpace from "swtui/src/components/WorkSpace";
 export default {
   name: 'home',
+  data: function () {
+      return {
+          data: "Some data2",
+      }
+  },
   components: {
       WorkSpace,
   }
