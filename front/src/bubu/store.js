@@ -2,18 +2,6 @@ function Store(config) {
 
     let Items = {};
     let ctx = null;
-    let selectedItem = null;
-    let selectedItemOffsetX = 0;
-    let selectedItemOffsetY = 0;
-
-    this.GetSelectedItem = () => {
-        return selectedItem;
-    };
-
-    this.SetSelectedItem = (item) => {
-        selectedItem = item;
-        return this;
-    };
 
     this.AddItem = (element) => {
 
@@ -125,6 +113,9 @@ function Store(config) {
 
         let Items = this.GetSelectableItems();
 
+        let canvasOffsetX = this.GetCanvasOffsetX();
+        let canvasOffsetY = this.GetCanvasOffsetY();
+
         for (let i in Items) {
 
             let x1 = Items[i].Coords.GetX();
@@ -135,8 +126,35 @@ function Store(config) {
 
             if (x - canvasOffsetX >= x1 && x - canvasOffsetX <= x2 && y - canvasOffsetY >= y1 && y - canvasOffsetY <= y2) {
 
-                selectedItemOffsetX = x - canvasOffsetX - x1;
-                selectedItemOffsetY = y - canvasOffsetY - y1;
+                this.SetSelectedItemOffsetX(x - canvasOffsetX - x1);
+                this.SetSelectedItemOffsetY(y - canvasOffsetY - y1);
+
+                return Items[i];
+            }
+        }
+
+        return null;
+    };
+
+    this.GetFirstElementByCoordinates = (x, y) => {
+
+        let Items = this.GetSelectableItems();
+
+        let canvasOffsetX = this.GetCanvasOffsetX();
+        let canvasOffsetY = this.GetCanvasOffsetY();
+
+        for (let i in Items) {
+
+            let x1 = Items[i].Coords.GetX();
+            let x2 = x1 + Items[i].GetWidth();
+
+            let y1 = Items[i].Coords.GetY();
+            let y2 = y1 + Items[i].GetHeight();
+
+            if (x - canvasOffsetX >= x1 && x - canvasOffsetX <= x2 && y - canvasOffsetY >= y1 && y - canvasOffsetY <= y2) {
+
+                this.SetSelectedItemOffsetX(x - canvasOffsetX - x1);
+                this.SetSelectedItemOffsetY(y - canvasOffsetY - y1);
 
                 return Items[i];
             }
