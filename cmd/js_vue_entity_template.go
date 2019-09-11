@@ -208,7 +208,7 @@ const usualEntityVueComponent = `
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters({namespace}{
                 {entity}List: 'getList{Entity}'
             }),
             isPanelCreate() {
@@ -252,14 +252,14 @@ const usualEntityVueComponent = `
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions({namespace}[
                 'find{Entity}',
                 'update{Entity}',
                 'delete{Entity}',
                 'create{Entity}',
             ]),
 
-            ...mapMutations([
+            ...mapMutations({namespace}[
                 'add{Entity}ItemToList',
                 'delete{Entity}FromList',
                 'update{Entity}ById',

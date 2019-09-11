@@ -65,7 +65,7 @@
 										v-if="isCheckbox(currentOrderFilterItem.item[key])"
                                         v-model="currentOrderFilterItem.item[key]"
                                         :id="`currentOrderFilterItem${key}`"
-										@input="changeCurrentApplicationItem"
+										@input="changeCurrentOrderFilterItem"
 									/>
 									
                                 </VSet>
@@ -206,7 +206,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('im3', {
                 orderFilterList: 'getListOrderFilter'
             }),
             isPanelCreate() {
@@ -250,14 +250,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('im3', [
                 'findOrderFilter',
                 'updateOrderFilter',
                 'deleteOrderFilter',
                 'createOrderFilter',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('im3', [
                 'addOrderFilterItemToList',
                 'deleteOrderFilterFromList',
                 'updateOrderFilterById',

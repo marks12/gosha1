@@ -1,17 +1,15 @@
 <template>
-    <div>
-    <!--<VSet>-->
-        <!--<WorkSpace width="fit">-->
-            <!--<VSet vertical>-->
-                <!--<VText>{{text}}</VText>-->
-                <!--<VImage :src="src" data-bubu="task" draggable="true" v-on:dragend="drop($event)"></VImage>-->
-            <!--</VSet>-->
-        <!--</WorkSpace>-->
-        <!--<WorkSpace width="dyn">-->
+    <VSet>
+        <WorkSpace width="fit">
+            <VSet vertical>
+                <VText @click="text+=text">{{text}}</VText>
+                <VImage :src="src" data-bubu="task" draggable="true" v-on:dragend="drop($event)"></VImage>
+            </VSet>
+        </WorkSpace>
+        <WorkSpace width="dyn">
             <canvas id="SomeCanvas" width="500" height="600" v-on:drop="drop($event)">></canvas>
-        <!--</WorkSpace>-->
-    <!--</VSet>-->
-    </div>
+        </WorkSpace>
+    </VSet>
 </template>
 
 <script>
@@ -35,6 +33,9 @@
                 src: "",
             };
         },
+        updated() {
+            console.log('updated');
+        },
         created() {
 
             setTimeout(()=>{
@@ -42,7 +43,9 @@
                 this.bubu = new BuBu('SomeCanvas');
                 this.bubu.Render();
 
-                this.src = this.bubu.GetSrcImageTask();
+                setTimeout(()=>{
+                    this.src = this.bubu.GetSrcImageTask();
+                }, 200);
 
             });
 

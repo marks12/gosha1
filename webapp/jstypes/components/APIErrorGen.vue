@@ -65,7 +65,7 @@
 										v-if="isCheckbox(currentAPIErrorItem.item[key])"
                                         v-model="currentAPIErrorItem.item[key]"
                                         :id="`currentAPIErrorItem${key}`"
-										@input="changeCurrentApplicationItem"
+										@input="changeCurrentAPIErrorItem"
 									/>
 									
                                 </VSet>
@@ -206,7 +206,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('im3', {
                 aPIErrorList: 'getListAPIError'
             }),
             isPanelCreate() {
@@ -250,14 +250,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('im3', [
                 'findAPIError',
                 'updateAPIError',
                 'deleteAPIError',
                 'createAPIError',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('im3', [
                 'addAPIErrorItemToList',
                 'deleteAPIErrorFromList',
                 'updateAPIErrorById',
