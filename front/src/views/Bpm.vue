@@ -6,8 +6,8 @@
                 <VImage :src="src" data-bubu="task" draggable="true" v-on:dragend="drop($event)"></VImage>
             </VSet>
         </WorkSpace>
-        <WorkSpace width="dyn">
-            <canvas id="SomeCanvas" width="500" height="600" v-on:drop="drop($event)">></canvas>
+        <WorkSpace noIndent>
+            <canvas id="SomeCanvas" v-on:drop="drop($event)">></canvas>
         </WorkSpace>
     </VSet>
 </template>
@@ -34,18 +34,17 @@
             };
         },
         updated() {
-            console.log('updated');
+            this.bubu.UpdateCanvas();
         },
         created() {
 
-            setTimeout(()=>{
+
+            this.$nextTick(() => {
 
                 this.bubu = new BuBu('SomeCanvas');
+                this.src = this.bubu.GetSrcImageTask();
+                this.bubu.UpdateCanvas();
                 this.bubu.Render();
-
-                setTimeout(()=>{
-                    this.src = this.bubu.GetSrcImageTask();
-                }, 200);
 
             });
 

@@ -7,8 +7,6 @@ function Resize(childElement) {
             sItem.Coords.SetY(y);
         }
 
-        console.log('resize x', x);
-
         sItem.SetWidth(x - sItem.Coords.GetX());
         sItem.SetHeight(y - sItem.Coords.GetY());
 

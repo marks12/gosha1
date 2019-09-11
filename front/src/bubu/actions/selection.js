@@ -74,8 +74,6 @@ function Selection(config) {
 
         let items = this.GetSelectableItems();
 
-        console.log('selection', selection);
-
         if (selection) {
 
             for (let i in items) {
