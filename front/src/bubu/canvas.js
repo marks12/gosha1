@@ -4,16 +4,25 @@ function Canvas(canvasElementId) {
 
     let canvas = document.getElementById(canvasElementId);
 
-    for (let i in canvas.parentNode.parentElement) {
-        console.log('canvas.parentNode.parentElement', i, canvas.parentNode.parentElement[i]);
-    }
-
     canvas.setAttribute("width", canvas.parentNode.parentElement.clientWidth);
     canvas.setAttribute("height", canvas.parentNode.parentElement.clientHeight);
 
-
     let canvasOffsetX = canvas.getBoundingClientRect().left;
     let canvasOffsetY = canvas.getBoundingClientRect().top;
+
+    this.UpdateCanvas = () => {
+
+        setTimeout(() => {
+
+            canvas.setAttribute("width", document.getElementById(canvasElementId).parentNode.clientWidth);
+            canvas.setAttribute("height", document.getElementById(canvasElementId).parentNode.clientHeight);
+
+            canvasOffsetX = canvas.getBoundingClientRect().left;
+            canvasOffsetY = canvas.getBoundingClientRect().top;
+        });
+    };
+
+    this.UpdateCanvas();
 
     this.SetCtx(canvas.getContext('2d'));
 
