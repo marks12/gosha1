@@ -67,7 +67,7 @@ const usualEntityVueComponent = `
 										v-if="isCheckbox(current{Entity}Item.item[key])"
                                         v-model="current{Entity}Item.item[key]"
                                         :id="` + "`" + `current{Entity}Item${key}` + "`" + `"
-										@input="changeCurrentApplicationItem"
+										@input="changeCurrent{Entity}Item"
 									/>
 									
                                 </VSet>
