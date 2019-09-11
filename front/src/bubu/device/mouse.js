@@ -68,8 +68,11 @@ function Mouse(config) {
 
             event = this.AssignCoordinates(event);
 
+
             let newX = event.pageX - self.GetCanvasOffsetX() - self.GetSelectedItemOffsetX();
             let newY = event.pageY - self.GetCanvasOffsetY() - self.GetSelectedItemOffsetY();
+
+            // console.log('event.pageX', event.pageX, 'newX', newX, 'self.GetCanvasOffsetX()', self.GetSelectedItemOffsetX());
 
             let sItem = self.GetSelectedItem();
             
@@ -78,7 +81,7 @@ function Mouse(config) {
                 if (sItem.GetOnMove()) {
 
                     let m = sItem.GetOnMove();
-                    m.Run(newX, newY, self, sItem);
+                    m.Run(newX, newY, sItem, self);
 
                 } else {
 
