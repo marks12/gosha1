@@ -1,15 +1,17 @@
 <template>
-    <VSet>
-        <WorkSpace width="fit">
-            <VSet vertical>
-                <VText>{{text}}</VText>
-                <VImage :src="src" data-bubu="task" draggable="true" v-on:dragend="drop($event)"></VImage>
-            </VSet>
-        </WorkSpace>
-        <WorkSpace width="dyn">
+    <div>
+    <!--<VSet>-->
+        <!--<WorkSpace width="fit">-->
+            <!--<VSet vertical>-->
+                <!--<VText>{{text}}</VText>-->
+                <!--<VImage :src="src" data-bubu="task" draggable="true" v-on:dragend="drop($event)"></VImage>-->
+            <!--</VSet>-->
+        <!--</WorkSpace>-->
+        <!--<WorkSpace width="dyn">-->
             <canvas id="SomeCanvas" width="500" height="600" v-on:drop="drop($event)">></canvas>
-        </WorkSpace>
-    </VSet>
+        <!--</WorkSpace>-->
+    <!--</VSet>-->
+    </div>
 </template>
 
 <script>

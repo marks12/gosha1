@@ -1,13 +1,13 @@
 function Resize(childElement) {
 
-    this.Run = (x, y, root) => {
-
-        let sItem = root.GetSelectedItem();
+    this.Run = (x, y, sItem, root) => {
 
         if (sItem.Coords.GetX() === 0 && sItem.Coords.GetY() === 0) {
             sItem.Coords.SetX(x);
             sItem.Coords.SetY(y);
         }
+
+        console.log('resize x', x);
 
         sItem.SetWidth(x - sItem.Coords.GetX());
         sItem.SetHeight(y - sItem.Coords.GetY());

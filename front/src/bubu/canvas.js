@@ -4,8 +4,12 @@ function Canvas(canvasElementId) {
 
     let canvas = document.getElementById(canvasElementId);
 
-    canvas.setAttribute("width", canvas.parentNode.parentElement.clientWidth - 40);
-    canvas.setAttribute("height", canvas.parentNode.parentElement.clientHeight - 40);
+    for (let i in canvas.parentNode.parentElement) {
+        console.log(i, canvas.parentNode.parentElement[i]);
+    }
+
+    canvas.setAttribute("width", canvas.parentNode.parentElement.clientWidth);
+    canvas.setAttribute("height", canvas.parentNode.parentElement.clientHeight);
 
     let canvasOffsetX = canvas.getBoundingClientRect().left;
     let canvasOffsetY = canvas.getBoundingClientRect().top;
@@ -15,6 +19,11 @@ function Canvas(canvasElementId) {
     canvas.addEventListener("mousedown", down);
     canvas.addEventListener("mousemove", mover);
     canvas.addEventListener("mouseup", up);
+    canvas.addEventListener("ondrop", importElement);
+
+    function importElement(event) {
+        console.log('import element event', event);
+    }
 
     this.GetCanvas = () => {
         return this.canvas;
