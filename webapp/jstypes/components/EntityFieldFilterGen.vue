@@ -65,7 +65,7 @@
 										v-if="isCheckbox(currentEntityFieldFilterItem.item[key])"
                                         v-model="currentEntityFieldFilterItem.item[key]"
                                         :id="`currentEntityFieldFilterItem${key}`"
-										@input="changeCurrentApplicationItem"
+										@input="changeCurrentEntityFieldFilterItem"
 									/>
 									
                                 </VSet>
@@ -206,7 +206,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('im3', {
                 entityFieldFilterList: 'getListEntityFieldFilter'
             }),
             isPanelCreate() {
@@ -250,14 +250,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('im3', [
                 'findEntityFieldFilter',
                 'updateEntityFieldFilter',
                 'deleteEntityFieldFilter',
                 'createEntityFieldFilter',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('im3', [
                 'addEntityFieldFilterItemToList',
                 'deleteEntityFieldFilterFromList',
                 'updateEntityFieldFilterById',

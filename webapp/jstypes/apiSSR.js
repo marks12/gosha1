@@ -1,11 +1,9 @@
-package cmd
 
-const apiSSRContent = `
 import axios from "axios";
 
 function BackendApi() {
 
-  this.serverUrl = "";
+  this.serverUrl = "http://127.0.0.1:7500";
 
   this.getRouteUrl = (url) => {
     return this.serverUrl + url;
@@ -46,4 +44,3 @@ function BackendApi() {
 let apiSSR = new BackendApi();
 
 export default apiSSR;
-`

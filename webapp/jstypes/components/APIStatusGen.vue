@@ -65,7 +65,7 @@
 										v-if="isCheckbox(currentAPIStatusItem.item[key])"
                                         v-model="currentAPIStatusItem.item[key]"
                                         :id="`currentAPIStatusItem${key}`"
-										@input="changeCurrentApplicationItem"
+										@input="changeCurrentAPIStatusItem"
 									/>
 									
                                 </VSet>
@@ -206,7 +206,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('im3', {
                 aPIStatusList: 'getListAPIStatus'
             }),
             isPanelCreate() {
@@ -250,14 +250,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('im3', [
                 'findAPIStatus',
                 'updateAPIStatus',
                 'deleteAPIStatus',
                 'createAPIStatus',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('im3', [
                 'addAPIStatusItemToList',
                 'deleteAPIStatusFromList',
                 'updateAPIStatusById',

@@ -65,7 +65,7 @@
 										v-if="isCheckbox(currentSettingFilterItem.item[key])"
                                         v-model="currentSettingFilterItem.item[key]"
                                         :id="`currentSettingFilterItem${key}`"
-										@input="changeCurrentApplicationItem"
+										@input="changeCurrentSettingFilterItem"
 									/>
 									
                                 </VSet>
@@ -206,7 +206,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('im3', {
                 settingFilterList: 'getListSettingFilter'
             }),
             isPanelCreate() {
@@ -250,14 +250,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('im3', [
                 'findSettingFilter',
                 'updateSettingFilter',
                 'deleteSettingFilter',
                 'createSettingFilter',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('im3', [
                 'addSettingFilterItemToList',
                 'deleteSettingFilterFromList',
                 'updateSettingFilterById',
