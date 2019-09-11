@@ -43,6 +43,7 @@ function BuBu(canvasElementId) {
         GetItemById: this.GetItemById,
         Render: this.Render,
         GetSrcImageTask: this.GetSrcImageTask,
+        UpdateCanvas: this.UpdateCanvas,
     };
 }
 
