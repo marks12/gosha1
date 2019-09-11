@@ -24,6 +24,9 @@ type vueComponentData struct {
 
 func genTypesJs(c *ishell.Context) {
 
+	//map-namespace
+	storeNamespace, _ := GetOsArgument("map-namespace")
+
 	folder := "./jstypes"
 	folderStore := folder + "/store"
 	folderComponent := folder + "/components"
@@ -40,7 +43,7 @@ func genTypesJs(c *ishell.Context) {
 	os.MkdirAll(folderComponent, 0755)
 	os.MkdirAll(folderData, 0755)
 
-	modelContent, stores, tpls, data := getTypesJs()
+	modelContent, stores, tpls, data := getTypesJs(storeNamespace.StringResult)
 
 	cb := []byte(modelContent)
 	ioutil.WriteFile(file, cb, 0644)
@@ -70,16 +73,16 @@ func genTypesJs(c *ishell.Context) {
 	}
 }
 
-func getTypesJs() (string, []store, []vueComponent, []vueComponentData) {
+func getTypesJs(storeNameSpace string) (string, []store, []vueComponent, []vueComponentData) {
 
 	existsTypes := GetExistsTypes()
 	typeNames := GetModelsList(existsTypes)
 
-	return getFileContent(existsTypes, typeNames)
+	return getFileContent(existsTypes, typeNames, storeNameSpace)
 
 }
 
-func getFileContent(repository ModelRepository, typeNames []string) (content string, stores []store, vueComponentTemplates []vueComponent, vueData []vueComponentData) {
+func getFileContent(repository ModelRepository, typeNames []string, storeNameSpace string) (content string, stores []store, vueComponentTemplates []vueComponent, vueData []vueComponentData) {
 
 	for _, t := range typeNames {
 
@@ -124,7 +127,7 @@ func getFileContent(repository ModelRepository, typeNames []string) (content str
 
 		vueComponentTemplates = append(vueComponentTemplates, vueComponent{
 			name:   t,
-			jscode: getTemplateJsCode(t),
+			jscode: getTemplateJsCode(t, storeNameSpace),
 		})
 
 		vueData = append(vueData, vueComponentData{
@@ -144,16 +147,24 @@ func getFileContent(repository ModelRepository, typeNames []string) (content str
 }
 
 func getStoreJsCode(entity string) string {
-
 	return assignVar(
 		assignVar(storeTemplate, "{Entity}", entity),
 		"{entity}", getFirstLowerCase(entity))
 }
 
-func getTemplateJsCode(entity string) string {
+func getTemplateJsCode(entity string, storeNameSpace string) string {
+
+
+	template := ""
+
+	if len(storeNameSpace) > 0 {
+		template = assignVar(usualEntityVueComponent, "{namespace}", "'" + storeNameSpace +"', ")
+	} else {
+		template = assignVar(usualEntityVueComponent, "{namespace}", "")
+	}
 
 	return assignVar(
-		assignVar(usualEntityVueComponent, "{Entity}", entity),
+		assignVar(template, "{Entity}", entity),
 		"{entity}", getFirstLowerCase(entity))
 }
 

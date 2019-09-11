@@ -1,6 +1,4 @@
-package cmd
 
-const apiCSRContent = `
 
 function request(method, url, getParams, data, headerParams) {
 
@@ -92,7 +90,7 @@ function request(method, url, getParams, data, headerParams) {
 
 function BackendApi() {
 
-  this.serverUrl = "";
+  this.serverUrl = "http://127.0.0.1:7500";
 
   this.getRouteUrl = (url) => {
     return this.serverUrl + url;
@@ -124,4 +122,3 @@ function BackendApi() {
 let apiCSR = new BackendApi();
 
 export default apiCSR;
-`

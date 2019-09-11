@@ -65,7 +65,7 @@
 										v-if="isCheckbox(currentProjectInfoItem.item[key])"
                                         v-model="currentProjectInfoItem.item[key]"
                                         :id="`currentProjectInfoItem${key}`"
-										@input="changeCurrentApplicationItem"
+										@input="changeCurrentProjectInfoItem"
 									/>
 									
                                 </VSet>
@@ -206,7 +206,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('im3', {
                 projectInfoList: 'getListProjectInfo'
             }),
             isPanelCreate() {
@@ -250,14 +250,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('im3', [
                 'findProjectInfo',
                 'updateProjectInfo',
                 'deleteProjectInfo',
                 'createProjectInfo',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('im3', [
                 'addProjectInfoItemToList',
                 'deleteProjectInfoFromList',
                 'updateProjectInfoById',

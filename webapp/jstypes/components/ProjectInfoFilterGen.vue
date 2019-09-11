@@ -65,7 +65,7 @@
 										v-if="isCheckbox(currentProjectInfoFilterItem.item[key])"
                                         v-model="currentProjectInfoFilterItem.item[key]"
                                         :id="`currentProjectInfoFilterItem${key}`"
-										@input="changeCurrentApplicationItem"
+										@input="changeCurrentProjectInfoFilterItem"
 									/>
 									
                                 </VSet>
@@ -206,7 +206,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('im3', {
                 projectInfoFilterList: 'getListProjectInfoFilter'
             }),
             isPanelCreate() {
@@ -250,14 +250,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('im3', [
                 'findProjectInfoFilter',
                 'updateProjectInfoFilter',
                 'deleteProjectInfoFilter',
                 'createProjectInfoFilter',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('im3', [
                 'addProjectInfoFilterItemToList',
                 'deleteProjectInfoFilterFromList',
                 'updateProjectInfoFilterById',

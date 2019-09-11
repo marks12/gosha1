@@ -65,7 +65,7 @@
 										v-if="isCheckbox(currentPaginationItem.item[key])"
                                         v-model="currentPaginationItem.item[key]"
                                         :id="`currentPaginationItem${key}`"
-										@input="changeCurrentApplicationItem"
+										@input="changeCurrentPaginationItem"
 									/>
 									
                                 </VSet>
@@ -206,7 +206,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('im3', {
                 paginationList: 'getListPagination'
             }),
             isPanelCreate() {
@@ -250,14 +250,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('im3', [
                 'findPagination',
                 'updatePagination',
                 'deletePagination',
                 'createPagination',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('im3', [
                 'addPaginationItemToList',
                 'deletePaginationFromList',
                 'updatePaginationById',
