@@ -65,7 +65,7 @@
 										v-if="isCheckbox(currentFieldItem.item[key])"
                                         v-model="currentFieldItem.item[key]"
                                         :id="`currentFieldItem${key}`"
-										@input="changeCurrentApplicationItem"
+										@input="changeCurrentFieldItem"
 									/>
 									
                                 </VSet>
@@ -206,7 +206,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('im3', {
                 fieldList: 'getListField'
             }),
             isPanelCreate() {
@@ -250,14 +250,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('im3', [
                 'findField',
                 'updateField',
                 'deleteField',
                 'createField',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('im3', [
                 'addFieldItemToList',
                 'deleteFieldFromList',
                 'updateFieldById',

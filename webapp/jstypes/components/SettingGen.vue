@@ -65,7 +65,7 @@
 										v-if="isCheckbox(currentSettingItem.item[key])"
                                         v-model="currentSettingItem.item[key]"
                                         :id="`currentSettingItem${key}`"
-										@input="changeCurrentApplicationItem"
+										@input="changeCurrentSettingItem"
 									/>
 									
                                 </VSet>
@@ -206,7 +206,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('im3', {
                 settingList: 'getListSetting'
             }),
             isPanelCreate() {
@@ -250,14 +250,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('im3', [
                 'findSetting',
                 'updateSetting',
                 'deleteSetting',
                 'createSetting',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('im3', [
                 'addSettingItemToList',
                 'deleteSettingFromList',
                 'updateSettingById',
