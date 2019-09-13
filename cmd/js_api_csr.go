@@ -1,7 +1,6 @@
 package cmd
 
 const apiCSRContent = `
-
 function request(method, url, getParams, data, headerParams) {
 
   function appendParams(u, params) {
@@ -22,13 +21,17 @@ function request(method, url, getParams, data, headerParams) {
 
           switch (typeof params[f]) {
             case "object":
-              for (let j = 0; j < params[f].length; j++) {
-                if (list.length) {
-                  list += "&";
-                }
-                list += f + "[]=" + encodeURIComponent(params[f][j]);
+
+              if (params && params[f]) {
+                  for (let j = 0; j < params[f].length; j++) {
+                      if (list.length) {
+                          list += "&";
+                      }
+                      list += f + "[]=" + encodeURIComponent(params[f][j]);
+                  }
+
+                  uparams += list;
               }
-              uparams += list;
               break;
             default:
               uparams += f + "=" + encodeURIComponent(params[f]);
@@ -37,7 +40,7 @@ function request(method, url, getParams, data, headerParams) {
         }
         break;
     }
-    return u + uparams;
+    return (u + uparams).replace(/[&]+/,'&');
   }
 
   function setHeader(req) {

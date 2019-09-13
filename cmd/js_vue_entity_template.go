@@ -14,7 +14,7 @@ const usualEntityVueComponent = `
                 <table>
                     <thead>
                         <tr>
-                            <th v-for="header in fields">{{ header }}</th>
+                            <th v-for="(header, index) in fields" :key="index">{{ header }}</th>
                         </tr>
                     </thead>
             
@@ -26,7 +26,7 @@ const usualEntityVueComponent = `
                             class="sw-table__row_can-select"
                             :class="{'sw-table__row_is-selected': {entity}Item.Id === current{Entity}Item.item.Id}"
                         >
-                            <td v-for="(value, key) in fields">
+                            <td v-for="(value, key) in fields" :key="key + '-fields'">
                                 <VCheckbox v-if="isCheckbox({entity}Item[key])" :checked="{entity}Item[key]" disabled></VCheckbox>
                                 <VText v-else>{{ {entity}Item[key] }}</VText>
                             </td>
@@ -49,7 +49,7 @@ const usualEntityVueComponent = `
                         <form @submit.prevent="saveChangesSubmit">
                             <VSet direction="vertical">
                                 <VSet
-                                    v-for="(filed, key) in editFields"
+                                    v-for="(filed, key) in editFields" :key="key + '-editFields'"
                                     vertical-align="center"
                                 >
                                     <VLabel
@@ -124,11 +124,13 @@ const usualEntityVueComponent = `
             <slot name="pageFooter">
                 <VSet>
                     <VButton
+                        v-if="canCreate"
                         text="Добавить"
                         accent
                         @click="showPanel(panel.create)"
                     />
                     <VButton
+                        v-if="canDelete"
                         text="Удалить"
                         :disabled="!current{Entity}Item.isSelected"
                         @click="delete{Entity}ItemHandler"
@@ -195,7 +197,15 @@ const usualEntityVueComponent = `
 
                     return fieldsObj;
                 }
-            }
+            },
+            canDelete: {
+                type: Boolean,
+                default: true,
+            },
+            canCreate: {
+                type: Boolean,
+                default: true,
+            },
         },
 
         data() {
@@ -331,11 +341,7 @@ const usualEntityVueComponent = `
 
             create{Entity}ItemSubmit() {
                 this.create{Entity}({
-                    data: {
-                        Name: this.current{Entity}Item.item.Name,
-                        Value: this.current{Entity}Item.item.Value,
-                        Description: this.current{Entity}Item.item.Description,
-                    }
+					data: this.current{Entity}Item.item,
                 }).then((response) => {
 
                     if (response.Model) {
