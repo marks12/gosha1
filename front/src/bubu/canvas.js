@@ -14,8 +14,8 @@ function Canvas(canvasElementId) {
 
         setTimeout(() => {
 
-            canvas.setAttribute("width", document.getElementById(canvasElementId).parentNode.clientWidth);
-            canvas.setAttribute("height", document.getElementById(canvasElementId).parentNode.clientHeight);
+            canvas.setAttribute("width", document.getElementById(canvasElementId).parentNode.parentElement.clientWidth);
+            canvas.setAttribute("height", document.getElementById(canvasElementId).parentNode.parentElement.clientHeight);
 
             canvasOffsetX = canvas.getBoundingClientRect().left;
             canvasOffsetY = canvas.getBoundingClientRect().top;
@@ -23,6 +23,8 @@ function Canvas(canvasElementId) {
     };
 
     this.UpdateCanvas();
+
+    window.addEventListener("resize", this.UpdateCanvas);
 
     this.SetCtx(canvas.getContext('2d'));
 
