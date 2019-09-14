@@ -1,45 +1,43 @@
 import ElementsRegister from "./elements-register";
 import {TYPES as constants} from "./constants";
 
-function Toolbox(config) {
-    //
-    // this.AddItem(new ElementsRegister.Background({
-    //     Name: "toolbox-background",
-    //     Description: "Подложка для тулбокса",
-    //     Coords: {
-    //         X: 1,
-    //         Y: constants.spaceBetween,
-    //     },
-    //     Width: constants.toolboxWidth,
-    //     Height: this.GetCanvasHeight() - 2 * constants.spaceBetween,
-    //     OnMove: new ElementsRegister.Actions.Nothing(),
-    //     IsSelectable: false,
-    //     Color: '#fff',
-    // }));
-    //
-    // this.AddItem(new ElementsRegister.Condition({
-    //     Name: "Condition",
-    //     Description: "Move this condition to work area for create new Condition",
-    //     Coords: {
-    //         X: constants.spaceBetween,
-    //         Y: constants.spaceBetween * 2,
-    //     },
-    //     Width: constants.stdHeight,
-    //     Height: constants.stdHeight,
-    //     OnMove: new ElementsRegister.Actions.Clone(ElementsRegister.Condition),
-    // }));
-    //
-    // this.AddItem(new ElementsRegister.Task({
-    //     Name: "Task",
-    //     Description: "Move this task to work area for create new Task",
-    //     Coords: {
-    //         X: constants.spaceBetween,
-    //         Y: 3 * constants.spaceBetween + constants.stdHeight,
-    //     },
-    //     Width: constants.stdHeight,
-    //     Height: constants.stdHeight / 1.6,
-    //     OnMove: new ElementsRegister.Actions.Clone(ElementsRegister.Task),
-    // }));
+function Toolbox(config, toolboxElementId) {
+
+    let self = this;
+
+    let bubuElement = document.getElementById(toolboxElementId);
+
+    if (bubuElement) {
+
+        bubuElement.appendChild((
+            new Img(this.GetSrcImageTask())
+        ).GetNode());
+
+        bubuElement.appendChild((
+            new Img(this.GetSrcImageCondition())
+        ).GetNode());
+
+    } else {
+        console.error('Root toolbox not found. Id = ' + toolboxElementId +
+            '. Please check is countainer with id=\'' + toolboxElementId + '\' ' +
+            'exists or create new container like: <div id="BubuToolbox">')
+    }
+
+    function Img(src) {
+
+        let img = document.createElement('img');
+
+        img.setAttribute('data-bubu', 'condition');
+        img.setAttribute('draggable', 'true');
+        img.addEventListener('dragend', self.DropElement);
+        bubuElement.appendChild(img);
+        img.setAttribute('src', src);
+
+        this.GetNode = () => {
+            return img;
+        }
+    }
+
 }
 
 export default Toolbox;
