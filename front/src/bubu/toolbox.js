@@ -10,11 +10,11 @@ function Toolbox(config, toolboxElementId) {
     if (bubuElement) {
 
         bubuElement.appendChild((
-            new Img(this.GetSrcImageTask())
+            new Img(this.GetSrcImageTask(), constants.TASK)
         ).GetNode());
 
         bubuElement.appendChild((
-            new Img(this.GetSrcImageCondition())
+            new Img(this.GetSrcImageCondition(), constants.CONDITION)
         ).GetNode());
 
     } else {
@@ -23,13 +23,29 @@ function Toolbox(config, toolboxElementId) {
             'exists or create new container like: <div id="BubuToolbox">')
     }
 
-    function Img(src) {
+    function Img(src, type) {
 
         let img = document.createElement('img');
 
-        img.setAttribute('data-bubu', 'condition');
+        img.setAttribute('data-bubu', type);
         img.setAttribute('draggable', 'true');
+
+        img.addEventListener('dragstart', (ev)=>{
+            return true;
+        });
+
+        img.addEventListener('dragenter', (event)=>{
+            event.preventDefault();
+            return true;
+        });
+
+        img.addEventListener('dragover', (event)=>{
+            event.preventDefault();
+        });
+
         img.addEventListener('dragend', self.DropElement);
+
+
         bubuElement.appendChild(img);
         img.setAttribute('src', src);
 

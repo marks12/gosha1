@@ -1,8 +1,8 @@
 function Canvas(canvasElementId) {
 
     let self = this;
-
     let canvas = document.getElementById(canvasElementId);
+    let scale = 1;
 
     canvas.setAttribute("width", canvas.parentNode.parentElement.clientWidth);
     canvas.setAttribute("height", canvas.parentNode.parentElement.clientHeight);
@@ -42,7 +42,7 @@ function Canvas(canvasElementId) {
     canvas.addEventListener("MozMousePixelScroll", wheel);
 
     function importElement(event) {
-        console.log('import element event', event);
+        console.log('import element event', event.srcElement);
     }
 
     this.GetCanvas = () => {
@@ -104,11 +104,14 @@ function Canvas(canvasElementId) {
         let ctx = self.GetCtx();
 
         if (delta > 0) {
-            ctx.scale(1.1, 1.1);
+            scale = Math.round((scale + 0.1) * 100) / 100;
         } else {
-            ctx.scale(0.9, 0.9);
+            scale = Math.round((scale - 0.1) * 100) / 100;
         }
 
+        ctx.scale(scale, scale);
+
+        this.Render();
     };
 
 }
