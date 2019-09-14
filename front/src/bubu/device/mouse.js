@@ -66,11 +66,10 @@ function Mouse(config) {
 
         this.Move = (event) => {
 
-            // event = this.AssignCoordinates(event);
+            event = this.AssignCoordinates(event);
 
-
-            let newX = event.pageX - self.GetCanvasOffsetX();
-            let newY = event.pageY - self.GetCanvasOffsetY();
+            let newX = event.pageX - self.GetCanvasOffsetX() - self.GetSelectedItemOffsetX();
+            let newY = event.pageY - self.GetCanvasOffsetY() - self.GetSelectedItemOffsetY();
 
             // console.log('event.pageX', event.pageX, 'newX', newX, 'self.GetCanvasOffsetX()', self.GetSelectedItemOffsetX());
 
