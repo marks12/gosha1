@@ -14,9 +14,23 @@ function SrcImage () {
                 X: 1,
                 Y: 1,
             },
-            Width: 100,
-            Height: 100 / 1.6,
-        }))
+            Width: 50,
+            Height: 50 / 1.6,
+        }));
+    };
+
+    this.GetSrcImageCondition = function () {
+
+        return getSource(new ElementsRegister.Condition({
+            Name: "Condition",
+            Description: "Move this condition to work area for create new Condition",
+            Coords: {
+                X: 1,
+                Y: 1,
+            },
+            Width: 50,
+            Height: 50,
+        }));
     };
 
     let clear = () => {
