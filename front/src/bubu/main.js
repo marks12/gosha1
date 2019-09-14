@@ -12,7 +12,7 @@ import Mouse from "./device/mouse";
 import Canvas from "./canvas";
 import SrcImage from "./src-image";
 
-function BuBu(canvasElementId) {
+function BuBu(canvasElementId, ToolboxElementId) {
 
     Store.apply(this, arguments);
     Canvas.apply(this, arguments);
@@ -45,7 +45,6 @@ function BuBu(canvasElementId) {
         GetSrcImageTask: this.GetSrcImageTask,
         GetSrcImageCondition: this.GetSrcImageCondition,
         UpdateCanvas: this.UpdateCanvas,
-        DropElement: this.DropElement,
     };
 }
 

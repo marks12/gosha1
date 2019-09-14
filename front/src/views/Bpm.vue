@@ -2,9 +2,8 @@
     <VSet>
         <WorkSpace width="fit">
             <VSet vertical>
-                <VHead level="h2">Элементы</VHead>
-                <VImage :src="src.task" data-bubu="task" draggable="true" v-on:dragend="drop($event)"></VImage>
-                <VImage :src="src.condition" data-bubu="task" draggable="true" v-on:dragend="drop($event)"></VImage>
+                <VHead>Элементы</VHead>
+                <div id="BubuToolbox"></div>
             </VSet>
         </WorkSpace>
         <WorkSpace noIndent>
@@ -42,10 +41,9 @@
             this.bubu.UpdateCanvas();
         },
         created() {
-
             this.$nextTick(() => {
 
-                this.bubu = new BuBu('SomeCanvas');
+                this.bubu = new BuBu('SomeCanvas', 'BubuToolbox');
                 this.src.task = this.bubu.GetSrcImageTask();
                 this.src.condition = this.bubu.GetSrcImageCondition();
                 this.bubu.UpdateCanvas();
@@ -58,27 +56,6 @@
             },
             drop: function(event) {
                 this.bubu.DropElement(event)
-            },
-            addAction() {
-
-                this.bubu.Add(new this.bubu.Elements.Task({
-                    name: "Task1 name",
-                    description: "Task1 description",
-                })).Render();
-
-            },
-            addCondition() {
-
-                this.bubu.Add(
-                    new this.bubu.Elements.Condition({
-                        name: "Condition name",
-                        description: "Condition description",
-                        Coords: {
-                            X: 110,
-                            Y: 0,
-                        },
-                    })
-                ).Render();
             },
         },
     }
