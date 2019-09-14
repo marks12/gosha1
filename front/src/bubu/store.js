@@ -1,3 +1,6 @@
+import ElementsRegister from "./elements-register";
+import {TYPES as constants} from "./constants";
+
 function Store(config) {
 
     let Items = {};
@@ -12,7 +15,38 @@ function Store(config) {
 
     this.DropElement = (event) => {
 
-        console.log('event', event);
+        let elementType = event.srcElement.getAttribute('data-bubu');
+
+        let offsetX = this.GetCanvasOffsetX();
+        let offsetY = this.GetCanvasOffsetY();
+
+        switch (elementType * 1) {
+
+            case constants.TASK:
+
+                let w = 100;
+                let h = w;
+
+
+                this.AddItem((new ElementsRegister.Task({
+                    Width: 100,
+                    Height: 100,
+                    Coords: {
+                        X: event.pageX - offsetX - w / 2,
+                        Y: event.pageY - offsetY - h / 2,
+                    },
+                })));
+
+                break;
+
+            default:
+
+                console.log('unknown drop type', elementType);
+
+                break;
+        }
+
+        this.Render();
 
         return this;
     };

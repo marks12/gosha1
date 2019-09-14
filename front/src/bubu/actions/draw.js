@@ -15,7 +15,7 @@ function Draw(config) {
 
         switch (this.GetType()) {
 
-            case TYPES.ACTION:
+            case TYPES.TASK:
 
                 ctx.beginPath();
                 ctx.moveTo(X, Y);
