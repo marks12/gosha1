@@ -31,7 +31,15 @@ function Canvas(canvasElementId) {
     canvas.addEventListener("mousedown", down);
     canvas.addEventListener("mousemove", mover);
     canvas.addEventListener("mouseup", up);
+    canvas.addEventListener("mouseout", (event) => {
+        this.Mouse.Up(event);
+        this.Render();
+    });
     canvas.addEventListener("ondrop", importElement);
+
+    canvas.addEventListener("onwheel", wheel);
+    canvas.addEventListener("mousewheel", wheel);
+    canvas.addEventListener("MozMousePixelScroll", wheel);
 
     function importElement(event) {
         console.log('import element event', event);
@@ -52,6 +60,10 @@ function Canvas(canvasElementId) {
         self.Mouse.Up(event);
         self.Render();
 
+    }
+
+    function wheel(event) {
+        self.CanvasScale(event);
     }
 
     function mover (event) {
@@ -85,6 +97,19 @@ function Canvas(canvasElementId) {
         return canvas.getAttribute("width") * 1;
     };
 
+    this.CanvasScale = (event) => {
+
+        let delta = event.deltaY || event.detail || event.wheelDelta;
+
+        let ctx = self.GetCtx();
+
+        if (delta > 0) {
+            ctx.scale(1.1, 1.1);
+        } else {
+            ctx.scale(0.9, 0.9);
+        }
+
+    };
 
 }
 
