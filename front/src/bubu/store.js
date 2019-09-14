@@ -10,6 +10,13 @@ function Store(config) {
         return this;
     };
 
+    this.DropElement = (event) => {
+
+        console.log('event', event);
+
+        return this;
+    };
+
     this.RemoveItem = (element) => {
 
         for (let i in Items) {

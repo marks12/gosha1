@@ -2,12 +2,13 @@
     <VSet>
         <WorkSpace width="fit">
             <VSet vertical>
-                <VText @click="text+=text">{{text}}</VText>
-                <VImage :src="src" data-bubu="task" draggable="true" v-on:dragend="drop($event)"></VImage>
+                <VHead level="h2">Элементы</VHead>
+                <VImage :src="src.task" data-bubu="task" draggable="true" v-on:dragend="drop($event)"></VImage>
+                <VImage :src="src.condition" data-bubu="task" draggable="true" v-on:dragend="drop($event)"></VImage>
             </VSet>
         </WorkSpace>
         <WorkSpace noIndent>
-            <canvas id="SomeCanvas" v-on:drop="drop($event)">></canvas>
+            <canvas id="SomeCanvas"></canvas>
         </WorkSpace>
     </VSet>
 </template>
@@ -22,15 +23,19 @@
     import WorkSpace from "swtui/src/components/WorkSpace";
     import VText from "swtui/src/components/VText";
     import VImage from "swtui/src/components/VImage";
+    import VHead from "swtui/src/components/VHead";
 
     export default {
         name: "Bpm",
-        components: {VImage, VText, WorkSpace, VSet, VButton, VLink},
+        components: {VHead, VImage, VText, WorkSpace, VSet, VButton, VLink},
         data() {
             return {
                 text: "Some asd",
                 bubu: {},
-                src: "",
+                src: {
+                    task: "",
+                    condition: "",
+                },
             };
         },
         updated() {
@@ -38,20 +43,21 @@
         },
         created() {
 
-
             this.$nextTick(() => {
 
                 this.bubu = new BuBu('SomeCanvas');
-                this.src = this.bubu.GetSrcImageTask();
+                this.src.task = this.bubu.GetSrcImageTask();
+                this.src.condition = this.bubu.GetSrcImageCondition();
                 this.bubu.UpdateCanvas();
                 this.bubu.Render();
-
             });
-
         },
         methods: {
+            allowDrop: function(ev) {
+                ev.preventDefault();
+            },
             drop: function(event) {
-                console.log('event',event);
+                this.bubu.DropElement(event)
             },
             addAction() {
 
