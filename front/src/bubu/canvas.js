@@ -34,6 +34,10 @@ function Canvas(canvasElementId) {
         return (y - this.Zero.Coords.GetY()) * (1 / scale);
     };
 
+    this.GetZero = () => {
+        return this.Zero;
+    };
+
     this.UpdateCanvas();
 
     window.addEventListener("resize", this.UpdateCanvas);
@@ -115,7 +119,7 @@ function Canvas(canvasElementId) {
         }
 
         let ctx = self.GetCtx();
-        ctx.setTransform(scale, 0, 0, scale, 0, 0);
+        ctx.setTransform(scale, 0, 0, scale, (1 - scale) * event.pageX / 3, (1 - scale) * event.pageY / 3);
 
         this.Render();
     };
