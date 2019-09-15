@@ -22,6 +22,7 @@ function Coordinates(config) {
             PreviousY = this.GetY();
         },
     };
+
 }
 
 export default Coordinates;
