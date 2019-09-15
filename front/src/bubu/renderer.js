@@ -3,9 +3,15 @@ function Renderer(config) {
     this.clearAll = () => {
 
         let ctx = this.GetCtx();
-        let canvas = this.GetCanvas();
+        let w = this.GetCanvasWidth();
+        let h = this.GetCanvasHeight();
+        let scale = this.GetScale();
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (scale < 1) {
+            scale = 1;
+        }
+
+        ctx.clearRect(-100, -100, w * scale * 100, h * scale * 100);
     };
 
     this.Render = () => {
@@ -19,8 +25,6 @@ function Renderer(config) {
             Items[i].draw(ctx, this);
         }
     };
-
-
 }
 
 export default Renderer;

@@ -17,31 +17,44 @@ function Store(config) {
 
         let elementType = event.srcElement.getAttribute('data-bubu');
 
-        let offsetX = this.GetCanvasOffsetX();
-        let offsetY = this.GetCanvasOffsetY();
+        let w = 100;
+        let h = w;
+        let x = this.GetCanvasX(event.pageX) - w / 2;
+        let y = this.GetCanvasX(event.pageY) + h / 2;
 
         switch (elementType * 1) {
 
             case constants.TASK:
 
-                let w = 100;
-                let h = w;
-
-
                 this.AddItem((new ElementsRegister.Task({
-                    Width: 100,
-                    Height: 100,
+                    Width: w,
+                    Height: h,
                     Coords: {
-                        X: event.pageX - offsetX - w / 2,
-                        Y: event.pageY - offsetY - h / 2,
+                        X: x,
+                        Y: y,
                     },
+                    Text: `x: ${x} y: ${y}`
+                })));
+
+                break;
+
+            case constants.CONDITION:
+
+                this.AddItem((new ElementsRegister.Condition({
+                    Width: w,
+                    Height: h,
+                    Coords: {
+                        X: x,
+                        Y: y,
+                    },
+                    Text: `x: ${x} y: ${y}`
                 })));
 
                 break;
 
             default:
 
-                console.log('unknown drop type', elementType);
+                console.error('unknown drop type', elementType);
 
                 break;
         }
@@ -154,9 +167,6 @@ function Store(config) {
 
         let Items = this.GetSelectableItems();
 
-        let canvasOffsetX = this.GetCanvasOffsetX();
-        let canvasOffsetY = this.GetCanvasOffsetY();
-
         for (let i in Items) {
 
             let x1 = Items[i].Coords.GetX();
@@ -165,10 +175,10 @@ function Store(config) {
             let y1 = Items[i].Coords.GetY();
             let y2 = y1 + Items[i].GetHeight();
 
-            if (x - canvasOffsetX >= x1 && x - canvasOffsetX <= x2 && y - canvasOffsetY >= y1 && y - canvasOffsetY <= y2) {
+            if (x >= x1 && x <= x2 && y >= y1 && y <= y2) {
 
-                this.SetSelectedItemOffsetX(x - canvasOffsetX - x1);
-                this.SetSelectedItemOffsetY(y - canvasOffsetY - y1);
+                this.SetSelectedItemOffsetX(x - x1);
+                this.SetSelectedItemOffsetY(y - y1);
 
                 return Items[i];
             }
