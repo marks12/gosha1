@@ -11,7 +11,7 @@ function Renderer(config) {
             scale = 1;
         }
 
-        ctx.clearRect(-100, -100, w * scale * 100, h * scale * 100);
+        ctx.clearRect(-w * scale, -h * scale, w * scale * 100, h * scale * 100);
     };
 
     this.Render = () => {

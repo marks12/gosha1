@@ -9,9 +9,24 @@ function Coordinates(config) {
     let self = this;
 
     this.Coords = {
+        /**
+         * @return {number}
+         */
         GetX () {return X},
+
+        /**
+         * @return {number}
+         */
         GetY () {return Y},
+
+        /**
+         * @return {number}
+         */
         GetPreviousX () {return PreviousX},
+
+        /**
+         * @return {number}
+         */
         GetPreviousY () {return PreviousY},
         SetX (x) {X = x; return self},
         SetY (y) {Y = y; return self},

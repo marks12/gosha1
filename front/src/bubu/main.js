@@ -7,7 +7,6 @@ import SelectItem from "./actions/selectItem";
 import Move from "./actions/move";
 import Clone from "./actions/clone";
 import Selection from "./actions/selection";
-import IsRightButton from "./common";
 import Mouse from "./device/mouse";
 import Canvas from "./canvas";
 import SrcImage from "./src-image";

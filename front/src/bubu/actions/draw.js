@@ -10,7 +10,11 @@ function Draw(config) {
         let lineWidth = 1;
         let X = this.Coords.GetX();
         let Y = this.Coords.GetY();
-        
+
+        if (root && root.GetZero()) {
+
+        }
+
         ctx.lineWidth = lineWidth;
 
         switch (this.GetType()) {
@@ -60,7 +64,6 @@ function Draw(config) {
                     ctx.strokeStyle = this.GetColorDefault();
                 }
 
-
                 ctx.stroke();
 
                 break;
@@ -91,7 +94,7 @@ function Draw(config) {
 
                 ctx.stroke();
 
-                break;
+            break;
 
             case TYPES.BACKGROUND:
 

@@ -1,5 +1,5 @@
 
-function IsRightButton(e) {
+export function IsRightButton(e) {
 
     let isRightMB;
     e = e || window.event;
@@ -12,4 +12,10 @@ function IsRightButton(e) {
     return isRightMB;
 }
 
-export default IsRightButton;
+/**
+ * @return {boolean}
+ */
+export function IsMiddleButtton(e) {
+    return !!(e && (e.which === 2 || e.button === 4));
+}
+
