@@ -23,8 +23,6 @@ function BuBu(canvasElementId, ToolboxElementId) {
         return
     }
 
-    this.Zero = new ElementsRegister.ZeroPoint();
-
     Move.apply(this, arguments);
     Toolbox.apply(this, arguments);
     WorkArea.apply(this, arguments);
