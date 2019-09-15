@@ -1,5 +1,6 @@
 import Coordinates from "../attributes/coordinates";
-import IsRightButton from "../common";
+import {IsRightButton} from "../common";
+import {IsMiddleButtton} from "../common";
 
 function Mouse(config) {
 
@@ -24,6 +25,11 @@ function Mouse(config) {
             event = this.AssignCoordinates(event);
 
             if (IsRightButton(event)) {
+                return false;
+            }
+
+            if (IsMiddleButtton(event)) {
+                console.log('middle button');
                 return false;
             }
 
