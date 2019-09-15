@@ -29,15 +29,15 @@ function Mouse(config) {
 
             isDown = true;
 
-            let x = event.pageX;
-            let y = event.pageY;
+            clickCoordsX = self.GetCanvasX(event.pageX);
+            clickCoordsY = self.GetCanvasY(event.pageY);
 
-            clickCoordsX = x - self.GetCanvasOffsetX();
-            clickCoordsY = y - self.GetCanvasOffsetY();
+            console.log('clickCoordsX', clickCoordsX);
+            console.log('clickCoordsY', clickCoordsY);
 
             let selectedItems = self.GetSelectedItems();
 
-            let sItem = self.SelectItemByCoordinates(x, y);
+            let sItem = self.SelectItemByCoordinates(clickCoordsX, clickCoordsY);
 
             if (sItem) {
 
@@ -50,7 +50,7 @@ function Mouse(config) {
                 }
 
             } else {
-                self.CreateMultiSelection(x - self.GetCanvasOffsetX(), y - self.GetCanvasOffsetY());
+                self.CreateMultiSelection(clickCoordsX, clickCoordsY);
                 self.BlurAll();
             }
         };
@@ -68,10 +68,8 @@ function Mouse(config) {
 
             event = this.AssignCoordinates(event);
 
-            let newX = event.pageX - self.GetCanvasOffsetX() - self.GetSelectedItemOffsetX();
-            let newY = event.pageY - self.GetCanvasOffsetY() - self.GetSelectedItemOffsetY();
-
-            // console.log('event.pageX', event.pageX, 'newX', newX, 'self.GetCanvasOffsetX()', self.GetSelectedItemOffsetX());
+            let newX = self.GetCanvasX(event.pageX) - self.GetSelectedItemOffsetX();
+            let newY = self.GetCanvasY(event.pageY) - self.GetSelectedItemOffsetY();
 
             let sItem = self.GetSelectedItem();
             
@@ -95,8 +93,8 @@ function Mouse(config) {
                         continue;
                     }
 
-                    let offsetX = event.pageX - clickCoordsX - self.GetCanvasOffsetX();
-                    let offsetY = event.pageY - clickCoordsY - self.GetCanvasOffsetY();
+                    let offsetX = self.GetCanvasX(event.pageX) - clickCoordsX;
+                    let offsetY = self.GetCanvasY(event.pageY) - clickCoordsY;
 
                     if (items[i].GetOnMove()) {
 
@@ -109,9 +107,7 @@ function Mouse(config) {
                         items[i].Coords.SetY(items[i].Coords.GetPreviousY() + offsetY);
                     }
                 }
-
             }
-
         };
 
         this.AssignCoordinates = (e) => {

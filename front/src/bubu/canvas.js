@@ -1,14 +1,18 @@
+import ElementsRegister from "./elements-register";
+
 function Canvas(canvasElementId) {
 
     let self = this;
     let canvas = document.getElementById(canvasElementId);
     let scale = 1;
 
+    this.Zero = new ElementsRegister.ZeroPoint();
+
     canvas.setAttribute("width", canvas.parentNode.parentElement.clientWidth);
     canvas.setAttribute("height", canvas.parentNode.parentElement.clientHeight);
 
-    let canvasOffsetX = canvas.getBoundingClientRect().left;
-    let canvasOffsetY = canvas.getBoundingClientRect().top;
+    this.Zero.Coords.SetX(canvas.getBoundingClientRect().left);
+    this.Zero.Coords.SetY(canvas.getBoundingClientRect().top);
 
     this.UpdateCanvas = () => {
 
@@ -17,9 +21,17 @@ function Canvas(canvasElementId) {
             canvas.setAttribute("width", document.getElementById(canvasElementId).parentNode.parentElement.clientWidth);
             canvas.setAttribute("height", document.getElementById(canvasElementId).parentNode.parentElement.clientHeight);
 
-            canvasOffsetX = canvas.getBoundingClientRect().left;
-            canvasOffsetY = canvas.getBoundingClientRect().top;
+            this.Zero.Coords.SetX(canvas.getBoundingClientRect().left);
+            this.Zero.Coords.SetY(canvas.getBoundingClientRect().top);
         });
+    };
+
+    this.GetCanvasX = (x) => {
+        return (x - this.Zero.Coords.GetX()) * (1 / scale);
+    };
+
+    this.GetCanvasY = (y) => {
+        return (y - this.Zero.Coords.GetY()) * (1 / scale);
     };
 
     this.UpdateCanvas();
@@ -35,18 +47,17 @@ function Canvas(canvasElementId) {
         this.Mouse.Up(event);
         this.Render();
     });
-    canvas.addEventListener("ondrop", importElement);
 
     canvas.addEventListener("onwheel", wheel);
     canvas.addEventListener("mousewheel", wheel);
     canvas.addEventListener("MozMousePixelScroll", wheel);
 
-    function importElement(event) {
-        console.log('import element event', event.srcElement);
-    }
-
     this.GetCanvas = () => {
         return this.canvas;
+    };
+
+    this.GetScale = () => {
+        return scale;
     };
 
     function down(event) {
@@ -73,14 +84,6 @@ function Canvas(canvasElementId) {
 
     }
 
-    this.GetCanvasOffsetX = () => {
-        return canvasOffsetX;
-    };
-
-    this.GetCanvasOffsetY = () => {
-        return canvasOffsetY;
-    };
-
     this.GetCanvas = () => {
         return canvas;
     };
@@ -101,15 +104,18 @@ function Canvas(canvasElementId) {
 
         let delta = event.deltaY || event.detail || event.wheelDelta;
 
-        let ctx = self.GetCtx();
-
         if (delta > 0) {
-            scale = Math.round((scale + 0.1) * 100) / 100;
+            if (scale < 8) {
+                scale = scale * 1.2;
+            }
         } else {
-            scale = Math.round((scale - 0.1) * 100) / 100;
+            if (scale > 0.35) {
+                scale = scale / 1.2;
+            }
         }
 
-        ctx.scale(scale, scale);
+        let ctx = self.GetCtx();
+        ctx.setTransform(scale, 0, 0, scale, 0, 0);
 
         this.Render();
     };
