@@ -20,7 +20,7 @@ function Store(config) {
         let w = 100;
         let h = w;
         let x = this.GetCanvasX(event.pageX) - w / 2;
-        let y = this.GetCanvasX(event.pageY) + h / 2;
+        let y = this.GetCanvasX(event.pageY) + 2*h/3;
 
         switch (elementType * 1) {
 
