@@ -1,10 +1,10 @@
 function Coordinates(config) {
 
-    let X = config && config.Coords && typeof config.Coords.X === "number" ? config.Coords.X : 0;
-    let Y = config && config.Coords && typeof config.Coords.Y === "number" ? config.Coords.Y : 0;
+    let X = config && config.Coords && typeof config.Coords.X === "number" ? config.Coords.X : 1;
+    let Y = config && config.Coords && typeof config.Coords.Y === "number" ? config.Coords.Y : 1;
 
-    let PreviousX = 0;
-    let PreviousY = 0;
+    let PreviousX = 1;
+    let PreviousY = 1;
 
     let self = this;
 
