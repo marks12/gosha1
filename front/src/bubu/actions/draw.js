@@ -11,10 +11,6 @@ function Draw(config) {
         let X = this.Coords.GetX();
         let Y = this.Coords.GetY();
 
-        if (root && root.GetZero()) {
-
-        }
-
         ctx.lineWidth = lineWidth;
 
         switch (this.GetType()) {
@@ -46,7 +42,7 @@ function Draw(config) {
 
             case TYPES.CONDITION:
 
-                let curX = X + W / 2;
+                let curX = X;
                 let curY = Y;
 
                 ctx.beginPath();

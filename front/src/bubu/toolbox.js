@@ -10,14 +10,16 @@ function Toolbox(config, toolboxElementId) {
     if (bubuElement) {
 
         bubuElement.appendChild((
-            new Img(this.GetSrcImageTask(), constants.TASK)
-        ).GetNode());
-
-        bubuElement.appendChild((
             new Img(this.GetSrcImageCondition(), constants.CONDITION)
         ).GetNode());
 
+        bubuElement.appendChild((
+            new Img(this.GetSrcImageTask(), constants.TASK)
+        ).GetNode());
+
+
     } else {
+
         console.error('Root toolbox not found. Id = ' + toolboxElementId +
             '. Please check is countainer with id=\'' + toolboxElementId + '\' ' +
             'exists or create new container like: <div id="BubuToolbox">')
