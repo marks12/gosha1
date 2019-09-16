@@ -146,8 +146,8 @@ function Canvas(canvasElementId) {
         self.GetCtx().scale(scale, scale);
 
         for (let i in items) {
-            items[i].Coords.SetX( this.GetCanvasX(event.pageX) + distanceX[i] );
-            items[i].Coords.SetY( this.GetCanvasY(event.pageY) + distanceY[i] );
+            items[i].Coords.SetX( this.GetCanvasX(event.pageX) + distanceX[i] - items[i].GetWidth() / 2);
+            items[i].Coords.SetY( this.GetCanvasY(event.pageY) + distanceY[i] - items[i].GetHeight() / 2 );
         }
 
         if (mode >= 0) {

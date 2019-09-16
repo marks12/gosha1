@@ -42,7 +42,7 @@ function Draw(config) {
 
             case TYPES.CONDITION:
 
-                let curX = X;
+                let curX = X + W / 2;
                 let curY = Y;
 
                 ctx.beginPath();
