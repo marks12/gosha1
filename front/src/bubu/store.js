@@ -128,7 +128,13 @@ function Store(config) {
     };
 
     this.GetItems = () => {
-        return Items;
+        let els = [];
+
+        for (let i in Items) {
+            els.push(Items[i]);
+        }
+
+        return els;
     };
 
     this.GetSelectableItems = () => {

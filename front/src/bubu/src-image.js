@@ -25,7 +25,7 @@ function SrcImage () {
             Name: "Condition",
             Description: "Move this condition to work area for create new Condition",
             Coords: {
-                X: 1,
+                X: 25,
                 Y: 1,
             },
             Width: 50,
@@ -48,8 +48,6 @@ function SrcImage () {
         img.draw(context);
         return imgCanva.toDataURL();
     }
-
-
 }
 
 export default SrcImage;
