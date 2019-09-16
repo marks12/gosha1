@@ -5,6 +5,7 @@ function Canvas(canvasElementId) {
     let self = this;
     let canvas = document.getElementById(canvasElementId);
     let scale = 1;
+    let zoomCount = 0;
 
     this.Zero = new ElementsRegister.ZeroPoint();
 
@@ -23,6 +24,8 @@ function Canvas(canvasElementId) {
 
             this.Zero.Coords.SetX(canvas.getBoundingClientRect().left);
             this.Zero.Coords.SetY(canvas.getBoundingClientRect().top);
+
+            this.CanvasScale({Delta: 0});
         });
     };
 
@@ -108,22 +111,57 @@ function Canvas(canvasElementId) {
 
         let delta = event.deltaY || event.detail || event.wheelDelta;
 
+        let zoommer = 1.06;
+
+        let stopZoom = true;
+
         if (delta > 0) {
             if (scale < 8) {
-                scale = scale * 1.2;
+                scale = scale * zoommer;
+                zoomCount++;
+                stopZoom = false;
             }
         } else {
             if (scale > 0.35) {
-                scale = scale / 1.2;
+                scale = scale / zoommer;
+                zoomCount--;
+                stopZoom = false;
             }
         }
 
+        if (stopZoom) {
+            return true;
+        }
+
+        let items = this.GetSelectableItems();
+
+        if (! items.length) {
+            return true;
+        }
+
+        let distanceX = [];
+        let distanceY = [];
+
+        for (let i in items) {
+            distanceX[i] = this.GetCanvasX(event.pageX) - items[i].Coords.GetX();
+            distanceY[i] = this.GetCanvasY(event.pageY) - items[i].Coords.GetY();
+        }
+
         let ctx = self.GetCtx();
-        ctx.setTransform(scale, 0, 0, scale, (1 - scale) * event.pageX / 3, (1 - scale) * event.pageY / 3);
+        ctx.setTransform(scale, 0, 0, scale, 0, 0);
+
+        for (let i in items) {
+            items[i].Coords.SetX( this.GetCanvasX(event.pageX) + distanceX[i]);
+            items[i].Coords.SetY( this.GetCanvasY(event.pageY) + distanceY[i]);
+
+            console.log(distanceX[i]);
+            console.log(distanceY[i]);
+
+        }
 
         this.Render();
-    };
 
+    };
 }
 
 export default Canvas;
