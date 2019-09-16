@@ -6,6 +6,7 @@ function Canvas(canvasElementId) {
     let canvas = document.getElementById(canvasElementId);
     let scale = 1;
     let zoomCount = 0;
+    let mode = 1;
 
     this.Zero = new ElementsRegister.ZeroPoint();
 
@@ -17,24 +18,21 @@ function Canvas(canvasElementId) {
 
     this.UpdateCanvas = () => {
 
-        setTimeout(() => {
+        canvas.setAttribute("width", document.getElementById(canvasElementId).parentNode.parentElement.clientWidth);
+        canvas.setAttribute("height", document.getElementById(canvasElementId).parentNode.parentElement.clientHeight);
 
-            canvas.setAttribute("width", document.getElementById(canvasElementId).parentNode.parentElement.clientWidth);
-            canvas.setAttribute("height", document.getElementById(canvasElementId).parentNode.parentElement.clientHeight);
-
-            this.Zero.Coords.SetX(canvas.getBoundingClientRect().left);
-            this.Zero.Coords.SetY(canvas.getBoundingClientRect().top);
-
-            this.CanvasScale({Delta: 0});
-        });
+        this.Zero.Coords.SetX(canvas.getBoundingClientRect().left);
+        this.Zero.Coords.SetY(canvas.getBoundingClientRect().top);
     };
 
     this.GetCanvasX = (x) => {
-        return (x - this.Zero.Coords.GetX()) * (1 / scale);
+        let a = (x - this.Zero.Coords.GetX());
+        return a * (1 / scale);
     };
 
     this.GetCanvasY = (y) => {
-        return (y - this.Zero.Coords.GetY()) * (1 / scale);
+        let a = (y - this.Zero.Coords.GetY());
+        return  a * (1 / scale);
     };
 
     this.GetZero = () => {
@@ -109,31 +107,27 @@ function Canvas(canvasElementId) {
 
     this.CanvasScale = (event) => {
 
+        mode *= -1;
+
         let delta = event.deltaY || event.detail || event.wheelDelta;
 
-        let zoommer = 1.06;
+        let zoommer = 1.07;
 
-        let stopZoom = true;
+        if (delta >= 0) {
 
-        if (delta > 0) {
             if (scale < 8) {
                 scale = scale * zoommer;
                 zoomCount++;
-                stopZoom = false;
             }
+
         } else {
-            if (scale > 0.35) {
+            if (scale >= 0.35) {
                 scale = scale / zoommer;
                 zoomCount--;
-                stopZoom = false;
             }
         }
 
-        if (stopZoom) {
-            return true;
-        }
-
-        let items = this.GetSelectableItems();
+        let items = this.GetItems();
 
         if (! items.length) {
             return true;
@@ -142,25 +136,27 @@ function Canvas(canvasElementId) {
         let distanceX = [];
         let distanceY = [];
 
+        this.UpdateCanvas();
+
         for (let i in items) {
             distanceX[i] = this.GetCanvasX(event.pageX) - items[i].Coords.GetX();
             distanceY[i] = this.GetCanvasY(event.pageY) - items[i].Coords.GetY();
         }
 
-        let ctx = self.GetCtx();
-        ctx.setTransform(scale, 0, 0, scale, 0, 0);
+        self.GetCtx().scale(scale, scale);
 
         for (let i in items) {
-            items[i].Coords.SetX( this.GetCanvasX(event.pageX) + distanceX[i]);
-            items[i].Coords.SetY( this.GetCanvasY(event.pageY) + distanceY[i]);
-
-            console.log(distanceX[i]);
-            console.log(distanceY[i]);
-
+            items[i].Coords.SetX( this.GetCanvasX(event.pageX) + distanceX[i] );
+            items[i].Coords.SetY( this.GetCanvasY(event.pageY) + distanceY[i] );
         }
 
-        this.Render();
-
+        if (mode >= 0) {
+            this.Render();
+        } else {
+            setTimeout(()=>{
+                this.CanvasScale(event);
+            });
+        }
     };
 }
 
