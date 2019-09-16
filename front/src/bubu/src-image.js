@@ -25,7 +25,7 @@ function SrcImage () {
             Name: "Condition",
             Description: "Move this condition to work area for create new Condition",
             Coords: {
-                X: 25,
+                X: 1,
                 Y: 1,
             },
             Width: 50,
