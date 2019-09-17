@@ -10,6 +10,9 @@ function Mouse(config) {
 
     this.Mouse = new MouseDevice();
 
+    let onMoveX = 0;
+    let onMoveY = 0;
+
     function MouseDevice() {
 
         let clickCoordsX = 0;
@@ -30,16 +33,14 @@ function Mouse(config) {
 
             if (IsMiddleButtton(event)) {
                 console.log('middle button');
-                return false;
+                isDown = true;
+                return true;
             }
 
             isDown = true;
 
             clickCoordsX = self.GetCanvasX(event.pageX);
             clickCoordsY = self.GetCanvasY(event.pageY);
-
-            console.log('clickCoordsX', clickCoordsX);
-            console.log('clickCoordsY', clickCoordsY);
 
             let selectedItems = self.GetSelectedItems();
 
@@ -72,48 +73,86 @@ function Mouse(config) {
 
         this.Move = (event) => {
 
-            event = this.AssignCoordinates(event);
-
             let newX = self.GetCanvasX(event.pageX) - self.GetSelectedItemOffsetX();
             let newY = self.GetCanvasY(event.pageY) - self.GetSelectedItemOffsetY();
 
             let sItem = self.GetSelectedItem();
             
-            if (self.Mouse.IsDown() && sItem) {
+            if (self.Mouse.IsDown() && (sItem || IsMiddleButtton(event))) {
 
-                if (sItem.GetOnMove()) {
+                if (sItem) {
 
-                    let m = sItem.GetOnMove();
-                    m.Run(newX, newY, sItem, self);
+                    if (sItem.GetOnMove()) {
 
-                } else {
+                        let m = sItem.GetOnMove();
+                        m.Run(newX, newY, sItem, self);
 
-                    sItem.Coords.SetX(newX);
-                    sItem.Coords.SetY(newY);
+                    } else {
+
+                        sItem.Coords.SetX(newX);
+                        sItem.Coords.SetY(newY);
+                    }
                 }
 
-                let items = self.GetSelectedItems();
-                for (let i in items) {
+                let items = [];
 
-                    if (items[i].GetId() === sItem.GetId()) {
-                        continue;
-                    }
+                console.log(IsMiddleButtton(event));
+
+                if (IsMiddleButtton(event)) {
+                    items = self.GetItems();
+                } else {
+                    items = self.GetSelectedItems();
+                }
+
+                let updateCoords = (item) => {
 
                     let offsetX = self.GetCanvasX(event.pageX) - clickCoordsX;
                     let offsetY = self.GetCanvasY(event.pageY) - clickCoordsY;
 
-                    if (items[i].GetOnMove()) {
+                    item.Coords.SetX(item.Coords.GetPreviousX() + offsetX);
+                    item.Coords.SetY(item.Coords.GetPreviousY() + offsetY);
+                };
 
-                        let m = sItem.GetOnMove();
-                        m.Run(newX, newY, self, items[i]);
+                let moveCoords = (item) => {
+
+                    if (onMoveX === 0 || onMoveY === 0) {
+                        return
+                    }
+
+                    let offsetX = self.GetCanvasX(event.pageX) - self.GetCanvasX(onMoveX);
+                    let offsetY = self.GetCanvasY(event.pageY) - self.GetCanvasY(onMoveY);
+
+                    item.Coords.SetX(item.Coords.GetX() + offsetX);
+                    item.Coords.SetY(item.Coords.GetY() + offsetY);
+                };
+
+                for (let i in items) {
+
+                    if (sItem && items[i].GetId() === sItem.GetId()) {
+                        continue;
+                    }
+
+                    if (IsMiddleButtton(event)) {
+
+                        console.log('move middle button');
+                        moveCoords(items[i])
 
                     } else {
 
-                        items[i].Coords.SetX(items[i].Coords.GetPreviousX() + offsetX);
-                        items[i].Coords.SetY(items[i].Coords.GetPreviousY() + offsetY);
+                        if (items[i].GetOnMove()) {
+
+                            let m = sItem.GetOnMove();
+                            m.Run(newX, newY, self, items[i]);
+
+                        } else {
+                            updateCoords(items[i])
+                        }
                     }
                 }
             }
+
+            onMoveX = event.pageX;
+            onMoveY = event.pageY;
         };
 
         this.AssignCoordinates = (e) => {
@@ -134,6 +173,13 @@ function Mouse(config) {
                     (doc && doc.scrollTop  || body && body.scrollTop  || 0) -
                     (doc && doc.clientTop  || body && body.clientTop  || 0 );
 
+            }
+
+            if (event.pageX === 0 && event.pageY === 0 && onMoveX !== 0 && onMoveY !==0) {
+                event.onMoveCoords = {
+                    x: onMoveX,
+                    y: onMoveY
+                };
             }
 
             return event;
