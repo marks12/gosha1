@@ -32,7 +32,6 @@ function Mouse(config) {
             }
 
             if (IsMiddleButtton(event)) {
-                console.log('middle button');
                 isDown = true;
                 return true;
             }
@@ -96,8 +95,6 @@ function Mouse(config) {
 
                 let items = [];
 
-                console.log(IsMiddleButtton(event));
-
                 if (IsMiddleButtton(event)) {
                     items = self.GetItems();
                 } else {
@@ -134,7 +131,6 @@ function Mouse(config) {
 
                     if (IsMiddleButtton(event)) {
 
-                        console.log('move middle button');
                         moveCoords(items[i])
 
                     } else {
