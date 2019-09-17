@@ -5,6 +5,7 @@ function Store(config) {
 
     let Items = {};
     let ctx = null;
+    let self = this;
 
     this.AddItem = (element) => {
 
@@ -15,12 +16,16 @@ function Store(config) {
 
     this.DropElement = (event) => {
 
+        event.preventDefault();
+
+        event = this.Mouse.AssignCoordinates(event);
+
         let elementType = event.srcElement.getAttribute('data-bubu');
 
         let w = 100;
         let h = w;
-        let x = this.GetCanvasX(event.pageX) - w / 2;
-        let y = this.GetCanvasX(event.pageY) + 2*h/3;
+        let x = this.GetCanvasX(event.pageX || event.onMoveCoords.x)  - w / 2;
+        let y = this.GetCanvasY(event.pageY || event.onMoveCoords.y) - h / 2;
 
         switch (elementType * 1) {
 
@@ -59,6 +64,7 @@ function Store(config) {
                 break;
         }
 
+        console.log(x, y);
         this.Render();
 
         return this;

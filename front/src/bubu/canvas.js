@@ -47,6 +47,7 @@ function Canvas(canvasElementId) {
 
     canvas.addEventListener("mousedown", down);
     canvas.addEventListener("mousemove", mover);
+    canvas.addEventListener("dragover", mover);
     canvas.addEventListener("mouseup", up);
     canvas.addEventListener("mouseout", (event) => {
         this.Mouse.Up(event);
@@ -109,19 +110,23 @@ function Canvas(canvasElementId) {
 
         mode *= -1;
 
+        let maxScale = 8;
+        let minScale = 0.35;
         let delta = event.deltaY || event.detail || event.wheelDelta;
 
         let zoommer = 1.07;
 
+        let previosScale = (()=>{return scale})();
+
         if (delta >= 0) {
 
-            if (scale < 8) {
+            if (scale < maxScale) {
                 scale = scale * zoommer;
                 zoomCount++;
             }
 
         } else {
-            if (scale >= 0.35) {
+            if (scale >= minScale) {
                 scale = scale / zoommer;
                 zoomCount--;
             }
@@ -146,12 +151,21 @@ function Canvas(canvasElementId) {
         self.GetCtx().scale(scale, scale);
 
         for (let i in items) {
-            items[i].Coords.SetX( this.GetCanvasX(event.pageX) + distanceX[i] - items[i].GetWidth() / 2);
-            items[i].Coords.SetY( this.GetCanvasY(event.pageY) + distanceY[i] - items[i].GetHeight() / 2 );
+
+            let newX = this.GetCanvasX(event.pageX) + distanceX[i];
+            let newY = this.GetCanvasY(event.pageY) + distanceY[i];
+
+            if (mode < 0 && scale < maxScale && scale >= minScale) {
+                newX += 3;
+                newY += 3;
+            }
+
+            items[i].Coords.SetX(newX);
+            items[i].Coords.SetY(newY);
         }
 
         if (mode >= 0) {
-            this.Render();
+                this.Render();
         } else {
             setTimeout(()=>{
                 this.CanvasScale(event);

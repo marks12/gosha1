@@ -46,6 +46,7 @@ function Toolbox(config, toolboxElementId) {
         });
 
         img.addEventListener('dragend', self.DropElement);
+        img.addEventListener('drop', self.DropElement);
 
 
         bubuElement.appendChild(img);
