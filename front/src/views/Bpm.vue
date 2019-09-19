@@ -42,7 +42,6 @@
         },
         created() {
             this.$nextTick(() => {
-
                 this.bubu = new BuBu('SomeCanvas', 'BubuToolbox');
                 this.src.task = this.bubu.GetSrcImageTask();
                 this.src.condition = this.bubu.GetSrcImageCondition();
