@@ -10,8 +10,11 @@ export const TYPES = {
     //toolbox
     stdHeight: 40,
     spaceBetween: 0,
-    // spaceBetween: 20,
     toolboxWidth: 0,
-    // toolboxWidth: 80,
+
+    //links
+    linkTypeSequenceFlowA: 10100, // ->
+    linkTypeSequenceFlowB: 10200, // <-
+    linkTypeSequenceFlowC: 10300, // <->
 
 };

@@ -4,11 +4,13 @@ const apiContent = `
 import apiFront from "./apiCSR";
 import apiSSR from "./apiSSR";
 
-// for Client Side Rendering
-let api = apiFront;
+let api;
 if(process && !process.client) {
   // for Server Side Rendering
-  let api = apiSSR;
+  api = apiSSR;
+} else {
+  // for Client Side Rendering
+  api = apiFront;
 }
 
 export default api;
