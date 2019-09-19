@@ -5,6 +5,7 @@ import Size from "../attributes/size";
 import Text from "../attributes/text";
 import Color from "../attributes/color";
 import Names from "../attributes/names";
+import Links from "../attributes/links";
 import Move from "../actions/move";
 import Resize from "../actions/resize";
 import Selection from "../actions/selection";

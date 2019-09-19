@@ -23,6 +23,10 @@ function Canvas(canvasElementId) {
 
         this.Zero.Coords.SetX(canvas.getBoundingClientRect().left);
         this.Zero.Coords.SetY(canvas.getBoundingClientRect().top);
+
+        setTimeout(() => {
+            this.Render();
+        });
     };
 
     this.GetCanvasX = (x) => {

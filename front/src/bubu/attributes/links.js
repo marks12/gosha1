@@ -2,6 +2,12 @@ function Links(config) {
 
     let links = config && config.links && config.links.length ? config.links : [];
 
+    /**
+     * \
+     * @param linkedId
+     * @param linkType default
+     * @constructor
+     */
     this.AddLink = (linkedId, linkType) => {
 
         switch (linkType) {
@@ -10,6 +16,10 @@ function Links(config) {
 
     };
 
+    this.GetLinks = () => {
+        return links;
+    };
+
 }
 
-export default Names;
+export default Links;
