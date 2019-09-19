@@ -21,6 +21,7 @@ function BasicSet(config) {
     Coordinates.apply(this, arguments);
     Selection.apply(this, arguments);
     Resize.apply(this, arguments);
+    Links.apply(this, arguments);
 
     return this;
 }
