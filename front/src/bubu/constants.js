@@ -1,11 +1,14 @@
 export const TYPES = {
-    TASK : 100,
-    CONDITION : 200,
-    ARROW : 300,
-    DIVIDER : 400,
-    MULTISELECTION : 500,
-    BACKGROUND : 600,
-    ZEROPOINT : 700,
+    task : 100,
+    condition : 200,
+    arrow : 300,
+    divider : 400,
+    multiselection : 500,
+    background : 600,
+    zeroPoint : 700,
+    eventStart : 800,
+    eventIntermediate : 810,
+    eventEnd : 820,
 
     //toolbox
     stdHeight: 40,
@@ -13,20 +16,20 @@ export const TYPES = {
     toolboxWidth: 0,
 
     //links
-    linkTypeSequenceFlowA: 10100, // ___>
-    linkTypeSequenceFlowB: 10200, // <____
-    linkTypeSequenceFlowC: 10300, // <____>
+    linkTypeLine: 10100, // _________________
+    linkTypeDashes: 10110, // ---------------
+    linkTypeDots: 10120, // .................
 
-    linkTypeConditionalFlowA: 10400, // <>________>
-    linkTypeConditionalFlowB: 10500, // <________<>
+    arrowTypeRhombus: 11100, // <>------
+    arrowTypeNone: 11110, // ---------
+    arrowTypeSimple: 11120, // -------->
+    arrowTypeFilled: 11130, // --------|>
+    arrowTypeCircle: 11140, // --------o                 /
+    arrowTypeMany: 11150, //                     -----------
+                               //                        \
 
-    linkTypeControlFlowA: 10600, // __\__________>
-    linkTypeControlFlowB: 10700, // <__________/__
+    arrowTypeOne: 11160, // --------¹
+    arrowTypeRoot: 11170, // -/------
 
-    linkTypeAssocA: 10800, // .......|>
-    linkTypeAssocB: 10900, // <|.......
-    linkTypeAssocC: 11000, // .........
 
-    linkTypeMessagesFlowA: 11100, // []-------|>
-    linkTypeMessagesFlowB: 11200, // <|-------[]
 };

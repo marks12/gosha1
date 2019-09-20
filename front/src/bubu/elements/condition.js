@@ -7,7 +7,7 @@ function Condition(config) {
     BasicSet.apply(this, arguments);
 
     Types.apply(this, arguments);
-    this.SetType(TYPES.CONDITION);
+    this.SetType(TYPES.condition);
 
     return this;
 }
