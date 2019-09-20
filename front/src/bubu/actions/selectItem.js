@@ -37,6 +37,15 @@ function SelectItem() {
         offsetY = 0;
         selectedItem = null;
     };
+
+    this.ClearConnectors = () => {
+
+        let items = this.GetSelectableItems();
+
+        for (let i in items) {
+            items[i].HideConnectors();
+        }
+    };
 }
 
 export default SelectItem
