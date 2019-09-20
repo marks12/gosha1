@@ -1,4 +1,5 @@
 import ElementsRegister from "./elements-register";
+import {TYPES as Const} from "./constants";
 
 function Canvas(canvasElementId) {
 
@@ -180,7 +181,12 @@ function Canvas(canvasElementId) {
 
     this.ShowElementConnectors = (x, y) => {
 
-        let item = this.GetFirstElementByCoordinates(x, y);
+        let item = this.GetFirstElementByCoordinates(
+            x,
+            y,
+            Const.connectionPointRadius + Const.spaceBetween,
+            Const.connectionPointRadius + Const.spaceBetween
+        );
 
         if (item) {
             console.log('element',item.Coords.GetX());

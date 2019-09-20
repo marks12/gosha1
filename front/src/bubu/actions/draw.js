@@ -115,7 +115,6 @@ function Draw(config) {
                 break;
         }
 
-
         if (this.IsShowConnectors()) {
             drawConnectors(ctx);
         }
@@ -156,9 +155,13 @@ function Draw(config) {
 
                 let h = this.GetHeight();
 
+                // ctx.beginPath();
+                // ctx.arc(x, y + h / 2, 0, 50, Math.PI, false);
+                // ctx.stroke();
+                // ctx.fill();
+
                 ctx.beginPath();
-                ctx.arc(x, y + h / 2, 0, 50, Math.PI, false);
-                ctx.stroke();
+                ctx.arc(x - TYPES.spaceBetween, y + h / 2, TYPES.connectionPointRadius, 0, 2 * Math.PI, false);
                 ctx.fill();
 
                 console.log('this.IsShowConnectors()', this.IsShowConnectors());

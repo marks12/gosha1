@@ -175,7 +175,7 @@ function Store(config) {
         return els;
     };
 
-    this.GetFirstElementByCoordinates = (x, y) => {
+    this.GetFirstElementByCoordinates = (x, y, spaceX, spaceY) => {
 
         let Items = this.GetSelectableItems();
 
@@ -186,6 +186,16 @@ function Store(config) {
 
             let y1 = Items[i].Coords.GetY();
             let y2 = y1 + Items[i].GetHeight();
+
+            if (spaceX) {
+                x1 -= spaceX;
+                x2 += spaceX;
+            }
+
+            if (spaceY) {
+                y1 -= spaceY;
+                y2 += spaceY;
+            }
 
             if (x >= x1 && x <= x2 && y >= y1 && y <= y2) {
 
