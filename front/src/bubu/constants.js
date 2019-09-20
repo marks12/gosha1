@@ -12,7 +12,7 @@ export const TYPES = {
 
     //toolbox
     stdHeight: 40,
-    spaceBetween: 0,
+    spaceBetween: 20,
     toolboxWidth: 0,
 
     //links
@@ -31,5 +31,6 @@ export const TYPES = {
     arrowTypeOne: 11160, // --------¹
     arrowTypeRoot: 11170, // -/------
 
+    connectionPointRadius: 10,
 
 };
