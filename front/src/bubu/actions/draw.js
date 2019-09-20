@@ -115,7 +115,14 @@ function Draw(config) {
                 break;
         }
 
+
+        if (this.IsShowConnectors()) {
+            drawConnectors(ctx);
+        }
+
         addLinks(ctx);
+
+
     };
 
     let addText = (ctx) => {
@@ -136,7 +143,31 @@ function Draw(config) {
             let link = links[i];
             console.log('link', link);
         }
-    }
+    };
+
+    let drawConnectors = (ctx) => {
+
+        switch (this.GetType()) {
+
+            case TYPES.task:
+
+                let x = this.Coords.GetX();
+                let y = this.Coords.GetY();
+
+                let h = this.GetHeight();
+
+                ctx.beginPath();
+                ctx.arc(x, y + h / 2, 0, 50, Math.PI, false);
+                ctx.stroke();
+                ctx.fill();
+
+                console.log('this.IsShowConnectors()', this.IsShowConnectors());
+
+
+                break;
+
+        }
+    };
 }
 
 
