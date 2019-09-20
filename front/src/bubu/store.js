@@ -29,7 +29,7 @@ function Store(config) {
 
         switch (elementType * 1) {
 
-            case constants.TASK:
+            case constants.task:
 
                 this.AddItem((new ElementsRegister.Task({
                     Width: w,
@@ -43,7 +43,7 @@ function Store(config) {
 
                 break;
 
-            case constants.CONDITION:
+            case constants.condition:
 
                 this.AddItem((new ElementsRegister.Condition({
                     Width: w,

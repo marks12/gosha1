@@ -13,7 +13,7 @@ function Divider(config) {
 
     BasicSet.apply(this, arguments);
     Types.apply(this, arguments);
-    this.SetType(TYPES.DIVIDER);
+    this.SetType(TYPES.divider);
 
     return this;
 }

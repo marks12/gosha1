@@ -10,11 +10,11 @@ function Toolbox(config, toolboxElementId) {
     if (bubuElement) {
 
         bubuElement.appendChild((
-            new Img(this.GetSrcImageCondition(), constants.CONDITION)
+            new Img(this.GetSrcImageCondition(), constants.Condition)
         ).GetNode());
 
         bubuElement.appendChild((
-            new Img(this.GetSrcImageTask(), constants.TASK)
+            new Img(this.GetSrcImageTask(), constants.task)
         ).GetNode());
 
 
