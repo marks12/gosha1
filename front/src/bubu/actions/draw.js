@@ -15,7 +15,7 @@ function Draw(config) {
 
         switch (this.GetType()) {
 
-            case TYPES.TASK:
+            case TYPES.task:
 
                 ctx.beginPath();
                 ctx.moveTo(X, Y);
@@ -40,7 +40,7 @@ function Draw(config) {
 
                 break;
 
-            case TYPES.CONDITION:
+            case TYPES.condition:
 
                 let curX = X + W / 2;
                 let curY = Y;
@@ -64,7 +64,7 @@ function Draw(config) {
 
                 break;
 
-            case TYPES.DIVIDER:
+            case TYPES.divider:
 
                 ctx.beginPath();
                 ctx.moveTo(X, Y);
@@ -77,7 +77,7 @@ function Draw(config) {
 
                 break;
 
-            case TYPES.MULTISELECTION:
+            case TYPES.multiselection:
 
                 ctx.beginPath();
                 ctx.moveTo(X, Y);
@@ -92,7 +92,7 @@ function Draw(config) {
 
             break;
 
-            case TYPES.BACKGROUND:
+            case TYPES.background:
 
                 ctx.beginPath();
                 ctx.moveTo(X, Y);

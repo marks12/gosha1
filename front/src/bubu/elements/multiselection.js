@@ -7,7 +7,7 @@ function Multiselection(config) {
     BasicSet.apply(this, arguments);
 
     Types.apply(this, arguments);
-    this.SetType(TYPES.MULTISELECTION);
+    this.SetType(TYPES.multiselection);
 
     return this;
 }

@@ -27,6 +27,11 @@ function Mouse(config) {
 
             event = this.AssignCoordinates(event);
 
+            if (event.altKey) {
+                console.log("create alt key");
+                return false;
+            }
+
             if (IsRightButton(event)) {
                 return false;
             }

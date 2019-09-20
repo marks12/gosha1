@@ -7,7 +7,7 @@ function Background(config) {
     BasicSet.apply(this, arguments);
 
     Types.apply(this, arguments);
-    this.SetType(TYPES.BACKGROUND);
+    this.SetType(TYPES.background);
 
     return this;
 }
