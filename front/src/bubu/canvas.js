@@ -24,10 +24,13 @@ function Canvas(canvasElementId) {
         this.Zero.Coords.SetX(canvas.getBoundingClientRect().left);
         this.Zero.Coords.SetY(canvas.getBoundingClientRect().top);
 
-        setTimeout(() => {
-            this.Render();
-        });
+        this.Render();
     };
+
+    setTimeout(() => {
+        this.UpdateCanvas();
+    });
+
 
     this.GetCanvasX = (x) => {
         let a = (x - this.Zero.Coords.GetX());
@@ -42,8 +45,6 @@ function Canvas(canvasElementId) {
     this.GetZero = () => {
         return this.Zero;
     };
-
-    this.UpdateCanvas();
 
     window.addEventListener("resize", this.UpdateCanvas);
 
@@ -174,6 +175,19 @@ function Canvas(canvasElementId) {
             setTimeout(()=>{
                 this.CanvasScale(event);
             });
+        }
+    };
+
+    this.ShowElementConnectors = (x, y) => {
+
+        let item = this.GetFirstElementByCoordinates(x, y);
+
+        if (item) {
+            console.log('element',item.Coords.GetX());
+            item.ShowConnectors();
+        } else {
+            self.ClearConnectors();
+            console.log('no element');
         }
     };
 }
