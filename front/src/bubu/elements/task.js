@@ -7,7 +7,7 @@ function Task(config) {
     BasicSet.apply(this, arguments);
 
     Types.apply(this, arguments);
-    this.SetType(TYPES.TASK);
+    this.SetType(TYPES.task);
 
     return this;
 }
