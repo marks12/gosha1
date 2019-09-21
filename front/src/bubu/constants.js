@@ -1,3 +1,6 @@
+let connectionPointRadius = 10;
+let spaceBetween = 20;
+
 export const TYPES = {
     task : 100,
     condition : 200,
@@ -12,7 +15,7 @@ export const TYPES = {
 
     //toolbox
     stdHeight: 40,
-    spaceBetween: 20,
+    spaceBetween: spaceBetween,
     toolboxWidth: 0,
 
     //links
@@ -31,6 +34,10 @@ export const TYPES = {
     arrowTypeOne: 11160, // --------¹
     arrowTypeRoot: 11170, // -/------
 
-    connectionPointRadius: 10,
+    connectionPointRadius: connectionPointRadius,
+    activeSpaceAround: connectionPointRadius + spaceBetween,
+
+    connectionFillStyle: "#eee",
+    connectionStrokeStyle: "#999",
 
 };

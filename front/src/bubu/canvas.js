@@ -184,16 +184,14 @@ function Canvas(canvasElementId) {
         let item = this.GetFirstElementByCoordinates(
             x,
             y,
-            Const.connectionPointRadius + Const.spaceBetween,
-            Const.connectionPointRadius + Const.spaceBetween
+            Const.activeSpaceAround,
+            Const.activeSpaceAround
         );
 
         if (item) {
-            console.log('element',item.Coords.GetX());
             item.ShowConnectors();
         } else {
             self.ClearConnectors();
-            console.log('no element');
         }
     };
 }
