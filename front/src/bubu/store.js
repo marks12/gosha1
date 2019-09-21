@@ -187,12 +187,12 @@ function Store(config) {
             let y1 = Items[i].Coords.GetY();
             let y2 = y1 + Items[i].GetHeight();
 
-            if (spaceX) {
+            if (spaceX > 0) {
                 x1 -= spaceX;
                 x2 += spaceX;
             }
 
-            if (spaceY) {
+            if (spaceY > 0) {
                 y1 -= spaceY;
                 y2 += spaceY;
             }
@@ -204,6 +204,8 @@ function Store(config) {
 
                 return Items[i];
             }
+
+            this.ClearSelectedItem();
         }
 
         return null;
@@ -214,6 +216,10 @@ function Store(config) {
         let item = this.GetFirstElementByCoordinates(x, y);
         this.SetSelectedItem(item);
         return item;
+    };
+
+    this.IsConnection = (x, y) => {
+
     };
 
 }
