@@ -46,11 +46,12 @@ function Mouse(config) {
             clickCoordsX = self.GetCanvasX(event.pageX);
             clickCoordsY = self.GetCanvasY(event.pageY);
 
-            let selectedItems = self.GetSelectedItems();
 
             let sItem = self.SelectItemByCoordinates(clickCoordsX, clickCoordsY);
 
             if (sItem) {
+
+                let selectedItems = self.GetSelectedItems();
 
                 if (selectedItems.length === 1) {
                     self.BlurAll();
@@ -61,8 +62,15 @@ function Mouse(config) {
                 }
 
             } else {
-                self.CreateMultiSelection(clickCoordsX, clickCoordsY);
-                self.BlurAll();
+
+                if (self.IsConnection(event)) {
+
+                    console.log('begin connection');
+
+                } else {
+                    self.CreateMultiSelection(clickCoordsX, clickCoordsY);
+                    self.BlurAll();
+                }
             }
         };
 

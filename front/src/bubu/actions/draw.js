@@ -146,30 +146,58 @@ function Draw(config) {
 
     let drawConnectors = (ctx) => {
 
+        let connectionX1 = 0;
+        let connectionX2 = 0;
+        let connectionY1 = 0;
+        let connectionY2 = 0;
+
+        let connectionCenter =  0;
+
+
         switch (this.GetType()) {
 
+            case TYPES.condition:
             case TYPES.task:
 
                 let x = this.Coords.GetX();
                 let y = this.Coords.GetY();
 
                 let h = this.GetHeight();
+                let w = this.GetWidth();
 
-                // ctx.beginPath();
-                // ctx.arc(x, y + h / 2, 0, 50, Math.PI, false);
-                // ctx.stroke();
-                // ctx.fill();
+                ctx.fillStyle = TYPES.connectionFillStyle;
+                ctx.strokeStyle = TYPES.connectionStrokeStyle;
+
+                let connectionCenter = y + h / 2;
+
+                this.drawConnector();
+
 
                 ctx.beginPath();
-                ctx.arc(x - TYPES.spaceBetween, y + h / 2, TYPES.connectionPointRadius, 0, 2 * Math.PI, false);
+                ctx.arc(x + w, y + h / 2, TYPES.connectionPointRadius, 0, 2 * Math.PI, false);
                 ctx.fill();
+                ctx.stroke();
 
-                console.log('this.IsShowConnectors()', this.IsShowConnectors());
+                ctx.beginPath();
+                ctx.arc(x + w / 2, y, TYPES.connectionPointRadius, 0, 2 * Math.PI, false);
+                ctx.fill();
+                ctx.stroke();
 
+                ctx.beginPath();
+                ctx.arc(x + w / 2, y + h, TYPES.connectionPointRadius, 0, 2 * Math.PI, false);
+                ctx.fill();
+                ctx.stroke();
 
                 break;
 
         }
+
+        this.drawConnector = (x, y) => {
+            ctx.beginPath();
+            ctx.arc(x, y, TYPES.connectionPointRadius, 0, 2 * Math.PI, false);
+            ctx.fill();
+            ctx.stroke();
+        };
     };
 }
 
