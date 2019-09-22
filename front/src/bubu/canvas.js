@@ -64,6 +64,9 @@ function Canvas(canvasElementId) {
     canvas.addEventListener("mousewheel", wheel);
     canvas.addEventListener("MozMousePixelScroll", wheel);
 
+    canvas.addEventListener("keyup", self.Keyboard.Keyup);
+    canvas.addEventListener("keydown", self.Keyboard.keydown);
+
     this.GetCanvas = () => {
         return this.canvas;
     };
@@ -181,6 +184,8 @@ function Canvas(canvasElementId) {
 
     this.ShowElementConnectors = (x, y) => {
 
+        self.ClearConnectors();
+
         let item = this.GetFirstElementByCoordinates(
             x,
             y,
@@ -190,8 +195,6 @@ function Canvas(canvasElementId) {
 
         if (item) {
             item.ShowConnectors();
-        } else {
-            self.ClearConnectors();
         }
     };
 }
