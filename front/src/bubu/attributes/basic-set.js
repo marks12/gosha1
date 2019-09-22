@@ -5,7 +5,6 @@ import Size from "../attributes/size";
 import Text from "../attributes/text";
 import Color from "../attributes/color";
 import Names from "../attributes/names";
-import Links from "../attributes/links";
 import Connectors from "../attributes/connectors";
 import Move from "../actions/move";
 import Resize from "../actions/resize";
@@ -23,7 +22,6 @@ function BasicSet(config) {
     Coordinates.apply(this, arguments);
     Selection.apply(this, arguments);
     Resize.apply(this, arguments);
-    Links.apply(this, arguments);
     Connectors.apply(this, arguments);
 
     return this;

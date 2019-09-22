@@ -1,25 +1,24 @@
-import Link from "../elements/Link";
+import ElementsRegister from "../elements-register";
 
 function Links(config) {
 
-    Link.apply(this, arguments);
+    this.AddLink = (x, y) => {
 
-    let links = config && config.links && config.links.length ? config.links : [];
+        let link = new ElementsRegister.Link({
+            Coords: {
+                X: x,
+                Y: y,
+            },
+        });
 
-    /**
-     * @param isSource bool
-     * @param lineType int
-     * @param arrowType int
-     */
-    this.AddLink = (isSource, lineType, arrowType) => {
+        link.Select();
 
-        switch (linkType) {
-
-        }
+        this.AddItem(link);
+        this.SetSelectedItem(link);
     };
 
     this.GetLinks = () => {
-        return links;
+        return [];
     };
 }
 

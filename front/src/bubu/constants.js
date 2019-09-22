@@ -12,6 +12,7 @@ export const TYPES = {
     eventStart : 800,
     eventIntermediate : 810,
     eventEnd : 820,
+    link : 900,
 
     //toolbox
     stdHeight: 40,

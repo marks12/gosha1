@@ -1,6 +1,6 @@
 function Connectors(config) {
 
-    let selectors = [];
+    let connectorPoints = [];
 
     let isShow = false;
 
@@ -9,7 +9,7 @@ function Connectors(config) {
     };
 
     this.HideConnectors = () => {
-        selectors = [];
+        connectorPoints = [];
         isShow = false;
     };
 
@@ -17,17 +17,31 @@ function Connectors(config) {
         return isShow;
     };
 
-    this.AddSelector = (x1, y1, x2, y2) => {
-
-        selectors.push({
+    this.AddConnectorPoint = (x1, y1, x2, y2) => {
+        connectorPoints.push({
             x1: x1,
-            x2: x2,
             y1: y1,
-            y2: y2,
-        });
+            x2: x2,
+            y2: y2
+        })
+    };
 
-        return this;
-    }
+    this.ClearConnectorPoints = () => {
+        connectorPoints = [];
+    };
+
+    this.IsConnectorPointCoords = (x, y) => {
+
+        for (let i = 0; i < connectorPoints.length; i++) {
+
+            if (x >= connectorPoints[i].x1 && x <= connectorPoints[i].x2 && y >= connectorPoints[i].y1 && y <= connectorPoints[i].y2) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+
 }
 
 export default Connectors;
