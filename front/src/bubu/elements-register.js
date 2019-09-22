@@ -1,4 +1,5 @@
 import Task from "./elements/task";
+import Link from "./elements/link";
 import Condition from "./elements/condition";
 import Divider from "./elements/divider";
 import Background from "./elements/background";
@@ -13,6 +14,7 @@ function ElementsRegister () {
     return {
         MultiSelection,
         Task,
+        Link,
         Condition,
         Divider,
         Background,
