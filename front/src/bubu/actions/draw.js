@@ -116,11 +116,12 @@ function Draw(config) {
         }
 
         if (this.IsShowConnectors()) {
-            drawConnectors(ctx);
+            drawConnectors(ctx, root);
         }
 
-        addLinks(ctx);
-
+        if (root) {
+            addLinks(ctx, root);
+        }
 
     };
 
@@ -133,9 +134,9 @@ function Draw(config) {
         }
     };
 
-    let addLinks = (ctx) => {
+    let addLinks = (ctx, root) => {
 
-        let links = this.GetLinks();
+        let links = root.GetLinks();
 
         for (let i=0; i < links.length; i++) {
 
@@ -144,20 +145,20 @@ function Draw(config) {
         }
     };
 
-    let drawConnectors = (ctx) => {
-
-        let connectionX1 = 0;
-        let connectionX2 = 0;
-        let connectionY1 = 0;
-        let connectionY2 = 0;
-
-        let connectionCenter =  0;
+    let drawConnectors = (ctx, root) => {
 
         let drawConnector = (x, y) => {
             ctx.beginPath();
             ctx.arc(x, y, TYPES.connectionPointRadius, 0, 2 * Math.PI, false);
             ctx.fill();
             ctx.stroke();
+
+            root.AddConnectorPoint(
+                x - TYPES.connectionPointRadius,
+                y - TYPES.connectionPointRadius,
+                x + TYPES.connectionPointRadius,
+                y + TYPES.connectionPointRadius
+            );
         };
 
         switch (this.GetType()) {
@@ -173,6 +174,8 @@ function Draw(config) {
 
                 ctx.fillStyle = TYPES.connectionFillStyle;
                 ctx.strokeStyle = TYPES.connectionStrokeStyle;
+
+                root.ClearConnectorPoints();
 
                 drawConnector(x, y + h / 2);
                 drawConnector(x + w, y + h / 2);

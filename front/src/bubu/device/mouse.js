@@ -46,6 +46,11 @@ function Mouse(config) {
             clickCoordsX = self.GetCanvasX(event.pageX);
             clickCoordsY = self.GetCanvasY(event.pageY);
 
+            // check connection point
+            if (self.IsConnectorPointCoords(clickCoordsX, clickCoordsY)) {
+                self.AddLink(clickCoordsX, clickCoordsY);
+                return true;
+            }
 
             let sItem = self.SelectItemByCoordinates(clickCoordsX, clickCoordsY);
 
@@ -62,15 +67,8 @@ function Mouse(config) {
                 }
 
             } else {
-
-                if (self.IsConnection(event)) {
-
-                    console.log('begin connection');
-
-                } else {
-                    self.CreateMultiSelection(clickCoordsX, clickCoordsY);
-                    self.BlurAll();
-                }
+                self.CreateMultiSelection(clickCoordsX, clickCoordsY);
+                self.BlurAll();
             }
         };
 
