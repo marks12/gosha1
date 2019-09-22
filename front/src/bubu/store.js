@@ -218,10 +218,6 @@ function Store(config) {
         return item;
     };
 
-    this.IsConnection = (x, y) => {
-
-    };
-
 }
 
 export default Store;
