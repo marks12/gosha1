@@ -77,10 +77,9 @@ function Mouse(config) {
         this.Up = (event) => {
 
             isDown = false;
-
             self.RemoveMultiSelection();
-
             self.ClearSelectedItem();
+            self.Render();
         };
 
         this.Move = (event) => {

@@ -7,6 +7,7 @@ import SelectItem from "./actions/selectItem";
 import Move from "./actions/move";
 import Clone from "./actions/clone";
 import Selection from "./actions/selection";
+import Keyboard from "./device/keyboard";
 import Mouse from "./device/mouse";
 import Canvas from "./canvas";
 import SrcImage from "./src-image";
@@ -14,6 +15,8 @@ import SrcImage from "./src-image";
 function BuBu(canvasElementId, ToolboxElementId) {
 
     Store.apply(this, arguments);
+    Mouse.apply(this, arguments);
+    Keyboard.apply(this, arguments);
     Canvas.apply(this, arguments);
     SrcImage.apply(this, arguments);
 
@@ -29,7 +32,7 @@ function BuBu(canvasElementId, ToolboxElementId) {
     SelectItem.apply(this, arguments);
     Clone.apply(this, arguments);
     Selection.apply(this, arguments);
-    Mouse.apply(this, arguments);
+
 
     return {
         Add: this.AddItem,

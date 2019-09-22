@@ -35,7 +35,7 @@ export const TYPES = {
     arrowTypeRoot: 11170, // -/------
 
     connectionPointRadius: connectionPointRadius,
-    activeSpaceAround: connectionPointRadius + spaceBetween,
+    activeSpaceAround: connectionPointRadius,
 
     connectionFillStyle: "#eee",
     connectionStrokeStyle: "#999",
