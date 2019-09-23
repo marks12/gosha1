@@ -7,11 +7,11 @@ import {TYPES} from "../constants";
 
 function Link(config) {
 
-    BasicSet.apply(this, arguments);
-
     LinkArrow.apply(this, arguments);
     LinkLine.apply(this, arguments);
     LinkDirection.apply(this, arguments);
+
+    BasicSet.apply(this, arguments);
 
     Types.apply(this, arguments);
     this.SetType(TYPES.link);
