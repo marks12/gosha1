@@ -182,9 +182,28 @@ function Canvas(canvasElementId) {
         }
     };
 
-    this.ShowElementConnectors = (x, y) => {
+    this.ShowSrcConnectors = (x, y) => {
 
         self.ClearConnectors();
+        let item = this.GetFirstElementByCoordinates(
+            x,
+            y,
+            Const.activeSpaceAround,
+            Const.activeSpaceAround
+        );
+
+        if (item) {
+            item.ShowConnectors();
+        } else {
+            this.ClearSelectedItem();
+        }
+    };
+
+    this.ShowDstConnectors = (x, y) => {
+        showConnectors(x, y);
+    };
+
+    let showConnectors = (x, y) => {
 
         let item = this.GetFirstElementByCoordinates(
             x,
@@ -197,6 +216,8 @@ function Canvas(canvasElementId) {
             item.ShowConnectors();
         }
     };
+
+
 }
 
 export default Canvas;

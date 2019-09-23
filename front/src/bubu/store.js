@@ -205,7 +205,6 @@ function Store(config) {
                 return Items[i];
             }
 
-            this.ClearSelectedItem();
         }
 
         return null;
@@ -214,6 +213,11 @@ function Store(config) {
     this.SelectItemByCoordinates = (x, y) => {
 
         let item = this.GetFirstElementByCoordinates(x, y);
+
+        if (! item) {
+            this.ClearSelectedItem();
+        }
+
         this.SetSelectedItem(item);
         return item;
     };

@@ -2,20 +2,33 @@ function ConnectLink() {
 
     this.Run = (newX, newY, sItem, root, event) => {
 
-        if (! sItem) {
+        if (!sItem) {
             return false;
         }
 
-        if (! sItem.SetLinkDestinationCoords) {
+        if (!sItem.SetLinkDestinationCoords) {
             return false;
         }
 
-        if (! root) {
+        if (!root) {
             return false;
         }
 
-        console.log('connect link', newX, newY);
-        sItem.SetLinkDestinationCoords(root.GetCanvasX(event.pageX), root.GetCanvasY(event.pageY));
+
+        let clickCoordsX = root.GetCanvasX(event.pageX);
+        let clickCoordsY = root.GetCanvasY(event.pageY);
+
+        sItem.SetLinkDestinationCoords(clickCoordsX, clickCoordsY);
+
+        let point = root.GetConnectorPoint(clickCoordsX, clickCoordsY);
+
+        if (point && sItem.GetId() !== point.elementId) {
+            sItem.SetLinkDestinationPoint(point);
+        } else {
+            sItem.ClearLinkDestinationPoint();
+        }
+
+        root.ShowDstConnectors(clickCoordsX, clickCoordsY);
     };
 }
 
