@@ -1,28 +1,20 @@
 function LinkDirection(config) {
 
-    let isSource = true;
-    let isDestination = !isSource;
+    let destination = null;
+    let destX = 0;
+    let destY = 0;
 
-    this.MarkAsSource = () => {
-        isSource = true;
-        isDestination = !isSource;
-
-        return this;
+    this.GetLinkDestination = () => {
+        return destination;
     };
 
-    this.MarkAsDestination = () => {
-        isSource = false;
-        isDestination = !isSource;
-
-        return this;
+    this.SetLinkDestinationCoords = (x, y) => {
+        destX = x;
+        destY = y;
     };
 
-    this.IsSource = () => {
-        return isSource;
-    };
-
-    this.IsDestination = () => {
-        return isDestination;
+    this.ClearLinkDestination = () => {
+        destination = null;
     };
 }
 
