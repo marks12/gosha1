@@ -5,7 +5,7 @@ import apiFront from "./apiCSR";
 import apiSSR from "./apiSSR";
 
 let api;
-if(process && !process.client) {
+if(process && process.client === false) {
   // for Server Side Rendering
   api = apiSSR;
 } else {

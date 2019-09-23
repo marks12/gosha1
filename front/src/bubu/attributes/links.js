@@ -1,4 +1,5 @@
 import ElementsRegister from "../elements-register";
+import ConnectLink from "../actions/connect-link";
 
 function Links(config) {
 
@@ -10,6 +11,8 @@ function Links(config) {
                 Y: y,
             },
         });
+
+        link.SetOnMove(new ConnectLink());
 
         link.Select();
 
