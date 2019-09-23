@@ -22,7 +22,9 @@ function Connectors(config) {
             x1: x1,
             y1: y1,
             x2: x2,
-            y2: y2
+            y2: y2,
+            xCenter: (x1 + x2) / 2,
+            yCenter: (y1 + y2) / 2,
         })
     };
 
@@ -31,17 +33,22 @@ function Connectors(config) {
     };
 
     this.IsConnectorPointCoords = (x, y) => {
-
         for (let i = 0; i < connectorPoints.length; i++) {
-
             if (x >= connectorPoints[i].x1 && x <= connectorPoints[i].x2 && y >= connectorPoints[i].y1 && y <= connectorPoints[i].y2) {
                 return true;
             }
         }
-
         return false;
     };
 
+    this.GetConnectorPoint = (x, y) => {
+        for (let i = 0; i < connectorPoints.length; i++) {
+            if (x >= connectorPoints[i].x1 && x <= connectorPoints[i].x2 && y >= connectorPoints[i].y1 && y <= connectorPoints[i].y2) {
+                return connectorPoints[i];
+            }
+        }
+        return false;
+    };
 }
 
 export default Connectors;

@@ -13,6 +13,14 @@ function LinkDirection(config) {
         destY = y;
     };
 
+    this.GetLinkDestinationX = () => {
+        return destX;
+    };
+
+    this.GetLinkDestinationY = () => {
+        return destY;
+    };
+
     this.ClearLinkDestination = () => {
         destination = null;
     };

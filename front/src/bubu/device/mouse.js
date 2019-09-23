@@ -47,8 +47,11 @@ function Mouse(config) {
             clickCoordsY = self.GetCanvasY(event.pageY);
 
             // check connection point
-            if (self.IsConnectorPointCoords(clickCoordsX, clickCoordsY)) {
-                self.AddLink(clickCoordsX, clickCoordsY);
+
+            let point = self.GetConnectorPoint(clickCoordsX, clickCoordsY);
+
+            if (point) {
+                self.AddLink(point.xCenter, point.yCenter);
                 return true;
             }
 
@@ -94,7 +97,7 @@ function Mouse(config) {
                     if (sItem.GetOnMove()) {
 
                         let m = sItem.GetOnMove();
-                        m.Run(newX, newY, sItem, self);
+                        return m.Run(newX, newY, sItem, self, event);
 
                     } else {
 
