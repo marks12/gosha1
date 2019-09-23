@@ -147,7 +147,7 @@ function Mouse(config) {
 
                         if (items[i].GetOnMove()) {
 
-                            let m = sItem.GetOnMove();
+                            let m = items[i].GetOnMove();
                             m.Run(newX, newY, self, items[i]);
 
                         } else {
