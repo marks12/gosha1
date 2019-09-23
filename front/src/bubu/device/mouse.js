@@ -51,7 +51,7 @@ function Mouse(config) {
             let point = self.GetConnectorPoint(clickCoordsX, clickCoordsY);
 
             if (point) {
-                self.AddLink(point.xCenter, point.yCenter);
+                self.AddLink(point);
                 return true;
             }
 
@@ -134,6 +134,18 @@ function Mouse(config) {
 
                     item.Coords.SetX(item.Coords.GetX() + offsetX);
                     item.Coords.SetY(item.Coords.GetY() + offsetY);
+
+                    if (item.GetLinkSourcePoint) {
+
+                        let point = item.GetLinkSourcePoint();
+
+                        if (point) {
+                            point.move(offsetX, offsetY);
+                        }
+
+                        console.log('link source', item.GetLinkSourcePoint());
+                    }
+
                 };
 
                 for (let i in items) {
@@ -148,6 +160,7 @@ function Mouse(config) {
 
                     } else {
 
+
                         if (items[i].GetOnMove()) {
 
                             let m = items[i].GetOnMove();
@@ -159,7 +172,7 @@ function Mouse(config) {
                     }
                 }
             } else {
-                self.ShowElementConnectors(self.GetCanvasX(event.pageX), self.GetCanvasY(event.pageY));
+                self.ShowSrcConnectors(self.GetCanvasX(event.pageX), self.GetCanvasY(event.pageY));
             }
 
             onMoveX = event.pageX;
