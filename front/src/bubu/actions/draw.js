@@ -113,6 +113,24 @@ function Draw(config) {
                 ctx.fill();
 
                 break;
+
+            case TYPES.link:
+
+                let x2 = this.GetLinkDestinationX();
+                let y2 = this.GetLinkDestinationY();
+
+                if (this.GetLinkDestination()) {
+
+                }
+
+                if (x2 && y2) {
+                    ctx.beginPath();
+                    ctx.moveTo(X, Y);
+                    ctx.lineTo(x2, y2);
+                    ctx.stroke();
+                }
+
+                break;
         }
 
         if (this.IsShowConnectors()) {
