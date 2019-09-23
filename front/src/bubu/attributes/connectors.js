@@ -17,7 +17,7 @@ function Connectors(config) {
         return isShow;
     };
 
-    this.AddConnectorPoint = (x1, y1, x2, y2) => {
+    this.AddConnectorPoint = (x1, y1, x2, y2, elementId) => {
         connectorPoints.push({
             x1: x1,
             y1: y1,
@@ -25,11 +25,29 @@ function Connectors(config) {
             y2: y2,
             xCenter: (x1 + x2) / 2,
             yCenter: (y1 + y2) / 2,
+            elementId: elementId,
+            index: connectorPoints.length,
+            move: (x, y) => {
+                self.x1 += x;
+                this.x2 += x;
+                this.y1 += y;
+                this.y2 += y;
+                this.xCenter += x;
+                this.yCenter += y;
+            },
         })
     };
 
     this.ClearConnectorPoints = () => {
         connectorPoints = [];
+    };
+
+    this.GetConnectorPointByIndex = (index) => {
+
+        if (connectorPoints && connectorPoints[index]) {
+            return connectorPoints[index];
+        }
+        return null;
     };
 
     this.IsConnectorPointCoords = (x, y) => {

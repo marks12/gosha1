@@ -118,14 +118,17 @@ function Draw(config) {
 
                 let x2 = this.GetLinkDestinationX();
                 let y2 = this.GetLinkDestinationY();
+                let dest = this.GetLinkDestinationPoint();
+                let src = this.GetLinkSourcePoint();
 
-                if (this.GetLinkDestination()) {
-
+                if (dest) {
+                    x2 = dest.xCenter;
+                    y2 = dest.yCenter;
                 }
 
-                if (x2 && y2) {
+                if (src && x2 && y2) {
                     ctx.beginPath();
-                    ctx.moveTo(X, Y);
+                    ctx.moveTo(src.xCenter, src.yCenter);
                     ctx.lineTo(x2, y2);
                     ctx.stroke();
                 }
@@ -175,7 +178,8 @@ function Draw(config) {
                 x - TYPES.connectionPointRadius,
                 y - TYPES.connectionPointRadius,
                 x + TYPES.connectionPointRadius,
-                y + TYPES.connectionPointRadius
+                y + TYPES.connectionPointRadius,
+                this.GetId()
             );
         };
 
