@@ -1,11 +1,11 @@
 function Ratio() {
 
     this.GetXCenter = () => {
-        return this.GetX() + this.GetWidth() / 2;
+        return this.Coords.GetX() + this.GetWidth() / 2;
     };
 
     this.GetYCenter = () => {
-        return this.GetY() + this.GetHeight() / 2;
+        return this.Coords.GetY() + this.GetHeight() / 2;
     }
 }
 

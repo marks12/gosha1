@@ -34,11 +34,13 @@ function Canvas(canvasElementId) {
 
 
     this.GetCanvasX = (x) => {
+
         let a = (x - this.Zero.Coords.GetX());
         return a * (1 / scale);
     };
 
     this.GetCanvasY = (y) => {
+
         let a = (y - this.Zero.Coords.GetY());
         return  a * (1 / scale);
     };
@@ -173,12 +175,10 @@ function Canvas(canvasElementId) {
             items[i].Coords.SetY(newY);
         }
 
-        if (mode >= 0) {
-                this.Render();
+        if (mode > 0) {
+            this.Render();
         } else {
-            setTimeout(()=>{
-                this.CanvasScale(event);
-            });
+            this.CanvasScale(event);
         }
     };
 
