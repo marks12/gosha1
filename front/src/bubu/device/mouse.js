@@ -47,7 +47,6 @@ function Mouse(config) {
             clickCoordsY = self.GetCanvasY(event.pageY);
 
             // check connection point
-
             let point = self.GetConnectorPoint(clickCoordsX, clickCoordsY);
 
             if (point) {
@@ -135,17 +134,6 @@ function Mouse(config) {
                     item.Coords.SetX(item.Coords.GetX() + offsetX);
                     item.Coords.SetY(item.Coords.GetY() + offsetY);
 
-                    if (item.GetLinkSourcePoint) {
-
-                        let point = item.GetLinkSourcePoint();
-
-                        if (point) {
-                            point.move(offsetX, offsetY);
-                        }
-
-                        console.log('link source', item.GetLinkSourcePoint());
-                    }
-
                 };
 
                 for (let i in items) {
@@ -208,7 +196,7 @@ function Mouse(config) {
 
             return event;
         }
-    };
+    }
 }
 
 export default Mouse;
