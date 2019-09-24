@@ -14,6 +14,15 @@ function Store(config) {
         return this;
     };
 
+    let addPoints = (item) => {
+
+        for (let i=0; i<4;i++) {
+            item.AddConnectorPoint(i);
+        }
+
+        return item;
+    };
+
     this.DropElement = (event) => {
 
         event.preventDefault();
@@ -27,11 +36,13 @@ function Store(config) {
         let x = this.GetCanvasX(event.pageX || event.onMoveCoords.x)  - w / 2;
         let y = this.GetCanvasY(event.pageY || event.onMoveCoords.y) - h / 2;
 
+        let item = null;
+
         switch (elementType * 1) {
 
             case constants.task:
 
-                this.AddItem((new ElementsRegister.Task({
+                item = addPoints(new ElementsRegister.Task({
                     Width: w,
                     Height: h,
                     Coords: {
@@ -39,13 +50,15 @@ function Store(config) {
                         Y: y,
                     },
                     Text: `x: ${x} y: ${y}`
-                })));
+                }));
+
+                this.AddItem(item);
 
                 break;
 
             case constants.condition:
 
-                this.AddItem((new ElementsRegister.Condition({
+                item = addPoints(new ElementsRegister.Condition({
                     Width: w,
                     Height: h,
                     Coords: {
@@ -53,7 +66,9 @@ function Store(config) {
                         Y: y,
                     },
                     Text: `x: ${x} y: ${y}`
-                })));
+                }));
+
+                this.AddItem(item);
 
                 break;
 
@@ -64,7 +79,6 @@ function Store(config) {
                 break;
         }
 
-        console.log(x, y);
         this.Render();
 
         return this;

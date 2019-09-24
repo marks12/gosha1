@@ -14,7 +14,6 @@ function ConnectLink() {
             return false;
         }
 
-
         let clickCoordsX = root.GetCanvasX(event.pageX);
         let clickCoordsY = root.GetCanvasY(event.pageY);
 
@@ -22,7 +21,7 @@ function ConnectLink() {
 
         let point = root.GetConnectorPoint(clickCoordsX, clickCoordsY);
 
-        if (point && sItem.GetId() !== point.elementId) {
+        if (point && sItem.GetId() !== point.GetParentId()) {
             sItem.SetLinkDestinationPoint(point);
         } else {
             sItem.ClearLinkDestinationPoint();

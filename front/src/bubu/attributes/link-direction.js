@@ -1,7 +1,7 @@
 function LinkDirection(config) {
 
     let destinationPoint = null;
-    let srcSourcePoint = null;
+    let sourcePoint = null;
     let destX = 0;
     let destY = 0;
 
@@ -10,7 +10,7 @@ function LinkDirection(config) {
     };
 
     this.GetLinkSourcePoint = () => {
-        return srcSourcePoint;
+        return sourcePoint;
     };
 
     this.SetLinkDestinationCoords = (x, y) => {
@@ -33,7 +33,7 @@ function LinkDirection(config) {
     };
 
     this.ClearLinkSourcePoint = () => {
-        srcSourcePoint = null;
+        sourcePoint = null;
         return this;
     };
 
@@ -43,7 +43,7 @@ function LinkDirection(config) {
     };
 
     this.SetLinkSourcePoint = (point) => {
-        srcSourcePoint = point;
+        sourcePoint = point;
         return this;
     };
 }

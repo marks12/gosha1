@@ -3,11 +3,13 @@ import clone from "../common/objects";
 
 function Draw(config) {
 
+    let self = this;
+
     this.draw = (ctx, root) => {
 
         let W = this.GetWidth();
         let H = this.GetHeight();
-        let lineWidth = 1;
+        let lineWidth = 2;
         let X = this.Coords.GetX();
         let Y = this.Coords.GetY();
 
@@ -22,7 +24,7 @@ function Draw(config) {
                 ctx.lineTo(X + W, Y);
                 ctx.lineTo(X + W, Y + H);
                 ctx.lineTo(X, Y + H);
-                ctx.lineTo(X, Y);
+                ctx.lineTo(X, Y - lineWidth / 2);
                 // ctx.shadowBlur = 10;
                 // ctx.shadowOffsetX = 20;
                 // ctx.shadowColor = "black";
@@ -50,7 +52,7 @@ function Draw(config) {
                 ctx.lineTo(curX + W / 2, curY + H / 2);
                 ctx.lineTo(curX, curY + H + (lineWidth / 2) - 1);
                 ctx.lineTo(curX - W / 2, curY + H / 2);
-                ctx.lineTo(curX, curY);
+                ctx.lineTo(curX + lineWidth / 2 + lineWidth / 5, curY);
 
                 addText(ctx);
 
@@ -122,13 +124,13 @@ function Draw(config) {
                 let src = this.GetLinkSourcePoint();
 
                 if (dest) {
-                    x2 = dest.xCenter;
-                    y2 = dest.yCenter;
+                    x2 = dest.Coords.GetX();
+                    y2 = dest.Coords.GetY();
                 }
 
                 if (src && x2 && y2) {
                     ctx.beginPath();
-                    ctx.moveTo(src.xCenter, src.yCenter);
+                    ctx.moveTo(src.Coords.GetX(), src.Coords.GetY());
                     ctx.lineTo(x2, y2);
                     ctx.stroke();
                 }
@@ -175,14 +177,6 @@ function Draw(config) {
             ctx.strokeStyle = '#0060A6';
             ctx.fill();
             ctx.stroke();
-
-            root.AddConnectorPoint(
-                x - TYPES.connectionPointRadius,
-                y - TYPES.connectionPointRadius,
-                x + TYPES.connectionPointRadius,
-                y + TYPES.connectionPointRadius,
-                this.GetId()
-            );
         };
 
         switch (this.GetType()) {
@@ -190,21 +184,14 @@ function Draw(config) {
             case TYPES.condition:
             case TYPES.task:
 
-                let x = this.Coords.GetX();
-                let y = this.Coords.GetY();
-
-                let h = this.GetHeight();
-                let w = this.GetWidth();
-
                 ctx.fillStyle = TYPES.connectionFillStyle;
                 ctx.strokeStyle = TYPES.connectionStrokeStyle;
 
-                root.ClearConnectorPoints();
+                let points = this.GetConnectorPoints();
 
-                drawConnector(x, y + h / 2);
-                drawConnector(x + w, y + h / 2);
-                drawConnector(x + w / 2, y);
-                drawConnector(x + w / 2, y + h);
+                for (let i=0;i<points.length;i++) {
+                    drawConnector(points[i].Coords.GetX(), points[i].Coords.GetY());
+                }
 
                 break;
 

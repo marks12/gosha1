@@ -1,4 +1,5 @@
 import ElementsRegister from '../elements-register';
+import {TYPES as constants} from "../constants";
 
 function Connectors(config) {
 
@@ -11,7 +12,6 @@ function Connectors(config) {
     };
 
     this.HideConnectors = () => {
-        connectorPoints = [];
         isShow = false;
     };
 
@@ -19,21 +19,50 @@ function Connectors(config) {
         return isShow;
     };
 
-    this.AddConnectorPoint = (x1, y1, x2, y2, parentId) => {
+    this.AddConnectorPoint = (index) => {
 
-        connectorPoints.push((
-            new ElementsRegister.ConnectorPoint()
-                .Coords.SetX(x1)
-                .Coords.SetY(y1)
-                .SetWidth(x2 - x1)
-                .SetHeight(y2 - y1)
-                .SetParentId(parentId)
-                .SetIndex(connectorPoints.length)
-        ));
+        let x = () => {console.error('wrong x getter');};
+        let y = () => {console.error('wrong y getter');};
+
+        let item = this;
+
+        switch (index) {
+            case 0:
+                x = () => {return item.Coords.GetX() + item.GetWidth() / 2};
+                y = () => {return item.Coords.GetY()};
+                break;
+            case 1:
+                x = () => {return item.Coords.GetX() + item.GetWidth()};
+                y = () => {return item.Coords.GetY() + item.GetHeight() / 2};
+                break;
+            case 2:
+                x = () => {return item.Coords.GetX() + item.GetWidth() / 2};
+                y = () => {return item.Coords.GetY() + item.GetHeight()};
+                break;
+            case 3:
+                x = () => {return item.Coords.GetX()};
+                y = () => {return item.Coords.GetY() + item.GetHeight() / 2};
+                break;
+        }
+
+        let cp = new ElementsRegister.ConnectorPoint()
+            .SetIndex(index)
+            .SetWidth(constants.connectionPointRadius)
+            .SetHeight(constants.connectionPointRadius)
+            .SetParentId(this.GetId());
+
+        cp.Coords.GetX = x;
+        cp.Coords.GetY = y;
+
+        connectorPoints.push(cp);
     };
 
     this.ClearConnectorPoints = () => {
         connectorPoints = [];
+    };
+
+    this.GetConnectorPoints = () => {
+        return connectorPoints;
     };
 
     this.GetConnectorPointByIndex = (index) => {
@@ -54,11 +83,31 @@ function Connectors(config) {
     };
 
     this.GetConnectorPoint = (x, y) => {
-        for (let i = 0; i < connectorPoints.length; i++) {
-            if (x >= connectorPoints[i].x1 && x <= connectorPoints[i].x2 && y >= connectorPoints[i].y1 && y <= connectorPoints[i].y2) {
-                return connectorPoints[i];
+
+        let items = this.GetSelectableItems();
+
+        for (let index in items) {
+
+            if (! items[index].GetConnectorPoints) {
+                continue;
+            }
+
+            let connectorPoints = items[index].GetConnectorPoints();
+
+            for (let i = 0; i < connectorPoints.length; i++) {
+
+                let itemX1 = connectorPoints[i].Coords.GetX() - connectorPoints[i].GetWidth();
+                let itemX2 = connectorPoints[i].Coords.GetX() + connectorPoints[i].GetWidth();
+                let itemY1 = connectorPoints[i].Coords.GetY() - connectorPoints[i].GetHeight();
+                let itemY2 = connectorPoints[i].Coords.GetY() + connectorPoints[i].GetHeight();
+
+                if (x >= itemX1 && x <= itemX2 && y >= itemY1 && y <= itemY2) {
+
+                    return connectorPoints[i];
+                }
             }
         }
+
         return false;
     };
 }
