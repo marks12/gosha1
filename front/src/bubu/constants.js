@@ -1,6 +1,24 @@
 let connectionPointRadius = 10;
 let spaceBetween = 20;
 
+let egyptianTheme = {
+    primaryFill: '#fef7dc',
+    secondaryFill: '#e4ba70',
+    primaryStroke: '#080909',
+    secondaryStroke: '#0c1f26',
+    primaryContrast: '#dd000d',
+    secondaryContrast: '#00569B',
+};
+
+let defaultTheme = {
+    primaryFill: '#eee',
+    secondaryFill: '#fefefe',
+    primaryStroke: '#eee',
+    secondaryStroke: '#999',
+    primaryContrast: '#f00',
+    secondaryContrast: '#00f',
+};
+
 export const TYPES = {
     task : 100,
     condition : 200,
@@ -13,6 +31,7 @@ export const TYPES = {
     eventIntermediate : 810,
     eventEnd : 820,
     link : 900,
+    connectorPoint : 910,
 
     //toolbox
     stdHeight: 40,
@@ -40,5 +59,14 @@ export const TYPES = {
 
     connectionFillStyle: "#eee",
     connectionStrokeStyle: "#999",
+
+    currentTheme: {
+        primaryFill: egyptianTheme.primaryFill,
+        secondaryFill: egyptianTheme.secondaryFill,
+        primaryStroke: egyptianTheme.primaryStroke,
+        secondaryStroke: egyptianTheme.secondaryStroke,
+        primaryContrast: egyptianTheme.primaryContrast,
+        secondaryContrast: egyptianTheme.secondaryContrast,
+    },
 
 };
