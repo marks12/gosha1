@@ -1,5 +1,6 @@
 import Task from "./elements/task";
 import Link from "./elements/link";
+import ConnectorPoint from "./elements/connector-point";
 import Condition from "./elements/condition";
 import Divider from "./elements/divider";
 import Background from "./elements/background";
@@ -15,6 +16,7 @@ function ElementsRegister () {
         MultiSelection,
         Task,
         Link,
+        ConnectorPoint,
         Condition,
         Divider,
         Background,

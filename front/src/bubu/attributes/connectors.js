@@ -1,3 +1,5 @@
+import ElementsRegister from '../elements-register';
+
 function Connectors(config) {
 
     let connectorPoints = [];
@@ -17,25 +19,17 @@ function Connectors(config) {
         return isShow;
     };
 
-    this.AddConnectorPoint = (x1, y1, x2, y2, elementId) => {
-        connectorPoints.push({
-            x1: x1,
-            y1: y1,
-            x2: x2,
-            y2: y2,
-            xCenter: (x1 + x2) / 2,
-            yCenter: (y1 + y2) / 2,
-            elementId: elementId,
-            index: connectorPoints.length,
-            move: (x, y) => {
-                self.x1 += x;
-                this.x2 += x;
-                this.y1 += y;
-                this.y2 += y;
-                this.xCenter += x;
-                this.yCenter += y;
-            },
-        })
+    this.AddConnectorPoint = (x1, y1, x2, y2, parentId) => {
+
+        connectorPoints.push((
+            new ElementsRegister.ConnectorPoint()
+                .Coords.SetX(x1)
+                .Coords.SetY(y1)
+                .SetWidth(x2 - x1)
+                .SetHeight(y2 - y1)
+                .SetParentId(parentId)
+                .SetIndex(connectorPoints.length)
+        ));
     };
 
     this.ClearConnectorPoints = () => {
