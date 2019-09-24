@@ -86,7 +86,7 @@ function Draw(config) {
                 ctx.lineTo(X, Y + H);
                 ctx.lineTo(X, Y);
 
-                ctx.strokeStyle = 'red';
+                ctx.strokeStyle = '#d80010';
 
                 ctx.stroke();
 
@@ -169,8 +169,10 @@ function Draw(config) {
     let drawConnectors = (ctx, root) => {
 
         let drawConnector = (x, y) => {
+
             ctx.beginPath();
             ctx.arc(x, y, TYPES.connectionPointRadius, 0, 2 * Math.PI, false);
+            ctx.strokeStyle = '#0060A6';
             ctx.fill();
             ctx.stroke();
 

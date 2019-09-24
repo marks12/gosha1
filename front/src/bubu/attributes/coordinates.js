@@ -28,6 +28,7 @@ function Coordinates(config) {
          * @return {number}
          */
         GetPreviousY () {return PreviousY},
+
         SetX (x) {X = x; return self},
         SetY (y) {Y = y; return self},
         AddX (x) {X = PreviousX + x; return self},
