@@ -9,6 +9,7 @@ import Clone from "./actions/clone";
 import MultiSelection from "./elements/multiselection";
 import Resize from "./actions/resize";
 import Nothing from "./actions/nothing";
+import Button from "./elements/button";
 
 function ElementsRegister () {
 
@@ -21,6 +22,7 @@ function ElementsRegister () {
         Divider,
         Background,
         ZeroPoint,
+        Button,
         Actions: {
             Clone: Clone,
             Resize: Resize,

@@ -23,6 +23,13 @@ function Store(config) {
         return item;
     };
 
+    let addButtons = (item) => {
+
+        item.AddButton(constants.bottom, constants.right);
+
+        return item;
+    };
+
     let resetGetText = (item) => {
 
         let previosGetText = item.GetText;
@@ -41,20 +48,24 @@ function Store(config) {
 
         let elementType = event.srcElement.getAttribute('data-bubu');
 
-        let w = 100;
+        let w = 120;
         let h = w;
-        let x = this.GetCanvasX(event.pageX || event.onMoveCoords.x)  - w / 2;
+        let x = this.GetCanvasX(event.pageX || event.onMoveCoords.x) - w / 2;
         let y = this.GetCanvasY(event.pageY || event.onMoveCoords.y) - h / 2;
 
         let item = null;
+
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max));
+        }
 
         switch (elementType * 1) {
 
             case constants.task:
 
                 item = new ElementsRegister.Task({
-                    Width: w,
-                    Height: h,
+                    Width: 160,
+                    Height: 120,
                     Coords: {
                         X: x,
                         Y: y,
@@ -89,6 +100,7 @@ function Store(config) {
         }
 
         addPoints(item);
+        addButtons(item);
         resetGetText(item);
 
         this.Render();

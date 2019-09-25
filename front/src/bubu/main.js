@@ -13,6 +13,7 @@ import Canvas from "./canvas";
 import SrcImage from "./src-image";
 import Connectors from "./attributes/connectors";
 import Links from "./attributes/links";
+import Buttons from "./attributes/buttons";
 
 function BuBu(canvasElementId, ToolboxElementId) {
 
@@ -23,6 +24,7 @@ function BuBu(canvasElementId, ToolboxElementId) {
     SrcImage.apply(this, arguments);
     Connectors.apply(this, arguments);
     Links.apply(this, arguments);
+    Buttons.apply(this, arguments);
 
     if (!this.GetCanvas() || !this.GetContext) {
         console.error("Wrong canvas element Id. ELement not found or canvas.getContext function not exists");
