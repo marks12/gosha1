@@ -64,6 +64,10 @@ function Mouse(config) {
                     self.BlurAll();
                 }
 
+                if (! sItem.IsSelected() && selectedItems.length > 1) {
+                    self.BlurAll();
+                }
+
                 if (sItem.IsSelectable()) {
                     sItem.Select();
                 }

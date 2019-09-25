@@ -12,8 +12,6 @@ walk_dir () {
             add_file $pathname
         fi
     done
-
-
 }
 
 add_file () {

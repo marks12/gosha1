@@ -3,7 +3,7 @@ import axios from "axios";
 
 function BackendApi() {
 
-  this.serverUrl = "http://127.0.0.1:7500";
+  this.serverUrl = "";
 
   this.getRouteUrl = (url) => {
     return this.serverUrl + url;
