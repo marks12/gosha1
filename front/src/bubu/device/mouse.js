@@ -165,6 +165,7 @@ function Mouse(config) {
                 }
             } else {
                 self.ShowSrcConnectors(self.GetCanvasX(event.pageX), self.GetCanvasY(event.pageY));
+                self.ShowElementButtons(self.GetCanvasX(event.pageX), self.GetCanvasY(event.pageY));
             }
 
             onMoveX = event.pageX;

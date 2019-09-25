@@ -1,5 +1,4 @@
 import {TYPES} from "../constants";
-import clone from "../common/objects";
 
 function Draw(config) {
 
@@ -9,7 +8,7 @@ function Draw(config) {
 
         let W = this.GetWidth();
         let H = this.GetHeight();
-        let lineWidth = 2;
+        let lineWidth = TYPES.lineWidth;
         let X = this.Coords.GetX();
         let Y = this.Coords.GetY();
 
@@ -19,12 +18,15 @@ function Draw(config) {
 
             case TYPES.task:
 
-                ctx.beginPath();
-                ctx.moveTo(X, Y);
-                ctx.lineTo(X + W, Y);
-                ctx.lineTo(X + W, Y + H);
-                ctx.lineTo(X, Y + H);
-                ctx.lineTo(X, Y - lineWidth / 2);
+                drawRoundRect(ctx, X, Y, W, H, TYPES.cornerRadius, false, true);
+
+                // ctx.beginPath();
+                // ctx.moveTo(X, Y);
+                // ctx.lineTo(X + W, Y);
+                // ctx.lineTo(X + W, Y + H);
+                // ctx.lineTo(X, Y + H);
+                // ctx.lineTo(X, Y - lineWidth / 2);
+
                 // ctx.shadowBlur = 10;
                 // ctx.shadowOffsetX = 20;
                 // ctx.shadowColor = "black";
@@ -62,7 +64,11 @@ function Draw(config) {
                     ctx.strokeStyle = this.GetColorDefault();
                 }
 
+                ctx.lineWidth = lineWidth * 1.3;
+
                 ctx.stroke();
+
+                ctx.lineWidth = lineWidth;
 
                 break;
 
@@ -142,8 +148,34 @@ function Draw(config) {
             drawConnectors(ctx, root);
         }
 
+
+        if (this.IsShowButtons()) {
+            drawButtons(ctx, root);
+        }
+
         if (root) {
             addLinks(ctx, root);
+        }
+
+    };
+
+    let drawButtons = (ctx, root) => {
+
+        let drawButton = (x, y) => {
+
+            ctx.beginPath();
+            ctx.arc(x, y, TYPES.connectionPointRadius, 0, 2 * Math.PI, false);
+            ctx.strokeStyle = '#0060A6';
+            ctx.fill();
+            ctx.stroke();
+        };
+
+        let buttons = this.GetButtons();
+
+        if (buttons.length) {
+            for (let i=0; i< buttons.length; i++) {
+                drawButton(buttons[i].Coords.GetX(), buttons[i].Coords.GetY());
+            }
         }
 
     };
@@ -200,6 +232,58 @@ function Draw(config) {
 
         }
     };
+
+    /**
+     * Draws a rounded rectangle using the current state of the canvas.
+     * If you omit the last three params, it will draw a rectangle
+     * outline with a 5 pixel border radius
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {Number} x The top left x coordinate
+     * @param {Number} y The top left y coordinate
+     * @param {Number} width The width of the rectangle
+     * @param {Number} height The height of the rectangle
+     * @param {Number} [radius = 5] The corner radius; It can also be an object
+     *                 to specify different radii for corners
+     * @param {Number} [radius.tl = 0] Top left
+     * @param {Number} [radius.tr = 0] Top right
+     * @param {Number} [radius.br = 0] Bottom right
+     * @param {Number} [radius.bl = 0] Bottom left
+     * @param {Boolean} [fill = false] Whether to fill the rectangle.
+     * @param {Boolean} [stroke = true] Whether to stroke the rectangle.
+     */
+    function drawRoundRect(ctx, x, y, width, height, radius, fill, stroke) {
+        if (typeof stroke === 'undefined') {
+            stroke = true;
+        }
+        if (typeof radius === 'undefined') {
+            radius = 5;
+        }
+        if (typeof radius === 'number') {
+            radius = {tl: radius, tr: radius, br: radius, bl: radius};
+        } else {
+            let defaultRadius = {tl: 0, tr: 0, br: 0, bl: 0};
+            for (let side in defaultRadius) {
+                radius[side] = radius[side] || defaultRadius[side];
+            }
+        }
+        ctx.beginPath();
+        ctx.moveTo(x + radius.tl, y);
+        ctx.lineTo(x + width - radius.tr, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
+        ctx.lineTo(x + width, y + height - radius.br);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height);
+        ctx.lineTo(x + radius.bl, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+        ctx.lineTo(x, y + radius.tl);
+        ctx.quadraticCurveTo(x, y, x + radius.tl, y);
+        ctx.closePath();
+        if (fill) {
+            ctx.fill();
+        }
+        if (stroke) {
+            ctx.stroke();
+        }
+    }
 }
 
 

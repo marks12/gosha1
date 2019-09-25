@@ -32,7 +32,6 @@ function Canvas(canvasElementId) {
         this.UpdateCanvas();
     });
 
-
     this.GetCanvasX = (x) => {
 
         let a = (x - this.Zero.Coords.GetX());
@@ -216,8 +215,6 @@ function Canvas(canvasElementId) {
             item.ShowConnectors();
         }
     };
-
-
 }
 
 export default Canvas;
