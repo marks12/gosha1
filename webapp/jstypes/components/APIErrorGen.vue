@@ -12,7 +12,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th v-for="header in fields">{{ header }}</th>
+                            <th v-for="(header, index) in fields" :key="index">{{ header }}</th>
                         </tr>
                     </thead>
             
@@ -24,7 +24,7 @@
                             class="sw-table__row_can-select"
                             :class="{'sw-table__row_is-selected': aPIErrorItem.Id === currentAPIErrorItem.item.Id}"
                         >
-                            <td v-for="(value, key) in fields">
+                            <td v-for="(value, key) in fields" :key="key + '-fields'">
                                 <VCheckbox v-if="isCheckbox(aPIErrorItem[key])" :checked="aPIErrorItem[key]" disabled></VCheckbox>
                                 <VText v-else>{{ aPIErrorItem[key] }}</VText>
                             </td>
@@ -47,7 +47,7 @@
                         <form @submit.prevent="saveChangesSubmit">
                             <VSet direction="vertical">
                                 <VSet
-                                    v-for="(filed, key) in editFields"
+                                    v-for="(filed, key) in editFields" :key="key + '-editFields'"
                                     vertical-align="center"
                                 >
                                     <VLabel
@@ -122,11 +122,13 @@
             <slot name="pageFooter">
                 <VSet>
                     <VButton
+                        v-if="canCreate"
                         text="Добавить"
                         accent
                         @click="showPanel(panel.create)"
                     />
                     <VButton
+                        v-if="canDelete"
                         text="Удалить"
                         :disabled="!currentAPIErrorItem.isSelected"
                         @click="deleteAPIErrorItemHandler"
@@ -193,7 +195,15 @@
 
                     return fieldsObj;
                 }
-            }
+            },
+            canDelete: {
+                type: Boolean,
+                default: true,
+            },
+            canCreate: {
+                type: Boolean,
+                default: true,
+            },
         },
 
         data() {
@@ -206,7 +216,7 @@
         },
 
         computed: {
-            ...mapGetters('im3', {
+            ...mapGetters({
                 aPIErrorList: 'getListAPIError'
             }),
             isPanelCreate() {
@@ -250,14 +260,14 @@
         },
 
         methods: {
-            ...mapActions('im3', [
+            ...mapActions([
                 'findAPIError',
                 'updateAPIError',
                 'deleteAPIError',
                 'createAPIError',
             ]),
 
-            ...mapMutations('im3', [
+            ...mapMutations([
                 'addAPIErrorItemToList',
                 'deleteAPIErrorFromList',
                 'updateAPIErrorById',
@@ -329,11 +339,7 @@
 
             createAPIErrorItemSubmit() {
                 this.createAPIError({
-                    data: {
-                        Name: this.currentAPIErrorItem.item.Name,
-                        Value: this.currentAPIErrorItem.item.Value,
-                        Description: this.currentAPIErrorItem.item.Description,
-                    }
+					data: this.currentAPIErrorItem.item,
                 }).then((response) => {
 
                     if (response.Model) {

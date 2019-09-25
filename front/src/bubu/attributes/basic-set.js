@@ -4,6 +4,7 @@ import Draw from "../actions/draw";
 import Size from "../attributes/size";
 import Text from "../attributes/text";
 import Color from "../attributes/color";
+import Visibility from "../attributes/visibility";
 import Names from "../attributes/names";
 import Connectors from "../attributes/connectors";
 import Move from "../actions/move";
@@ -23,6 +24,7 @@ function BasicSet(config) {
     Selection.apply(this, arguments);
     Resize.apply(this, arguments);
     Connectors.apply(this, arguments);
+    Visibility.apply(this, arguments);
 
     return this;
 }

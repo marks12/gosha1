@@ -1,4 +1,4 @@
-let connectionPointRadius = 10;
+let connectionPointRadius = 5;
 let spaceBetween = 20;
 
 let egyptianTheme = {
@@ -55,7 +55,7 @@ export const TYPES = {
     arrowTypeRoot: 11170, // -/------
 
     connectionPointRadius: connectionPointRadius,
-    activeSpaceAround: connectionPointRadius,
+    activeSpaceAround: connectionPointRadius * 4,
 
     connectionFillStyle: "#eee",
     connectionStrokeStyle: "#999",

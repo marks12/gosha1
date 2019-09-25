@@ -12,7 +12,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th v-for="header in fields">{{ header }}</th>
+                            <th v-for="(header, index) in fields" :key="index">{{ header }}</th>
                         </tr>
                     </thead>
             
@@ -24,7 +24,7 @@
                             class="sw-table__row_can-select"
                             :class="{'sw-table__row_is-selected': entityItem.Id === currentEntityItem.item.Id}"
                         >
-                            <td v-for="(value, key) in fields">
+                            <td v-for="(value, key) in fields" :key="key + '-fields'">
                                 <VCheckbox v-if="isCheckbox(entityItem[key])" :checked="entityItem[key]" disabled></VCheckbox>
                                 <VText v-else>{{ entityItem[key] }}</VText>
                             </td>
@@ -47,7 +47,7 @@
                         <form @submit.prevent="saveChangesSubmit">
                             <VSet direction="vertical">
                                 <VSet
-                                    v-for="(filed, key) in editFields"
+                                    v-for="(filed, key) in editFields" :key="key + '-editFields'"
                                     vertical-align="center"
                                 >
                                     <VLabel
@@ -122,11 +122,13 @@
             <slot name="pageFooter">
                 <VSet>
                     <VButton
+                        v-if="canCreate"
                         text="Добавить"
                         accent
                         @click="showPanel(panel.create)"
                     />
                     <VButton
+                        v-if="canDelete"
                         text="Удалить"
                         :disabled="!currentEntityItem.isSelected"
                         @click="deleteEntityItemHandler"
@@ -193,7 +195,15 @@
 
                     return fieldsObj;
                 }
-            }
+            },
+            canDelete: {
+                type: Boolean,
+                default: true,
+            },
+            canCreate: {
+                type: Boolean,
+                default: true,
+            },
         },
 
         data() {
@@ -206,7 +216,7 @@
         },
 
         computed: {
-            ...mapGetters('im3', {
+            ...mapGetters({
                 entityList: 'getListEntity'
             }),
             isPanelCreate() {
@@ -250,14 +260,14 @@
         },
 
         methods: {
-            ...mapActions('im3', [
+            ...mapActions([
                 'findEntity',
                 'updateEntity',
                 'deleteEntity',
                 'createEntity',
             ]),
 
-            ...mapMutations('im3', [
+            ...mapMutations([
                 'addEntityItemToList',
                 'deleteEntityFromList',
                 'updateEntityById',
@@ -329,11 +339,7 @@
 
             createEntityItemSubmit() {
                 this.createEntity({
-                    data: {
-                        Name: this.currentEntityItem.item.Name,
-                        Value: this.currentEntityItem.item.Value,
-                        Description: this.currentEntityItem.item.Description,
-                    }
+					data: this.currentEntityItem.item,
                 }).then((response) => {
 
                     if (response.Model) {
