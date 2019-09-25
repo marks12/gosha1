@@ -190,14 +190,15 @@ function Draw(config) {
                 let points = this.GetConnectorPoints();
 
                 for (let i=0;i<points.length;i++) {
-                    drawConnector(points[i].Coords.GetX(), points[i].Coords.GetY());
+
+                    if (points[i].GetVisibility()) {
+                        drawConnector(points[i].Coords.GetX(), points[i].Coords.GetY());
+                    }
                 }
 
                 break;
 
         }
-
-
     };
 }
 

@@ -17,9 +17,19 @@ function Store(config) {
     let addPoints = (item) => {
 
         for (let i=0; i<4;i++) {
-            item.AddConnectorPoint(i);
+            item.AddConnectorPoint(i, i === 1);
         }
 
+        return item;
+    };
+
+    let resetGetText = (item) => {
+
+        let previosGetText = item.GetText;
+        item.GetText = () => {
+            return " x:" + item.Coords.GetX() + "\n" +
+                " y:" + item.Coords.GetY();
+        };
         return item;
     };
 
@@ -42,15 +52,15 @@ function Store(config) {
 
             case constants.task:
 
-                item = addPoints(new ElementsRegister.Task({
+                item = new ElementsRegister.Task({
                     Width: w,
                     Height: h,
                     Coords: {
                         X: x,
                         Y: y,
                     },
-                    Text: `x: ${x} y: ${y}`
-                }));
+                    Text: `Task`
+                });
 
                 this.AddItem(item);
 
@@ -58,15 +68,15 @@ function Store(config) {
 
             case constants.condition:
 
-                item = addPoints(new ElementsRegister.Condition({
+                item = new ElementsRegister.Condition({
                     Width: w,
                     Height: h,
                     Coords: {
                         X: x,
                         Y: y,
                     },
-                    Text: `x: ${x} y: ${y}`
-                }));
+                    Text: `Condition`
+                });
 
                 this.AddItem(item);
 
@@ -75,9 +85,11 @@ function Store(config) {
             default:
 
                 console.error('unknown drop type', elementType);
-
-                break;
+                return false;
         }
+
+        addPoints(item);
+        resetGetText(item);
 
         this.Render();
 
@@ -164,6 +176,10 @@ function Store(config) {
         for (let i in Items) {
 
             if (! Items[i].IsSelectable()) {
+                continue;
+            }
+
+            if (Items[i].GetVisibility && ! Items[i].GetVisibility()) {
                 continue;
             }
 

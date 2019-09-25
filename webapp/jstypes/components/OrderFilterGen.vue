@@ -12,7 +12,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th v-for="header in fields">{{ header }}</th>
+                            <th v-for="(header, index) in fields" :key="index">{{ header }}</th>
                         </tr>
                     </thead>
             
@@ -24,7 +24,7 @@
                             class="sw-table__row_can-select"
                             :class="{'sw-table__row_is-selected': orderFilterItem.Id === currentOrderFilterItem.item.Id}"
                         >
-                            <td v-for="(value, key) in fields">
+                            <td v-for="(value, key) in fields" :key="key + '-fields'">
                                 <VCheckbox v-if="isCheckbox(orderFilterItem[key])" :checked="orderFilterItem[key]" disabled></VCheckbox>
                                 <VText v-else>{{ orderFilterItem[key] }}</VText>
                             </td>
@@ -47,7 +47,7 @@
                         <form @submit.prevent="saveChangesSubmit">
                             <VSet direction="vertical">
                                 <VSet
-                                    v-for="(filed, key) in editFields"
+                                    v-for="(filed, key) in editFields" :key="key + '-editFields'"
                                     vertical-align="center"
                                 >
                                     <VLabel
@@ -122,11 +122,13 @@
             <slot name="pageFooter">
                 <VSet>
                     <VButton
+                        v-if="canCreate"
                         text="Добавить"
                         accent
                         @click="showPanel(panel.create)"
                     />
                     <VButton
+                        v-if="canDelete"
                         text="Удалить"
                         :disabled="!currentOrderFilterItem.isSelected"
                         @click="deleteOrderFilterItemHandler"
@@ -193,7 +195,15 @@
 
                     return fieldsObj;
                 }
-            }
+            },
+            canDelete: {
+                type: Boolean,
+                default: true,
+            },
+            canCreate: {
+                type: Boolean,
+                default: true,
+            },
         },
 
         data() {
@@ -206,7 +216,7 @@
         },
 
         computed: {
-            ...mapGetters('im3', {
+            ...mapGetters({
                 orderFilterList: 'getListOrderFilter'
             }),
             isPanelCreate() {
@@ -250,14 +260,14 @@
         },
 
         methods: {
-            ...mapActions('im3', [
+            ...mapActions([
                 'findOrderFilter',
                 'updateOrderFilter',
                 'deleteOrderFilter',
                 'createOrderFilter',
             ]),
 
-            ...mapMutations('im3', [
+            ...mapMutations([
                 'addOrderFilterItemToList',
                 'deleteOrderFilterFromList',
                 'updateOrderFilterById',
@@ -329,11 +339,7 @@
 
             createOrderFilterItemSubmit() {
                 this.createOrderFilter({
-                    data: {
-                        Name: this.currentOrderFilterItem.item.Name,
-                        Value: this.currentOrderFilterItem.item.Value,
-                        Description: this.currentOrderFilterItem.item.Description,
-                    }
+					data: this.currentOrderFilterItem.item,
                 }).then((response) => {
 
                     if (response.Model) {

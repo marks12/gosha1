@@ -1,5 +1,4 @@
 
-
 function request(method, url, getParams, data, headerParams) {
 
   function appendParams(u, params) {
@@ -20,13 +19,17 @@ function request(method, url, getParams, data, headerParams) {
 
           switch (typeof params[f]) {
             case "object":
-              for (let j = 0; j < params[f].length; j++) {
-                if (list.length) {
-                  list += "&";
-                }
-                list += f + "[]=" + encodeURIComponent(params[f][j]);
+
+              if (params && params[f]) {
+                  for (let j = 0; j < params[f].length; j++) {
+                      if (list.length) {
+                          list += "&";
+                      }
+                      list += f + "[]=" + encodeURIComponent(params[f][j]);
+                  }
+
+                  uparams += list;
               }
-              uparams += list;
               break;
             default:
               uparams += f + "=" + encodeURIComponent(params[f]);
@@ -35,7 +38,7 @@ function request(method, url, getParams, data, headerParams) {
         }
         break;
     }
-    return u + uparams;
+    return (u + uparams).replace(/[&]+/,'&');
   }
 
   function setHeader(req) {
@@ -90,7 +93,7 @@ function request(method, url, getParams, data, headerParams) {
 
 function BackendApi() {
 
-  this.serverUrl = "http://127.0.0.1:7500";
+  this.serverUrl = "";
 
   this.getRouteUrl = (url) => {
     return this.serverUrl + url;
