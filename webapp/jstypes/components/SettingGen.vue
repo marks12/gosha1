@@ -12,7 +12,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th v-for="header in fields">{{ header }}</th>
+                            <th v-for="(header, index) in fields" :key="index">{{ header }}</th>
                         </tr>
                     </thead>
             
@@ -24,7 +24,7 @@
                             class="sw-table__row_can-select"
                             :class="{'sw-table__row_is-selected': settingItem.Id === currentSettingItem.item.Id}"
                         >
-                            <td v-for="(value, key) in fields">
+                            <td v-for="(value, key) in fields" :key="key + '-fields'">
                                 <VCheckbox v-if="isCheckbox(settingItem[key])" :checked="settingItem[key]" disabled></VCheckbox>
                                 <VText v-else>{{ settingItem[key] }}</VText>
                             </td>
@@ -47,7 +47,7 @@
                         <form @submit.prevent="saveChangesSubmit">
                             <VSet direction="vertical">
                                 <VSet
-                                    v-for="(filed, key) in editFields"
+                                    v-for="(filed, key) in editFields" :key="key + '-editFields'"
                                     vertical-align="center"
                                 >
                                     <VLabel
@@ -122,11 +122,13 @@
             <slot name="pageFooter">
                 <VSet>
                     <VButton
+                        v-if="canCreate"
                         text="Добавить"
                         accent
                         @click="showPanel(panel.create)"
                     />
                     <VButton
+                        v-if="canDelete"
                         text="Удалить"
                         :disabled="!currentSettingItem.isSelected"
                         @click="deleteSettingItemHandler"
@@ -193,7 +195,15 @@
 
                     return fieldsObj;
                 }
-            }
+            },
+            canDelete: {
+                type: Boolean,
+                default: true,
+            },
+            canCreate: {
+                type: Boolean,
+                default: true,
+            },
         },
 
         data() {
@@ -206,7 +216,7 @@
         },
 
         computed: {
-            ...mapGetters('im3', {
+            ...mapGetters({
                 settingList: 'getListSetting'
             }),
             isPanelCreate() {
@@ -250,14 +260,14 @@
         },
 
         methods: {
-            ...mapActions('im3', [
+            ...mapActions([
                 'findSetting',
                 'updateSetting',
                 'deleteSetting',
                 'createSetting',
             ]),
 
-            ...mapMutations('im3', [
+            ...mapMutations([
                 'addSettingItemToList',
                 'deleteSettingFromList',
                 'updateSettingById',
@@ -329,11 +339,7 @@
 
             createSettingItemSubmit() {
                 this.createSetting({
-                    data: {
-                        Name: this.currentSettingItem.item.Name,
-                        Value: this.currentSettingItem.item.Value,
-                        Description: this.currentSettingItem.item.Description,
-                    }
+					data: this.currentSettingItem.item,
                 }).then((response) => {
 
                     if (response.Model) {

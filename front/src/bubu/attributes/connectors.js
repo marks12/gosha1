@@ -19,7 +19,7 @@ function Connectors(config) {
         return isShow;
     };
 
-    this.AddConnectorPoint = (index) => {
+    this.AddConnectorPoint = (index, isVisible) => {
 
         let x = () => {console.error('wrong x getter');};
         let y = () => {console.error('wrong y getter');};
@@ -47,6 +47,7 @@ function Connectors(config) {
 
         let cp = new ElementsRegister.ConnectorPoint()
             .SetIndex(index)
+            .SetVisibility(isVisible)
             .SetWidth(constants.connectionPointRadius)
             .SetHeight(constants.connectionPointRadius)
             .SetParentId(this.GetId());
@@ -62,7 +63,16 @@ function Connectors(config) {
     };
 
     this.GetConnectorPoints = () => {
-        return connectorPoints;
+
+        let cps = [];
+
+        for (let i = 0; i < connectorPoints.length; i++) {
+            if (connectorPoints[i].GetVisibility()) {
+                cps.push(connectorPoints[i]);
+            }
+        }
+
+        return cps;
     };
 
     this.GetConnectorPointByIndex = (index) => {
@@ -96,10 +106,10 @@ function Connectors(config) {
 
             for (let i = 0; i < connectorPoints.length; i++) {
 
-                let itemX1 = connectorPoints[i].Coords.GetX() - connectorPoints[i].GetWidth();
-                let itemX2 = connectorPoints[i].Coords.GetX() + connectorPoints[i].GetWidth();
-                let itemY1 = connectorPoints[i].Coords.GetY() - connectorPoints[i].GetHeight();
-                let itemY2 = connectorPoints[i].Coords.GetY() + connectorPoints[i].GetHeight();
+                let itemX1 = connectorPoints[i].Coords.GetX() - (connectorPoints[i].GetWidth() + constants.activeSpaceAround);
+                let itemX2 = connectorPoints[i].Coords.GetX() + (connectorPoints[i].GetWidth() + constants.activeSpaceAround);
+                let itemY1 = connectorPoints[i].Coords.GetY() - (connectorPoints[i].GetHeight() + constants.activeSpaceAround);
+                let itemY2 = connectorPoints[i].Coords.GetY() + (connectorPoints[i].GetHeight() + constants.activeSpaceAround);
 
                 if (x >= itemX1 && x <= itemX2 && y >= itemY1 && y <= itemY2) {
 

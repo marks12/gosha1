@@ -2,11 +2,13 @@
 import apiFront from "./apiCSR";
 import apiSSR from "./apiSSR";
 
-// for Client Side Rendering
-let api = apiFront;
-if(process && !process.client) {
+let api;
+if(process && process.client === false) {
   // for Server Side Rendering
-  let api = apiSSR;
+  api = apiSSR;
+} else {
+  // for Client Side Rendering
+  api = apiFront;
 }
 
 export default api;
