@@ -32,9 +32,11 @@ export const TYPES = {
     eventEnd : 820,
     link : 900,
     connectorPoint : 910,
+    button : 1000,
 
     //toolbox
     stdHeight: 40,
+    lineWidth: 1.5,
     spaceBetween: spaceBetween,
     toolboxWidth: 0,
 
@@ -55,10 +57,16 @@ export const TYPES = {
     arrowTypeRoot: 11170, // -/------
 
     connectionPointRadius: connectionPointRadius,
+    cornerRadius: 5,
     activeSpaceAround: connectionPointRadius * 4,
 
     connectionFillStyle: "#eee",
     connectionStrokeStyle: "#999",
+
+    top: "top",
+    bottom: "bottom",
+    left: "left",
+    right: "right",
 
     currentTheme: {
         primaryFill: egyptianTheme.primaryFill,
