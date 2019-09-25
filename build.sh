@@ -63,5 +63,8 @@ EOL
 
 
 env GOOS=darwin GOARCH=amd64 go build -o ./gosha-mac -v ./main.go
-
 go build -v
+
+env GOOS=windows GOARCH=386 go build -o gosha.exe -v ./main.go
+go build -v
+
