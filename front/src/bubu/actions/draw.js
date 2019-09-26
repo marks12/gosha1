@@ -17,31 +17,14 @@ function Draw(config) {
         switch (this.GetType()) {
 
             case TYPES.task:
-
                 drawRoundRect(ctx, X, Y, W, H, TYPES.cornerRadius, false, true);
-
-                // ctx.beginPath();
-                // ctx.moveTo(X, Y);
-                // ctx.lineTo(X + W, Y);
-                // ctx.lineTo(X + W, Y + H);
-                // ctx.lineTo(X, Y + H);
-                // ctx.lineTo(X, Y - lineWidth / 2);
-
-                // ctx.shadowBlur = 10;
-                // ctx.shadowOffsetX = 20;
-                // ctx.shadowColor = "black";
-                // ctx.fillStyle = "red";
-
                 addText(ctx);
-
                 if (this.IsSelected()) {
                     ctx.strokeStyle = 'red';
                 } else {
                     ctx.strokeStyle = this.GetColorDefault();
                 }
-
                 ctx.stroke();
-
                 break;
 
             case TYPES.condition:
@@ -65,9 +48,7 @@ function Draw(config) {
                 }
 
                 ctx.lineWidth = lineWidth * 1.3;
-
                 ctx.stroke();
-
                 ctx.lineWidth = lineWidth;
 
                 break;
@@ -161,20 +142,26 @@ function Draw(config) {
 
     let drawButtons = (ctx, root) => {
 
-        let drawButton = (x, y) => {
+        let drawButton = (x, y, isHasArrow) => {
 
             ctx.beginPath();
-            ctx.arc(x, y, TYPES.connectionPointRadius, 0, 2 * Math.PI, false);
+            ctx.arc(x, y, TYPES.buttonRadius, 0, 2 * Math.PI, false);
             ctx.strokeStyle = '#0060A6';
             ctx.fill();
+
+            if (isHasArrow) {
+                drawArrow(ctx, x - TYPES.buttonRadius + 5, y, x + TYPES.buttonRadius - 5, y)
+            }
+
             ctx.stroke();
+
         };
 
         let buttons = this.GetButtons();
 
         if (buttons.length) {
             for (let i=0; i< buttons.length; i++) {
-                drawButton(buttons[i].Coords.GetX(), buttons[i].Coords.GetY());
+                drawButton(buttons[i].Coords.GetX(), buttons[i].Coords.GetY(), true);
             }
         }
 
@@ -203,7 +190,6 @@ function Draw(config) {
     let drawConnectors = (ctx, root) => {
 
         let drawConnector = (x, y) => {
-
             ctx.beginPath();
             ctx.arc(x, y, TYPES.connectionPointRadius, 0, 2 * Math.PI, false);
             ctx.strokeStyle = '#0060A6';
@@ -222,14 +208,11 @@ function Draw(config) {
                 let points = this.GetConnectorPoints();
 
                 for (let i=0;i<points.length;i++) {
-
                     if (points[i].GetVisibility()) {
                         drawConnector(points[i].Coords.GetX(), points[i].Coords.GetY());
                     }
                 }
-
-                break;
-
+            break;
         }
     };
 
@@ -283,6 +266,34 @@ function Draw(config) {
         if (stroke) {
             ctx.stroke();
         }
+    }
+
+    function drawArrow(ctx, fromx, fromy, tox, toy) {
+        //variables to be used when creating the arrow
+        let headLen = 8;
+
+        let angle = Math.atan2(toy-fromy,tox-fromx);
+
+        //starting path of the arrow from the start square to the end square and drawing the stroke
+        ctx.beginPath();
+        ctx.moveTo(fromx, fromy);
+        ctx.lineTo(tox, toy);
+        ctx.stroke();
+
+        //starting a new path from the head of the arrow to one of the sides of the point
+        ctx.beginPath();
+        ctx.moveTo(tox, toy);
+        // ctx.lineTo(tox - headLen * Math.cos(angle - Math.PI/7),toy - headLen * Math.sin(angle - Math.PI/7));
+
+        //path from the side point of the arrow, to the other side point
+        ctx.lineTo(tox-headLen*Math.cos(angle+Math.PI/4),toy-headLen*Math.sin(angle+Math.PI/4));
+
+        //path from the side point back to the tip of the arrow, and then again to the opposite side point
+        ctx.lineTo(tox, toy);
+        ctx.lineTo(tox-headLen*Math.cos(angle-Math.PI/4),toy-headLen*Math.sin(angle-Math.PI/4));
+
+        //draws the paths created above
+        ctx.stroke();
     }
 }
 
