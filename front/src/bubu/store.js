@@ -15,13 +15,27 @@ function Store(config) {
 
     let addPoints = (item) => {
         for (let i=0; i<4;i++) {
-            item.AddConnectorPoint(i, i === 1);
+            item.AddConnectorPoint(i, false);
         }
         return item;
     };
 
     let addButtons = (item) => {
-        item.AddButton(constants.bottom, constants.right);
+
+        // create links btn
+        item.AddButton({
+            positionVertical: constants.bottom,
+            positionHorizontal: constants.right,
+            OnDown: (root, clickCoordsX, clickCoordsY) => {
+
+                let point = item.GetConnectorPointByIndex(1);
+
+                root.AddLink(point);
+                point.SetVisibility(true);
+                item.ShowConnectors();
+            }
+        });
+
         return item;
     };
 

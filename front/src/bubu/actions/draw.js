@@ -116,10 +116,12 @@ function Draw(config) {
                 }
 
                 if (src && x2 && y2) {
-                    ctx.beginPath();
-                    ctx.moveTo(src.Coords.GetX(), src.Coords.GetY());
-                    ctx.lineTo(x2, y2);
-                    ctx.stroke();
+                    // ctx.beginPath();
+                    // ctx.moveTo(src.Coords.GetX(), src.Coords.GetY());
+                    // ctx.lineTo(x2, y2);
+                    // ctx.stroke();
+
+                    drawArrow(ctx, src.Coords.GetX(), src.Coords.GetY(), x2, y2, TYPES.arrowTypeSimple);
                 }
 
                 break;
@@ -150,7 +152,7 @@ function Draw(config) {
             ctx.fill();
 
             if (isHasArrow) {
-                drawArrow(ctx, x - TYPES.buttonRadius + 5, y, x + TYPES.buttonRadius - 5, y)
+                drawArrow(ctx, x - TYPES.buttonRadius + 5, y, x + TYPES.buttonRadius - 5, y, TYPES.arrowTypeSimple)
             }
 
             ctx.stroke();
@@ -268,7 +270,8 @@ function Draw(config) {
         }
     }
 
-    function drawArrow(ctx, fromx, fromy, tox, toy) {
+    function drawArrow(ctx, fromx, fromy, tox, toy, arrowTypeDestination, arrowTypeSource) {
+
         //variables to be used when creating the arrow
         let headLen = 8;
 
@@ -283,14 +286,35 @@ function Draw(config) {
         //starting a new path from the head of the arrow to one of the sides of the point
         ctx.beginPath();
         ctx.moveTo(tox, toy);
-        // ctx.lineTo(tox - headLen * Math.cos(angle - Math.PI/7),toy - headLen * Math.sin(angle - Math.PI/7));
 
-        //path from the side point of the arrow, to the other side point
-        ctx.lineTo(tox-headLen*Math.cos(angle+Math.PI/4),toy-headLen*Math.sin(angle+Math.PI/4));
+        if (! arrowTypeSource) {
+            arrowTypeSource = TYPES.arrowTypeNone;
+        }
 
-        //path from the side point back to the tip of the arrow, and then again to the opposite side point
-        ctx.lineTo(tox, toy);
-        ctx.lineTo(tox-headLen*Math.cos(angle-Math.PI/4),toy-headLen*Math.sin(angle-Math.PI/4));
+        if (! arrowTypeDestination) {
+            arrowTypeDestination = TYPES.arrowTypeNone;
+        }
+
+        switch (arrowTypeDestination) {
+
+            case TYPES.arrowTypeSimple:
+
+                // ctx.lineTo(tox - headLen * Math.cos(angle - Math.PI/7),toy - headLen * Math.sin(angle - Math.PI/7));
+
+                //path from the side point of the arrow, to the other side point
+                ctx.lineTo(tox-headLen*Math.cos(angle+Math.PI/4),toy-headLen*Math.sin(angle+Math.PI/4));
+
+                //path from the side point back to the tip of the arrow, and then again to the opposite side point
+                ctx.lineTo(tox, toy);
+                ctx.lineTo(tox-headLen*Math.cos(angle-Math.PI/4),toy-headLen*Math.sin(angle-Math.PI/4));
+
+                break;
+
+            // none
+            default:
+                break;
+        }
+
 
         //draws the paths created above
         ctx.stroke();

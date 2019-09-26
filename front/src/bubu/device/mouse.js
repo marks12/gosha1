@@ -28,7 +28,7 @@ function Mouse(config) {
             event = this.AssignCoordinates(event);
 
             if (event.altKey) {
-                console.log("create alt key");
+                console.log("DOWN + ALT key");
                 return false;
             }
 
@@ -46,11 +46,10 @@ function Mouse(config) {
             clickCoordsX = self.GetCanvasX(event.pageX);
             clickCoordsY = self.GetCanvasY(event.pageY);
 
-            // check connection point
-            let point = self.GetConnectorPoint(clickCoordsX, clickCoordsY);
-
-            if (point) {
-                self.AddLink(point);
+            // work button
+            let button = self.FindButton(clickCoordsX, clickCoordsY);
+            if (button && button.GetOnDown()) {
+                button.GetOnDown()(self, clickCoordsX, clickCoordsY);
                 return true;
             }
 
@@ -80,6 +79,11 @@ function Mouse(config) {
 
         this.Up = (event) => {
 
+            if (event.altKey) {
+                console.log("UP + ALT key");
+                return false;
+            }
+
             isDown = false;
             self.RemoveMultiSelection();
             self.ClearSelectedItem();
@@ -88,8 +92,20 @@ function Mouse(config) {
 
         this.Move = (event) => {
 
+            if (event.altKey) {
+                console.log("MOVE + ALT key");
+                return false;
+            }
+
             let newX = self.GetCanvasX(event.pageX) - self.GetSelectedItemOffsetX();
             let newY = self.GetCanvasY(event.pageY) - self.GetSelectedItemOffsetY();
+
+            // check connection point
+            let button = self.FindButton(self.GetCanvasX(event.pageX), self.GetCanvasY(event.pageY));
+            if (button && button.OnMove) {
+                button.OnMove(self, clickCoordsX, clickCoordsY);
+                return true;
+            }
 
             let sItem = self.GetSelectedItem();
             
