@@ -8,30 +8,24 @@ function Store(config) {
     let self = this;
 
     this.AddItem = (element) => {
-
         let id = element.GetId();
         Items[id] = element;
         return this;
     };
 
     let addPoints = (item) => {
-
         for (let i=0; i<4;i++) {
             item.AddConnectorPoint(i, i === 1);
         }
-
         return item;
     };
 
     let addButtons = (item) => {
-
         item.AddButton(constants.bottom, constants.right);
-
         return item;
     };
 
     let resetGetText = (item) => {
-
         let previosGetText = item.GetText;
         item.GetText = () => {
             return " x:" + item.Coords.GetX() + "\n" +
@@ -41,18 +35,15 @@ function Store(config) {
     };
 
     this.DropElement = (event) => {
-
+        
         event.preventDefault();
-
         event = this.Mouse.AssignCoordinates(event);
 
         let elementType = event.srcElement.getAttribute('data-bubu');
-
-        let w = 120;
+        let w = constants.elementWidth;
         let h = w;
         let x = this.GetCanvasX(event.pageX || event.onMoveCoords.x) - w / 2;
         let y = this.GetCanvasY(event.pageY || event.onMoveCoords.y) - h / 2;
-
         let item = null;
 
         function getRandomInt(max) {
@@ -60,9 +51,7 @@ function Store(config) {
         }
 
         switch (elementType * 1) {
-
             case constants.task:
-
                 item = new ElementsRegister.Task({
                     Width: 160,
                     Height: 120,
@@ -240,30 +229,22 @@ function Store(config) {
             }
 
             if (x >= x1 && x <= x2 && y >= y1 && y <= y2) {
-
                 this.SetSelectedItemOffsetX(x - x1);
                 this.SetSelectedItemOffsetY(y - y1);
-
                 return Items[i];
             }
-
         }
-
         return null;
     };
 
     this.SelectItemByCoordinates = (x, y) => {
-
         let item = this.GetFirstElementByCoordinates(x, y);
-
         if (! item) {
             this.ClearSelectedItem();
         }
-
         this.SetSelectedItem(item);
         return item;
     };
-
 }
 
 export default Store;
