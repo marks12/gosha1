@@ -40,6 +40,9 @@ export const TYPES = {
     spaceBetween: spaceBetween,
     toolboxWidth: 0,
 
+    // button
+    buttonRadius: 10,
+
     //links
     linkTypeLine: 10100, // _________________
     linkTypeDashes: 10110, // ---------------
@@ -56,6 +59,7 @@ export const TYPES = {
     arrowTypeOne: 11160, // --------¹
     arrowTypeRoot: 11170, // -/------
 
+    elementWidth: 120,
     connectionPointRadius: connectionPointRadius,
     cornerRadius: 5,
     activeSpaceAround: connectionPointRadius * 4,
