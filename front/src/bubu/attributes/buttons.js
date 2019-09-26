@@ -42,7 +42,7 @@ function Buttons() {
         }
     };
 
-    this.AddButton = (positionVertical, positionHorizontal) => {
+    this.AddButton = ({positionVertical, positionHorizontal, OnDown, OnMove, OnUp}) => {
 
         let x = () => {console.error('wrong x getter');};
         let y = () => {console.error('wrong y getter');};
@@ -61,10 +61,22 @@ function Buttons() {
             y = () => {return item.Coords.GetY() + item.GetHeight() - constants.spaceBetween};
         }
 
-        let b = (new ElementsRegister.Button())
+        let b = new ElementsRegister.Button()
             .SetVisibility(true)
             .SetWidth(constants.connectionPointRadius)
             .SetHeight(constants.connectionPointRadius);
+
+        if (OnDown) {
+            b.SetOnDown(OnDown);
+        }
+
+        if (OnMove) {
+            b.SetOnMove(OnMove);
+        }
+
+        if (OnUp) {
+            b.SetOnUp(OnUp);
+        }
 
         b.Coords.GetX = x;
         b.Coords.GetY = y;
@@ -72,10 +84,35 @@ function Buttons() {
 
         buttons.push(b);
 
+        return b;
     };
 
     this.ClearButtons = () => {
         buttons = [];
+    };
+
+    this.FindButton = (x, y) => {
+
+        let items = this.GetSelectableItems();
+
+        for (let index in items) {
+
+            let btns = items[index].GetButtons();
+
+            for (let i in btns) {
+                if (
+                    btns[i].Coords.GetX() - constants.activeSpaceAround <= x &&
+                    btns[i].Coords.GetY() - constants.activeSpaceAround <= y &&
+                    btns[i].Coords.GetX() + btns[i].GetWidth() + constants.activeSpaceAround >= x &&
+                    btns[i].Coords.GetY() + btns[i].GetWidth() + constants.activeSpaceAround >= y) {
+
+                    return btns[i];
+                }
+            }
+
+        }
+
+        return null;
     };
 
 

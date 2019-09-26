@@ -10,6 +10,7 @@ import Names from "../attributes/names";
 import Connectors from "../attributes/connectors";
 import Move from "../actions/move";
 import Resize from "../actions/resize";
+import Click from "../actions/click";
 import Selection from "../actions/selection";
 
 function BasicSet(config) {
