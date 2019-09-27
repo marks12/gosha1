@@ -67,6 +67,17 @@ function Connectors(config) {
         let cps = [];
 
         for (let i = 0; i < connectorPoints.length; i++) {
+            cps.push(connectorPoints[i]);
+        }
+
+        return cps;
+    };
+
+    this.GetVisibleConnectorPoints = () => {
+
+        let cps = [];
+
+        for (let i = 0; i < connectorPoints.length; i++) {
             if (connectorPoints[i].GetVisibility()) {
                 cps.push(connectorPoints[i]);
             }
