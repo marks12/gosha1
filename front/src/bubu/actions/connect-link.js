@@ -36,26 +36,60 @@ function ConnectLink() {
     };
 
     function getNearPoint(clickCoordsX, clickCoordsY, points) {
-        return undefined;
+
+        let minDx = 2200000000;
+        let nearpoint = null;
+
+        for (let i in points) {
+
+            let dx = points[i].Coords.GetX() - clickCoordsX;
+            let dy = points[i].Coords.GetY() - clickCoordsY;
+
+            let vectorLen = Math.sqrt((dx*dx) + (dy*dy));
+
+            if (vectorLen < minDx) {
+                minDx = vectorLen;
+                nearpoint = points[i];
+            }
+        }
+
+        return nearpoint;
     }
 
     function setNearSourcePoint(root, sItem, clickCoordsX, clickCoordsY) {
 
         let source = sItem.GetLinkSourcePoint();
-        let sourceBlock = root.GetItemById(source.GetParentId())
+        let sourceBlock = root.GetItemById(source.GetParentId());
         let points = sourceBlock.GetConnectorPoints();
-
-        console.log('points', points);
-        console.log('----------');
 
         let p = getNearPoint(clickCoordsX, clickCoordsY, points);
 
-        if (p.GetId() !== source.GetId()) {
-            sItem.SetLinkSourcePoint(p);
-            source.SetVisibility(false);
+        if (! p) {
+            return false;
         }
 
-        console.log('----------');
+        if (p.GetId() !== source.GetId()) {
+            sItem.SetLinkSourcePoint(p);
+            p.SetVisibility(true);
+        }
+
+    }
+
+    function setNearDestinationPoint(root, sItem, destinationBlock, sourcePointX, sourcePointY) {
+
+        let points = destinationBlock.GetConnectorPoints();
+        let dstPoint = destinationBlock.GetLinkDestinationPoint();
+
+        let p = getNearPoint(sourcePointX, sourcePointY, points);
+
+        if (! p) {
+            return false;
+        }
+
+        if (! dstPoint || p.GetId() !== dstPoint.GetId()) {
+            sItem.SetLinkDestinationPoint(p);
+            p.SetVisibility(true);
+        }
     }
 }
 
