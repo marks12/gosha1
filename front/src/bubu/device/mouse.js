@@ -163,12 +163,8 @@ function Mouse(config) {
                     }
 
                     if (IsMiddleButtton(event)) {
-
                         moveCoords(items[i])
-
                     } else {
-
-
                         if (items[i].GetOnMove()) {
 
                             let m = items[i].GetOnMove();
@@ -205,7 +201,6 @@ function Mouse(config) {
                 event.pageY = event.clientY +
                     (doc && doc.scrollTop  || body && body.scrollTop  || 0) -
                     (doc && doc.clientTop  || body && body.clientTop  || 0 );
-
             }
 
             if (event.pageX === 0 && event.pageY === 0 && onMoveX !== 0 && onMoveY !==0) {

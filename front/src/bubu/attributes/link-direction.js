@@ -14,6 +14,7 @@ function LinkDirection(config) {
     };
 
     this.SetLinkDestinationCoords = (x, y) => {
+        
         destX = x;
         destY = y;
         return this;

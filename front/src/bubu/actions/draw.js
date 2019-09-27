@@ -207,7 +207,7 @@ function Draw(config) {
                 ctx.fillStyle = TYPES.connectionFillStyle;
                 ctx.strokeStyle = TYPES.connectionStrokeStyle;
 
-                let points = this.GetConnectorPoints();
+                let points = this.GetVisibleConnectorPoints();
 
                 for (let i=0;i<points.length;i++) {
                     if (points[i].GetVisibility()) {
