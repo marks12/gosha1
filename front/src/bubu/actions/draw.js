@@ -136,34 +136,37 @@ function Draw(config) {
             drawButtons(ctx, root);
         }
 
-        if (root) {
-            addLinks(ctx, root);
-        }
-
     };
 
     let drawButtons = (ctx, root) => {
 
-        let drawButton = (x, y, isHasArrow) => {
+        let drawButton = (button) => {
+
+            ctx.save();
+
+            let x = button.Coords.GetX();
+            let y = button.Coords.GetY();
+
+            let radius = button.GetWidth() / 2;
 
             ctx.beginPath();
-            ctx.arc(x, y, TYPES.buttonRadius, 0, 2 * Math.PI, false);
+            ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
             ctx.strokeStyle = '#0060A6';
+            ctx.lineWidth = radius * 0.2;
             ctx.fill();
 
-            if (isHasArrow) {
-                drawArrow(ctx, x - TYPES.buttonRadius + 5, y, x + TYPES.buttonRadius - 5, y, TYPES.arrowTypeSimple)
-            }
+            drawArrow(ctx, x - radius + radius*0.2 , y, x + radius - radius*0.3, y, TYPES.arrowTypeSimple, TYPES.arrowTypeNone, radius);
 
             ctx.stroke();
 
+            ctx.restore();
         };
 
         let buttons = this.GetButtons();
 
         if (buttons.length) {
             for (let i=0; i< buttons.length; i++) {
-                drawButton(buttons[i].Coords.GetX(), buttons[i].Coords.GetY(), true);
+                drawButton(buttons[i]);
             }
         }
 
@@ -175,17 +178,6 @@ function Draw(config) {
             ctx.fillStyle = "#000000";
             ctx.font = "10px Arial";
             ctx.fillText(this.GetText(), this.Coords.GetX(), this.Coords.GetY() + this.GetHeight() / 2);
-        }
-    };
-
-    let addLinks = (ctx, root) => {
-
-        let links = root.GetLinks();
-
-        for (let i=0; i < links.length; i++) {
-
-            let link = links[i];
-            console.log('link', link);
         }
     };
 
@@ -270,10 +262,12 @@ function Draw(config) {
         }
     }
 
-    function drawArrow(ctx, fromx, fromy, tox, toy, arrowTypeDestination, arrowTypeSource) {
+    function drawArrow(ctx, fromx, fromy, tox, toy, arrowTypeDestination, arrowTypeSource, headLen) {
 
         //variables to be used when creating the arrow
-        let headLen = 8;
+        if (! headLen)  {
+            headLen = 20;
+        }
 
         let angle = Math.atan2(toy-fromy,tox-fromx);
 
@@ -302,11 +296,11 @@ function Draw(config) {
                 // ctx.lineTo(tox - headLen * Math.cos(angle - Math.PI/7),toy - headLen * Math.sin(angle - Math.PI/7));
 
                 //path from the side point of the arrow, to the other side point
-                ctx.lineTo(tox-headLen*Math.cos(angle+Math.PI/4),toy-headLen*Math.sin(angle+Math.PI/4));
+                ctx.lineTo(tox-headLen*Math.cos(angle+Math.PI/7),toy-headLen*Math.sin(angle+Math.PI/7));
 
                 //path from the side point back to the tip of the arrow, and then again to the opposite side point
                 ctx.lineTo(tox, toy);
-                ctx.lineTo(tox-headLen*Math.cos(angle-Math.PI/4),toy-headLen*Math.sin(angle-Math.PI/4));
+                ctx.lineTo(tox-headLen*Math.cos(angle-Math.PI/7),toy-headLen*Math.sin(angle-Math.PI/7));
 
                 break;
 

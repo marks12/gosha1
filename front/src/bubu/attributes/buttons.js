@@ -42,29 +42,65 @@ function Buttons() {
         }
     };
 
-    this.AddButton = ({positionVertical, positionHorizontal, OnDown, OnMove, OnUp}) => {
+    this.AddButton = ({positionVertical, positionHorizontal, OnDown, OnMove, OnUp, border, radius}) => {
+
+        if (border === undefined) {
+            border = false;
+        } else {
+            border = !! (border);
+        }
+
+        if (! radius) {
+            border = constants.buttonRadius;
+        } else {
+            border = radius * 1;
+        }
 
         let x = () => {console.error('wrong x getter');};
         let y = () => {console.error('wrong y getter');};
 
         let item = this;
 
-        if (positionHorizontal === constants.right) {
-            x = () => {return item.Coords.GetX() + item.GetWidth() - constants.spaceBetween};
-        } else {
-            x = () => {return item.Coords.GetX() + constants.spaceBetween};
+        switch (positionHorizontal) {
+
+            case constants.center:
+                x = () => {return item.Coords.GetX() + item.GetWidth() / 2};
+                break;
+
+            case constants.right:
+                x = () => {return item.Coords.GetX() + item.GetWidth() - constants.spaceBetween};
+                break;
+
+            default:
+                x = () => {return item.Coords.GetX() + constants.spaceBetween};
+                break;
+
+        }
+
+        switch (positionVertical) {
+
+            case constants.center:
+                y = () => {return item.Coords.GetY() + item.GetHeight() / 2};
+                break;
+
+            case constants.top:
+                y = () => {return item.Coords.GetY() + constants.spaceBetween};
+                break;
+
+            default:
+                y = () => {return item.Coords.GetY() + item.GetHeight() - constants.spaceBetween};
+                break;
+
         }
 
         if (positionVertical === constants.top) {
-            y = () => {return item.Coords.GetY() + constants.spaceBetween};
         } else {
-            y = () => {return item.Coords.GetY() + item.GetHeight() - constants.spaceBetween};
         }
 
         let b = new ElementsRegister.Button()
             .SetVisibility(true)
-            .SetWidth(constants.connectionPointRadius)
-            .SetHeight(constants.connectionPointRadius);
+            .SetWidth(radius)
+            .SetHeight(radius);
 
         if (OnDown) {
             b.SetOnDown(OnDown);
@@ -80,7 +116,6 @@ function Buttons() {
 
         b.Coords.GetX = x;
         b.Coords.GetY = y;
-
 
         buttons.push(b);
 

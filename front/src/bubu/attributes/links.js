@@ -15,9 +15,6 @@ function Links(config) {
         this.SetSelectedItem(link);
     };
 
-    this.GetLinks = () => {
-        return [];
-    };
 }
 
 export default Links;
