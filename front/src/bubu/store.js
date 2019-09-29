@@ -26,6 +26,8 @@ function Store(config) {
         item.AddButton({
             positionVertical: constants.bottom,
             positionHorizontal: constants.right,
+            border: true,
+            radius: 20,
             OnDown: (root, clickCoordsX, clickCoordsY) => {
 
                 let point = item.GetConnectorPointByIndex(1);

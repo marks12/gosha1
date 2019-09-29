@@ -29,17 +29,34 @@ function LinkDirection(config) {
     };
 
     this.ClearLinkDestinationPoint = () => {
+
+        if (destinationPoint) {
+            destinationPoint.ClearAssignLinkDestination();
+        }
+
         destinationPoint = null;
         return this;
     };
 
     this.ClearLinkSourcePoint = () => {
+
+        if (sourcePoint) {
+            sourcePoint.ClearAssignLinkSource();
+        }
+
         sourcePoint = null;
         return this;
     };
 
     this.SetLinkDestinationPoint = (point) => {
+
+        if (destinationPoint) {
+            destinationPoint.ClearAssignLinkDestination(this.GetId());
+        }
+
         destinationPoint = point;
+        point.SetAssignLinkDestination(this.GetId());
+
         return this;
     };
 
@@ -47,7 +64,10 @@ function LinkDirection(config) {
 
         if (sourcePoint && sourcePoint.GetId() !== point.GetId()) {
             sourcePoint.SetVisibility(false);
+            sourcePoint.ClearAssignLinkSource();
         }
+
+        point.SetAssignLinkSource(this.GetId());
 
         sourcePoint = point;
         return this;

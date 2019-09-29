@@ -24,9 +24,9 @@ function ConnectLink() {
 
         sItem.SetLinkDestinationCoords(clickCoordsX, clickCoordsY);
 
-        let point = root.GetConnectorPoint(clickCoordsX, clickCoordsY);
+        let point = root.GetNearConnectorPoint(clickCoordsX, clickCoordsY, sItem.GetLinkSourcePoint());
 
-        if (point && sItem.GetId() !== point.GetParentId()) {
+        if (point && sItem.GetId() !== point.GetParentId() && point.GetId() !== sItem.GetLinkSourcePoint().GetId()) {
             sItem.SetLinkDestinationPoint(point);
         } else {
             sItem.ClearLinkDestinationPoint();
@@ -72,7 +72,6 @@ function ConnectLink() {
             sItem.SetLinkSourcePoint(p);
             p.SetVisibility(true);
         }
-
     }
 
     function setNearDestinationPoint(root, sItem, destinationBlock, sourcePointX, sourcePointY) {
