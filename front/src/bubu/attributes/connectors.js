@@ -103,33 +103,46 @@ function Connectors(config) {
         return false;
     };
 
-    this.GetConnectorPoint = (x, y) => {
+    this.GetNearConnectorPoint = (x, y, sourceConnectorPoint) => {
 
-        let items = this.GetSelectableItems();
+        let item = this.GetFirstElementByCoordinates(x, y);
 
-        for (let index in items) {
-
-            if (! items[index].GetConnectorPoints) {
-                continue;
-            }
-
-            let connectorPoints = items[index].GetConnectorPoints();
-
-            for (let i = 0; i < connectorPoints.length; i++) {
-
-                let itemX1 = connectorPoints[i].Coords.GetX() - (connectorPoints[i].GetWidth() + constants.activeSpaceAround);
-                let itemX2 = connectorPoints[i].Coords.GetX() + (connectorPoints[i].GetWidth() + constants.activeSpaceAround);
-                let itemY1 = connectorPoints[i].Coords.GetY() - (connectorPoints[i].GetHeight() + constants.activeSpaceAround);
-                let itemY2 = connectorPoints[i].Coords.GetY() + (connectorPoints[i].GetHeight() + constants.activeSpaceAround);
-
-                if (x >= itemX1 && x <= itemX2 && y >= itemY1 && y <= itemY2) {
-
-                    return connectorPoints[i];
-                }
-            }
+        if (! item || ! item.GetConnectorPoints) {
+            return false;
         }
 
-        return false;
+        let connectorPoints = item.GetConnectorPoints();
+
+
+        let minDx = 2200000000;
+        let nearpoint = null;
+
+        for (let i = 0; i < connectorPoints.length; i++) {
+
+            let dx = connectorPoints[i].Coords.GetX() - sourceConnectorPoint.Coords.GetX();
+            let dy = connectorPoints[i].Coords.GetY() - sourceConnectorPoint.Coords.GetY();
+
+            let vectorLen = Math.sqrt((dx*dx) + (dy*dy));
+
+            if (vectorLen < minDx) {
+                minDx = vectorLen;
+                nearpoint = connectorPoints[i];
+            }
+
+        }
+
+        return nearpoint;
+    };
+
+    this.ReConnectPoints = () => {
+
+        let cp = this.GetConnectorPoints();
+
+        for (let i in cp) {
+            console.log('cp', i, cp[i].GetAssignedLinkSource());
+            console.log('cp', i, cp[i].GetAssignedLinkDestination());
+        }
+
     };
 }
 
