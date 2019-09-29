@@ -1,6 +1,7 @@
 import Coordinates from "../attributes/coordinates";
 import {IsRightButton} from "../common";
 import {IsMiddleButtton} from "../common";
+import {TYPES} from "../constants";
 
 function Mouse(config) {
 
@@ -84,9 +85,27 @@ function Mouse(config) {
                 return false;
             }
 
+            let current = self.GetSelectedItem();
+
             isDown = false;
             self.RemoveMultiSelection();
             self.ClearSelectedItem();
+
+
+            if (current && current.GetType) {
+
+                switch (current.GetType()) {
+
+                    case TYPES.link:
+
+                        if (! current.GetLinkDestinationPoint()) {
+                            self.RemoveItem(current);
+                        }
+
+                        break;
+                }
+            }
+
             self.Render();
         };
 
@@ -100,18 +119,16 @@ function Mouse(config) {
             let newX = self.GetCanvasX(event.pageX) - self.GetSelectedItemOffsetX();
             let newY = self.GetCanvasY(event.pageY) - self.GetSelectedItemOffsetY();
 
-            // check connection point
-            let button = self.FindButton(self.GetCanvasX(event.pageX), self.GetCanvasY(event.pageY));
-            if (button && button.OnMove) {
-                button.OnMove(self, clickCoordsX, clickCoordsY);
-                return true;
+            let sItem = self.GetSelectedItem();
+
+            if (sItem && ! IsMiddleButtton(event) && sItem.GetConnectorPoints().length) {
+                sItem.ReConnectPoints();
             }
 
-            let sItem = self.GetSelectedItem();
-            
             if (self.Mouse.IsDown() && (sItem || IsMiddleButtton(event))) {
 
                 if (sItem) {
+
 
                     if (sItem.GetOnMove()) {
 
@@ -122,6 +139,7 @@ function Mouse(config) {
 
                         sItem.Coords.SetX(newX);
                         sItem.Coords.SetY(newY);
+
                     }
                 }
 

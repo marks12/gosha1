@@ -69,6 +69,7 @@ export const TYPES = {
 
     top: "top",
     bottom: "bottom",
+    center: "center",
     left: "left",
     right: "right",
 
