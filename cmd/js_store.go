@@ -107,7 +107,7 @@ const {entity} = {
             state.{Entity} = data;
         },
         set{Entity}__List(state, data) {
-            state.{Entity}__List = data;
+            state.{Entity}__List = data || [];
         },
         clear{Entity}(state) {
             state.{Entity} = new {Entity}();
