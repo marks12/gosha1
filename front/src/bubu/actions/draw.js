@@ -24,6 +24,10 @@ function Draw(config) {
                 } else {
                     ctx.strokeStyle = this.GetColorDefault();
                 }
+
+                ctx.strokeStyle = this.GetFillColorDefault();
+
+                ctx.fill();
                 ctx.stroke();
                 break;
 
