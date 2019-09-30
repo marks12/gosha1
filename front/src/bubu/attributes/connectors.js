@@ -134,6 +134,7 @@ function Connectors(config) {
         return nearpoint;
     };
 
+    // TODO Баг во время сближения точек соурса и назначения. Линк перескакивает и точка соурса становится = точкой назначения
     this.ReConnectPoints = (root) => {
 
         let cp = this.GetConnectorPoints();
