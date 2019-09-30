@@ -99,6 +99,7 @@ function Mouse(config) {
                     case TYPES.link:
 
                         if (! current.GetLinkDestinationPoint()) {
+                            current.GetLinkSourcePoint().SetVisibility(false);
                             self.RemoveItem(current);
                         }
 
@@ -122,7 +123,7 @@ function Mouse(config) {
             let sItem = self.GetSelectedItem();
 
             if (sItem && ! IsMiddleButtton(event) && sItem.GetConnectorPoints().length) {
-                sItem.ReConnectPoints();
+                sItem.ReConnectPoints(self);
             }
 
             if (self.Mouse.IsDown() && (sItem || IsMiddleButtton(event))) {
