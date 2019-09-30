@@ -6,6 +6,7 @@ function Draw(config) {
 
     this.draw = (ctx, root) => {
 
+
         let W = this.GetWidth();
         let H = this.GetHeight();
         let lineWidth = TYPES.lineWidth;
@@ -24,11 +25,11 @@ function Draw(config) {
                 } else {
                     ctx.strokeStyle = this.GetColorDefault();
                 }
-
-                ctx.strokeStyle = this.GetFillColorDefault();
-
-                ctx.fill();
                 ctx.stroke();
+
+                ctx.fillStyle = this.GetFillColorDefault();
+                ctx.fill();
+
                 break;
 
             case TYPES.condition:
@@ -36,14 +37,13 @@ function Draw(config) {
                 let curX = X + W / 2;
                 let curY = Y;
 
+
                 ctx.beginPath();
                 ctx.moveTo(curX, curY);
                 ctx.lineTo(curX + W / 2, curY + H / 2);
                 ctx.lineTo(curX, curY + H + (lineWidth / 2) - 1);
                 ctx.lineTo(curX - W / 2, curY + H / 2);
                 ctx.lineTo(curX + lineWidth / 2 + lineWidth / 5, curY);
-
-                addText(ctx);
 
                 if (this.IsSelected()) {
                     ctx.strokeStyle = 'red';
@@ -54,6 +54,11 @@ function Draw(config) {
                 ctx.lineWidth = lineWidth * 1.3;
                 ctx.stroke();
                 ctx.lineWidth = lineWidth;
+
+                ctx.fillStyle = this.GetFillColorDefault();
+                ctx.fill();
+
+                addText(ctx);
 
                 break;
 

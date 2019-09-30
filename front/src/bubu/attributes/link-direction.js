@@ -62,7 +62,7 @@ function LinkDirection(config) {
 
     this.SetLinkSourcePoint = (point) => {
 
-        if (sourcePoint && sourcePoint.GetId() !== point.GetId()) {
+        if (sourcePoint && sourcePoint.GetId && sourcePoint.GetId() !== point.GetId()) {
             sourcePoint.SetVisibility(false);
             sourcePoint.ClearAssignLinkSource();
         }
