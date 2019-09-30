@@ -14,6 +14,8 @@ function Keyboard(config) {
 
         this.Keyup = (event) => {
 
+            console.log('event', event);
+
         };
 
     }

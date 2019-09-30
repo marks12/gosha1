@@ -253,6 +253,25 @@ function Store(config) {
         return null;
     };
 
+    this.FindFirstElementByCoordinates = (x, y) => {
+
+        let Items = this.GetSelectableItems();
+
+        for (let i in Items) {
+
+            let x1 = Items[i].Coords.GetX();
+            let x2 = x1 + Items[i].GetWidth();
+
+            let y1 = Items[i].Coords.GetY();
+            let y2 = y1 + Items[i].GetHeight();
+
+            if (x >= x1 && x <= x2 && y >= y1 && y <= y2) {
+                return Items[i];
+            }
+        }
+        return null;
+    };
+
     this.SelectItemByCoordinates = (x, y) => {
         let item = this.GetFirstElementByCoordinates(x, y);
         if (! item) {
