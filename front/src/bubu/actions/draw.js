@@ -18,8 +18,10 @@ function Draw(config) {
         switch (this.GetType()) {
 
             case TYPES.task:
+
+
                 drawRoundRect(ctx, X, Y, W, H, TYPES.cornerRadius, false, true);
-                addText(ctx);
+
                 if (this.IsSelected()) {
                     ctx.strokeStyle = 'red';
                 } else {
@@ -29,6 +31,8 @@ function Draw(config) {
 
                 ctx.fillStyle = this.GetFillColorDefault();
                 ctx.fill();
+
+                addText(ctx);
 
                 break;
 
