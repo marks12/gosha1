@@ -6,7 +6,6 @@ function Draw(config) {
 
     this.draw = (ctx, root) => {
 
-
         let W = this.GetWidth();
         let H = this.GetHeight();
         let lineWidth = TYPES.lineWidth;
@@ -18,7 +17,6 @@ function Draw(config) {
         switch (this.GetType()) {
 
             case TYPES.task:
-
 
                 drawRoundRect(ctx, X, Y, W, H, TYPES.cornerRadius, false, true);
 
