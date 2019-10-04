@@ -134,8 +134,7 @@ function Connectors(config) {
         return nearpoint;
     };
 
-    // TODO Баг во время сближения точек соурса и назначения. Линк перескакивает и точка соурса становится = точкой назначения
-    this.ReConnectPoints = (root) => {
+    this.ReConnectPoints = (root, isNotCallLinked) => {
 
         let cp = this.GetConnectorPoints();
 
@@ -159,15 +158,10 @@ function Connectors(config) {
 
                 let destElement = root.GetItemById(dpForSp.GetParentId());
 
-                if (destElement.GetId() === this.GetId()) {
-                    continue;
-                }
-
                 let newSrcPoint = root.GetNearConnectorPoint(x, y, dpForSp);
                 let oldSrcPoint = link.GetLinkSourcePoint();
 
                 link.SetLinkSourcePoint(newSrcPoint);
-
 
                 let newDstPoint = root.GetNearConnectorPoint(destElement.Coords.GetX(), destElement.Coords.GetY(), newSrcPoint);
 
@@ -175,7 +169,10 @@ function Connectors(config) {
                     link.SetLinkDestinationPoint(newDstPoint);
                 } else {
                     link.SetLinkSourcePoint(oldSrcPoint);
-                    continue;
+                }
+
+                if (! isNotCallLinked) {
+                    destElement.ReConnectPoints(root, true);
                 }
             }
 
@@ -184,10 +181,6 @@ function Connectors(config) {
                 let link = root.GetItemById(dp);
                 let spForDp = link.GetLinkSourcePoint();
                 let sourceElement = root.GetItemById(spForDp.GetParentId());
-
-                if (sourceElement.GetId() === this.GetId()) {
-                    continue;
-                }
 
                 let newDstPoint = root.GetNearConnectorPoint(x, y, spForDp);
                 let oldDstPoint = link.GetLinkDestinationPoint();
@@ -203,6 +196,9 @@ function Connectors(config) {
                     link.SetLinkDestinationPoint(oldDstPoint);
                 }
 
+                if (! isNotCallLinked) {
+                    sourceElement.ReConnectPoints(root, true);
+                }
             }
         }
 
