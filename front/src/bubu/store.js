@@ -45,7 +45,7 @@ function Store(config) {
         let previosGetText = item.GetText;
         item.GetText = () => {
             return " x:" + item.Coords.GetX() + "\n" +
-                " y:" + item.Coords.GetY();
+                " y:" + item.Coords.GetY() + " id:" + item.GetId();
         };
         return item;
     };
