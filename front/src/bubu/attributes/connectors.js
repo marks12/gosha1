@@ -103,16 +103,21 @@ function Connectors(config) {
         return false;
     };
 
-    this.GetNearConnectorPoint = (x, y, sourceConnectorPoint) => {
+    this.GetNearConnectorPoint = (x, y, sourceConnectorPoint, dstItem) => {
 
-        let item = this.FindFirstElementByCoordinates(x, y);
+        let item;
+
+        if (dstItem) {
+            item = dstItem;
+        } else {
+            item = this.FindFirstElementByCoordinates(x, y);
+        }
 
         if (! item || ! item.GetConnectorPoints) {
             return false;
         }
 
         let connectorPoints = item.GetConnectorPoints();
-
 
         let minDx = 2200000000;
         let nearpoint = null;
@@ -146,60 +151,40 @@ function Connectors(config) {
             let sp = cp[i].GetAssignedLinkSource();
             let dp = cp[i].GetAssignedLinkDestination();
 
-            if (sp) {
+            let resign = (id) => {
 
-                let link = root.GetItemById(sp);
+                let link = root.GetItemById(id);
 
                 if (! link) {
-                    continue;
+                    return;
                 }
 
                 let dpForSp = link.GetLinkDestinationPoint();
+                let spCp = link.GetLinkSourcePoint();
+                let dstBlock = root.GetItemById(dpForSp.GetParentId());
+                let srcBlock = root.GetItemById(spCp.GetParentId());
 
-                let destElement = root.GetItemById(dpForSp.GetParentId());
 
-                let newSrcPoint = root.GetNearConnectorPoint(x, y, dpForSp);
-                let oldSrcPoint = link.GetLinkSourcePoint();
+                let newDstPoint = root.GetNearConnectorPoint(x, y, spCp, dstBlock);
+                link.SetLinkDestinationPoint(newDstPoint);
 
+                let newSrcPoint = root.GetNearConnectorPoint(x, y, newDstPoint, srcBlock);
                 link.SetLinkSourcePoint(newSrcPoint);
 
-                let newDstPoint = root.GetNearConnectorPoint(destElement.Coords.GetX(), destElement.Coords.GetY(), newSrcPoint);
-
-                if (newSrcPoint.GetParentId() === oldSrcPoint.GetParentId()) {
-                    link.SetLinkDestinationPoint(newDstPoint);
-                } else {
-                    link.SetLinkSourcePoint(oldSrcPoint);
-                }
-
                 if (! isNotCallLinked) {
-                    destElement.ReConnectPoints(root, true);
+                    dstBlock.ReConnectPoints(root, true);
+                    srcBlock.ReConnectPoints(root, true);
                 }
+            };
+
+            if (sp) {
+                resign(sp);
             }
 
             if (dp) {
-
-                let link = root.GetItemById(dp);
-                let spForDp = link.GetLinkSourcePoint();
-                let sourceElement = root.GetItemById(spForDp.GetParentId());
-
-                let newDstPoint = root.GetNearConnectorPoint(x, y, spForDp);
-                let oldDstPoint = link.GetLinkDestinationPoint();
-
-                link.SetLinkDestinationPoint(newDstPoint);
-                // try to find source point
-
-                let newSrcPoint = root.GetNearConnectorPoint(sourceElement.Coords.GetX(), sourceElement.Coords.GetY(), newDstPoint);
-
-                if (newDstPoint.GetParentId() === oldDstPoint.GetParentId()) {
-                    link.SetLinkSourcePoint(newSrcPoint);
-                } else {
-                    link.SetLinkDestinationPoint(oldDstPoint);
-                }
-
-                if (! isNotCallLinked) {
-                    sourceElement.ReConnectPoints(root, true);
-                }
+                resign(dp);
             }
+
         }
 
     };
