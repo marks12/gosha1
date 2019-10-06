@@ -1,3 +1,5 @@
+import {TYPES as constants} from '../constants';
+
 function Coordinates(config) {
 
     let X = config && config.Coords && typeof config.Coords.X === "number" ? config.Coords.X : 1;
@@ -7,6 +9,22 @@ function Coordinates(config) {
     let PreviousY = 1;
 
     let self = this;
+
+    let roundCoord = (x) => {
+
+        if (self.GetType) {
+            switch (self.GetType()) {
+
+                case constants.task:
+                case constants.condition:
+                    return Math.round(x / constants.roundCoords) * constants.roundCoords;
+                    break;
+            }
+        }
+
+
+        return x;
+    };
 
     this.Coords = {
         /**
@@ -29,8 +47,12 @@ function Coordinates(config) {
          */
         GetPreviousY () {return PreviousY},
 
-        SetX (x) {X = x; return self},
-        SetY (y) {Y = y; return self},
+        SetX (x) {
+            X = roundCoord(x); return self
+        },
+        SetY (y) {
+            Y = roundCoord(y); return self
+        },
         AddX (x) {X = PreviousX + x; return self},
         AddY (y) {Y = PreviousY + y; return self},
         SavePrevious () {

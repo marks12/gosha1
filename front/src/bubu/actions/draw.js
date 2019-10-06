@@ -186,8 +186,8 @@ function Draw(config) {
     let addText = (ctx) => {
 
         if (this.GetText().length) {
-            ctx.fillStyle = "#000000";
-            ctx.font = "10px Arial";
+            ctx.fillStyle = TYPES.fontColor;
+            ctx.font = TYPES.fontStyle;
             ctx.fillText(this.GetText(), this.Coords.GetX(), this.Coords.GetY() + this.GetHeight() / 2);
         }
     };

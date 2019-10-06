@@ -63,6 +63,7 @@ export const TYPES = {
     connectionPointRadius: connectionPointRadius,
     cornerRadius: 5,
     activeSpaceAround: connectionPointRadius * 4,
+    roundCoords: 20,
 
     connectionFillStyle: "#eee",
     connectionStrokeStyle: "#999",
@@ -72,6 +73,11 @@ export const TYPES = {
     center: "center",
     left: "left",
     right: "right",
+
+    // font
+
+    fontColor: "#00569B",
+    fontStyle: "14px Arial",
 
     currentTheme: {
         primaryFill: egyptianTheme.primaryFill,
