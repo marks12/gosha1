@@ -12,10 +12,27 @@ function Keyboard(config) {
 
     function KeyboardDevice() {
 
-        this.Keyup = (event) => {
+        this.Keypress = (event) => {
 
-            console.log('event', event);
+            if (event.key === "Delete") {
+                let items = self.GetSelectedItems();
+                for (let i in items) {
 
+                    let del = items[i].GetOnDelete();
+
+                    if (del) {
+                        del(event);
+                    }
+
+                    self.RemoveItem(items[i]);
+                }
+
+                self.Render();
+
+                console.log(self.GetItems());
+            }
+
+            event.preventDefault();
         };
 
     }
