@@ -1,13 +1,13 @@
 function CollectionItem() {
 
-    let index = 0;
+    let side = 'left';
 
-    this.GetIndex = () => {
-        return index;
+    this.GetSide = () => {
+        return side;
     };
 
-    this.SetIndex = (i) => {
-        index = i;
+    this.SetIndex = (s) => {
+        side = s;
         return this;
     };
 }

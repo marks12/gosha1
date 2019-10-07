@@ -1,3 +1,5 @@
+import {TYPES} from "../constants";
+
 function SelectItem() {
 
     let offsetX = 0;
@@ -44,6 +46,18 @@ function SelectItem() {
 
         for (let i in items) {
             items[i].HideConnectors();
+        }
+    };
+
+    this.ClearMusltiSelection = () => {
+
+        let items = this.GetItems();
+
+        for (let i in items) {
+
+            if (items[i].GetType() === TYPES.multiselection) {
+                this.RemoveItem(items[i]);
+            }
         }
     };
 }

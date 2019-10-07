@@ -26,6 +26,8 @@ function Mouse(config) {
 
         this.Down = (event) => {
 
+            self.ClearMusltiSelection();
+
             event = this.AssignCoordinates(event);
 
             if (event.altKey) {
@@ -99,7 +101,7 @@ function Mouse(config) {
                     case TYPES.link:
 
                         if (! current.GetLinkDestinationPoint()) {
-                            current.GetLinkSourcePoint().SetVisibility(false);
+                            current.GetLinkSourcePoint().SetVisibility(false).ClearAssignLinkSource();
                             self.RemoveItem(current);
                         }
 
@@ -129,18 +131,14 @@ function Mouse(config) {
             if (self.Mouse.IsDown() && (sItem || IsMiddleButtton(event))) {
 
                 if (sItem) {
-
-
                     if (sItem.GetOnMove()) {
 
                         let m = sItem.GetOnMove();
                         return m.Run(newX, newY, sItem, self, event);
 
                     } else {
-
                         sItem.Coords.SetX(newX);
                         sItem.Coords.SetY(newY);
-
                     }
                 }
 

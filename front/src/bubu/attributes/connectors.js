@@ -19,34 +19,34 @@ function Connectors(config) {
         return isShow;
     };
 
-    this.AddConnectorPoint = (index, isVisible) => {
+    this.AddConnectorPoint = (side, isVisible) => {
 
         let x = () => {console.error('wrong x getter');};
         let y = () => {console.error('wrong y getter');};
 
         let item = this;
 
-        switch (index) {
-            case 0:
+        switch (side) {
+            case 'top':
                 x = () => {return item.Coords.GetX() + item.GetWidth() / 2};
                 y = () => {return item.Coords.GetY()};
                 break;
-            case 1:
+            case 'right':
                 x = () => {return item.Coords.GetX() + item.GetWidth()};
                 y = () => {return item.Coords.GetY() + item.GetHeight() / 2};
                 break;
-            case 2:
+            case 'bottom':
                 x = () => {return item.Coords.GetX() + item.GetWidth() / 2};
                 y = () => {return item.Coords.GetY() + item.GetHeight()};
                 break;
-            case 3:
+            case 'left':
                 x = () => {return item.Coords.GetX()};
                 y = () => {return item.Coords.GetY() + item.GetHeight() / 2};
                 break;
         }
 
         let cp = new ElementsRegister.ConnectorPoint()
-            .SetIndex(index)
+            .SetIndex(side)
             .SetVisibility(isVisible)
             .SetWidth(constants.connectionPointRadius)
             .SetHeight(constants.connectionPointRadius)
@@ -133,7 +133,6 @@ function Connectors(config) {
                 minDx = vectorLen;
                 nearpoint = connectorPoints[i];
             }
-
         }
 
         return nearpoint;
