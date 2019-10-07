@@ -63,7 +63,7 @@ export const TYPES = {
     connectionPointRadius: connectionPointRadius,
     cornerRadius: 5,
     activeSpaceAround: connectionPointRadius * 4,
-    roundCoords: 20,
+    roundCoords: 1,
 
     connectionFillStyle: "#eee",
     connectionStrokeStyle: "#999",
