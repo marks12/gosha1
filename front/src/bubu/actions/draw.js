@@ -21,7 +21,7 @@ function Draw(config) {
                 drawRoundRect(ctx, X, Y, W, H, TYPES.cornerRadius, false, true);
 
                 if (this.IsSelected()) {
-                    ctx.strokeStyle = 'red';
+                    ctx.strokeStyle = TYPES.currentTheme.primaryContrast;
                 } else {
                     ctx.strokeStyle = this.GetColorDefault();
                 }
@@ -48,7 +48,7 @@ function Draw(config) {
                 ctx.lineTo(curX + lineWidth / 2 + lineWidth / 5, curY);
 
                 if (this.IsSelected()) {
-                    ctx.strokeStyle = 'red';
+                    ctx.strokeStyle = TYPES.currentTheme.primaryContrast;
                 } else {
                     ctx.strokeStyle = this.GetColorDefault();
                 }
@@ -86,7 +86,7 @@ function Draw(config) {
                 ctx.lineTo(X, Y + H);
                 ctx.lineTo(X, Y);
 
-                ctx.strokeStyle = '#d80010';
+                ctx.strokeStyle = TYPES.currentTheme.secondaryContrast;
 
                 ctx.stroke();
 
@@ -162,8 +162,9 @@ function Draw(config) {
 
             ctx.beginPath();
             ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
-            ctx.strokeStyle = '#0060A6';
+            ctx.strokeStyle = TYPES.currentTheme.primaryStroke;
             ctx.lineWidth = radius * 0.2;
+            ctx.fillStyle = TYPES.currentTheme.primaryFill;
             ctx.fill();
 
             drawArrow(ctx, x - radius + radius*0.2 , y, x + radius - radius*0.3, y, TYPES.arrowTypeSimple, TYPES.arrowTypeNone, radius);
