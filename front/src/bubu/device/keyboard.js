@@ -22,10 +22,12 @@ function Keyboard(config) {
 
                     if (del) {
                         del(event);
+                    } else {
+                        self.RemoveItem(items[i]);
                     }
-
-                    self.RemoveItem(items[i]);
                 }
+
+                self.RemoveBrokenLinks();
 
                 self.Render();
 

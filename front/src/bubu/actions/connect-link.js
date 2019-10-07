@@ -27,6 +27,7 @@ function ConnectLink() {
         let point = root.GetNearConnectorPoint(clickCoordsX, clickCoordsY, sItem.GetLinkSourcePoint());
 
         if (point && sItem.GetId() !== point.GetParentId() && point.GetId() !== sItem.GetLinkSourcePoint().GetId()) {
+
             sItem.SetLinkDestinationPoint(point);
         } else {
             sItem.ClearLinkDestinationPoint();
@@ -73,23 +74,23 @@ function ConnectLink() {
             p.SetVisibility(true);
         }
     }
-
-    function setNearDestinationPoint(root, sItem, destinationBlock, sourcePointX, sourcePointY) {
-
-        let points = destinationBlock.GetConnectorPoints();
-        let dstPoint = destinationBlock.GetLinkDestinationPoint();
-
-        let p = getNearPoint(sourcePointX, sourcePointY, points);
-
-        if (! p) {
-            return false;
-        }
-
-        if (! dstPoint || p.GetId() !== dstPoint.GetId()) {
-            sItem.SetLinkDestinationPoint(p);
-            p.SetVisibility(true);
-        }
-    }
+    //
+    // function setNearDestinationPoint(root, sItem, destinationBlock, sourcePointX, sourcePointY) {
+    //
+    //     let points = destinationBlock.GetConnectorPoints();
+    //     let dstPoint = destinationBlock.GetLinkDestinationPoint();
+    //
+    //     let p = getNearPoint(sourcePointX, sourcePointY, points);
+    //
+    //     if (! p) {
+    //         return false;
+    //     }
+    //
+    //     if (! dstPoint || p.GetId() !== dstPoint.GetId()) {
+    //         sItem.SetLinkDestinationPoint(p);
+    //         p.SetVisibility(true);
+    //     }
+    // }
 }
 
 export default ConnectLink;

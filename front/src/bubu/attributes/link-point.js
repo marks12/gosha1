@@ -12,6 +12,11 @@ function LinkPoint(config) {
     }
 
     this.SetAssignLinkDestination = (linkId) => {
+
+        if (linkDestinationId !== null && linkDestinationId !== linkId) {
+            console.log('need create dest point');
+        }
+
         linkDestinationId = linkId;
         return this;
     };
@@ -25,6 +30,11 @@ function LinkPoint(config) {
     };
 
     this.SetAssignLinkSource = (linkId) => {
+
+        if (linkSourceId !== null && linkSourceId !== linkId) {
+            console.log('need create source point');
+        }
+
         linkSourceId = linkId;
         return this;
     };
