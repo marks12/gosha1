@@ -20,6 +20,40 @@ function Store(config) {
         return item;
     };
 
+    let addRemover = (item) => {
+        item.SetOnDelete(() => {
+            let points = item.GetConnectorPoints();
+
+            for (let i in points) {
+
+                let src = points[i].GetAssignedLinkSource();
+                let dst = points[i].GetAssignedLinkDestination();
+                let link = null;
+
+                if (src) {
+
+                    link = this.GetItemById(src);
+                    if (link) {
+                        let dstPoint = link.GetLinkDestinationPoint();
+                        this.GetItemById(dstPoint.GetParentId()).HideConnectors();
+                    }
+                }
+
+                if (dst) {
+                    link = this.GetItemById(dst);
+                    if (link) {
+                        let srcPoint = link.GetLinkSourcePoint();
+                        this.GetItemById(srcPoint.GetParentId()).HideConnectors();
+                    }
+                }
+
+                if (link) {
+                    this.RemoveItem(link);
+                }
+            }
+        })
+    };
+
     let addButtons = (item) => {
 
         // create links btn
@@ -104,6 +138,7 @@ function Store(config) {
                 return false;
         }
 
+        addRemover(item);
         addPoints(item);
         addButtons(item);
         resetGetText(item);
@@ -114,6 +149,10 @@ function Store(config) {
     };
 
     this.RemoveItem = (element) => {
+
+        if (! element) {
+            return;
+        }
 
         for (let i in Items) {
             if (Items[i].GetId() === element.GetId()) {
