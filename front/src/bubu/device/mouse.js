@@ -185,17 +185,15 @@ function Mouse(config) {
                         moveCoords(items[i])
                     } else {
                         if (items[i].GetOnMove()) {
-
                             let m = items[i].GetOnMove();
                             m.Run(newX, newY, self, items[i]);
-
                         } else {
                             updateCoords(items[i])
                         }
                     }
                 }
             } else {
-                self.ShowSrcConnectors(self.GetCanvasX(event.pageX), self.GetCanvasY(event.pageY));
+                // self.ShowSrcConnectors(self.GetCanvasX(event.pageX), self.GetCanvasY(event.pageY));
                 self.ShowElementButtons(self.GetCanvasX(event.pageX), self.GetCanvasY(event.pageY));
             }
 
