@@ -48,7 +48,11 @@ function Canvas(canvasElementId) {
         return this.Zero;
     };
 
-    window.addEventListener("resize", this.UpdateCanvas);
+    window.addEventListener("resize", () => {
+        setTimeout( () => {
+            this.UpdateCanvas();
+        });
+    });
 
     this.SetCtx(canvas.getContext('2d'));
 
@@ -65,8 +69,7 @@ function Canvas(canvasElementId) {
     canvas.addEventListener("mousewheel", wheel);
     canvas.addEventListener("MozMousePixelScroll", wheel);
 
-    canvas.addEventListener("keyup", self.Keyboard.Keyup);
-    canvas.addEventListener("keydown", self.Keyboard.keydown);
+    document.addEventListener("keypress", self.Keyboard.Keypress);
 
     this.GetCanvas = () => {
         return this.canvas;
