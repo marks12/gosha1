@@ -1,5 +1,6 @@
 import ElementsRegister from "../elements-register";
 import ConnectLink from "../actions/connect-link";
+import {TYPES} from "../constants";
 
 function Links(config) {
 
@@ -15,6 +16,28 @@ function Links(config) {
         this.SetSelectedItem(link);
     };
 
+    this.RemoveBrokenLinks = () => {
+
+        let items = this.GetItems();
+
+        for (let i in items) {
+
+            if (items[i].GetType() === TYPES.link) {
+
+                let ps = items[i].GetLinkSourcePoint();
+                let pd = items[i].GetLinkDestinationPoint();
+
+                if (ps && ! this.GetItemById(ps.GetParentId())) {
+                    this.RemoveItem(items[i]);
+                    continue;
+                }
+
+                if (pd && ! this.GetItemById(pd.GetParentId())) {
+                    this.RemoveItem(items[i]);
+                }
+            }
+        }
+    };
 }
 
 export default Links;

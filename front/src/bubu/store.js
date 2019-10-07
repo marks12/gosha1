@@ -14,16 +14,18 @@ function Store(config) {
     };
 
     let addPoints = (item) => {
-        for (let i=0; i<4;i++) {
-            item.AddConnectorPoint(i, false);
-        }
+        item.AddConnectorPoint('top', false);
+        item.AddConnectorPoint('right', false);
+        item.AddConnectorPoint('bottom', false);
+        item.AddConnectorPoint('left', false);
+
         return item;
     };
 
     let addRemover = (item) => {
+
         item.SetOnDelete(() => {
             let points = item.GetConnectorPoints();
-
             for (let i in points) {
 
                 let src = points[i].GetAssignedLinkSource();
@@ -42,6 +44,7 @@ function Store(config) {
                 if (dst) {
                     link = this.GetItemById(dst);
                     if (link) {
+
                         let srcPoint = link.GetLinkSourcePoint();
                         this.GetItemById(srcPoint.GetParentId()).HideConnectors();
                     }
@@ -51,6 +54,8 @@ function Store(config) {
                     this.RemoveItem(link);
                 }
             }
+
+            this.RemoveItem(item);
         })
     };
 
