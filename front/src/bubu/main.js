@@ -27,7 +27,7 @@ function BuBu(canvasElementId, ToolboxElementId) {
     Buttons.apply(this, arguments);
 
     if (!this.GetCanvas() || !this.GetContext) {
-        console.error("Wrong canvas element Id. ELement not found or canvas.getContext function not exists");
+        console.error("Wrong canvas element Id. Element not found or canvas.getContext function not exists");
         return
     }
 
@@ -51,6 +51,7 @@ function BuBu(canvasElementId, ToolboxElementId) {
         GetSrcImageTask: this.GetSrcImageTask,
         GetSrcImageCondition: this.GetSrcImageCondition,
         UpdateCanvas: this.UpdateCanvas,
+        GetData: this.GetStore,
     };
 }
 
