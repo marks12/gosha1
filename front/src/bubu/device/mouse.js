@@ -78,6 +78,16 @@ function Mouse(config) {
                 self.CreateMultiSelection(clickCoordsX, clickCoordsY);
                 self.BlurAll();
             }
+
+            event.preventDefault();
+        };
+
+        this.Dblclick = (event) => {
+
+            self.BlurAll();
+            console.log('dblclick', event);
+
+            event.preventDefault();
         };
 
         this.Up = (event) => {
@@ -103,13 +113,14 @@ function Mouse(config) {
                         if (! current.GetLinkDestinationPoint()) {
                             current.GetLinkSourcePoint().SetVisibility(false).ClearAssignLinkSource();
                             self.RemoveItem(current);
+                            self.ClearSelectedItem();
                         }
-
                         break;
                 }
             }
 
             self.Render();
+            event.preventDefault();
         };
 
         this.Move = (event) => {
