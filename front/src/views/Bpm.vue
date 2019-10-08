@@ -4,6 +4,7 @@
             <VSet vertical>
                 <VHead>Элементы</VHead>
                 <div id="BubuToolbox"></div>
+                <VButton @click="getData" text="Save"></VButton>
             </VSet>
         </WorkSpace>
         <WorkSpace noIndent>
@@ -56,6 +57,11 @@
             drop: function(event) {
                 this.bubu.DropElement(event)
             },
+            getData: function () {
+                let data = this.bubu.GetData();
+
+                console.log('data', data);
+            }
         },
     }
 </script>

@@ -324,6 +324,10 @@ function Store(config) {
         this.SetSelectedItem(item);
         return item;
     };
+
+    this.GetStore = () => {
+        return JSON.stringify(Items);
+    };
 }
 
 export default Store;
