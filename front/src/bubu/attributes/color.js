@@ -1,8 +1,9 @@
+import {TYPES} from "../constants";
+
 function Color(config) {
 
-    let defaultColor = '#6e6e6e';
-    let fillColor = '#fff';
-
+    let defaultColor = TYPES.currentTheme.primaryStroke;
+    let fillColor = TYPES.currentTheme.primaryFill;
     let color = config && config.Color ? config.Color : defaultColor;
 
     this.GetColor = () => {return color};
