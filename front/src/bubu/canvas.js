@@ -60,6 +60,7 @@ function Canvas(canvasElementId) {
     canvas.addEventListener("mousemove", mover);
     canvas.addEventListener("dragover", mover);
     canvas.addEventListener("mouseup", up);
+    canvas.addEventListener("dblclick", dblclick);
     canvas.addEventListener("mouseout", (event) => {
         this.Mouse.Up(event);
         this.Render();
@@ -88,6 +89,13 @@ function Canvas(canvasElementId) {
     function up(event) {
 
         self.Mouse.Up(event);
+        self.Render();
+
+    }
+
+    function dblclick(event) {
+
+        self.Mouse.Dblclick(event);
         self.Render();
 
     }
