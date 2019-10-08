@@ -1,6 +1,6 @@
-function Id() {
+function Id(config) {
 
-    let Id = generateUUID();
+    let Id = config && config.id ? config.id : generateUUID();
 
     function generateUUID() { // Public Domain/MIT
         let d = new Date().getTime();//Timestamp

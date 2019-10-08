@@ -1,10 +1,9 @@
 import ElementsRegister from '../elements-register'
-import {TYPES as constants, TYPES as Const} from "../constants";
+import {TYPES as constants} from "../constants";
 
-function Buttons() {
+function Buttons(config) {
 
     let buttons = [];
-
     let isShowButtons = false;
 
     this.IsShowButtons = () => {
