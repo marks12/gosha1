@@ -1,8 +1,8 @@
 import {TYPES as types} from "../constants";
 
-function LinkArrow() {
+function LinkArrow(config) {
 
-    let type = types.arrowTypeSimple;
+    let type = config && config.LinkArrowType ? config.LinkArrowType : types.arrowTypeSimple;
 
     this.SetLinkArrowType = (t) => {
         type = t;
