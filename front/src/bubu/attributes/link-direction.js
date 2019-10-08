@@ -1,7 +1,20 @@
+import {TYPES as types} from "../constants";
+
 function LinkDirection(config) {
 
+
     let destinationPoint = null;
+
+    if (config && config.destinationPointId && this.GetItemById(config.destinationPointId)) {
+        destinationPoint = this.GetItemById(config.destinationPointId);
+    }
+
     let sourcePoint = null;
+
+    if (config && config.sourcePointId && this.GetItemById(config.sourcePointId)) {
+        destinationPoint = this.GetItemById(config.sourcePointId);
+    }
+
     let destX = 0;
     let destY = 0;
 

@@ -1,3 +1,4 @@
+import ToJson from "../actions/tojson";
 import Id from "../attributes/id";
 import Coordinates from "../attributes/coordinates";
 import Draw from "../actions/draw";
@@ -28,6 +29,7 @@ function BasicSet(config) {
     Connectors.apply(this, arguments);
     Visibility.apply(this, arguments);
     Buttons.apply(this, arguments);
+    ToJson.apply(this, arguments);
 
     return this;
 }

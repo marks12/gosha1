@@ -1,6 +1,11 @@
-function LinkLine() {
+function LinkLine(config) {
 
     let isSource = true;
+
+    if (config && !!(config.linkLineIsSource) !== isSource) {
+        isSource = !!(config.linkLineIsSource);
+    }
+
     let isDestination = !isSource;
 
     this.MarkAsSource = () => {
