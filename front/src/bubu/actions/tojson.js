@@ -4,32 +4,32 @@ function ToJson() {
 
     this.toJSON = () => {
 
-        let btns = this.GetButtons();
+        // let btns = this.GetButtons();
+        //
+        // if (btns && btns.length) {
+        //     obj.Buttons = btns;
+        // }
 
-        if (btns && btns.length) {
-            obj.buttons = btns;
+        obj.IsShowButtons = this.IsShowButtons();
+
+        obj.Color = this.GetColor();
+        if (! obj.Color) {
+            delete obj.Color;
         }
 
-        obj.isShowButtons = this.IsShowButtons();
-
-        obj.color = this.GetColor();
-        if (! obj.color) {
-            delete obj.color;
+        obj.Name = this.GetName();
+        if (! obj.Name) {
+            delete obj.Name;
         }
 
-        obj.name = this.GetName();
-        if (! obj.name) {
-            delete obj.name;
+        obj.Description = this.GetDescription();
+        if (! obj.Description) {
+            delete obj.Description;
         }
 
-        obj.description = this.GetDescription();
-        if (! obj.description) {
-            delete obj.description;
-        }
-
-        obj.connectorPoints = this.GetConnectorPoints();
-        if (! obj.connectorPoints.length) {
-            delete obj.connectorPoints;
+        obj.ConnectorPoints = this.GetConnectorPoints();
+        if (! obj.ConnectorPoints.length) {
+            delete obj.ConnectorPoints;
         }
 
         obj.Coords = {
@@ -37,7 +37,7 @@ function ToJson() {
             Y: this.Coords.GetY(),
         };
 
-        obj.id = this.GetId();
+        obj.Id = this.GetId();
 
         if (this.GetLinkArrowType) {
             obj.LinkArrowType = this.GetLinkArrowType();
@@ -45,37 +45,37 @@ function ToJson() {
 
         if (this.GetLinkDestinationPoint) {
             let p = this.GetLinkDestinationPoint();
-            obj.destinationPointId = p ? p : null;
+            obj.DestinationPointId = p ? p.GetId() : null;
 
-            if (! obj.destinationPointId) {
-                delete obj.destinationPointId;
+            if (! obj.DestinationPointId) {
+                delete obj.DestinationPointId;
             }
         }
 
         if (this.GetLinkSourcePoint) {
             let p = this.GetLinkSourcePoint();
-            obj.sourcePointId = p ? p : null;
+            obj.SourcePointId = p ? p.GetId() : null;
 
-            if (! obj.sourcePointId) {
-                delete obj.sourcePointId;
+            if (! obj.SourcePointId) {
+                delete obj.SourcePointId;
             }
         }
 
         if (this.IsSource) {
-            obj.linkLineIsSource = this.IsSource();
+            obj.LinkLineIsSource = this.IsSource();
         }
 
         if (this.GetAssignedLinkDestination) {
-            obj.linkDestinationId = this.GetAssignedLinkDestination();
-            if (! obj.linkDestinationId) {
-                delete obj.linkDestinationId;
+            obj.LinkDestinationId = this.GetAssignedLinkDestination();
+            if (! obj.LinkDestinationId) {
+                delete obj.LinkDestinationId;
             }
         }
 
         if (this.GetAssignedLinkSource) {
-            obj.linkSourceId = this.GetAssignedLinkSource();
-            if (! obj.linkSourceId) {
-                delete obj.linkSourceId;
+            obj.LinkSourceId = this.GetAssignedLinkSource();
+            if (! obj.LinkSourceId) {
+                delete obj.LinkSourceId;
             }
         }
 

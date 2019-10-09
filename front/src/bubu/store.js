@@ -327,9 +327,9 @@ function Store(config) {
 
     this.GetStore = () => {
         return JSON.parse(JSON.stringify({
-            items: Items,
-            scale: this.GetScale(),
-            zeroCoords: {
+            Items: Object.values(Items),
+            Scale: this.GetScale(),
+            ZeroCoords: {
                 X: this.Zero.Coords.GetX(),
                 Y: this.Zero.Coords.GetY(),
             },
