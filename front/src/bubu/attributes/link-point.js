@@ -2,8 +2,8 @@ import {TYPES as types} from "../constants";
 
 function LinkPoint(config) {
 
-    let linkDestinationId = config && config.linkDestinationId ? config.linkDestinationId : null;
-    let linkSourceId = config && config.linkSourceId ? config.linkSourceId : null;
+    let linkDestinationId = config && config.LinkDestinationId ? config.LinkDestinationId : null;
+    let linkSourceId = config && config.LinkSourceId ? config.LinkSourceId : null;
 
     if (config && config.LinkSourceId) {
         linkSourceId = config.LinkSourceId;

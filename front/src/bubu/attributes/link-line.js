@@ -2,8 +2,8 @@ function LinkLine(config) {
 
     let isSource = true;
 
-    if (config && !!(config.linkLineIsSource) !== isSource) {
-        isSource = !!(config.linkLineIsSource);
+    if (config && !!(config.LinkLineIsSource) !== isSource) {
+        isSource = !!(config.LinkLineIsSource);
     }
 
     let isDestination = !isSource;

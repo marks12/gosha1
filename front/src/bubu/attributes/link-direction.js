@@ -5,14 +5,14 @@ function LinkDirection(config) {
 
     let destinationPoint = null;
 
-    if (config && config.destinationPointId && this.GetItemById(config.destinationPointId)) {
-        destinationPoint = this.GetItemById(config.destinationPointId);
+    if (config && config.DestinationPointId && this.GetItemById(config.DestinationPointId)) {
+        destinationPoint = this.GetItemById(config.DestinationPointId);
     }
 
     let sourcePoint = null;
 
-    if (config && config.sourcePointId && this.GetItemById(config.sourcePointId)) {
-        destinationPoint = this.GetItemById(config.sourcePointId);
+    if (config && config.SourcePointId && this.GetItemById(config.SourcePointId)) {
+        destinationPoint = this.GetItemById(config.SourcePointId);
     }
 
     let destX = 0;

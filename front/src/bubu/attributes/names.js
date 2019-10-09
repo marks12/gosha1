@@ -1,7 +1,7 @@
 function Names(config) {
 
-    let Name = config && config.name && config.name.length ? config.name : "";
-    let Description = config && config.description && config.description.length ? config.description : "";
+    let Name = config && config.Name && config.Name.length ? config.Name : "";
+    let Description = config && config.Description && config.Description.length ? config.Description : "";
 
     this.GetName = () => {return Name};
     this.SetName = (name) => {Name = name; return this;};
