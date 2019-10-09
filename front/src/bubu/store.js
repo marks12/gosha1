@@ -326,14 +326,14 @@ function Store(config) {
     };
 
     this.GetStore = () => {
-        return JSON.stringify({
+        return JSON.parse(JSON.stringify({
             items: Items,
             scale: this.GetScale(),
             zeroCoords: {
                 X: this.Zero.Coords.GetX(),
                 Y: this.Zero.Coords.GetY(),
             },
-        });
+        }));
     };
 }
 
