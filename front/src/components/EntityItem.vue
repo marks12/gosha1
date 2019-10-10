@@ -1,5 +1,5 @@
 <template>
-    <VGroup width="dyn">
+    <WorkSpace width="fit" height="fit" noBg>
         <VSet divider vertical>
             <VSet>
                 <VText :title="entityItem.Name">{{entityItem.Name}}</VText>
@@ -29,7 +29,7 @@
                 </VSpoiler>
             </VSet>
         </VSet>
-    </VGroup>
+    </WorkSpace>
 </template>
 
 <script>
@@ -40,10 +40,11 @@
     import VText from "swtui/src/components/VText";
     import VIcon from "swtui/src/components/VIcon";
     import VSign from "swtui/src/components/VSign";
+    import WorkSpace from "swtui/src/components/WorkSpace";
 
     export default {
         name: "EntityItem",
-        components: {VSpoiler, VBadge, VGroup, VSet, VText, VIcon, VSign},
+        components: {WorkSpace, VSpoiler, VBadge, VGroup, VSet, VText, VIcon, VSign},
 
         props: {
             entityItem: Object,

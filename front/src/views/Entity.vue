@@ -10,7 +10,7 @@
 
         <template #data>
 
-            <VSet vertical :isControl="false" v-if="entityList && entityList.length">
+            <VSet :isControl="false" v-if="entityList && entityList.length" wrap>
                 <template v-for="entityItem in entityList">
                     <EntityItem :entityItem="entityItem"></EntityItem>
                 </template>
