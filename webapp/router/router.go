@@ -10,7 +10,7 @@ import (
 	"encoding/base64"
 	"strings"
 	"regexp"
-	wa "gosha/webapp/webapp"
+	"gosha/webapp/webapp"
 )
 
 // Router - маршрутизатор
@@ -25,29 +25,28 @@ func Router() http.Handler {
 	router.HandleFunc("/api", homePage).Methods("GET")
 
 	//[ Entity ]
-	router.HandleFunc("/api/v1/entity/{id}", wa.EntityRead).Methods("GET")
-	router.HandleFunc("/api/v1/entity", wa.EntityFind).Methods("GET")
-	router.HandleFunc("/api/v1/entity", wa.EntityCreate).Methods("POST")
-	router.HandleFunc("/api/v1/entity/{id}", wa.EntityUpdate).Methods("PUT")
-	router.HandleFunc("/api/v1/entity/{id}", wa.EntityDelete).Methods("DELETE")
+	router.HandleFunc("/api/v1/entity/{id}", webapp.EntityRead).Methods("GET")
+	router.HandleFunc("/api/v1/entity", webapp.EntityFind).Methods("GET")
+	router.HandleFunc("/api/v1/entity", webapp.EntityCreate).Methods("POST")
+	router.HandleFunc("/api/v1/entity/{id}", webapp.EntityUpdate).Methods("PUT")
+	router.HandleFunc("/api/v1/entity/{id}", webapp.EntityDelete).Methods("DELETE")
 
 	//[ Settings ]
-	router.HandleFunc("/api/v1/setting/{id}", 	wa.SettingRead).Methods("GET")
-	router.HandleFunc("/api/v1/setting", 		wa.SettingFind).Methods("GET")
-	router.HandleFunc("/api/v1/setting", 		wa.SettingCreate).Methods("POST")
-	router.HandleFunc("/api/v1/setting/{id}", 	wa.SettingUpdate).Methods("PUT")
-	router.HandleFunc("/api/v1/setting/{id}", 	wa.SettingDelete).Methods("DELETE")
+	router.HandleFunc("/api/v1/setting/{id}", 	webapp.SettingRead).Methods("GET")
+	router.HandleFunc("/api/v1/setting", 		webapp.SettingFind).Methods("GET")
+	router.HandleFunc("/api/v1/setting", 		webapp.SettingCreate).Methods("POST")
+	router.HandleFunc("/api/v1/setting/{id}", 	webapp.SettingUpdate).Methods("PUT")
+	router.HandleFunc("/api/v1/setting/{id}", 	webapp.SettingDelete).Methods("DELETE")
 
 	//[ ProjectInfo ]
-	router.HandleFunc("/api/v1/projectInfo", wa.ProjectInfoFind).Methods("GET")
+	router.HandleFunc("/api/v1/projectInfo", webapp.ProjectInfoFind).Methods("GET")
 
-	//[ BuLayer ]
-    router.HandleFunc("/api/v1/buLayer",      wa.BuLayerFind).Methods("GET")
-    router.HandleFunc("/api/v1/buLayer",      wa.BuLayerCreate).Methods("POST")
-    router.HandleFunc("/api/v1/buLayer/{id}", wa.BuLayerRead).Methods("GET")
-    router.HandleFunc("/api/v1/buLayer/{id}", wa.BuLayerUpdate).Methods("PUT")
-    router.HandleFunc("/api/v1/buLayer/{id}", wa.BuLayerDelete).Methods("DELETE")
-    router.HandleFunc("/api/v1/buLayer",      wa.BuLayerFindOrCreate).Methods("PUT")
+    //[ BuLayer ]
+    router.HandleFunc("/api/v1/buLayer",           webapp.BuLayerFind).Methods("GET")
+    router.HandleFunc("/api/v1/buLayer",           webapp.BuLayerCreate).Methods("POST")
+    router.HandleFunc("/api/v1/buLayer/{id}",      webapp.BuLayerRead).Methods("GET")
+    router.HandleFunc("/api/v1/buLayer/{id}",      webapp.BuLayerUpdate).Methods("PUT")
+    router.HandleFunc("/api/v1/buLayer/{id}",      webapp.BuLayerDelete).Methods("DELETE")
 
     //router-generator here dont touch this line
 
@@ -75,7 +74,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 
 func MainPage(w http.ResponseWriter, r *http.Request) {
 
-	files := GetFiles()
+	files := webapp.GetFiles()
 	var decoded string
 
 	for _, f := range files {

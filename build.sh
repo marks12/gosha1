@@ -31,7 +31,7 @@ DOWNLOADING_DIR=./front/dist
 walk_dir "$DOWNLOADING_DIR"
 
 
-cat > ./webapp/html.go <<EOL
+cat > ./webapp/webapp/html.go <<EOL
 package webapp
 
 type HtmlFile struct {
@@ -47,13 +47,13 @@ EOL
 
 for i in "${!files[@]}"; do
 
-cat >> ./webapp/html.go << EOL
+cat >> ./webapp/webapp/html.go << EOL
     Files =  append(Files, HtmlFile{Path: "${files[i]}", Content: \`${content[i]}\`})
 EOL
 
 done
 
-cat >> ./webapp/html.go <<EOL
+cat >> ./webapp/webapp/html.go <<EOL
 
     return Files
 }

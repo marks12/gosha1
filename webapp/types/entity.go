@@ -31,6 +31,7 @@ func (unit *Entity) Validate() {
 type EntityFilter struct {
 	Cats  []int
 	model Entity
+	WithFilter bool
 	//EntityFilter remove this line for disable generator functionality
 
 	AbstractFilter
@@ -48,6 +49,8 @@ func GetEntityFilter(request *http.Request, functionType string) EntityFilter {
 		newID, _ := strconv.Atoi(id)
 		filter.Cats = append(filter.Cats, newID)
 	}
+
+	filter.WithFilter = reque
 
 	//GetEntityFilter remove this line for disable generator functionality
 
