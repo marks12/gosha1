@@ -3,7 +3,7 @@
     <WorkSpace>
         <template #header>
             <slot name="pageHeader">
-                <VHead level="h1">Entity</VHead>
+                <VHead level="h1">BuLayerFilter</VHead>
             </slot>
         </template>
 
@@ -18,15 +18,15 @@
             
                     <tbody>
                         <tr
-                            v-for="entityItem in entityList"
-                            :key="entityItem.Id"
-                            @click="selectEntityItem(entityItem)"
+                            v-for="buLayerFilterItem in buLayerFilterList"
+                            :key="buLayerFilterItem.Id"
+                            @click="selectBuLayerFilterItem(buLayerFilterItem)"
                             class="sw-table__row_can-select"
-                            :class="{'sw-table__row_is-selected': entityItem.Id === currentEntityItem.item.Id}"
+                            :class="{'sw-table__row_is-selected': buLayerFilterItem.Id === currentBuLayerFilterItem.item.Id}"
                         >
                             <td v-for="(value, key) in fields" :key="key + '-fields'">
-                                <VCheckbox v-if="isCheckbox(entityItem[key])" :checked="entityItem[key]" disabled></VCheckbox>
-                                <VText v-else>{{ entityItem[key] }}</VText>
+                                <VCheckbox v-if="isCheckbox(buLayerFilterItem[key])" :checked="buLayerFilterItem[key]" disabled></VCheckbox>
+                                <VText v-else>{{ buLayerFilterItem[key] }}</VText>
                             </td>
                         </tr>
                     </tbody>
@@ -52,25 +52,25 @@
                                 >
                                     <VLabel
                                         width="col4"
-                                        :for="`currentEntityItem${key}`"
+                                        :for="`currentBuLayerFilterItem${key}`"
                                     >{{ filed }}</VLabel>
                                     <VInput
-										v-if="isInput(currentEntityItem.item[key])"
-                                        v-model="currentEntityItem.item[key]"
+										v-if="isInput(currentBuLayerFilterItem.item[key])"
+                                        v-model="currentBuLayerFilterItem.item[key]"
                                         width="dyn"
-                                        :id="`currentEntityItem${key}`"
-                                        @input="changeCurrentEntityItem"
+                                        :id="`currentBuLayerFilterItem${key}`"
+                                        @input="changeCurrentBuLayerFilterItem"
                                     />
 									<VCheckbox
-										v-if="isCheckbox(currentEntityItem.item[key])"
-                                        v-model="currentEntityItem.item[key]"
-                                        :id="`currentEntityItem${key}`"
-										@input="changeCurrentEntityItem"
+										v-if="isCheckbox(currentBuLayerFilterItem.item[key])"
+                                        v-model="currentBuLayerFilterItem.item[key]"
+                                        :id="`currentBuLayerFilterItem${key}`"
+										@input="changeCurrentBuLayerFilterItem"
 									/>
 									
                                 </VSet>
                             </VSet>
-                            <button type="submit" :disabled="!currentEntityItem.hasChange" hidden></button>
+                            <button type="submit" :disabled="!currentBuLayerFilterItem.hasChange" hidden></button>
                         </form>
                     </template>
 
@@ -80,7 +80,7 @@
                                 @click="saveChangesSubmit"
                                 accent
                                 :text="panelSubmitButtonText"
-                                :disabled="!currentEntityItem.hasChange"
+                                :disabled="!currentBuLayerFilterItem.hasChange"
                             />
                             <VButton
                                 @click="cancelChanges"
@@ -93,7 +93,7 @@
 
             <slot name="confirmationPanel">
                 <VPanel
-                    v-if="currentEntityItem.showDeleteConfirmation"
+                    v-if="currentBuLayerFilterItem.showDeleteConfirmation"
                     modal
                     @close="closeConfirmationPanel"
                 >
@@ -130,8 +130,8 @@
                     <VButton
                         v-if="canDelete"
                         text="Удалить"
-                        :disabled="!currentEntityItem.isSelected"
-                        @click="deleteEntityItemHandler"
+                        :disabled="!currentBuLayerFilterItem.isSelected"
+                        @click="deleteBuLayerFilterItemHandler"
                     />
                 </VSet>
             </slot>
@@ -140,8 +140,8 @@
 </template>
 
 <script>
-    import entityData from "../data/EntityData";
-    import { Entity } from '../apiModel';
+    import buLayerFilterData from "../data/BuLayerFilterData";
+    import { BuLayerFilter } from '../apiModel';
     import { mapGetters, mapMutations, mapActions } from 'vuex';
     import WorkSpace from "swui/src/components/WorkSpace";
     import VHead from "swui/src/components/VHead";
@@ -155,23 +155,22 @@
     import VIcon from "swui/src/components/VIcon";
     import VSign from "swui/src/components/VSign";
     import VSelectSimple from "swui/src/components/VSelectSimple";
-    import VSelect from "swui/src/components/VSelect";
 
     export default {
-        name: 'EntityGen',
+        name: 'BuLayerFilterGen',
 
-        components: {VSelectSimple, VSign, VIcon, VButton, VPanel, VText, VInput, VLabel, VSet, VHead, WorkSpace, VCheckbox, VSelect},
+        components: {VSelectSimple, VSign, VIcon, VButton, VPanel, VText, VInput, VLabel, VSet, VHead, WorkSpace, VCheckbox},
 
         props: {
             fields: {
                 type: Object,
                 default() {
-                    const entityItem = new Entity();
+                    const buLayerFilterItem = new BuLayerFilter();
                     const fieldsObj = {};
 
-                    for (let prop in entityItem) {
+                    for (let prop in buLayerFilterItem) {
 
-                        if (entityItem.hasOwnProperty(prop)) {
+                        if (buLayerFilterItem.hasOwnProperty(prop)) {
                             fieldsObj[prop] = prop;
                         }
 
@@ -183,12 +182,12 @@
             editFields: {
                 type: Object,
                 default() {
-                    const entityItem = new Entity();
+                    const buLayerFilterItem = new BuLayerFilter();
                     const fieldsObj = {};
 
-                    for (let prop in entityItem) {
+                    for (let prop in buLayerFilterItem) {
 
-                        if (entityItem.hasOwnProperty(prop)) {
+                        if (buLayerFilterItem.hasOwnProperty(prop)) {
                             fieldsObj[prop] = prop;
                         }
 
@@ -208,17 +207,17 @@
         },
 
         data() {
-            return entityData;
+            return buLayerFilterData;
         },
 
         created() {
-            this.fillEntityFilter();
-            this.fetchEntityData();
+            this.fillBuLayerFilterFilter();
+            this.fetchBuLayerFilterData();
         },
 
         computed: {
             ...mapGetters({
-                entityList: 'getListEntity'
+                buLayerFilterList: 'getListBuLayerFilter'
             }),
             isPanelCreate() {
                 return this.panel.type === this.panel.create;
@@ -262,26 +261,26 @@
 
         methods: {
             ...mapActions([
-                'findEntity',
-                'updateEntity',
-                'deleteEntity',
-                'createEntity',
+                'findBuLayerFilter',
+                'updateBuLayerFilter',
+                'deleteBuLayerFilter',
+                'createBuLayerFilter',
             ]),
 
             ...mapMutations([
-                'addEntityItemToList',
-                'deleteEntityFromList',
-                'updateEntityById',
+                'addBuLayerFilterItemToList',
+                'deleteBuLayerFilterFromList',
+                'updateBuLayerFilterById',
             ]),
 
-            fillEntityFilter() {
-                this.entityFilter.CurrentPage = 1;
-                this.entityFilter.PerPage = 1000;
+            fillBuLayerFilterFilter() {
+                this.buLayerFilterFilter.CurrentPage = 1;
+                this.buLayerFilterFilter.PerPage = 1000;
             },
 
-            fetchEntityData() {
-                return this.findEntity({
-                    filter: this.entityFilter
+            fetchBuLayerFilterData() {
+                return this.findBuLayerFilter({
+                    filter: this.buLayerFilterFilter
                 });
             },
 
@@ -292,10 +291,10 @@
             showPanel(type) {
                 if (type === this.panel.create) {
                     this.panel.type = this.panel.create;
-                    this.clearPanelEntityItem();
+                    this.clearPanelBuLayerFilterItem();
                 } else if (type === this.panel.edit) {
                     this.panel.type = this.panel.edit;
-                    this.currentEntityItem.isSelected = true;
+                    this.currentBuLayerFilterItem.isSelected = true;
                 }
 
                 this.panel.show = true;
@@ -303,49 +302,49 @@
 
             closePanel() {
                 this.panel.show = false;
-                this.currentEntityItem.isSelected = false;
-                this.clearPanelEntityItem();
+                this.currentBuLayerFilterItem.isSelected = false;
+                this.clearPanelBuLayerFilterItem();
             },
 
-            selectEntityItem(entityItem) {
+            selectBuLayerFilterItem(buLayerFilterItem) {
                 this.showPanel(this.panel.edit);
-                this.currentEntityItem.isSelected = true;
-                Object.assign(this.currentEntityItem.item, entityItem);
+                this.currentBuLayerFilterItem.isSelected = true;
+                Object.assign(this.currentBuLayerFilterItem.item, buLayerFilterItem);
             },
 
-            changeCurrentEntityItem() {
-                this.currentEntityItem.hasChange = true;
+            changeCurrentBuLayerFilterItem() {
+                this.currentBuLayerFilterItem.hasChange = true;
             },
 
             cancelChanges() {
-                this.clearPanelEntityItem();
+                this.clearPanelBuLayerFilterItem();
                 this.closePanel();
             },
 
-            clearPanelEntityItem() {
-                this.currentEntityItem.item = new Entity();
-                this.currentEntityItem.hasChange = false;
+            clearPanelBuLayerFilterItem() {
+                this.currentBuLayerFilterItem.item = new BuLayerFilter();
+                this.currentBuLayerFilterItem.hasChange = false;
             },
 
             saveChangesSubmit() {
                 if (this.isPanelCreate) {
-                    this.createEntityItemSubmit();
+                    this.createBuLayerFilterItemSubmit();
                     return;
                 }
 
                 if (this.isPanelEdit) {
-                    this.editEntityItemSubmit();
+                    this.editBuLayerFilterItemSubmit();
                 }
             },
 
-            createEntityItemSubmit() {
-                this.createEntity({
-					data: this.currentEntityItem.item,
+            createBuLayerFilterItemSubmit() {
+                this.createBuLayerFilter({
+					data: this.currentBuLayerFilterItem.item,
                 }).then((response) => {
 
                     if (response.Model) {
-                        this.addEntityItemToList(response.Model);
-                        this.clearPanelEntityItem();
+                        this.addBuLayerFilterItemToList(response.Model);
+                        this.clearPanelBuLayerFilterItem();
                     } else {
                         console.error('Ошибка создания записи: ', response.Error);
                     }
@@ -355,17 +354,17 @@
                 });
             },
 
-            editEntityItemSubmit() {
-                if (this.currentEntityItem.hasChange) {
-                    this.updateEntity({
-                        id: this.currentEntityItem.item.Id,
-                        data: this.currentEntityItem.item,
+            editBuLayerFilterItemSubmit() {
+                if (this.currentBuLayerFilterItem.hasChange) {
+                    this.updateBuLayerFilter({
+                        id: this.currentBuLayerFilterItem.item.Id,
+                        data: this.currentBuLayerFilterItem.item,
                     }).then((response) => {
 
                         if (response.Model) {
-                            this.updateEntityById(response.Model);
-                            this.currentEntityItem.hasChange = false;
-                            this.clearPanelEntityItem();
+                            this.updateBuLayerFilterById(response.Model);
+                            this.currentBuLayerFilterItem.hasChange = false;
+                            this.clearPanelBuLayerFilterItem();
                             this.closePanel();
                         } else {
                             console.error('Ошибка изменения записи: ', response.Error);
@@ -377,23 +376,23 @@
                 }
             },
 
-            deleteEntityItemHandler() {
-                let deletedItemId = this.currentEntityItem.item.Id;
+            deleteBuLayerFilterItemHandler() {
+                let deletedItemId = this.currentBuLayerFilterItem.item.Id;
 
-                if (!this.currentEntityItem.canDelete) {
-                    this.currentEntityItem.showDeleteConfirmation = true;
+                if (!this.currentBuLayerFilterItem.canDelete) {
+                    this.currentBuLayerFilterItem.showDeleteConfirmation = true;
                     return;
                 }
 
-                this.deleteEntity({
+                this.deleteBuLayerFilter({
                     id: deletedItemId
                 }).then(response => {
 
                     if (response.IsSuccess) {
-                        this.deleteEntityFromList(deletedItemId);
-                        this.clearPanelEntityItem();
-                        this.currentEntityItem.canDelete = false;
-                        this.currentEntityItem.isSelected = false;
+                        this.deleteBuLayerFilterFromList(deletedItemId);
+                        this.clearPanelBuLayerFilterItem();
+                        this.currentBuLayerFilterItem.canDelete = false;
+                        this.currentBuLayerFilterItem.isSelected = false;
                         this.panel.show = false;
                     } else {
                         console.error('Ошибка удаления элемента: ', response.Error);
@@ -405,13 +404,13 @@
             },
 
             confirmDeleteHandler() {
-                this.currentEntityItem.showDeleteConfirmation = false;
-                this.currentEntityItem.canDelete = true;
-                this.deleteEntityItemHandler();
+                this.currentBuLayerFilterItem.showDeleteConfirmation = false;
+                this.currentBuLayerFilterItem.canDelete = true;
+                this.deleteBuLayerFilterItemHandler();
             },
 
             closeConfirmationPanel() {
-                this.currentEntityItem.showDeleteConfirmation = false;
+                this.currentBuLayerFilterItem.showDeleteConfirmation = false;
             },
         },
     }

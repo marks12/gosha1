@@ -1,4 +1,23 @@
 
+export function BuLayer() {
+
+    this.Id = 0;
+
+    return this;
+}
+
+export function BuLayerFilter() {
+
+    this.Search = "";
+    this.SearchBy = [];
+    this.Order = [];
+    this.OrderDirection = [];
+    this.CurrentPage = 0;
+    this.PerPage = 0;
+
+    return this;
+}
+
 export function Field() {
 
     this.Name = "";
@@ -23,6 +42,7 @@ export function Entity() {
 export function EntityFilter() {
 
     this.Cats = [];
+    this.WithFilter = false;
     this.Search = "";
     this.SearchBy = [];
     this.Order = [];

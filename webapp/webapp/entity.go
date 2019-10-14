@@ -281,6 +281,24 @@ func logicEntityFind(filter types.EntityFilter) (result []types.Entity, totalRec
 		result = res
 	}
 
+	if ! filter.WithFilter {
+
+		filtered := []types.Entity{}
+
+		for _, entity := range res {
+
+			matched, _ := regexp.Match(`Filter`, []byte(entity.Name))
+
+			if ! matched {
+				filtered = append(filtered, entity)
+			}
+		}
+
+		result = filtered
+	} else {
+		result = res
+	}
+
 	return
 }
 
