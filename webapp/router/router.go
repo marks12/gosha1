@@ -48,6 +48,9 @@ func Router() http.Handler {
     router.HandleFunc("/api/v1/buLayer/{id}",      webapp.BuLayerUpdate).Methods("PUT")
     router.HandleFunc("/api/v1/buLayer/{id}",      webapp.BuLayerDelete).Methods("DELETE")
 
+    //[ FieldType ]
+    router.HandleFunc("/api/v1/fieldType",           webapp.FieldTypeFind).Methods("GET")
+
     //router-generator here dont touch this line
 
 	handler := cors.New(cors.Options{

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import projectInfo from "../../webapp/jstypes/store/ProjectInfo";
 import entity from "../../webapp/jstypes/store/Entity";
+import fieldType from "../../webapp/jstypes/store/FieldType";
 
 Vue.use(Vuex);
 
@@ -9,6 +10,7 @@ const store = {
     modules: {
         projectInfo,
         entity,
+        fieldType,
     },
     state: {
         version: "1.0.0", // a simple property

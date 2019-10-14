@@ -75,6 +75,26 @@ export function EntityFieldFilter() {
     return this;
 }
 
+export function FieldType() {
+
+    this.Id = 0;
+    this.Name = "";
+
+    return this;
+}
+
+export function FieldTypeFilter() {
+
+    this.Search = "";
+    this.SearchBy = [];
+    this.Order = [];
+    this.OrderDirection = [];
+    this.CurrentPage = 0;
+    this.PerPage = 0;
+
+    return this;
+}
+
 export function OrderFilter() {
 
     this.Order = [];

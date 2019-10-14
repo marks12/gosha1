@@ -32,29 +32,36 @@
                         @close="closePanel"
                 >
                     <VSet slot="header">
-                        <VHead level="h3" width="fit">{{ panelHeader }}</VHead>
-                        <VText>{{ currentEntityItem.Name }}</VText>
+                        <VHead level="h3" width="fit">{{ panelHeader }} {{ currentEntityItem.Name }}</VHead>
                     </VSet>
 
                     <template slot="content">
-                        <form @submit.prevent="saveChangesSubmit">
-                            <VSet direction="vertical" v-for="field in currentEntityItem.Fields" :key="'id-'+field.id">
-                                <VSet>
-                                    <template>
-                                        <VSign width="col3">{{field.Type}}</VSign>
-                                        <VText>{{field.Name}}</VText>
-                                    </template>
+                        <VSet vertical @submit.prevent="saveChangesSubmit">
+
+                            <VSet vertical indent-size="XS">
+                                <VSign>Entity name</VSign>
+                                <VInput v-model="currentEntityItem.Name" :disabled="currentEntityItem.Id > 0" width="dyn"></VInput>
+                            </VSet>
+
+                            <VSet vertical indent-size="XS">
+                                <VSet  indent-size="XS" direction="vertical" v-for="field in currentEntityItem.Fields" :key="'id-'+field.Name">
+                                    <VSet>
+                                        <template>
+                                            <VSign width="col3">{{field.Type}}</VSign>
+                                            <VText>{{field.Name}}</VText>
+                                        </template>
+                                    </VSet>
                                 </VSet>
                             </VSet>
 
                             <VHead level="h3" style="margin: 20px 0;">Add new field</VHead>
                             <VSet vertical>
-                                <VSet v-for="f in newFields">
-                                    <VInput v-model="f.Name" @input="updateNewFieldsList"></VInput>
-                                    <VSelect v-model="f.Type" :items="filedTypes"></VSelect>
+                                <VSet v-for="f in newFields" width="dyn">
+                                    <VInput v-model="f.Name" @input="updateNewFieldsList" width="dyn"></VInput>
+                                    <VSelect v-model="f.Type" :items="getTypes"></VSelect>
                                 </VSet>
                             </VSet>
-                        </form>
+                        </VSet>
                     </template>
 
                     <template #footer>
@@ -116,16 +123,19 @@
 </template>
 
 <script>
+
     import EntityGen from "../../../webapp/jstypes/components/EntityGen";
     import VBadge from "swtui/src/components/VBadge";
     import VSpoiler from "swtui/src/components/VSpoiler";
     import VGroup from "swtui/src/components/VGroup";
+    import VSelect from "swtui/src/components/VSelect";
     import EntityItem from "../components/EntityItem";
-    import {Entity, EntityField, EntityFilter} from "../../../webapp/jstypes/apiModel";
+    import { mapGetters, mapMutations, mapActions } from 'vuex';
+    import {Entity, EntityField, EntityFilter, FieldTypeFilter} from "../../../webapp/jstypes/apiModel";
 
     export default {
         name: "Entity",
-        components: {EntityItem, VSpoiler, VBadge, EntityGen, VGroup},
+        components: {EntityItem, VSpoiler, VBadge, EntityGen, VGroup, VSelect},
         mixins: [
             EntityGen,
         ],
@@ -137,21 +147,33 @@
                 newFields: [
                     new EntityField(),
                 ],
-                filedTypes: [
-                    "String",
-                    "Bool",
-                    "Integer",
-                ],
+                fieldTypeFilter: new FieldTypeFilter(),
             };
         },
+        created: function () {
+
+            this.fieldTypeFilter.CurrentPage = 1;
+            this.fieldTypeFilter.PerPage = 100;
+
+            this.findFieldType({
+                filter: this.fieldTypeFilter,
+            });
+
+        },
         methods: {
+            ...mapActions([
+                "findFieldType",
+            ]),
+            ...mapGetters([
+                "getListFieldType",
+            ]),
             search() {
 
                 this.entityFilter.Search = this.searchModel;
 
                 this.findEntity({
                     filter: this.entityFilter
-                })
+                });
             },
             editItem(item) {
 
@@ -179,6 +201,9 @@
                             entityItem.TypeFields.length;
                 }
             },
+            getTypes() {
+                return this.getListFieldType().map( (item)=> {return item.Name});
+            },
         },
         watch: {
             'entityFilter.WithFilter': function (newFilter) {
@@ -192,4 +217,5 @@
 </script>
 
 <style scoped>
+
 </style>

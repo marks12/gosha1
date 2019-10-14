@@ -3,7 +3,7 @@
     <WorkSpace>
         <template #header>
             <slot name="pageHeader">
-                <VHead level="h1">Entity</VHead>
+                <VHead level="h1">FieldType</VHead>
             </slot>
         </template>
 
@@ -18,15 +18,15 @@
             
                     <tbody>
                         <tr
-                            v-for="entityItem in entityList"
-                            :key="entityItem.Id"
-                            @click="selectEntityItem(entityItem)"
+                            v-for="fieldTypeItem in fieldTypeList"
+                            :key="fieldTypeItem.Id"
+                            @click="selectFieldTypeItem(fieldTypeItem)"
                             class="sw-table__row_can-select"
-                            :class="{'sw-table__row_is-selected': entityItem.Id === currentEntityItem.item.Id}"
+                            :class="{'sw-table__row_is-selected': fieldTypeItem.Id === currentFieldTypeItem.item.Id}"
                         >
                             <td v-for="(value, key) in fields" :key="key + '-fields'">
-                                <VCheckbox v-if="isCheckbox(entityItem[key])" :checked="entityItem[key]" disabled></VCheckbox>
-                                <VText v-else>{{ entityItem[key] }}</VText>
+                                <VCheckbox v-if="isCheckbox(fieldTypeItem[key])" :checked="fieldTypeItem[key]" disabled></VCheckbox>
+                                <VText v-else>{{ fieldTypeItem[key] }}</VText>
                             </td>
                         </tr>
                     </tbody>
@@ -52,25 +52,25 @@
                                 >
                                     <VLabel
                                         width="col4"
-                                        :for="`currentEntityItem${key}`"
+                                        :for="`currentFieldTypeItem${key}`"
                                     >{{ filed }}</VLabel>
                                     <VInput
-										v-if="isInput(currentEntityItem.item[key])"
-                                        v-model="currentEntityItem.item[key]"
+										v-if="isInput(currentFieldTypeItem.item[key])"
+                                        v-model="currentFieldTypeItem.item[key]"
                                         width="dyn"
-                                        :id="`currentEntityItem${key}`"
-                                        @input="changeCurrentEntityItem"
+                                        :id="`currentFieldTypeItem${key}`"
+                                        @input="changeCurrentFieldTypeItem"
                                     />
 									<VCheckbox
-										v-if="isCheckbox(currentEntityItem.item[key])"
-                                        v-model="currentEntityItem.item[key]"
-                                        :id="`currentEntityItem${key}`"
-										@input="changeCurrentEntityItem"
+										v-if="isCheckbox(currentFieldTypeItem.item[key])"
+                                        v-model="currentFieldTypeItem.item[key]"
+                                        :id="`currentFieldTypeItem${key}`"
+										@input="changeCurrentFieldTypeItem"
 									/>
 									
                                 </VSet>
                             </VSet>
-                            <button type="submit" :disabled="!currentEntityItem.hasChange" hidden></button>
+                            <button type="submit" :disabled="!currentFieldTypeItem.hasChange" hidden></button>
                         </form>
                     </template>
 
@@ -80,7 +80,7 @@
                                 @click="saveChangesSubmit"
                                 accent
                                 :text="panelSubmitButtonText"
-                                :disabled="!currentEntityItem.hasChange"
+                                :disabled="!currentFieldTypeItem.hasChange"
                             />
                             <VButton
                                 @click="cancelChanges"
@@ -93,7 +93,7 @@
 
             <slot name="confirmationPanel">
                 <VPanel
-                    v-if="currentEntityItem.showDeleteConfirmation"
+                    v-if="currentFieldTypeItem.showDeleteConfirmation"
                     modal
                     @close="closeConfirmationPanel"
                 >
@@ -130,8 +130,8 @@
                     <VButton
                         v-if="canDelete"
                         text="Удалить"
-                        :disabled="!currentEntityItem.isSelected"
-                        @click="deleteEntityItemHandler"
+                        :disabled="!currentFieldTypeItem.isSelected"
+                        @click="deleteFieldTypeItemHandler"
                     />
                 </VSet>
             </slot>
@@ -140,8 +140,8 @@
 </template>
 
 <script>
-    import entityData from "../data/EntityData";
-    import { Entity } from '../apiModel';
+    import fieldTypeData from "../data/FieldTypeData";
+    import { FieldType } from '../apiModel';
     import { mapGetters, mapMutations, mapActions } from 'vuex';
     import WorkSpace from "swui/src/components/WorkSpace";
     import VHead from "swui/src/components/VHead";
@@ -157,7 +157,7 @@
     import VSelectSimple from "swui/src/components/VSelectSimple";
 
     export default {
-        name: 'EntityGen',
+        name: 'FieldTypeGen',
 
         components: {VSelectSimple, VSign, VIcon, VButton, VPanel, VText, VInput, VLabel, VSet, VHead, WorkSpace, VCheckbox},
 
@@ -165,12 +165,12 @@
             fields: {
                 type: Object,
                 default() {
-                    const entityItem = new Entity();
+                    const fieldTypeItem = new FieldType();
                     const fieldsObj = {};
 
-                    for (let prop in entityItem) {
+                    for (let prop in fieldTypeItem) {
 
-                        if (entityItem.hasOwnProperty(prop)) {
+                        if (fieldTypeItem.hasOwnProperty(prop)) {
                             fieldsObj[prop] = prop;
                         }
 
@@ -182,12 +182,12 @@
             editFields: {
                 type: Object,
                 default() {
-                    const entityItem = new Entity();
+                    const fieldTypeItem = new FieldType();
                     const fieldsObj = {};
 
-                    for (let prop in entityItem) {
+                    for (let prop in fieldTypeItem) {
 
-                        if (entityItem.hasOwnProperty(prop)) {
+                        if (fieldTypeItem.hasOwnProperty(prop)) {
                             fieldsObj[prop] = prop;
                         }
 
@@ -207,17 +207,17 @@
         },
 
         data() {
-            return entityData;
+            return fieldTypeData;
         },
 
         created() {
-            this.fillEntityFilter();
-            this.fetchEntityData();
+            this.fillFieldTypeFilter();
+            this.fetchFieldTypeData();
         },
 
         computed: {
             ...mapGetters({
-                entityList: 'getListEntity'
+                fieldTypeList: 'getListFieldType'
             }),
             isPanelCreate() {
                 return this.panel.type === this.panel.create;
@@ -261,26 +261,26 @@
 
         methods: {
             ...mapActions([
-                'findEntity',
-                'updateEntity',
-                'deleteEntity',
-                'createEntity',
+                'findFieldType',
+                'updateFieldType',
+                'deleteFieldType',
+                'createFieldType',
             ]),
 
             ...mapMutations([
-                'addEntityItemToList',
-                'deleteEntityFromList',
-                'updateEntityById',
+                'addFieldTypeItemToList',
+                'deleteFieldTypeFromList',
+                'updateFieldTypeById',
             ]),
 
-            fillEntityFilter() {
-                this.entityFilter.CurrentPage = 1;
-                this.entityFilter.PerPage = 1000;
+            fillFieldTypeFilter() {
+                this.fieldTypeFilter.CurrentPage = 1;
+                this.fieldTypeFilter.PerPage = 1000;
             },
 
-            fetchEntityData() {
-                return this.findEntity({
-                    filter: this.entityFilter
+            fetchFieldTypeData() {
+                return this.findFieldType({
+                    filter: this.fieldTypeFilter
                 });
             },
 
@@ -291,10 +291,10 @@
             showPanel(type) {
                 if (type === this.panel.create) {
                     this.panel.type = this.panel.create;
-                    this.clearPanelEntityItem();
+                    this.clearPanelFieldTypeItem();
                 } else if (type === this.panel.edit) {
                     this.panel.type = this.panel.edit;
-                    this.currentEntityItem.isSelected = true;
+                    this.currentFieldTypeItem.isSelected = true;
                 }
 
                 this.panel.show = true;
@@ -302,49 +302,49 @@
 
             closePanel() {
                 this.panel.show = false;
-                this.currentEntityItem.isSelected = false;
-                this.clearPanelEntityItem();
+                this.currentFieldTypeItem.isSelected = false;
+                this.clearPanelFieldTypeItem();
             },
 
-            selectEntityItem(entityItem) {
+            selectFieldTypeItem(fieldTypeItem) {
                 this.showPanel(this.panel.edit);
-                this.currentEntityItem.isSelected = true;
-                Object.assign(this.currentEntityItem.item, entityItem);
+                this.currentFieldTypeItem.isSelected = true;
+                Object.assign(this.currentFieldTypeItem.item, fieldTypeItem);
             },
 
-            changeCurrentEntityItem() {
-                this.currentEntityItem.hasChange = true;
+            changeCurrentFieldTypeItem() {
+                this.currentFieldTypeItem.hasChange = true;
             },
 
             cancelChanges() {
-                this.clearPanelEntityItem();
+                this.clearPanelFieldTypeItem();
                 this.closePanel();
             },
 
-            clearPanelEntityItem() {
-                this.currentEntityItem.item = new Entity();
-                this.currentEntityItem.hasChange = false;
+            clearPanelFieldTypeItem() {
+                this.currentFieldTypeItem.item = new FieldType();
+                this.currentFieldTypeItem.hasChange = false;
             },
 
             saveChangesSubmit() {
                 if (this.isPanelCreate) {
-                    this.createEntityItemSubmit();
+                    this.createFieldTypeItemSubmit();
                     return;
                 }
 
                 if (this.isPanelEdit) {
-                    this.editEntityItemSubmit();
+                    this.editFieldTypeItemSubmit();
                 }
             },
 
-            createEntityItemSubmit() {
-                this.createEntity({
-					data: this.currentEntityItem.item,
+            createFieldTypeItemSubmit() {
+                this.createFieldType({
+					data: this.currentFieldTypeItem.item,
                 }).then((response) => {
 
                     if (response.Model) {
-                        this.addEntityItemToList(response.Model);
-                        this.clearPanelEntityItem();
+                        this.addFieldTypeItemToList(response.Model);
+                        this.clearPanelFieldTypeItem();
                     } else {
                         console.error('Ошибка создания записи: ', response.Error);
                     }
@@ -354,17 +354,17 @@
                 });
             },
 
-            editEntityItemSubmit() {
-                if (this.currentEntityItem.hasChange) {
-                    this.updateEntity({
-                        id: this.currentEntityItem.item.Id,
-                        data: this.currentEntityItem.item,
+            editFieldTypeItemSubmit() {
+                if (this.currentFieldTypeItem.hasChange) {
+                    this.updateFieldType({
+                        id: this.currentFieldTypeItem.item.Id,
+                        data: this.currentFieldTypeItem.item,
                     }).then((response) => {
 
                         if (response.Model) {
-                            this.updateEntityById(response.Model);
-                            this.currentEntityItem.hasChange = false;
-                            this.clearPanelEntityItem();
+                            this.updateFieldTypeById(response.Model);
+                            this.currentFieldTypeItem.hasChange = false;
+                            this.clearPanelFieldTypeItem();
                             this.closePanel();
                         } else {
                             console.error('Ошибка изменения записи: ', response.Error);
@@ -376,23 +376,23 @@
                 }
             },
 
-            deleteEntityItemHandler() {
-                let deletedItemId = this.currentEntityItem.item.Id;
+            deleteFieldTypeItemHandler() {
+                let deletedItemId = this.currentFieldTypeItem.item.Id;
 
-                if (!this.currentEntityItem.canDelete) {
-                    this.currentEntityItem.showDeleteConfirmation = true;
+                if (!this.currentFieldTypeItem.canDelete) {
+                    this.currentFieldTypeItem.showDeleteConfirmation = true;
                     return;
                 }
 
-                this.deleteEntity({
+                this.deleteFieldType({
                     id: deletedItemId
                 }).then(response => {
 
                     if (response.IsSuccess) {
-                        this.deleteEntityFromList(deletedItemId);
-                        this.clearPanelEntityItem();
-                        this.currentEntityItem.canDelete = false;
-                        this.currentEntityItem.isSelected = false;
+                        this.deleteFieldTypeFromList(deletedItemId);
+                        this.clearPanelFieldTypeItem();
+                        this.currentFieldTypeItem.canDelete = false;
+                        this.currentFieldTypeItem.isSelected = false;
                         this.panel.show = false;
                     } else {
                         console.error('Ошибка удаления элемента: ', response.Error);
@@ -404,13 +404,13 @@
             },
 
             confirmDeleteHandler() {
-                this.currentEntityItem.showDeleteConfirmation = false;
-                this.currentEntityItem.canDelete = true;
-                this.deleteEntityItemHandler();
+                this.currentFieldTypeItem.showDeleteConfirmation = false;
+                this.currentFieldTypeItem.canDelete = true;
+                this.deleteFieldTypeItemHandler();
             },
 
             closeConfirmationPanel() {
-                this.currentEntityItem.showDeleteConfirmation = false;
+                this.currentFieldTypeItem.showDeleteConfirmation = false;
             },
         },
     }
