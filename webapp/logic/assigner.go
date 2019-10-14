@@ -5,7 +5,9 @@ import (
 	"gosha/webapp/types"
 )
 
+
 // add all assign functions
+
 
 func AssignBuLayerTypeFromDb(dbBuLayer dbmodels.BuLayer) types.BuLayer {
 
