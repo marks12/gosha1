@@ -50,7 +50,8 @@ func GetEntityFilter(request *http.Request, functionType string) EntityFilter {
 		filter.Cats = append(filter.Cats, newID)
 	}
 
-	filter.WithFilter = reque
+	v := request.FormValue("WithFilter")
+	filter.WithFilter = v != "false" && len(v) > 0
 
 	//GetEntityFilter remove this line for disable generator functionality
 

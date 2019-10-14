@@ -155,11 +155,12 @@
     import VIcon from "swui/src/components/VIcon";
     import VSign from "swui/src/components/VSign";
     import VSelectSimple from "swui/src/components/VSelectSimple";
+    import VSelect from "swui/src/components/VSelect";
 
     export default {
         name: 'EntityGen',
 
-        components: {VSelectSimple, VSign, VIcon, VButton, VPanel, VText, VInput, VLabel, VSet, VHead, WorkSpace, VCheckbox},
+        components: {VSelectSimple, VSign, VIcon, VButton, VPanel, VText, VInput, VLabel, VSet, VHead, WorkSpace, VCheckbox, VSelect},
 
         props: {
             fields: {

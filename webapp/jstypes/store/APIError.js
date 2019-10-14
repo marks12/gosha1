@@ -105,7 +105,7 @@ const aPIError = {
             state.APIError = data;
         },
         setAPIError__List(state, data) {
-            state.APIError__List = data;
+            state.APIError__List = data || [];
         },
         clearAPIError(state) {
             state.APIError = new APIError();

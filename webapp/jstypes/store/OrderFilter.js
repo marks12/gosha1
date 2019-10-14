@@ -105,7 +105,7 @@ const orderFilter = {
             state.OrderFilter = data;
         },
         setOrderFilter__List(state, data) {
-            state.OrderFilter__List = data;
+            state.OrderFilter__List = data || [];
         },
         clearOrderFilter(state) {
             state.OrderFilter = new OrderFilter();

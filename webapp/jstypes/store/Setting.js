@@ -105,7 +105,7 @@ const setting = {
             state.Setting = data;
         },
         setSetting__List(state, data) {
-            state.Setting__List = data;
+            state.Setting__List = data || [];
         },
         clearSetting(state) {
             state.Setting = new Setting();

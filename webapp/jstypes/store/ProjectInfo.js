@@ -105,7 +105,7 @@ const projectInfo = {
             state.ProjectInfo = data;
         },
         setProjectInfo__List(state, data) {
-            state.ProjectInfo__List = data;
+            state.ProjectInfo__List = data || [];
         },
         clearProjectInfo(state) {
             state.ProjectInfo = new ProjectInfo();
