@@ -55,7 +55,7 @@ function request(method, url, getParams, data, headerParams) {
 
     xhr.open(method, url);
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.setRequestHeader("Token", localStorage.getItem("Token"));
+    xhr.setRequestHeader("Token", localStorage.getItem("imToken"));
 
     xhr.onload = function() {
 

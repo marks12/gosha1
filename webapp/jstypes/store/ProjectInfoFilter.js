@@ -105,7 +105,7 @@ const projectInfoFilter = {
             state.ProjectInfoFilter = data;
         },
         setProjectInfoFilter__List(state, data) {
-            state.ProjectInfoFilter__List = data;
+            state.ProjectInfoFilter__List = data || [];
         },
         clearProjectInfoFilter(state) {
             state.ProjectInfoFilter = new ProjectInfoFilter();

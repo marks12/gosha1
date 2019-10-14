@@ -105,7 +105,7 @@ const aPIStatus = {
             state.APIStatus = data;
         },
         setAPIStatus__List(state, data) {
-            state.APIStatus__List = data;
+            state.APIStatus__List = data || [];
         },
         clearAPIStatus(state) {
             state.APIStatus = new APIStatus();

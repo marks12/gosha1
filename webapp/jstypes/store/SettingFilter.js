@@ -105,7 +105,7 @@ const settingFilter = {
             state.SettingFilter = data;
         },
         setSettingFilter__List(state, data) {
-            state.SettingFilter__List = data;
+            state.SettingFilter__List = data || [];
         },
         clearSettingFilter(state) {
             state.SettingFilter = new SettingFilter();

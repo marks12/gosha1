@@ -105,7 +105,7 @@ const field = {
             state.Field = data;
         },
         setField__List(state, data) {
-            state.Field__List = data;
+            state.Field__List = data || [];
         },
         clearField(state) {
             state.Field = new Field();
