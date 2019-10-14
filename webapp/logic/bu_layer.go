@@ -71,8 +71,8 @@ func BuLayerCreate(filter types.BuLayerFilter)  (data types.BuLayer, err error) 
 	//
     //query := core.Db
 	//
-    typeModel := filter.GetBuLayerModel()
-    dbModel := AssignBuLayerDbFromType(typeModel)
+	//typeModel := filter.GetBuLayerModel()
+    //dbModel := AssignBuLayerDbFromType(typeModel)
     //dbModel.ID = 0
 	//
     //dbModel.Validate()
@@ -92,7 +92,9 @@ func BuLayerCreate(filter types.BuLayerFilter)  (data types.BuLayer, err error) 
     //    return types.BuLayer{}, errors.New("cant create BuLayer")
     //}
 
-    return AssignBuLayerTypeFromDb(dbModel), nil
+    //return AssignBuLayerTypeFromDb(dbModel), nil
+
+    return
 }
 
 func BuLayerRead(filter types.BuLayerFilter)  (data types.BuLayer, err error) {
@@ -121,10 +123,10 @@ func BuLayerUpdate(filter types.BuLayerFilter)  (data types.BuLayer, err error) 
         return
     }
 
-    newModel := filter.GetBuLayerModel()
+    //newModel := filter.GetBuLayerModel()
 
-    updateModel := AssignBuLayerDbFromType(newModel)
-    updateModel.ID = existsModel.Id
+    //updateModel := AssignBuLayerDbFromType(newModel)
+    //updateModel.ID = existsModel.Id
 
     //updateModel.Some = newModel.Some
 
@@ -144,7 +146,7 @@ func BuLayerUpdate(filter types.BuLayerFilter)  (data types.BuLayer, err error) 
     //    return
     //}
 
-    data = AssignBuLayerTypeFromDb(updateModel)
+    //data = AssignBuLayerTypeFromDb(updateModel)
     return
 }
 
