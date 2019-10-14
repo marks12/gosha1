@@ -19,6 +19,8 @@ import (
     "reflect"
     "gosha/mode"
     "unicode"
+    "gosha/types"
+    "gosha/settings"
 )
 
 type RegularFind struct {
@@ -59,6 +61,38 @@ func (s ByCase) Less(i, j int) bool {
     }
 
     return false
+}
+
+func IsDirExists(path string) bool {
+
+    if _, err := os.Stat(path); !os.IsNotExist(err) {
+        return true
+    }
+
+    return false
+}
+
+func IsAllDirExists(dirs[]string) bool {
+
+    for _, d := range dirs {
+        if ! IsDirExists(d) {
+            return false
+        }
+    }
+    return true
+}
+
+func GetCurrentApp() types.App {
+
+    app := types.App{}
+
+    if IsAllDirExists(settings.UsualDefaultStructure) {
+        app.IsAppExists = true
+    } else {
+        app.IsAppExists = false
+    }
+
+    return app
 }
 
 func GetOsArgument(arg string) (RegularFind, error) {
@@ -127,9 +161,15 @@ func getCurrentDirName() string {
 
 func CreateFile(file, content string, c *ishell.Context) (err error) {
 
+    var choice int
+
     if _, err := os.Stat(file); !os.IsNotExist(err) {
 
-        choice := c.MultiChoice([]string{"No", "Yes"}, "file " + file + " already exists, rewrite?")
+        if mode.IsInteractive() {
+            choice = c.MultiChoice([]string{"No", "Yes"}, "file " + file + " already exists, rewrite?")
+        } else {
+            choice = 1
+        }
 
         if choice == 0 {
             return errors.New("Cancel rewrite file")

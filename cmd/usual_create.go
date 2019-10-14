@@ -4,26 +4,38 @@ import (
     "gopkg.in/abiosoft/ishell.v2"
     "github.com/fatih/color"
     "os"
+    "gosha/mode"
 )
 
 func usualAppInit(c *ishell.Context) {
+
+    var choice int
 
     yellow := color.New(color.FgYellow).SprintFunc()
     green := color.New(color.FgGreen).SprintFunc()
 
     c.Println(yellow("Hello we start creating new usual app in current directory"))
 
-    choice := c.MultiChoice([]string{
-        "No",
-        "Yes",
-    }, "Continue ?")
+
+    if mode.IsNonInteractive() {
+
+        choice = 1
+
+    } else {
+        choice = c.MultiChoice([]string{
+            "No",
+            "Yes",
+        }, "Continue ?")
+    }
+
 
     switch choice {
 
-        // mscore
         case 1:
 
-            c.Println(green("Creating app structure"))
+            if mode.IsInteractive() {
+                c.Println(green("Creating app structure"))
+            }
 
             usualCreate(c)
             usualAuthAdd(c)
