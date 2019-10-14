@@ -17,3 +17,15 @@ var SupportedFieldDataTypes = []string{
 	"uuid.UUID",
 	"*int",
 }
+
+var UsualDefaultStructure = []string{
+	"logic",
+	"mdl",
+	"ms",
+	"router",
+	"services",
+	"settings",
+	"static",
+	"types",
+	"webapp",
+}

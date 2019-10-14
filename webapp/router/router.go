@@ -51,6 +51,11 @@ func Router() http.Handler {
     //[ FieldType ]
     router.HandleFunc("/api/v1/fieldType",           webapp.FieldTypeFind).Methods("GET")
 
+    //[ CurrentApp ]
+    router.HandleFunc("/api/v1/currentApp",           webapp.CurrentAppFind).Methods("GET")
+    router.HandleFunc("/api/v1/currentApp",           webapp.CurrentAppCreate).Methods("POST")
+    router.HandleFunc("/api/v1/currentApp/{id}",      webapp.CurrentAppRead).Methods("GET")
+
     //router-generator here dont touch this line
 
 	handler := cors.New(cors.Options{
