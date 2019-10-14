@@ -10,6 +10,7 @@ import (
 var shell = ishell.New()
 
 const SET_APP_TYPE = "setAppType"
+const GET_APP_INFO = "getAppInfo"
 const GENERATE_TYPES_JS = "gen:types:js"
 
 func RunShell() {
@@ -40,6 +41,13 @@ func RunShell() {
         Help: "Set app type. " +
               "\n\t\t\t\tNIM: "+SET_APP_TYPE+" --type=[MsCore | MsRpcApi | Microservice | Usual]",
         Func: setAppType,
+    })
+
+    shell.AddCmd(&ishell.Cmd{
+        Name: GET_APP_INFO,
+        Help: "Get current app info. " +
+              "\n\t\t\t\tNIM: "+GET_APP_INFO,
+        Func: getAppInfo,
     })
 
     shell.AddCmd(&ishell.Cmd{

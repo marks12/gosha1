@@ -56,7 +56,7 @@
 
                             <VHead level="h3" style="margin: 20px 0;">Add new field</VHead>
                             <VSet vertical>
-                                <VSet v-for="f in newFields" width="dyn">
+                                <VSet v-for="f in newFields" width="dyn" :key="'newf-' + f.Id">
                                     <VInput v-model="f.Name" @input="updateNewFieldsList" width="dyn"></VInput>
                                     <VSelect v-model="f.Type" :items="getTypes"></VSelect>
                                 </VSet>
@@ -148,6 +148,7 @@
                     new EntityField(),
                 ],
                 fieldTypeFilter: new FieldTypeFilter(),
+                isLoading: true,
             };
         },
         created: function () {
@@ -157,6 +158,8 @@
 
             this.findFieldType({
                 filter: this.fieldTypeFilter,
+            }).then(()=>{
+                this.isLoading = false;
             });
 
         },

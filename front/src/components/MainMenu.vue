@@ -1,6 +1,7 @@
 <template>
     <VSet horizontal>
         <VSet horizontal width="dyn">
+            <VLink url="/" routerLink>Start</VLink>
             <VLink url="/entity" routerLink>Entity</VLink>
             <VLink url="/bpm" routerLink>Modeller</VLink>
         </VSet>
