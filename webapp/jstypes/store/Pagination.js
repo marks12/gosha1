@@ -105,7 +105,7 @@ const pagination = {
             state.Pagination = data;
         },
         setPagination__List(state, data) {
-            state.Pagination__List = data;
+            state.Pagination__List = data || [];
         },
         clearPagination(state) {
             state.Pagination = new Pagination();

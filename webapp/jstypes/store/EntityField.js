@@ -105,7 +105,7 @@ const entityField = {
             state.EntityField = data;
         },
         setEntityField__List(state, data) {
-            state.EntityField__List = data;
+            state.EntityField__List = data || [];
         },
         clearEntityField(state) {
             state.EntityField = new EntityField();

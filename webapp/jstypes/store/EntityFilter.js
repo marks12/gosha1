@@ -105,7 +105,7 @@ const entityFilter = {
             state.EntityFilter = data;
         },
         setEntityFilter__List(state, data) {
-            state.EntityFilter__List = data;
+            state.EntityFilter__List = data || [];
         },
         clearEntityFilter(state) {
             state.EntityFilter = new EntityFilter();
