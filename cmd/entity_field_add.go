@@ -13,6 +13,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"gosha/settings"
 )
 
 type ModelRepository struct {
@@ -389,15 +390,7 @@ func getDataType(c *ishell.Context) (dataType string, err error) {
 	var exists bool
 	var reg RegularFind
 
-	dataTypes := []string{
-		"string",
-		"int",
-		"time.Time",
-		"float",
-		"bool",
-		"uuid.UUID",
-		"*int",
-	}
+	dataTypes := settings.SupportedFieldDataTypes
 
 	if mode.IsInteractive() {
 

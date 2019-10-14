@@ -3,7 +3,7 @@
     <WorkSpace>
         <template #header>
             <slot name="pageHeader">
-                <VHead level="h1">Entity</VHead>
+                <VHead level="h1">FieldTypeFilter</VHead>
             </slot>
         </template>
 
@@ -18,15 +18,15 @@
             
                     <tbody>
                         <tr
-                            v-for="entityItem in entityList"
-                            :key="entityItem.Id"
-                            @click="selectEntityItem(entityItem)"
+                            v-for="fieldTypeFilterItem in fieldTypeFilterList"
+                            :key="fieldTypeFilterItem.Id"
+                            @click="selectFieldTypeFilterItem(fieldTypeFilterItem)"
                             class="sw-table__row_can-select"
-                            :class="{'sw-table__row_is-selected': entityItem.Id === currentEntityItem.item.Id}"
+                            :class="{'sw-table__row_is-selected': fieldTypeFilterItem.Id === currentFieldTypeFilterItem.item.Id}"
                         >
                             <td v-for="(value, key) in fields" :key="key + '-fields'">
-                                <VCheckbox v-if="isCheckbox(entityItem[key])" :checked="entityItem[key]" disabled></VCheckbox>
-                                <VText v-else>{{ entityItem[key] }}</VText>
+                                <VCheckbox v-if="isCheckbox(fieldTypeFilterItem[key])" :checked="fieldTypeFilterItem[key]" disabled></VCheckbox>
+                                <VText v-else>{{ fieldTypeFilterItem[key] }}</VText>
                             </td>
                         </tr>
                     </tbody>
@@ -52,25 +52,25 @@
                                 >
                                     <VLabel
                                         width="col4"
-                                        :for="`currentEntityItem${key}`"
+                                        :for="`currentFieldTypeFilterItem${key}`"
                                     >{{ filed }}</VLabel>
                                     <VInput
-										v-if="isInput(currentEntityItem.item[key])"
-                                        v-model="currentEntityItem.item[key]"
+										v-if="isInput(currentFieldTypeFilterItem.item[key])"
+                                        v-model="currentFieldTypeFilterItem.item[key]"
                                         width="dyn"
-                                        :id="`currentEntityItem${key}`"
-                                        @input="changeCurrentEntityItem"
+                                        :id="`currentFieldTypeFilterItem${key}`"
+                                        @input="changeCurrentFieldTypeFilterItem"
                                     />
 									<VCheckbox
-										v-if="isCheckbox(currentEntityItem.item[key])"
-                                        v-model="currentEntityItem.item[key]"
-                                        :id="`currentEntityItem${key}`"
-										@input="changeCurrentEntityItem"
+										v-if="isCheckbox(currentFieldTypeFilterItem.item[key])"
+                                        v-model="currentFieldTypeFilterItem.item[key]"
+                                        :id="`currentFieldTypeFilterItem${key}`"
+										@input="changeCurrentFieldTypeFilterItem"
 									/>
 									
                                 </VSet>
                             </VSet>
-                            <button type="submit" :disabled="!currentEntityItem.hasChange" hidden></button>
+                            <button type="submit" :disabled="!currentFieldTypeFilterItem.hasChange" hidden></button>
                         </form>
                     </template>
 
@@ -80,7 +80,7 @@
                                 @click="saveChangesSubmit"
                                 accent
                                 :text="panelSubmitButtonText"
-                                :disabled="!currentEntityItem.hasChange"
+                                :disabled="!currentFieldTypeFilterItem.hasChange"
                             />
                             <VButton
                                 @click="cancelChanges"
@@ -93,7 +93,7 @@
 
             <slot name="confirmationPanel">
                 <VPanel
-                    v-if="currentEntityItem.showDeleteConfirmation"
+                    v-if="currentFieldTypeFilterItem.showDeleteConfirmation"
                     modal
                     @close="closeConfirmationPanel"
                 >
@@ -130,8 +130,8 @@
                     <VButton
                         v-if="canDelete"
                         text="Удалить"
-                        :disabled="!currentEntityItem.isSelected"
-                        @click="deleteEntityItemHandler"
+                        :disabled="!currentFieldTypeFilterItem.isSelected"
+                        @click="deleteFieldTypeFilterItemHandler"
                     />
                 </VSet>
             </slot>
@@ -140,8 +140,8 @@
 </template>
 
 <script>
-    import entityData from "../data/EntityData";
-    import { Entity } from '../apiModel';
+    import fieldTypeFilterData from "../data/FieldTypeFilterData";
+    import { FieldTypeFilter } from '../apiModel';
     import { mapGetters, mapMutations, mapActions } from 'vuex';
     import WorkSpace from "swui/src/components/WorkSpace";
     import VHead from "swui/src/components/VHead";
@@ -157,7 +157,7 @@
     import VSelectSimple from "swui/src/components/VSelectSimple";
 
     export default {
-        name: 'EntityGen',
+        name: 'FieldTypeFilterGen',
 
         components: {VSelectSimple, VSign, VIcon, VButton, VPanel, VText, VInput, VLabel, VSet, VHead, WorkSpace, VCheckbox},
 
@@ -165,12 +165,12 @@
             fields: {
                 type: Object,
                 default() {
-                    const entityItem = new Entity();
+                    const fieldTypeFilterItem = new FieldTypeFilter();
                     const fieldsObj = {};
 
-                    for (let prop in entityItem) {
+                    for (let prop in fieldTypeFilterItem) {
 
-                        if (entityItem.hasOwnProperty(prop)) {
+                        if (fieldTypeFilterItem.hasOwnProperty(prop)) {
                             fieldsObj[prop] = prop;
                         }
 
@@ -182,12 +182,12 @@
             editFields: {
                 type: Object,
                 default() {
-                    const entityItem = new Entity();
+                    const fieldTypeFilterItem = new FieldTypeFilter();
                     const fieldsObj = {};
 
-                    for (let prop in entityItem) {
+                    for (let prop in fieldTypeFilterItem) {
 
-                        if (entityItem.hasOwnProperty(prop)) {
+                        if (fieldTypeFilterItem.hasOwnProperty(prop)) {
                             fieldsObj[prop] = prop;
                         }
 
@@ -207,17 +207,17 @@
         },
 
         data() {
-            return entityData;
+            return fieldTypeFilterData;
         },
 
         created() {
-            this.fillEntityFilter();
-            this.fetchEntityData();
+            this.fillFieldTypeFilterFilter();
+            this.fetchFieldTypeFilterData();
         },
 
         computed: {
             ...mapGetters({
-                entityList: 'getListEntity'
+                fieldTypeFilterList: 'getListFieldTypeFilter'
             }),
             isPanelCreate() {
                 return this.panel.type === this.panel.create;
@@ -261,26 +261,26 @@
 
         methods: {
             ...mapActions([
-                'findEntity',
-                'updateEntity',
-                'deleteEntity',
-                'createEntity',
+                'findFieldTypeFilter',
+                'updateFieldTypeFilter',
+                'deleteFieldTypeFilter',
+                'createFieldTypeFilter',
             ]),
 
             ...mapMutations([
-                'addEntityItemToList',
-                'deleteEntityFromList',
-                'updateEntityById',
+                'addFieldTypeFilterItemToList',
+                'deleteFieldTypeFilterFromList',
+                'updateFieldTypeFilterById',
             ]),
 
-            fillEntityFilter() {
-                this.entityFilter.CurrentPage = 1;
-                this.entityFilter.PerPage = 1000;
+            fillFieldTypeFilterFilter() {
+                this.fieldTypeFilterFilter.CurrentPage = 1;
+                this.fieldTypeFilterFilter.PerPage = 1000;
             },
 
-            fetchEntityData() {
-                return this.findEntity({
-                    filter: this.entityFilter
+            fetchFieldTypeFilterData() {
+                return this.findFieldTypeFilter({
+                    filter: this.fieldTypeFilterFilter
                 });
             },
 
@@ -291,10 +291,10 @@
             showPanel(type) {
                 if (type === this.panel.create) {
                     this.panel.type = this.panel.create;
-                    this.clearPanelEntityItem();
+                    this.clearPanelFieldTypeFilterItem();
                 } else if (type === this.panel.edit) {
                     this.panel.type = this.panel.edit;
-                    this.currentEntityItem.isSelected = true;
+                    this.currentFieldTypeFilterItem.isSelected = true;
                 }
 
                 this.panel.show = true;
@@ -302,49 +302,49 @@
 
             closePanel() {
                 this.panel.show = false;
-                this.currentEntityItem.isSelected = false;
-                this.clearPanelEntityItem();
+                this.currentFieldTypeFilterItem.isSelected = false;
+                this.clearPanelFieldTypeFilterItem();
             },
 
-            selectEntityItem(entityItem) {
+            selectFieldTypeFilterItem(fieldTypeFilterItem) {
                 this.showPanel(this.panel.edit);
-                this.currentEntityItem.isSelected = true;
-                Object.assign(this.currentEntityItem.item, entityItem);
+                this.currentFieldTypeFilterItem.isSelected = true;
+                Object.assign(this.currentFieldTypeFilterItem.item, fieldTypeFilterItem);
             },
 
-            changeCurrentEntityItem() {
-                this.currentEntityItem.hasChange = true;
+            changeCurrentFieldTypeFilterItem() {
+                this.currentFieldTypeFilterItem.hasChange = true;
             },
 
             cancelChanges() {
-                this.clearPanelEntityItem();
+                this.clearPanelFieldTypeFilterItem();
                 this.closePanel();
             },
 
-            clearPanelEntityItem() {
-                this.currentEntityItem.item = new Entity();
-                this.currentEntityItem.hasChange = false;
+            clearPanelFieldTypeFilterItem() {
+                this.currentFieldTypeFilterItem.item = new FieldTypeFilter();
+                this.currentFieldTypeFilterItem.hasChange = false;
             },
 
             saveChangesSubmit() {
                 if (this.isPanelCreate) {
-                    this.createEntityItemSubmit();
+                    this.createFieldTypeFilterItemSubmit();
                     return;
                 }
 
                 if (this.isPanelEdit) {
-                    this.editEntityItemSubmit();
+                    this.editFieldTypeFilterItemSubmit();
                 }
             },
 
-            createEntityItemSubmit() {
-                this.createEntity({
-					data: this.currentEntityItem.item,
+            createFieldTypeFilterItemSubmit() {
+                this.createFieldTypeFilter({
+					data: this.currentFieldTypeFilterItem.item,
                 }).then((response) => {
 
                     if (response.Model) {
-                        this.addEntityItemToList(response.Model);
-                        this.clearPanelEntityItem();
+                        this.addFieldTypeFilterItemToList(response.Model);
+                        this.clearPanelFieldTypeFilterItem();
                     } else {
                         console.error('Ошибка создания записи: ', response.Error);
                     }
@@ -354,17 +354,17 @@
                 });
             },
 
-            editEntityItemSubmit() {
-                if (this.currentEntityItem.hasChange) {
-                    this.updateEntity({
-                        id: this.currentEntityItem.item.Id,
-                        data: this.currentEntityItem.item,
+            editFieldTypeFilterItemSubmit() {
+                if (this.currentFieldTypeFilterItem.hasChange) {
+                    this.updateFieldTypeFilter({
+                        id: this.currentFieldTypeFilterItem.item.Id,
+                        data: this.currentFieldTypeFilterItem.item,
                     }).then((response) => {
 
                         if (response.Model) {
-                            this.updateEntityById(response.Model);
-                            this.currentEntityItem.hasChange = false;
-                            this.clearPanelEntityItem();
+                            this.updateFieldTypeFilterById(response.Model);
+                            this.currentFieldTypeFilterItem.hasChange = false;
+                            this.clearPanelFieldTypeFilterItem();
                             this.closePanel();
                         } else {
                             console.error('Ошибка изменения записи: ', response.Error);
@@ -376,23 +376,23 @@
                 }
             },
 
-            deleteEntityItemHandler() {
-                let deletedItemId = this.currentEntityItem.item.Id;
+            deleteFieldTypeFilterItemHandler() {
+                let deletedItemId = this.currentFieldTypeFilterItem.item.Id;
 
-                if (!this.currentEntityItem.canDelete) {
-                    this.currentEntityItem.showDeleteConfirmation = true;
+                if (!this.currentFieldTypeFilterItem.canDelete) {
+                    this.currentFieldTypeFilterItem.showDeleteConfirmation = true;
                     return;
                 }
 
-                this.deleteEntity({
+                this.deleteFieldTypeFilter({
                     id: deletedItemId
                 }).then(response => {
 
                     if (response.IsSuccess) {
-                        this.deleteEntityFromList(deletedItemId);
-                        this.clearPanelEntityItem();
-                        this.currentEntityItem.canDelete = false;
-                        this.currentEntityItem.isSelected = false;
+                        this.deleteFieldTypeFilterFromList(deletedItemId);
+                        this.clearPanelFieldTypeFilterItem();
+                        this.currentFieldTypeFilterItem.canDelete = false;
+                        this.currentFieldTypeFilterItem.isSelected = false;
                         this.panel.show = false;
                     } else {
                         console.error('Ошибка удаления элемента: ', response.Error);
@@ -404,13 +404,13 @@
             },
 
             confirmDeleteHandler() {
-                this.currentEntityItem.showDeleteConfirmation = false;
-                this.currentEntityItem.canDelete = true;
-                this.deleteEntityItemHandler();
+                this.currentFieldTypeFilterItem.showDeleteConfirmation = false;
+                this.currentFieldTypeFilterItem.canDelete = true;
+                this.deleteFieldTypeFilterItemHandler();
             },
 
             closeConfirmationPanel() {
-                this.currentEntityItem.showDeleteConfirmation = false;
+                this.currentFieldTypeFilterItem.showDeleteConfirmation = false;
             },
         },
     }
