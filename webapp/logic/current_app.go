@@ -4,6 +4,7 @@ import (
     "gosha/webapp/types"
     "errors"
     "gosha/cmd"
+    "os"
 )
 
 func CurrentAppFind(filter types.CurrentAppFilter)  (result []types.CurrentApp, totalRecords int, err error) {
@@ -18,6 +19,19 @@ func CurrentAppFind(filter types.CurrentAppFilter)  (result []types.CurrentApp, 
 }
 
 func CurrentAppCreate(filter types.CurrentAppFilter)  (data types.CurrentApp, err error) {
+
+    argsBak := os.Args
+    defer func(){os.Args = argsBak}()
+
+    args := []string{"", "exit", "setAppType", "--type=Usual", "usual:create"}
+
+    os.Args = args
+    cmd.RunShell()
+
+    defer func(){
+        shell := cmd.GetShell()
+        shell.Close()
+    }()
 
     return
 }

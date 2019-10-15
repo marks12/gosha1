@@ -18,6 +18,26 @@ export function BuLayerFilter() {
     return this;
 }
 
+export function CurrentApp() {
+
+    this.Id = 0;
+    this.IsValidStructure = false;
+
+    return this;
+}
+
+export function CurrentAppFilter() {
+
+    this.Search = "";
+    this.SearchBy = [];
+    this.Order = [];
+    this.OrderDirection = [];
+    this.CurrentPage = 0;
+    this.PerPage = 0;
+
+    return this;
+}
+
 export function Field() {
 
     this.Name = "";

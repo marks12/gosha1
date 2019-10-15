@@ -235,7 +235,7 @@ func setUsualAppCreate() {
     shell.AddCmd(&ishell.Cmd{
         Name: USUAL_APP_CREATE,
         Help: "Command create new usual non MS application",
-        Func: usualAppInit,
+        Func: UsualAppInit,
     })
 }
 
