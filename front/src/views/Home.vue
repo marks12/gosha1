@@ -1,7 +1,10 @@
 <template>
   <WorkSpace>
     <template #content>
-      {{data}}
+      <VHead level="h1">Start page</VHead>
+
+
+
     </template>
   </WorkSpace>
 </template>
@@ -10,6 +13,7 @@
 // @ is an alias to /src
 
 import WorkSpace from "swtui/src/components/WorkSpace";
+import VHead from "swtui/src/components/VHead";
 export default {
   name: 'home',
   data: function () {
@@ -18,6 +22,7 @@ export default {
       }
   },
   components: {
+      VHead,
       WorkSpace,
   }
 }

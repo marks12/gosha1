@@ -1,226 +1,244 @@
 package cmd
 
 import (
-    "gopkg.in/abiosoft/ishell.v2"
-    "github.com/fatih/color"
-    "strings"
+	"github.com/fatih/color"
+	"gopkg.in/abiosoft/ishell.v2"
+	"strings"
 )
 
 func usualEntityAdd(c *ishell.Context) {
 
-    yellow := color.New(color.FgYellow).SprintFunc()
-    c.Println(yellow("Start creating new entity and api"))
+	yellow := color.New(color.FgYellow).SprintFunc()
+	c.Println(yellow("Start creating new entity and api"))
 
-    entity, err := getEntity(c)
+	entity, err := getEntity(c)
 
-    if err !=nil {
-        return
-    }
+	if err != nil {
+		return
+	}
 
-    CamelCase := strings.Title(entity)
-    snakeCase := getLowerCase(entity)
-    firstLowerCase := getFirstLowerCase(entity)
+	CamelCase := strings.Title(entity)
+	snakeCase := getLowerCase(entity)
+	firstLowerCase := getFirstLowerCase(entity)
 
-    sourceFile := "./router/router.go"
-    destinationFile := "./router/router.go"
+	sourceFile := "./settings/routes.go"
+	destinationFile := "./settings/routes.go"
 
-    CopyFile(
-        sourceFile,
-        destinationFile,
-        []string{"router-generator here dont touch this line", "{Entity}", "{entity}"},
-        []string{getRouteContent(), CamelCase, firstLowerCase},
-        c)
+	CopyFile(
+		sourceFile,
+		destinationFile,
+		[]string{"\n// route-constant-generator here dont touch this line", "{Entity}", "{entity}"},
+		[]string{usualTemplateSettingsRoutesConstEntity.Content, CamelCase, firstLowerCase},
+		c)
 
-    sourceFile = "./logic/assigner.go"
-    destinationFile = "./logic/assigner.go"
+	sourceFile = "./settings/routes.go"
+	destinationFile = "./settings/routes.go"
 
-    CopyFile(
-        sourceFile,
-        destinationFile,
-        []string{"// add all assign functions", "{Entity}", "{entity}"},
-        []string{getAssignContent(), CamelCase, firstLowerCase},
-        c)
+	CopyFile(
+		sourceFile,
+		destinationFile,
+		[]string{"\n    // router-list-generator here dont touch this line", "{Entity}", "{entity}"},
+		[]string{usualTemplateSettingsRoutesListEntity.Content, CamelCase, firstLowerCase},
+		c)
 
-    sourceFile = "./webapp/" + snakeCase + ".go"
-    destinationFile = "./webapp/" + snakeCase + ".go"
+	sourceFile = "./router/router.go"
+	destinationFile = "./router/router.go"
 
-    CreateFile(sourceFile, getWebAppContent(), c)
+	CopyFile(
+		sourceFile,
+		destinationFile,
+		[]string{"router-generator here dont touch this line", "{Entity}", "{entity}"},
+		[]string{getRouteContent(), CamelCase, firstLowerCase},
+		c)
 
-    CopyFile(
-        sourceFile,
-        destinationFile,
-        []string{"{entity-name}", "{Entity}", "{entity}"},
-        []string{CamelCase, CamelCase, firstLowerCase},
-        c)
+	sourceFile = "./logic/assigner.go"
+	destinationFile = "./logic/assigner.go"
 
-    sourceFile = "./types/" + snakeCase + ".go"
-    destinationFile = "./types/" + snakeCase + ".go"
+	CopyFile(
+		sourceFile,
+		destinationFile,
+		[]string{"// add all assign functions", "{Entity}", "{entity}"},
+		[]string{getAssignContent(), CamelCase, firstLowerCase},
+		c)
 
-    CreateFile(sourceFile, getTypeContent(), c)
+	sourceFile = "./webapp/" + snakeCase + ".go"
+	destinationFile = "./webapp/" + snakeCase + ".go"
 
-    CopyFile(
-        sourceFile,
-        destinationFile,
-        []string{"{entity-name}", "{Entity}", "{entity}"},
-        []string{CamelCase, CamelCase, firstLowerCase},
-        c)
+	CreateFile(sourceFile, getWebAppContent(), c)
 
-    sourceFile = "./dbmodels/" + snakeCase + ".go"
-    destinationFile = "./dbmodels/" + snakeCase + ".go"
+	CopyFile(
+		sourceFile,
+		destinationFile,
+		[]string{"{entity-name}", "{Entity}", "{entity}"},
+		[]string{CamelCase, CamelCase, firstLowerCase},
+		c)
 
-    CreateFile(sourceFile, usualTemplateWebappEntityDbModels.Content, c)
+	sourceFile = "./types/" + snakeCase + ".go"
+	destinationFile = "./types/" + snakeCase + ".go"
 
-    CopyFile(
-        sourceFile,
-        destinationFile,
-        []string{"{entity-name}", "{Entity}", "{entity}"},
-        []string{CamelCase, CamelCase, firstLowerCase},
-        c)
+	CreateFile(sourceFile, getTypeContent(), c)
 
-    sourceFile = "./logic/" + snakeCase + ".go"
-    destinationFile = "./logic/" + snakeCase + ".go"
+	CopyFile(
+		sourceFile,
+		destinationFile,
+		[]string{"{entity-name}", "{Entity}", "{entity}"},
+		[]string{CamelCase, CamelCase, firstLowerCase},
+		c)
 
-    CreateFile(sourceFile, getLogicContent(), c)
+	sourceFile = "./dbmodels/" + snakeCase + ".go"
+	destinationFile = "./dbmodels/" + snakeCase + ".go"
 
-    CopyFile(
-        sourceFile,
-        destinationFile,
-        []string{"{entity-name}", "{Entity}", "{entity}"},
-        []string{CamelCase, CamelCase, firstLowerCase},
-        c)
+	CreateFile(sourceFile, usualTemplateWebappEntityDbModels.Content, c)
 
+	CopyFile(
+		sourceFile,
+		destinationFile,
+		[]string{"{entity-name}", "{Entity}", "{entity}"},
+		[]string{CamelCase, CamelCase, firstLowerCase},
+		c)
 
-    sourceFile = "./bootstrap/insert_data_to_db.go"
-    destinationFile = "./bootstrap/insert_data_to_db.go"
+	sourceFile = "./logic/" + snakeCase + ".go"
+	destinationFile = "./logic/" + snakeCase + ".go"
 
-    replaceFrom := `//generator insert entity`
-    replaceTo := `//generator insert entity
+	CreateFile(sourceFile, getLogicContent(), c)
+
+	CopyFile(
+		sourceFile,
+		destinationFile,
+		[]string{"{entity-name}", "{Entity}", "{entity}"},
+		[]string{CamelCase, CamelCase, firstLowerCase},
+		c)
+
+	sourceFile = "./bootstrap/insert_data_to_db.go"
+	destinationFile = "./bootstrap/insert_data_to_db.go"
+
+	replaceFrom := `//generator insert entity`
+	replaceTo := `//generator insert entity
           ` + "&dbmodels." + CamelCase + "{},"
 
-    CopyFile(
-        sourceFile,
-        destinationFile,
-        []string{replaceFrom},
-        []string{replaceTo},
-        c)
+	CopyFile(
+		sourceFile,
+		destinationFile,
+		[]string{replaceFrom},
+		[]string{replaceTo},
+		c)
 
-    c.Println("New entity " + CamelCase + " was created" )
+	c.Println("New entity " + CamelCase + " was created")
 }
 
 func getLogicContent() (c string) {
 
-    crudArgs, _ := GetOsArgument("crud")
-    crudParams := Crud{}
+	crudArgs, _ := GetOsArgument("crud")
+	crudParams := Crud{}
 
-    if len(crudArgs.StringResult) > 0 {
+	if len(crudArgs.StringResult) > 0 {
 
-        crudParams.IsFind = strings.Contains(crudArgs.StringResult, "f")
-        crudParams.IsCreate = strings.Contains(crudArgs.StringResult, "c")
-        crudParams.IsRead = strings.Contains(crudArgs.StringResult, "r")
-        crudParams.IsUpdate = strings.Contains(crudArgs.StringResult, "u")
-        crudParams.IsDelete = strings.Contains(crudArgs.StringResult, "d")
-        crudParams.IsFindOrCreate = strings.Contains(crudArgs.StringResult, "a")
-    } else {
-        crudParams = Crud{true, true, true, true, true, true}
-    }
+		crudParams.IsFind = strings.Contains(crudArgs.StringResult, "f")
+		crudParams.IsCreate = strings.Contains(crudArgs.StringResult, "c")
+		crudParams.IsRead = strings.Contains(crudArgs.StringResult, "r")
+		crudParams.IsUpdate = strings.Contains(crudArgs.StringResult, "u")
+		crudParams.IsDelete = strings.Contains(crudArgs.StringResult, "d")
+		crudParams.IsFindOrCreate = strings.Contains(crudArgs.StringResult, "a")
+	} else {
+		crudParams = Crud{true, true, true, true, true, true}
+	}
 
-    c = GetUsualTemplateLogicContent(crudParams)
-    return
+	c = GetUsualTemplateLogicContent(crudParams)
+	return
 }
-
 
 func getAssignContent() (c string) {
 
-    cfg := TypeConfig{}
+	cfg := TypeConfig{}
 
-    hasId, _ := GetOsArgument("no-id")
-    cfg.IsId = ! hasId.BoolResult
+	hasId, _ := GetOsArgument("no-id")
+	cfg.IsId = !hasId.BoolResult
 
-    c = GetUsualTemplateAssignContent(cfg)
-    return
+	c = GetUsualTemplateAssignContent(cfg)
+	return
 }
 
 func getTypeContent() (c string) {
 
-    cfg := TypeConfig{}
+	cfg := TypeConfig{}
 
-    hasId, _ := GetOsArgument("no-id")
-    cfg.IsId = ! hasId.BoolResult
+	hasId, _ := GetOsArgument("no-id")
+	cfg.IsId = !hasId.BoolResult
 
-    c = GetUsualTemplateTypeContent(cfg)
-    return
+	c = GetUsualTemplateTypeContent(cfg)
+	return
 }
 
 func getWebAppContent() (webappContent string) {
 
-    webappContent = usualTemplateWebappEntity.Content
+	webappContent = usualTemplateWebappEntity.Content
 
-    AuthcrudArgs, _ := GetOsArgument("check-auth")
-    authParams := Crud{true, true, true, true, true, true}
+	AuthcrudArgs, _ := GetOsArgument("check-auth")
+	authParams := Crud{true, true, true, true, true, true}
 
-    if len(AuthcrudArgs.StringResult) > 0 {
+	if len(AuthcrudArgs.StringResult) > 0 {
 
-        authParams.IsFind = strings.Contains(AuthcrudArgs.StringResult, "f")
-        authParams.IsCreate = strings.Contains(AuthcrudArgs.StringResult, "c")
-        authParams.IsRead = strings.Contains(AuthcrudArgs.StringResult, "r")
-        authParams.IsUpdate = strings.Contains(AuthcrudArgs.StringResult, "u")
-        authParams.IsDelete = strings.Contains(AuthcrudArgs.StringResult, "d")
-        authParams.IsFindOrCreate = strings.Contains(AuthcrudArgs.StringResult, "a")
+		authParams.IsFind = strings.Contains(AuthcrudArgs.StringResult, "f")
+		authParams.IsCreate = strings.Contains(AuthcrudArgs.StringResult, "c")
+		authParams.IsRead = strings.Contains(AuthcrudArgs.StringResult, "r")
+		authParams.IsUpdate = strings.Contains(AuthcrudArgs.StringResult, "u")
+		authParams.IsDelete = strings.Contains(AuthcrudArgs.StringResult, "d")
+		authParams.IsFindOrCreate = strings.Contains(AuthcrudArgs.StringResult, "a")
 
-    }
+	}
 
-    methodCrudArgs, _ := GetOsArgument("crud")
-    methodCrudParams := Crud{true, true, true, true, true, true}
+	methodCrudArgs, _ := GetOsArgument("crud")
+	methodCrudParams := Crud{true, true, true, true, true, true}
 
-    if len(methodCrudArgs.StringResult) > 0 {
+	if len(methodCrudArgs.StringResult) > 0 {
 
-        methodCrudParams.IsFind = strings.Contains(methodCrudArgs.StringResult, "f")
-        methodCrudParams.IsCreate = strings.Contains(methodCrudArgs.StringResult, "c")
-        methodCrudParams.IsRead = strings.Contains(methodCrudArgs.StringResult, "r")
-        methodCrudParams.IsUpdate = strings.Contains(methodCrudArgs.StringResult, "u")
-        methodCrudParams.IsDelete = strings.Contains(methodCrudArgs.StringResult, "d")
-        methodCrudParams.IsFindOrCreate = strings.Contains(methodCrudArgs.StringResult, "a")
+		methodCrudParams.IsFind = strings.Contains(methodCrudArgs.StringResult, "f")
+		methodCrudParams.IsCreate = strings.Contains(methodCrudArgs.StringResult, "c")
+		methodCrudParams.IsRead = strings.Contains(methodCrudArgs.StringResult, "r")
+		methodCrudParams.IsUpdate = strings.Contains(methodCrudArgs.StringResult, "u")
+		methodCrudParams.IsDelete = strings.Contains(methodCrudArgs.StringResult, "d")
+		methodCrudParams.IsFindOrCreate = strings.Contains(methodCrudArgs.StringResult, "a")
 
-    }
+	}
 
-    webappContent = assignMsName(GetUsualTemplateWebAppContent(authParams, methodCrudParams))
+	webappContent = assignMsName(GetUsualTemplateWebAppContent(authParams, methodCrudParams))
 
-    return
+	return
 }
 
 func getEntity(c *ishell.Context) (entity string, err error) {
 
-    var arguments RegularFind
+	var arguments RegularFind
 
-    arguments, err = GetOsArgument("entity")
+	arguments, err = GetOsArgument("entity")
 
-    if len(arguments.StringResult) < 1 || err != nil {
-        return getName(c, false, "Entity")
-    }
+	if len(arguments.StringResult) < 1 || err != nil {
+		return getName(c, false, "Entity")
+	}
 
-    entity = arguments.StringResult
+	entity = arguments.StringResult
 
-    return
+	return
 }
 
 func getRouteContent() string {
 
-    routeContent := usualTemplateRouteEntity.Content
+	routeContent := usualTemplateRouteEntity.Content
 
-    crudArgs, _ := GetOsArgument("crud")
+	crudArgs, _ := GetOsArgument("crud")
 
-    if len(crudArgs.StringResult) > 0 {
+	if len(crudArgs.StringResult) > 0 {
 
-        crudParams := Crud{}
-        crudParams.IsFind = strings.Contains(crudArgs.StringResult, "f")
-        crudParams.IsCreate = strings.Contains(crudArgs.StringResult, "c")
-        crudParams.IsRead = strings.Contains(crudArgs.StringResult, "r")
-        crudParams.IsUpdate = strings.Contains(crudArgs.StringResult, "u")
-        crudParams.IsDelete = strings.Contains(crudArgs.StringResult, "d")
-        crudParams.IsFindOrCreate = strings.Contains(crudArgs.StringResult, "a")
+		crudParams := Crud{}
+		crudParams.IsFind = strings.Contains(crudArgs.StringResult, "f")
+		crudParams.IsCreate = strings.Contains(crudArgs.StringResult, "c")
+		crudParams.IsRead = strings.Contains(crudArgs.StringResult, "r")
+		crudParams.IsUpdate = strings.Contains(crudArgs.StringResult, "u")
+		crudParams.IsDelete = strings.Contains(crudArgs.StringResult, "d")
+		crudParams.IsFindOrCreate = strings.Contains(crudArgs.StringResult, "a")
 
-        routeContent = GetUsualTemplateRouteEntity(crudParams)
-    }
+		routeContent = GetUsualTemplateRouteEntity(crudParams)
+	}
 
-    return routeContent
+	return routeContent
 }
