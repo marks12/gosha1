@@ -61,22 +61,30 @@
                                     <VSelect v-model="f.Type" :items="getTypes"></VSelect>
                                 </VSet>
                             </VSet>
+
                         </VSet>
                     </template>
 
                     <template #footer>
-                        <VSet>
-                            <VButton
-                                    @click="saveChangesSubmit"
-                                    accent
-                                    :text="panelSubmitButtonText"
-                                    :disabled="!currentEntityItem.hasChange"
-                            />
-                            <VButton
-                                    @click="cancelChanges"
-                                    text="Cancel"
-                            />
+
+                        <VSet vertical>
+                            <VSet vertical>
+                                <VGroup v-for="e in errors" color="attention-light" width="dyn">{{e}}</VGroup>
+                            </VSet>
+
+                            <VSet>
+                                <VButton
+                                        @click="saveChangesSubmit"
+                                        accent
+                                        :text="panelSubmitButtonText"
+                                />
+                                <VButton
+                                        @click="cancelChanges"
+                                        text="Cancel"
+                                />
+                            </VSet>
                         </VSet>
+
                     </template>
                 </VPanel>
             </template>
@@ -148,6 +156,7 @@
                     new EntityField(),
                 ],
                 fieldTypeFilter: new FieldTypeFilter(),
+                errors: [],
             };
         },
         created: function () {
@@ -183,7 +192,7 @@
             updateNewFieldsList() {
 
                 for (let i = this.newFields.length - 1; i >= 0; i--) {
-                    if (this.newFields[i].Name.trim().length < 1) {
+                    if (this.newFields[i].Name.trim().length < 1 && this.newFields.length > 1) {
                         this.newFields.splice(i , 1);
                     }
                 }
@@ -191,6 +200,67 @@
                 if (this.newFields[this.newFields.length - 1].Name.trim().length > 0) {
                     this.newFields.push(new EntityField());
                 }
+            },
+            /**
+             * @return {boolean}
+             */
+            IsValidEntity() {
+
+                this.errors = [];
+
+                if (this.currentEntityItem.Name.trim().length < 2) {
+                    this.errors.push('Invalid name length');
+                }
+
+                if (this.newFields.length < 2) {
+                    this.errors.push('Invalid new fields count');
+                }
+
+                for (let i in this.newFields) {
+
+                    if (i * 1 === this.newFields.length - 1) {
+                        continue;
+                    }
+
+                    if (this.getTypes.indexOf(this.newFields[i].Type) === -1) {
+                        this.errors.push('Invalid type this.newFields[i].Type');
+                    }
+
+                    if (this.newFields[i].Name.trim().length < 1) {
+                        this.errors.push('Invalid type this.newFields[i].Name');
+                    }
+                }
+
+                return this.errors.length === 0;
+            },
+            saveChangesSubmit() {
+
+                if (! this.IsValidEntity()) {
+                    return;
+                }
+
+                if (this.isPanelCreate) {
+                    console.log('create');
+                    return;
+                }
+
+                if (this.isPanelEdit) {
+                    console.log('update');
+                }
+            },
+            showPanel(type) {
+
+                this.errors = [];
+
+                if (type === this.panel.create) {
+                    this.panel.type = this.panel.create;
+                    this.clearPanelEntityItem();
+                } else if (type === this.panel.edit) {
+                    this.panel.type = this.panel.edit;
+                    this.currentEntityItem.isSelected = true;
+                }
+
+                this.panel.show = true;
             },
         },
         computed: {
