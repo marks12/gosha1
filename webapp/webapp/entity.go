@@ -9,6 +9,7 @@ import (
 	"strings"
 	"github.com/jinzhu/gorm"
 	"regexp"
+	"os"
 )
 
 func EntityFind(w http.ResponseWriter, httpRequest *http.Request) {
@@ -302,134 +303,6 @@ func logicEntityFind(filter types.EntityFilter) (result []types.Entity, totalRec
 	return
 }
 
-func logicEntityFind2(filter types.EntityFilter) (result []types.Entity, totalRecords int, err error) {
-
-	existsTypes := cmd.GetExistsTypes()
-	typeNames := cmd.GetModelsList(existsTypes)
-
-	existsModels := cmd.GetExistsModels()
-	modelsNames := cmd.GetModelsList(existsModels)
-
-	resModels := []types.Entity{}
-	resTypes := []types.Entity{}
-
-	id := 1
-	for _, t := range typeNames {
-
-		typeFields := []cmd.Field{}
-
-		for _, field := range existsTypes.GetFields(t, []cmd.Field{}) {
-
-			if field.Name == strings.Title(field.Name) {
-				typeFields = append(typeFields, field)
-			}
-		}
-
-		resTypes = append(resTypes, types.Entity{
-			Id: id,
-			Name: t,
-			TypeFields: typeFields,
-		})
-		id++
-	}
-
-	id = 1
-	for _, t := range modelsNames {
-
-		modelFields := []cmd.Field{}
-
-		for _, field := range existsModels.GetFields(t, []cmd.Field{}) {
-
-			if field.Name == strings.Title(field.Name) {
-				modelFields = append(modelFields, field)
-			}
-		}
-
-		resModels = append(resModels, types.Entity{
-			Id: id,
-			Name: t,
-			ModelFields: modelFields,
-		})
-		id++
-	}
-
-	for _, et := range resTypes {
-
-		em, _ := getExistsModel(et.Name, resModels)
-
-		if len(em.Name) > 0 {
-
-			for _, etf := range et.TypeFields {
-				emf := getExistsField(etf.Name, em.ModelFields)
-				et.ModelFields = append(et.ModelFields, emf)
-			}
-
-		} else {
-
-			for i := 0; i < len(et.TypeFields); i++ {
-				et.ModelFields = append(et.ModelFields, cmd.Field{})
-			}
-		}
-
-		result = append(result, et)
-	}
-
-	for _, em := range resModels {
-
-		eres, index := getExistsModel(em.Name, result)
-
-		if len(eres.Name) > 0 {
-
-			for _, emf := range  em.ModelFields {
-
-				etf := getExistsField(emf.Name, eres.TypeFields)
-
-				if len(etf.Name) < 1 {
-					result[index].TypeFields = append(result[index].TypeFields, cmd.Field{})
-					result[index].ModelFields = append(result[index].ModelFields, emf)
-				}
-			}
-
-		} else {
-
-			for i := 0; i < len(em.ModelFields); i++ {
-				em.TypeFields = append(em.TypeFields, cmd.Field{})
-			}
-
-			result = append(result, em)
-		}
-	}
-
-	if len(filter.Search) > 0 {
-
-		filtered := []types.Entity{}
-
-		for _, entity := range result {
-
-			matched, _ := regexp.Match(`[a-zA-Z0-9]*` + filter.Search + `[a-zA-Z0-9]*`, []byte(entity.Name))
-
-			if matched {
-				filtered = append(filtered, entity)
-			}
-		}
-
-		result = filtered
-	}
-
-	return
-}
-
-func getExistsField(name string, fields []cmd.Field) cmd.Field {
-
-	for _, f := range fields {
-		if gorm.ToColumnName(f.Name) == gorm.ToColumnName(name) {
-			return f
-		}
-	}
-
-	return cmd.Field{}
-}
-
 func getExistsFieldIndex(name string, fields []types.Field) (types.Field, int) {
 
 	for i, f := range fields {
@@ -458,6 +331,23 @@ func logicEntityRead(filter types.EntityFilter) (data types.Entity, err error) {
 }
 
 func logicEntityCreate(filter types.EntityFilter) (data types.Entity, err error) {
+
+	argsBak := os.Args
+	defer func(){os.Args = argsBak}()
+
+	e := filter.GetEntityModel()
+
+	args := []string{"", "exit", "setAppType", "--type=Usual", "usual:entity:add", "--entity=" + e.Name, "--crud=fcruda", "--check-auth=fcruda"}
+
+	os.Args = args
+	cmd.RunShell()
+
+	defer func(){
+		shell := cmd.GetShell()
+		shell.Close()
+	}()
+
+	return
 
 	return
 }
