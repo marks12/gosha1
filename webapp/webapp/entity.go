@@ -348,8 +348,6 @@ func logicEntityCreate(filter types.EntityFilter) (data types.Entity, err error)
 	}()
 
 	return
-
-	return
 }
 
 func logicEntityUpdate(filter types.EntityFilter) (data types.Entity, err error) {
