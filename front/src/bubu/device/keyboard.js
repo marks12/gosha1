@@ -32,9 +32,9 @@ function Keyboard(config) {
                 self.Render();
 
                 console.log(self.GetItems());
+                event.preventDefault();
             }
 
-            event.preventDefault();
         };
 
     }
