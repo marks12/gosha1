@@ -56,7 +56,7 @@
 
                             <VHead level="h3" style="margin: 20px 0;">Add new field</VHead>
                             <VSet vertical>
-                                <VSet v-for="f in newFields" width="dyn" :key="'newf-' + f.Id">
+                                <VSet v-for="(f, index) in newFields" width="dyn" :key="'newf-' + index">
                                     <VInput v-model="f.Name" @input="updateNewFieldsList" width="dyn"></VInput>
                                     <VSelect v-model="f.Type" :items="getTypes"></VSelect>
                                 </VSet>
@@ -69,7 +69,7 @@
 
                         <VSet vertical>
                             <VSet vertical>
-                                <VGroup v-for="e in errors" color="attention-light" width="dyn">{{e}}</VGroup>
+                                <VGroup v-for="(e, index) in errors" color="attention-light" :key="'err-' + index" width="dyn">{{e}}</VGroup>
                             </VSet>
 
                             <VSet>
@@ -175,6 +175,7 @@
         methods: {
             ...mapActions([
                 "findFieldType",
+                "createEntity",
             ]),
             ...mapGetters([
                 "getListFieldType",
@@ -243,7 +244,9 @@
                 }
 
                 if (this.isPanelCreate) {
-                    console.log('create');
+                    this.currentEntityItem.item.Name = this.currentEntityItem.Name;
+                    this.currentEntityItem.item.Fields = this.newFields.slice(0, -1);
+                    this.createEntityItemSubmit();
                     return;
                 }
 

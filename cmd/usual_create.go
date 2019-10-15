@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func usualAppInit(c *ishell.Context) {
+func UsualAppInit(c *ishell.Context) {
 
 	var choice int
 
