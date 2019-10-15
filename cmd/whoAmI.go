@@ -7,6 +7,7 @@ import (
     "fmt"
     "os"
     "strings"
+    "gosha/settings"
 )
 
 const MSCORE_ENTITY_ADD = "core:entity:add"
@@ -45,6 +46,27 @@ func setAppType(c *ishell.Context) {
     if IsNextCommand(choice) {
          runSecondLevelProgram(c)
     }
+}
+
+func getAppInfo(c *ishell.Context) {
+
+    shell.DeleteCmd(MSCORE_ENTITY_ADD)
+    shell.DeleteCmd(MSRPC_ENTITY_ADD)
+
+    app := GetCurrentApp()
+
+    green := color.New(color.FgGreen).SprintFunc()
+    red := color.New(color.FgRed).SprintFunc()
+
+    successText := red("invalid structure. Your app must have follow folders: ", settings.UsualDefaultStructure)
+
+    if app.IsAppExists {
+        successText = green("success structure")
+    }
+
+    InteractiveEcho([]string{
+        "Current app has " + successText,
+    })
 }
 
 func runSecondLevelProgram(c *ishell.Context) {

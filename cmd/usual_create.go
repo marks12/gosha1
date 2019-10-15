@@ -1,123 +1,134 @@
 package cmd
 
 import (
-    "gopkg.in/abiosoft/ishell.v2"
-    "github.com/fatih/color"
-    "os"
+	"github.com/fatih/color"
+	"gopkg.in/abiosoft/ishell.v2"
+	"gosha/mode"
+	"os"
 )
 
 func usualAppInit(c *ishell.Context) {
 
-    yellow := color.New(color.FgYellow).SprintFunc()
-    green := color.New(color.FgGreen).SprintFunc()
+	var choice int
 
-    c.Println(yellow("Hello we start creating new usual app in current directory"))
+	yellow := color.New(color.FgYellow).SprintFunc()
+	green := color.New(color.FgGreen).SprintFunc()
 
-    choice := c.MultiChoice([]string{
-        "No",
-        "Yes",
-    }, "Continue ?")
+	c.Println(yellow("Hello we start creating new usual app in current directory"))
 
-    switch choice {
+	if mode.IsNonInteractive() {
 
-        // mscore
-        case 1:
+		choice = 1
 
-            c.Println(green("Creating app structure"))
+	} else {
+		choice = c.MultiChoice([]string{
+			"No",
+			"Yes",
+		}, "Continue ?")
+	}
 
-            usualCreate(c)
-            usualAuthAdd(c)
+	switch choice {
 
-            break
+	case 1:
 
-    }
+		if mode.IsInteractive() {
+			c.Println(green("Creating app structure"))
+		}
 
-    return
+		usualCreate(c)
+		usualAuthAdd(c)
+
+		break
+
+	}
+
+	return
 }
 
 func usualCreate(c *ishell.Context) {
 
-    green := color.New(color.FgCyan).SprintFunc()
-    red := color.New(color.FgRed).SprintFunc()
+	green := color.New(color.FgCyan).SprintFunc()
+	red := color.New(color.FgRed).SprintFunc()
 
-    c.Println("Hello new app", green(getCurrentDirName()))
+	c.Println("Hello new app", green(getCurrentDirName()))
 
-    usualCreateMain(c)
+	usualCreateMain(c)
 
-    //bootstrap
-    CreateFile(msTemplateInsertDataToDb.Path, msTemplateInsertDataToDb.Content, c)
+	//bootstrap
+	CreateFile(msTemplateInsertDataToDb.Path, msTemplateInsertDataToDb.Content, c)
 
-    //core
-    CreateFile(msTemplateCoreDb.Path, msTemplateCoreDb.Content, c)
+	//core
+	CreateFile(msTemplateCoreDb.Path, msTemplateCoreDb.Content, c)
 
-    //dbmodels
-    //CreateFile(usualTemplateDbmodelsEntity.Path, usualTemplateDbmodelsEntity.Content, c)
-    CreateFile(usualTemplateDbmodelsValidator.Path, usualTemplateDbmodelsValidator.Content, c)
+	//dbmodels
+	//CreateFile(usualTemplateDbmodelsEntity.Path, usualTemplateDbmodelsEntity.Content, c)
+	CreateFile(usualTemplateDbmodelsValidator.Path, usualTemplateDbmodelsValidator.Content, c)
 
-    //logic
-    CreateFile(msTemplateLogicAssigner.Path, msTemplateLogicAssigner.Content, c)
+	//logic
+	CreateFile(msTemplateLogicAssigner.Path, msTemplateLogicAssigner.Content, c)
 
-    //router
-    CreateFile(usualTemplateRouter.Path, usualTemplateRouter.Content, c)
+	//router
+	CreateFile(usualTemplateRouter.Path, usualTemplateRouter.Content, c)
 
-    //service
-    CreateFile(usualTemplateServicesCaller.Path, usualTemplateServicesCaller.Content, c)
-    CreateFile(usualTemplateServicesTicket.Path, usualTemplateServicesTicket.Content, c)
+	//service
+	CreateFile(usualTemplateServicesCaller.Path, usualTemplateServicesCaller.Content, c)
+	CreateFile(usualTemplateServicesTicket.Path, usualTemplateServicesTicket.Content, c)
 
-    //settings
-    CreateFile(msTemplateSettingsApp.Path, msTemplateSettingsApp.Content, c)
-    CreateFile(msTemplateSettingsDb.Path, msTemplateSettingsDb.Content, c)
-    CreateFile(usualTemplateSettingsWebapp.Path, usualTemplateSettingsWebapp.Content, c)
+	//settings
+	CreateFile(msTemplateSettingsApp.Path, msTemplateSettingsApp.Content, c)
+	CreateFile(msTemplateSettingsDb.Path, msTemplateSettingsDb.Content, c)
+	CreateFile(usualTemplateSettingsWebapp.Path, usualTemplateSettingsWebapp.Content, c)
+	CreateFile(usualTemplateSettingsRoutes.Path, usualTemplateSettingsRoutes.Content, c)
 
-    //types
-    CreateFile(usualTemplateTypesAuthenticator.Path, usualTemplateTypesAuthenticator.Content, c)
-    //CreateFile(usualTemplateTypesEntity.Path, usualTemplateTypesEntity.Content, c)
-    CreateFile(usualTemplateTypesFilter.Path, usualTemplateTypesFilter.Content, c)
-    CreateFile(usualTemplateTypesRequest.Path, usualTemplateTypesRequest.Content, c)
-    CreateFile(usualTemplateTypesValidator.Path, usualTemplateTypesValidator.Content, c)
-    CreateFile(usualTemplateTypesResponse.Path, usualTemplateTypesResponse.Content, c)
+	//types
+	CreateFile(usualTemplateTypesAuthenticator.Path, usualTemplateTypesAuthenticator.Content, c)
+	//CreateFile(usualTemplateTypesEntity.Path, usualTemplateTypesEntity.Content, c)
+	CreateFile(usualTemplateTypesFilter.Path, usualTemplateTypesFilter.Content, c)
+	CreateFile(usualTemplateTypesRequest.Path, usualTemplateTypesRequest.Content, c)
+	CreateFile(usualTemplateTypesValidator.Path, usualTemplateTypesValidator.Content, c)
+	CreateFile(usualTemplateTypesResponse.Path, usualTemplateTypesResponse.Content, c)
 
-    //mdl
-    CreateFile(usualTemplateMdlPagination.Path, usualTemplateMdlPagination.Content, c)
-    CreateFile(usualTemplateMdlRequest.Path, usualTemplateMdlRequest.Content, c)
-    CreateFile(usualTemplateMdlResponse.Path, usualTemplateMdlResponse.Content, c)
+	//mdl
+	CreateFile(usualTemplateMdlPagination.Path, usualTemplateMdlPagination.Content, c)
+	CreateFile(usualTemplateMdlRequest.Path, usualTemplateMdlRequest.Content, c)
+	CreateFile(usualTemplateMdlResponse.Path, usualTemplateMdlResponse.Content, c)
 
-    //webapp
-    CreateFile(usualTemplateWebappErrors.Path, usualTemplateWebappErrors.Content, c)
+	//webapp
+	CreateFile(usualTemplateWebappErrors.Path, usualTemplateWebappErrors.Content, c)
 
-    //common
-    CreateFile(usualTemplateCommonValidator.Path, usualTemplateCommonValidator.Content, c)
-    CreateFile(usualTemplateCommonGenerator.Path, usualTemplateCommonGenerator.Content, c)
+	//common
+	CreateFile(usualTemplateCommonValidator.Path, usualTemplateCommonValidator.Content, c)
+	CreateFile(usualTemplateCommonGenerator.Path, usualTemplateCommonGenerator.Content, c)
 
-    ////ms folder
-    //CreateFile(msTemplateMsTicket.Path, msTemplateMsTicket.Content, c)
+	////ms folder
+	//CreateFile(msTemplateMsTicket.Path, msTemplateMsTicket.Content, c)
 
-    CreateFile("./.gitignore", "./\\.idea\n", c)
+	CreateFile("./.gitignore", "./\\.idea\n", c)
 
-    c.Println(red("New app with usual structure created"))
+	c.Println(red("New app with usual structure created"))
 }
 
 func usualCreateMain(c *ishell.Context) {
 
-    CreateFile(usualTemplateMain.Path, usualTemplateMain.Content, c)
+	CreateFile(usualTemplateMain.Path, usualTemplateMain.Content, c)
 
-    for _, folder := range []string{
-        "bootstrap",
-        "core",
-        "dbmodels",
-        "logic",
-        "ms",
-        "router",
-        "services",
-        "settings",
-        "static",
-        "types",
-        "webapp",
-        "mdl",
-        "common",
-    } {
-        if _, err := os.Stat(folder); os.IsNotExist(err) {
-            os.Mkdir(folder, 0755)
-        }
-    }
+	for _, folder := range []string{
+		"bootstrap",
+		"core",
+		"dbmodels",
+		"logic",
+		"ms",
+		"router",
+		"services",
+		"settings",
+		"static",
+		"types",
+		"webapp",
+		"mdl",
+		"common",
+	} {
+		if _, err := os.Stat(folder); os.IsNotExist(err) {
+			os.Mkdir(folder, 0755)
+		}
+	}
 }
