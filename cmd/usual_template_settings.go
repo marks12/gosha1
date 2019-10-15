@@ -11,7 +11,25 @@ const FunctionTypeDelete	= "00000000-0000-0000-0000-000000000004"
 const FunctionTypeCreate	= "00000000-0000-0000-0000-000000000005"
 `
 
+const usualSettingsRoutes = `package settings
+
+const HomePageRoute = "/api"
+
+// route-constant-generator here dont touch this line
+
+var RoutesArray = []string{
+    HomePageRoute,
+
+    // router-list-generator here dont touch this line
+}
+`
+
 var usualTemplateSettingsWebapp = template{
-    Path:    "./settings/web_app.go",
-    Content: usualSettingsWebApp,
+	Path:    "./settings/web_app.go",
+	Content: usualSettingsWebApp,
+}
+
+var usualTemplateSettingsRoutes = template{
+	Path:    "./settings/routes.go",
+	Content: usualSettingsRoutes,
 }
