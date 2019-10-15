@@ -8,8 +8,6 @@ import (
     "gosha/settings"
 )
 
-    
-
 func FieldTypeFind(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.GetFieldTypeFilter(httpRequest, settings.FunctionTypeFind)

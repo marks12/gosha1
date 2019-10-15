@@ -4,6 +4,7 @@ import (
     "gosha/cmd"
     "os"
     "gosha/webapp"
+    "gosha/mode"
 )
 
 func main() {
@@ -14,5 +15,6 @@ func main() {
         return
     }
 
+    mode.SetNonInteractiveMode()
     webapp.Run()
 }
