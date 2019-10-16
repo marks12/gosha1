@@ -184,12 +184,7 @@ func EntityCreate(filter types.EntityFilter) (data types.Entity, err error) {
     os.Args = args
     cmd.RunShell()
 
-    for _, f := range e.Fields {
-
-        args = []string{"", "exit", "setAppType", "--type=Usual", "entity:Field:add", "--entity=" + e.Name, "--Field="+f.Name, "--data-type=" + f.Type}
-        os.Args = args
-        cmd.RunShell()
-    }
+    addFields(e.Name, e.Fields)
 
     defer func(){
         shell := cmd.GetShell()
@@ -219,21 +214,25 @@ func EntityCreate(filter types.EntityFilter) (data types.Entity, err error) {
     return
 }
 
-func EntityUpdate(filter types.EntityFilter) (data types.Entity, err error) {
+func addFields(entityName string, fields []types.Field) {
 
     var args []string
+
+    for _, f := range fields {
+        args = []string{"", "exit", "setAppType", "--type=Usual", "entity:Field:add", "--entity=" + entityName, "--Field="+f.Name, "--data-type=" + f.Type}
+        os.Args = args
+        cmd.RunShell()
+    }
+}
+
+func EntityUpdate(filter types.EntityFilter) (data types.Entity, err error) {
 
     argsBak := os.Args
     defer func(){os.Args = argsBak}()
 
     e := filter.GetEntityModel()
 
-    for _, f := range e.Fields {
-
-        args = []string{"", "exit", "setAppType", "--type=Usual", "entity:Field:add", "--entity=" + e.Name, "--Field="+f.Name, "--data-type=" + f.Type}
-        os.Args = args
-        cmd.RunShell()
-    }
+    addFields(e.Name, e.Fields)
 
     defer func(){
         shell := cmd.GetShell()
