@@ -7,7 +7,8 @@ import (
 type FieldType struct {
     Id   int
     Name   string
-    //FieldType remove this line for disable generator functionality
+    Type string
+	//FieldType remove this line for disable generator functionality
 }
 
 func (fieldType *FieldType) Validate()  {

@@ -20,6 +20,7 @@ type Entity struct {
 	TypeFields	 []cmd.Field
 	ModelFields	 []cmd.Field
 	Fields	 []Field
+	IsFilter bool
 	//Entity remove this line for disable generator functionality
 }
 
