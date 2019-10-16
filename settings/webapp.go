@@ -8,12 +8,14 @@ const FunctionTypeUpdate	= "00000000-0000-0000-0000-000000000003"
 const FunctionTypeDelete	= "00000000-0000-0000-0000-000000000004"
 const FunctionTypeCreate	= "00000000-0000-0000-0000-000000000005"
 
+const TimeLinkDataType = "*time.Time"
+const TimeDataType = "time.Time"
 
-var SupportedFieldDataTypes = []string{
+var SupportedModelFieldDataTypes = []string{
 	"string",
 	"int",
-	"time.Time",
-	"*time.Time",
+	TimeDataType,
+	TimeLinkDataType,
 	"float64",
 	"bool",
 	"uuid.UUID",
