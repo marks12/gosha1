@@ -338,7 +338,7 @@
             },
 
             createSettingItemSubmit() {
-                this.createSetting({
+                return this.createSetting({
 					data: this.currentSettingItem.item,
                 }).then((response) => {
 
@@ -355,8 +355,9 @@
             },
 
             editSettingItemSubmit() {
+
                 if (this.currentSettingItem.hasChange) {
-                    this.updateSetting({
+                    return this.updateSetting({
                         id: this.currentSettingItem.item.Id,
                         data: this.currentSettingItem.item,
                     }).then((response) => {
@@ -373,7 +374,10 @@
                     }).catch(error => {
                         console.error('Ошибка изменения записи: ', error);
                     });
-                }
+
+                } else {
+					return new Promise(function(resolve, reject) {reject("Item has no changes. Nothing to save");})
+				}
             },
 
             deleteSettingItemHandler() {

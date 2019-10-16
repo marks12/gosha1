@@ -338,7 +338,7 @@
             },
 
             createProjectInfoFilterItemSubmit() {
-                this.createProjectInfoFilter({
+                return this.createProjectInfoFilter({
 					data: this.currentProjectInfoFilterItem.item,
                 }).then((response) => {
 
@@ -355,8 +355,9 @@
             },
 
             editProjectInfoFilterItemSubmit() {
+
                 if (this.currentProjectInfoFilterItem.hasChange) {
-                    this.updateProjectInfoFilter({
+                    return this.updateProjectInfoFilter({
                         id: this.currentProjectInfoFilterItem.item.Id,
                         data: this.currentProjectInfoFilterItem.item,
                     }).then((response) => {
@@ -373,7 +374,10 @@
                     }).catch(error => {
                         console.error('Ошибка изменения записи: ', error);
                     });
-                }
+
+                } else {
+					return new Promise(function(resolve, reject) {reject("Item has no changes. Nothing to save");})
+				}
             },
 
             deleteProjectInfoFilterItemHandler() {

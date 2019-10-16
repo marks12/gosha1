@@ -338,7 +338,7 @@
             },
 
             createEntityFieldItemSubmit() {
-                this.createEntityField({
+                return this.createEntityField({
 					data: this.currentEntityFieldItem.item,
                 }).then((response) => {
 
@@ -355,8 +355,9 @@
             },
 
             editEntityFieldItemSubmit() {
+
                 if (this.currentEntityFieldItem.hasChange) {
-                    this.updateEntityField({
+                    return this.updateEntityField({
                         id: this.currentEntityFieldItem.item.Id,
                         data: this.currentEntityFieldItem.item,
                     }).then((response) => {
@@ -373,7 +374,10 @@
                     }).catch(error => {
                         console.error('Ошибка изменения записи: ', error);
                     });
-                }
+
+                } else {
+					return new Promise(function(resolve, reject) {reject("Item has no changes. Nothing to save");})
+				}
             },
 
             deleteEntityFieldItemHandler() {

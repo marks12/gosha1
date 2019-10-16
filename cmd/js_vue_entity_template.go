@@ -340,7 +340,7 @@ const usualEntityVueComponent = `
             },
 
             create{Entity}ItemSubmit() {
-                this.create{Entity}({
+                return this.create{Entity}({
 					data: this.current{Entity}Item.item,
                 }).then((response) => {
 
@@ -357,8 +357,9 @@ const usualEntityVueComponent = `
             },
 
             edit{Entity}ItemSubmit() {
+
                 if (this.current{Entity}Item.hasChange) {
-                    this.update{Entity}({
+                    return this.update{Entity}({
                         id: this.current{Entity}Item.item.Id,
                         data: this.current{Entity}Item.item,
                     }).then((response) => {
@@ -375,7 +376,10 @@ const usualEntityVueComponent = `
                     }).catch(error => {
                         console.error('Ошибка изменения записи: ', error);
                     });
-                }
+
+                } else {
+					return new Promise(function(resolve, reject) {reject("Item has no changes. Nothing to save");})
+				}
             },
 
             delete{Entity}ItemHandler() {
