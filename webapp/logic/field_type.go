@@ -11,6 +11,16 @@ func FieldTypeFind(filter types.FieldTypeFilter)  (result []types.FieldType, tot
         result = append(result, types.FieldType{
             Id: i,
             Name: t,
+            Type: settings.FieldTypeModel,
+        })
+    }
+
+    for i, t := range settings.SupportedFilterDataTypes {
+
+        result = append(result, types.FieldType{
+            Id: i,
+            Name: t,
+            Type:  settings.FieldTypeFilter,
         })
     }
 

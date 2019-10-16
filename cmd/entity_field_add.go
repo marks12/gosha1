@@ -402,8 +402,12 @@ func entityFieldAdd(c *ishell.Context) {
 	})
 
 	if !existsModels.IsStructExists(entity) {
+
 		c.Println(red("You select entity: '", entity, "', but this struct is not exists"))
-		os.Exit(1)
+
+		if mode.IsInteractive() {
+			os.Exit(1)
+		}
 	}
 
 	if mode.IsInteractive() {
@@ -495,6 +499,7 @@ func GetModelsList(repository ModelRepository) (list []string) {
 				}
 
 				structDecl := md.(*ast.TypeSpec)
+
 				list = append(list, structDecl.Name.String())
 			}
 		}
