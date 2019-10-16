@@ -79,6 +79,10 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 		[]string{fieldName + " " + dataType + "\n\t" + getRemoveLine(CamelCase)},
 		nil)
 
+	if dataType == settings.TimeLinkDataType || dataType == settings.TimeDataType {
+		addImportIdNeed(sourceFile, "time")
+	}
+
 	sourceFile = "./dbmodels/" + snakeCase + ".go"
 
 	CopyFile(
@@ -110,6 +114,57 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 		nil)
 
 	return
+}
+
+func addImportIdNeed(file string, module string) {
+
+	module = strings.Replace(module, "\"", "", -1)
+	module = "\"" + module + "\""
+
+	fset := token.NewFileSet()
+
+	input, err := ioutil.ReadFile(file)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	srcCode := string(input)
+
+	f, err := parser.ParseFile(fset, "", srcCode, parser.ImportsOnly)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	p, err := parser.ParseFile(fset, "", srcCode, parser.PackageClauseOnly)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	imports := []string{};
+
+	for _, s := range f.Imports {
+
+		if s.Path.Value == module {
+			return
+		}
+
+		imports = append(imports, "    " + s.Path.Value)
+	}
+
+	imports = append(imports, "    " + module)
+	newImports := strings.Join(imports, "\n")
+
+	newFileContent := "package " + p.Name.Name + "\n\nimport (\n" + string(input[1:f.Pos()]) + newImports + "\n)\n" + string(input[f.End():])
+
+	err = ioutil.WriteFile(file, []byte(newFileContent), 0644)
+
+	if err != nil {
+		fmt.Println("Error adding import", file)
+		fmt.Println(err)
+	}
 }
 
 /**
@@ -351,7 +406,9 @@ func entityFieldAdd(c *ishell.Context) {
 		os.Exit(1)
 	}
 
-	existsModels.ShowFields(entity)
+	if mode.IsInteractive() {
+		existsModels.ShowFields(entity)
+	}
 
 	InteractiveEcho([]string{
 		"Please enter name of new Field:",
@@ -390,7 +447,7 @@ func getDataType(c *ishell.Context) (dataType string, err error) {
 	var exists bool
 	var reg RegularFind
 
-	dataTypes := settings.SupportedFieldDataTypes
+	dataTypes := settings.SupportedModelFieldDataTypes
 
 	if mode.IsInteractive() {
 

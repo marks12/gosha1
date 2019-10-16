@@ -7,7 +7,7 @@ import (
 
 func FieldTypeFind(filter types.FieldTypeFilter)  (result []types.FieldType, totalRecords int, err error) {
 
-    for i, t := range settings.SupportedFieldDataTypes {
+    for i, t := range settings.SupportedModelFieldDataTypes {
         result = append(result, types.FieldType{
             Id: i,
             Name: t,
