@@ -338,7 +338,7 @@
             },
 
             createPaginationItemSubmit() {
-                this.createPagination({
+                return this.createPagination({
 					data: this.currentPaginationItem.item,
                 }).then((response) => {
 
@@ -355,8 +355,9 @@
             },
 
             editPaginationItemSubmit() {
+
                 if (this.currentPaginationItem.hasChange) {
-                    this.updatePagination({
+                    return this.updatePagination({
                         id: this.currentPaginationItem.item.Id,
                         data: this.currentPaginationItem.item,
                     }).then((response) => {
@@ -373,7 +374,10 @@
                     }).catch(error => {
                         console.error('Ошибка изменения записи: ', error);
                     });
-                }
+
+                } else {
+					return new Promise(function(resolve, reject) {reject("Item has no changes. Nothing to save");})
+				}
             },
 
             deletePaginationItemHandler() {

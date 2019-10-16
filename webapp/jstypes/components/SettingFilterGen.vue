@@ -338,7 +338,7 @@
             },
 
             createSettingFilterItemSubmit() {
-                this.createSettingFilter({
+                return this.createSettingFilter({
 					data: this.currentSettingFilterItem.item,
                 }).then((response) => {
 
@@ -355,8 +355,9 @@
             },
 
             editSettingFilterItemSubmit() {
+
                 if (this.currentSettingFilterItem.hasChange) {
-                    this.updateSettingFilter({
+                    return this.updateSettingFilter({
                         id: this.currentSettingFilterItem.item.Id,
                         data: this.currentSettingFilterItem.item,
                     }).then((response) => {
@@ -373,7 +374,10 @@
                     }).catch(error => {
                         console.error('Ошибка изменения записи: ', error);
                     });
-                }
+
+                } else {
+					return new Promise(function(resolve, reject) {reject("Item has no changes. Nothing to save");})
+				}
             },
 
             deleteSettingFilterItemHandler() {

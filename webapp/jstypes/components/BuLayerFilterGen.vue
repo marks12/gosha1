@@ -338,7 +338,7 @@
             },
 
             createBuLayerFilterItemSubmit() {
-                this.createBuLayerFilter({
+                return this.createBuLayerFilter({
 					data: this.currentBuLayerFilterItem.item,
                 }).then((response) => {
 
@@ -355,8 +355,9 @@
             },
 
             editBuLayerFilterItemSubmit() {
+
                 if (this.currentBuLayerFilterItem.hasChange) {
-                    this.updateBuLayerFilter({
+                    return this.updateBuLayerFilter({
                         id: this.currentBuLayerFilterItem.item.Id,
                         data: this.currentBuLayerFilterItem.item,
                     }).then((response) => {
@@ -373,7 +374,10 @@
                     }).catch(error => {
                         console.error('Ошибка изменения записи: ', error);
                     });
-                }
+
+                } else {
+					return new Promise(function(resolve, reject) {reject("Item has no changes. Nothing to save");})
+				}
             },
 
             deleteBuLayerFilterItemHandler() {

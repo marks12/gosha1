@@ -338,7 +338,7 @@
             },
 
             createAPIErrorItemSubmit() {
-                this.createAPIError({
+                return this.createAPIError({
 					data: this.currentAPIErrorItem.item,
                 }).then((response) => {
 
@@ -355,8 +355,9 @@
             },
 
             editAPIErrorItemSubmit() {
+
                 if (this.currentAPIErrorItem.hasChange) {
-                    this.updateAPIError({
+                    return this.updateAPIError({
                         id: this.currentAPIErrorItem.item.Id,
                         data: this.currentAPIErrorItem.item,
                     }).then((response) => {
@@ -373,7 +374,10 @@
                     }).catch(error => {
                         console.error('Ошибка изменения записи: ', error);
                     });
-                }
+
+                } else {
+					return new Promise(function(resolve, reject) {reject("Item has no changes. Nothing to save");})
+				}
             },
 
             deleteAPIErrorItemHandler() {

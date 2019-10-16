@@ -338,7 +338,7 @@
             },
 
             createAPIStatusItemSubmit() {
-                this.createAPIStatus({
+                return this.createAPIStatus({
 					data: this.currentAPIStatusItem.item,
                 }).then((response) => {
 
@@ -355,8 +355,9 @@
             },
 
             editAPIStatusItemSubmit() {
+
                 if (this.currentAPIStatusItem.hasChange) {
-                    this.updateAPIStatus({
+                    return this.updateAPIStatus({
                         id: this.currentAPIStatusItem.item.Id,
                         data: this.currentAPIStatusItem.item,
                     }).then((response) => {
@@ -373,7 +374,10 @@
                     }).catch(error => {
                         console.error('Ошибка изменения записи: ', error);
                     });
-                }
+
+                } else {
+					return new Promise(function(resolve, reject) {reject("Item has no changes. Nothing to save");})
+				}
             },
 
             deleteAPIStatusItemHandler() {

@@ -338,7 +338,7 @@
             },
 
             createFieldTypeItemSubmit() {
-                this.createFieldType({
+                return this.createFieldType({
 					data: this.currentFieldTypeItem.item,
                 }).then((response) => {
 
@@ -355,8 +355,9 @@
             },
 
             editFieldTypeItemSubmit() {
+
                 if (this.currentFieldTypeItem.hasChange) {
-                    this.updateFieldType({
+                    return this.updateFieldType({
                         id: this.currentFieldTypeItem.item.Id,
                         data: this.currentFieldTypeItem.item,
                     }).then((response) => {
@@ -373,7 +374,10 @@
                     }).catch(error => {
                         console.error('Ошибка изменения записи: ', error);
                     });
-                }
+
+                } else {
+					return new Promise(function(resolve, reject) {reject("Item has no changes. Nothing to save");})
+				}
             },
 
             deleteFieldTypeItemHandler() {

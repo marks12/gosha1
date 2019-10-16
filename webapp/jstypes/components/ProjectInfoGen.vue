@@ -338,7 +338,7 @@
             },
 
             createProjectInfoItemSubmit() {
-                this.createProjectInfo({
+                return this.createProjectInfo({
 					data: this.currentProjectInfoItem.item,
                 }).then((response) => {
 
@@ -355,8 +355,9 @@
             },
 
             editProjectInfoItemSubmit() {
+
                 if (this.currentProjectInfoItem.hasChange) {
-                    this.updateProjectInfo({
+                    return this.updateProjectInfo({
                         id: this.currentProjectInfoItem.item.Id,
                         data: this.currentProjectInfoItem.item,
                     }).then((response) => {
@@ -373,7 +374,10 @@
                     }).catch(error => {
                         console.error('Ошибка изменения записи: ', error);
                     });
-                }
+
+                } else {
+					return new Promise(function(resolve, reject) {reject("Item has no changes. Nothing to save");})
+				}
             },
 
             deleteProjectInfoItemHandler() {

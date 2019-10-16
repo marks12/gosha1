@@ -338,7 +338,7 @@
             },
 
             createBuLayerItemSubmit() {
-                this.createBuLayer({
+                return this.createBuLayer({
 					data: this.currentBuLayerItem.item,
                 }).then((response) => {
 
@@ -355,8 +355,9 @@
             },
 
             editBuLayerItemSubmit() {
+
                 if (this.currentBuLayerItem.hasChange) {
-                    this.updateBuLayer({
+                    return this.updateBuLayer({
                         id: this.currentBuLayerItem.item.Id,
                         data: this.currentBuLayerItem.item,
                     }).then((response) => {
@@ -373,7 +374,10 @@
                     }).catch(error => {
                         console.error('Ошибка изменения записи: ', error);
                     });
-                }
+
+                } else {
+					return new Promise(function(resolve, reject) {reject("Item has no changes. Nothing to save");})
+				}
             },
 
             deleteBuLayerItemHandler() {
