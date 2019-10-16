@@ -22,6 +22,16 @@ var SupportedModelFieldDataTypes = []string{
 	"*int",
 }
 
+var SupportedFilterDataTypes = []string{
+	"string",
+	"int",
+	"float64",
+	"bool",
+	"uuid.UUID",
+	"Object",
+	"Array",
+}
+
 var UsualDefaultStructure = []string{
 	"logic",
 	"mdl",
@@ -33,3 +43,7 @@ var UsualDefaultStructure = []string{
 	"types",
 	"webapp",
 }
+
+const FieldTypeModel = "model"
+const FieldTypeFilter = "filter"
+
