@@ -39,10 +39,13 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
             })
         }
 
+        isFilter, _ := regexp.Match("Filter", []byte(t))
+
         res = append(res, types.Entity{
             Id: id,
             Name: t,
             Fields: fields,
+            IsFilter: isFilter,
         })
         id++
     }
