@@ -338,7 +338,7 @@
             },
 
             createOrderFilterItemSubmit() {
-                this.createOrderFilter({
+                return this.createOrderFilter({
 					data: this.currentOrderFilterItem.item,
                 }).then((response) => {
 
@@ -355,8 +355,9 @@
             },
 
             editOrderFilterItemSubmit() {
+
                 if (this.currentOrderFilterItem.hasChange) {
-                    this.updateOrderFilter({
+                    return this.updateOrderFilter({
                         id: this.currentOrderFilterItem.item.Id,
                         data: this.currentOrderFilterItem.item,
                     }).then((response) => {
@@ -373,7 +374,10 @@
                     }).catch(error => {
                         console.error('Ошибка изменения записи: ', error);
                     });
-                }
+
+                } else {
+					return new Promise(function(resolve, reject) {reject("Item has no changes. Nothing to save");})
+				}
             },
 
             deleteOrderFilterItemHandler() {

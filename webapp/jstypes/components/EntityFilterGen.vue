@@ -338,7 +338,7 @@
             },
 
             createEntityFilterItemSubmit() {
-                this.createEntityFilter({
+                return this.createEntityFilter({
 					data: this.currentEntityFilterItem.item,
                 }).then((response) => {
 
@@ -355,8 +355,9 @@
             },
 
             editEntityFilterItemSubmit() {
+
                 if (this.currentEntityFilterItem.hasChange) {
-                    this.updateEntityFilter({
+                    return this.updateEntityFilter({
                         id: this.currentEntityFilterItem.item.Id,
                         data: this.currentEntityFilterItem.item,
                     }).then((response) => {
@@ -373,7 +374,10 @@
                     }).catch(error => {
                         console.error('Ошибка изменения записи: ', error);
                     });
-                }
+
+                } else {
+					return new Promise(function(resolve, reject) {reject("Item has no changes. Nothing to save");})
+				}
             },
 
             deleteEntityFilterItemHandler() {
