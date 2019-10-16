@@ -56,6 +56,10 @@
 
                             <VHead level="h3" style="margin: 20px 0;">Add new field</VHead>
                             <VSet vertical>
+                                <VSet v-if="isPanelCreate" width="dyn" :key="'newf-id'">
+                                    <VInput width="dyn" value="Id" disabled></VInput>
+                                    <VInput value="int" disabled></VInput>
+                                </VSet>
                                 <VSet v-for="(f, index) in newFields" width="dyn" :key="'newf-' + index">
                                     <VInput v-model="f.Name" @input="updateNewFieldsList" width="dyn"></VInput>
                                     <VSelect v-model="f.Type" :items="getTypes"></VSelect>
@@ -121,7 +125,7 @@
                 <VButton
                         text="Добавить"
                         accent
-                        @click="showPanel(panel.create)"
+                        @click="showCreateForm"
                 />
             </VSet>
         </template>
@@ -193,6 +197,11 @@
                 this.currentEntityItem = item;
                 this.showPanel(this.panel.edit)
             },
+            clearNewFields() {
+                this.newFields  = [
+                    new EntityField(),
+                ];
+            },
             updateNewFieldsList() {
 
                 for (let i = this.newFields.length - 1; i >= 0; i--) {
@@ -246,12 +255,38 @@
                 if (this.isPanelCreate) {
                     this.currentEntityItem.item.Name = this.currentEntityItem.Name;
                     this.currentEntityItem.item.Fields = this.newFields.slice(0, -1);
-                    this.createEntityItemSubmit();
+                    this.createEntityItemSubmit().then(()=>{
+                        this.fetchEntityData();
+                        this.closePanel();
+                        this.clearNewFields();
+                    });
                     return;
                 }
 
                 if (this.isPanelEdit) {
-                    console.log('update');
+
+                    let item = new Entity();
+
+                    item.Name = this.currentEntityItem.Name;
+                    item.Fields = this.newFields.slice(0, -1);
+
+                    return this.updateEntity({
+                        id: item.Name,
+                        data: item,
+                    }).then((response) => {
+
+                        if (response.Model) {
+                            this.updateEntityById(response.Model);
+                            this.fetchEntityData();
+                            this.closePanel();
+                            this.clearNewFields();
+                        } else {
+                            console.error('Ошибка изменения записи: ', response.Error);
+                        }
+
+                    }).catch(error => {
+                        console.error('Ошибка изменения записи: ', error);
+                    });
                 }
             },
             showPanel(type) {
@@ -267,6 +302,10 @@
                 }
 
                 this.panel.show = true;
+            },
+            showCreateForm() {
+                this.currentEntityItem = new Entity();
+                this.showPanel(this.panel.create)
             },
         },
         computed: {
