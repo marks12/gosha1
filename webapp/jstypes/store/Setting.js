@@ -96,6 +96,9 @@ const setting = {
         getSetting: (state) => {
             return state.Setting;
         },
+        getSettingById: state => id => {
+            return state.Setting__List.find(item => item.Id === id);
+        },
         getListSetting: (state) => {
             return state.Setting__List;
         },

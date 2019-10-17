@@ -96,6 +96,9 @@ const projectInfo = {
         getProjectInfo: (state) => {
             return state.ProjectInfo;
         },
+        getProjectInfoById: state => id => {
+            return state.ProjectInfo__List.find(item => item.Id === id);
+        },
         getListProjectInfo: (state) => {
             return state.ProjectInfo__List;
         },

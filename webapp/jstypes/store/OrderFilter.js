@@ -96,6 +96,9 @@ const orderFilter = {
         getOrderFilter: (state) => {
             return state.OrderFilter;
         },
+        getOrderFilterById: state => id => {
+            return state.OrderFilter__List.find(item => item.Id === id);
+        },
         getListOrderFilter: (state) => {
             return state.OrderFilter__List;
         },

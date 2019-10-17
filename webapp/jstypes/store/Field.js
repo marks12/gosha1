@@ -96,6 +96,9 @@ const field = {
         getField: (state) => {
             return state.Field;
         },
+        getFieldById: state => id => {
+            return state.Field__List.find(item => item.Id === id);
+        },
         getListField: (state) => {
             return state.Field__List;
         },

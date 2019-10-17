@@ -96,6 +96,9 @@ const projectInfoFilter = {
         getProjectInfoFilter: (state) => {
             return state.ProjectInfoFilter;
         },
+        getProjectInfoFilterById: state => id => {
+            return state.ProjectInfoFilter__List.find(item => item.Id === id);
+        },
         getListProjectInfoFilter: (state) => {
             return state.ProjectInfoFilter__List;
         },

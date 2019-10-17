@@ -96,6 +96,9 @@ const pagination = {
         getPagination: (state) => {
             return state.Pagination;
         },
+        getPaginationById: state => id => {
+            return state.Pagination__List.find(item => item.Id === id);
+        },
         getListPagination: (state) => {
             return state.Pagination__List;
         },
