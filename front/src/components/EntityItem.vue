@@ -1,5 +1,5 @@
 <template>
-    <WorkSpace width="fit" height="fit">
+    <WorkSpace width="fit" height="fit" :class="{'bg-filter' : entityItem.IsFilter}">
         <VSet divider vertical height="fit">
             <VSet>
                 <VText :title="entityItem.Name">{{entityItem.Name}}</VText>
@@ -52,6 +52,9 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
+    .bg-filter {
+        background: #daffc9;
+    }
 </style>
