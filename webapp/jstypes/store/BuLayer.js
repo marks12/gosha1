@@ -96,6 +96,9 @@ const buLayer = {
         getBuLayer: (state) => {
             return state.BuLayer;
         },
+        getBuLayerById: state => id => {
+            return state.BuLayer__List.find(item => item.Id === id);
+        },
         getListBuLayer: (state) => {
             return state.BuLayer__List;
         },

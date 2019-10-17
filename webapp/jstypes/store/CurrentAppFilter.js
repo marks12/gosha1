@@ -96,6 +96,9 @@ const currentAppFilter = {
         getCurrentAppFilter: (state) => {
             return state.CurrentAppFilter;
         },
+        getCurrentAppFilterById: state => id => {
+            return state.CurrentAppFilter__List.find(item => item.Id === id);
+        },
         getListCurrentAppFilter: (state) => {
             return state.CurrentAppFilter__List;
         },

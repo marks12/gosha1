@@ -96,6 +96,9 @@ const entityFieldFilter = {
         getEntityFieldFilter: (state) => {
             return state.EntityFieldFilter;
         },
+        getEntityFieldFilterById: state => id => {
+            return state.EntityFieldFilter__List.find(item => item.Id === id);
+        },
         getListEntityFieldFilter: (state) => {
             return state.EntityFieldFilter__List;
         },

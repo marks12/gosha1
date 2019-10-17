@@ -55,6 +55,7 @@ export function Entity() {
     this.TypeFields = [];
     this.ModelFields = [];
     this.Fields = [];
+    this.IsFilter = false;
 
     return this;
 }
@@ -99,6 +100,7 @@ export function FieldType() {
 
     this.Id = 0;
     this.Name = "";
+    this.Type = "";
 
     return this;
 }
