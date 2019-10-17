@@ -175,6 +175,10 @@
                 this.isLoading = false;
             });
 
+            setTimeout(() => {
+                console.log('this.entity(1);', this.entity(1));
+            }, 1000);
+
         },
         methods: {
             ...mapActions([
@@ -183,6 +187,7 @@
             ]),
             ...mapGetters([
                 "getListFieldType",
+                "getEntityById",
             ]),
             search() {
 
@@ -318,6 +323,9 @@
             },
             getTypes() {
                 return this.getListFieldType().map( (item)=> {return item.Name});
+            },
+            entity() {
+                return this.getEntityById();
             },
         },
         watch: {

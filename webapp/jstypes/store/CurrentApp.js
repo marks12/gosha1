@@ -96,6 +96,9 @@ const currentApp = {
         getCurrentApp: (state) => {
             return state.CurrentApp;
         },
+        getCurrentAppById: state => id => {
+            return state.CurrentApp__List.find(item => item.Id === id);
+        },
         getListCurrentApp: (state) => {
             return state.CurrentApp__List;
         },

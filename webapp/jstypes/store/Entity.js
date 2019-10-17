@@ -96,6 +96,9 @@ const entity = {
         getEntity: (state) => {
             return state.Entity;
         },
+        getEntityById: state => id => {
+            return state.Entity__List.find(item => item.Id === id);
+        },
         getListEntity: (state) => {
             return state.Entity__List;
         },

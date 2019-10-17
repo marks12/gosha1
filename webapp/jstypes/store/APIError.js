@@ -96,6 +96,9 @@ const aPIError = {
         getAPIError: (state) => {
             return state.APIError;
         },
+        getAPIErrorById: state => id => {
+            return state.APIError__List.find(item => item.Id === id);
+        },
         getListAPIError: (state) => {
             return state.APIError__List;
         },
