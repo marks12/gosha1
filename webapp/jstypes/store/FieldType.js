@@ -96,6 +96,9 @@ const fieldType = {
         getFieldType: (state) => {
             return state.FieldType;
         },
+        getFieldTypeById: state => id => {
+            return state.FieldType__List.find(item => item.Id === id);
+        },
         getListFieldType: (state) => {
             return state.FieldType__List;
         },

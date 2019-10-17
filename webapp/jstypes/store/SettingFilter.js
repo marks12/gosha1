@@ -96,6 +96,9 @@ const settingFilter = {
         getSettingFilter: (state) => {
             return state.SettingFilter;
         },
+        getSettingFilterById: state => id => {
+            return state.SettingFilter__List.find(item => item.Id === id);
+        },
         getListSettingFilter: (state) => {
             return state.SettingFilter__List;
         },

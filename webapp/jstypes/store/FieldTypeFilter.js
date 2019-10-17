@@ -96,6 +96,9 @@ const fieldTypeFilter = {
         getFieldTypeFilter: (state) => {
             return state.FieldTypeFilter;
         },
+        getFieldTypeFilterById: state => id => {
+            return state.FieldTypeFilter__List.find(item => item.Id === id);
+        },
         getListFieldTypeFilter: (state) => {
             return state.FieldTypeFilter__List;
         },

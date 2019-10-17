@@ -96,6 +96,9 @@ const aPIStatus = {
         getAPIStatus: (state) => {
             return state.APIStatus;
         },
+        getAPIStatusById: state => id => {
+            return state.APIStatus__List.find(item => item.Id === id);
+        },
         getListAPIStatus: (state) => {
             return state.APIStatus__List;
         },
