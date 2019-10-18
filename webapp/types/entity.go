@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 	"gosha/cmd"
+	"strings"
 )
 
 
@@ -52,8 +53,11 @@ func GetEntityFilter(request *http.Request, functionType string) EntityFilter {
 		filter.Cats = append(filter.Cats, newID)
 	}
 
-	v := request.FormValue("WithFilter")
-	filter.WithFilter = v != "false" && len(v) > 0
+	wf := request.FormValue("WithFilter")
+	whf := request.FormValue("WithHiddenFields")
+
+	filter.WithFilter = strings.ToLower(wf) != "false" && len(wf) > 0
+	filter.WithHiddenFields = strings.ToLower(whf) != "false" && len(whf) > 0
 
 	//GetEntityFilter remove this line for disable generator functionality
 
