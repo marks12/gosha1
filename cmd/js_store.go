@@ -24,7 +24,8 @@ const {entity} = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         delete{Entity}(context, {id, header}) {
@@ -35,7 +36,8 @@ const {entity} = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         find{Entity}(context, {filter, header}) {
@@ -44,11 +46,11 @@ const {entity} = {
                 .then(function(response) {
 
                     context.commit("set{Entity}__List", response.List);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         load{Entity}(context, {id, filter, header}) {
@@ -57,11 +59,11 @@ const {entity} = {
                 .then(function(response) {
 
                     context.commit("set{Entity}", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         update{Entity}(context, {id, data, filter, header}) {
@@ -70,11 +72,11 @@ const {entity} = {
                 .then(function(response) {
 
                     context.commit("set{Entity}", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findOrCreate{Entity}(context, {id, data, filter, header}) {
@@ -83,11 +85,11 @@ const {entity} = {
                 .then(function(response) {
 
                     context.commit("set{Entity}", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearList{Entity}(context) {
