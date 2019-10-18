@@ -270,9 +270,7 @@
 
                 if (this.isPanelEdit) {
 
-                    let item = new Entity();
-
-                    item.Name = this.currentEntityItem.Name;
+                    let item = this.currentEntityItem;
                     item.Fields = this.newFields.slice(0, -1);
 
                     return this.updateEntity({
