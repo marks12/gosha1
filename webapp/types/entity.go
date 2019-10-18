@@ -33,6 +33,7 @@ type EntityFilter struct {
 	Cats  []int
 	model Entity
 	WithFilter bool
+	WithHiddenFields bool
 	//EntityFilter remove this line for disable generator functionality
 
 	AbstractFilter
