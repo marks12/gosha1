@@ -32,9 +32,9 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 
         for _, field := range existsTypes.GetFields(t, []cmd.Field{}) {
 
-            if ! filter.WithHiddenFields && field.Name != strings.Title(field.Name) {
-                continue
-            }
+           if ! filter.WithHiddenFields && field.Name != strings.Title(field.Name) {
+               continue
+           }
 
            fields = append(fields, types.Field{
                Name: field.Name,
