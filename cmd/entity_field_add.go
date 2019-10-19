@@ -79,7 +79,7 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 		[]string{fieldName + " " + dataType + "\n\t" + getRemoveLine(CamelCase)},
 		nil)
 
-	if dataType == settings.TimeLinkDataType || dataType == settings.TimeDataType {
+	if dataType == settings.DataTypeTimeLink || dataType == settings.DataTypeTime {
 		addImportIdNeed(sourceFile, "time")
 	}
 
@@ -432,7 +432,7 @@ func entityFieldAdd(c *ishell.Context) {
 		return
 	}
 
-	dataType, err := getDataType(c)
+	dataType, err := getDataType(c, settings.SupportedModelFieldDataTypes)
 
 	if err != nil {
 
@@ -445,13 +445,11 @@ func entityFieldAdd(c *ishell.Context) {
 	defer clearEntities(existsModels)
 }
 
-func getDataType(c *ishell.Context) (dataType string, err error) {
+func getDataType(c *ishell.Context, dataTypes []string) (dataType string, err error) {
 
 	var choice int
 	var exists bool
 	var reg RegularFind
-
-	dataTypes := settings.SupportedModelFieldDataTypes
 
 	if mode.IsInteractive() {
 

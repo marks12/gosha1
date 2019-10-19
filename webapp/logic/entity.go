@@ -266,7 +266,7 @@ func EntityUpdate(filter types.EntityFilter) (data types.Entity, err error) {
 
     findFilter := types.EntityFilter{}
     findFilter.Search = e.Name
-    findFilter.WithFilter = false
+    findFilter.WithFilter = isFilter
 
     res, records, err := EntityFind(findFilter)
 

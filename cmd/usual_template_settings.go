@@ -9,6 +9,7 @@ const FunctionTypeRead		= "00000000-0000-0000-0000-000000000002"
 const FunctionTypeUpdate	= "00000000-0000-0000-0000-000000000003"
 const FunctionTypeDelete	= "00000000-0000-0000-0000-000000000004"
 const FunctionTypeCreate	= "00000000-0000-0000-0000-000000000005"
+const FunctionTypeFindOrCreate	= "00000000-0000-0000-0000-000000000006"
 `
 
 const usualSettingsRoutes = `package settings

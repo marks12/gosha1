@@ -18,9 +18,25 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
         criteria = criteria.Where("id in (?)", filterIds)
     }
 
-//    if len(filter.Search) > 0 {
-//        criteria = criteria.Where("name like ?", ("%" + filter.Search + "%"), filter.Search)
-//    }
+    //if len(filter.Search) > 0 {
+    //
+    //    s := ("%" + filter.Search + "%")
+    //
+    //    if len(filter.SearchBy) > 0 {
+    //
+    //        for _, field := range filter.SearchBy {
+    //
+    //            if core.Db.NewScope(&dbmodels.{Entity}{}).HasColumn(field) {
+    //                criteria = criteria.Where("` + "`" + `"+field+"` + "`" + `"+" like ?", s)
+    //            } else {
+    //                err = errors.New("Search by unknown field " + field)
+    //                return
+    //            }
+    //        }
+    //    }
+    //} else {
+    //    criteria = criteria.Where("name like ? or code like ?", ("%" + filter.Search + "%"), ("%" + filter.Search + "%"))
+    //}
 
     q := criteria.Model(dbmodels.{Entity}{}).Count(&count)
 
