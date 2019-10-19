@@ -20,6 +20,18 @@ func usualAuthAdd(c *ishell.Context) {
 	usualEntityAdd(c)
 	os.Args = os.Args[:len(os.Args)-1]
 
+	os.Args = append(os.Args, "--entity=RoleResource")
+	usualEntityAdd(c)
+	os.Args = os.Args[:len(os.Args)-1]
+
+	os.Args = append(os.Args, "--entity=Resource")
+	usualEntityAdd(c)
+	os.Args = os.Args[:len(os.Args)-1]
+
+	os.Args = append(os.Args, "--entity=ResourceType")
+	usualEntityAdd(c)
+	os.Args = os.Args[:len(os.Args)-1]
+
 	os.Args = append(os.Args, "--entity=UserRole")
 	usualEntityAdd(c)
 	os.Args = os.Args[:len(os.Args)-1]
@@ -34,6 +46,36 @@ func usualAuthAdd(c *ishell.Context) {
 
 	c.Println("Models created success")
 
+    argsBak := os.Args
+
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=ResourceType", "--Field=Name", "--data-type=string"}
+    entityFieldAdd(c)
+
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Resource", "--Field=Name", "--data-type=string"}
+    entityFieldAdd(c)
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Resource", "--Field=Code", "--data-type=string"}
+    entityFieldAdd(c)
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Resource", "--Field=TypeId", "--data-type=int"}
+    entityFieldAdd(c)
+
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=RoleId", "--data-type=int"}
+    entityFieldAdd(c)
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=ResourceId", "--data-type=int"}
+    entityFieldAdd(c)
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=Find", "--data-type=bool"}
+    entityFieldAdd(c)
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=Read", "--data-type=bool"}
+    entityFieldAdd(c)
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=Create", "--data-type=bool"}
+    entityFieldAdd(c)
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=Update", "--data-type=bool"}
+    entityFieldAdd(c)
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=Delete", "--data-type=bool"}
+    entityFieldAdd(c)
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=FindOrCreate", "--data-type=bool"}
+    entityFieldAdd(c)
+
+    os.Args = argsBak
 
 	// fill fields
 	fillUser(c)
@@ -141,6 +183,16 @@ func fillUser(c *ishell.Context) {
 		c)
 
 	CopyFile(
+		"dbmodels/role.go",
+		"dbmodels/role.go",
+		[]string{getRemoveLine("Role")},
+		[]string{
+			`Name       string
+    Description   string	`+"`"+`gorm:"type:text"`+"`"+`
+    ` + getRemoveLine("Role")},
+		c)
+
+	CopyFile(
 		"dbmodels/user.go",
 		"dbmodels/user.go",
 		[]string{getRemoveLine("Validate")},
@@ -182,6 +234,7 @@ func fillAuth(c *ishell.Context) {
 			`Email     string
     Password  string	` + "`" + `json:"-"` + "`" + `
     Token     string
+    UserId   int
     `+ getRemoveLine("Auth")},
 		c)
 
@@ -193,6 +246,8 @@ func fillAuth(c *ishell.Context) {
 			`Email     string
     Password  string
     Token     string
+    IsActive bool
+    UserId   int
     ` + getRemoveLine("Auth")},
 		c)
 
