@@ -1,13 +1,11 @@
 package cmd
 
-const usualAuthLogic = `
-package logic
+const usualAuthLogic = `package logic
 
 import (
     "{ms-name}/types"
     "{ms-name}/dbmodels"
     "{ms-name}/core"
-    "{ms-name}/common"
     "{ms-name}/settings"
     "errors"
     "fmt"
@@ -15,7 +13,7 @@ import (
     "log"
 )
 
-func AuthCreate(filter types.AuthFilter)  (data types.Auth, err error) {
+func AuthCreate(filter types.AuthFilter) (data types.Auth, err error) {
 
     query := core.Db
 
@@ -32,15 +30,15 @@ func AuthCreate(filter types.AuthFilter)  (data types.Auth, err error) {
         if dbUser.ID < 1 {
             return types.Auth{}, errors.New("cant create Auth")
         }
-
-        hashErr := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(typeModel.Password + settings.PASSWORD_SALT))
+        hashErr := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(typeModel.Password+settings.PASSWORD_SALT))
 
         if hashErr == nil {
 
-            token := common.RandomString(32)
-
-            dbUser.Token = token
-            q := core.Db.Save(&dbUser)
+            core.Db.Model(dbmodels.Auth{}).Where(dbmodels.Auth{Token: filter.Token}).First(&dbAuth)
+            dbAuth.IsActive = true
+            dbAuth.UserId = dbUser.ID
+            dbAuth.Email = dbUser.Email
+            q := core.Db.Save(&dbAuth)
 
             if q.Error != nil {
 
@@ -48,33 +46,33 @@ func AuthCreate(filter types.AuthFilter)  (data types.Auth, err error) {
 
             } else {
 
-                typeModel.Token = token
+                typeModel.Token = dbAuth.Token
                 typeModel.Password = "******"
 
                 return typeModel, nil
             }
         }
 
+        fmt.Println("AuthCreate > Create Auth error:", hashErr)
+        return types.Auth{}, errors.New("cant create Auth")
+
     } else {
 
         fmt.Println("AuthCreate > Invalid data:", dbAuth)
         return types.Auth{}, errors.New(dbAuth.GetValidationErrors())
     }
-
-    fmt.Println("AuthCreate > Create Auth error:", query.Error)
-    return types.Auth{}, errors.New("cant create Auth")
 }
 
-func AuthDelete(filter types.AuthFilter)  (isOk bool, err error) {
+func AuthDelete(filter types.AuthFilter) (isOk bool, err error) {
 
-    dbUser := dbmodels.User{}
+    dbAuth := dbmodels.Auth{}
 
     query := core.Db
 
-    q := query.Model(dbmodels.User{}).Where(dbmodels.User{Token: filter.Token}).Find(&dbUser)
+    q := query.Model(dbmodels.Auth{}).Where(dbmodels.Auth{Token: filter.Token}).Find(&dbAuth)
 
-    dbUser.Token = ""
-    q = core.Db.Model(dbmodels.User{}).Save(&dbUser)
+    dbAuth.IsActive = false
+    q = core.Db.Model(dbmodels.Auth{}).Save(&dbAuth)
 
     if q.Error != nil {
         err = q.Error
