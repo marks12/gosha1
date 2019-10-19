@@ -39,7 +39,8 @@
                         <VSet vertical @submit.prevent="saveChangesSubmit">
 
                             <VSet vertical indent-size="XS">
-                                <VSign>Entity name</VSign>
+                                <VSign v-if="currentEntityItem.IsFilter">Filter name</VSign>
+                                <VSign v-else>Entity name</VSign>
                                 <VInput v-model="currentEntityItem.Name" :disabled="currentEntityItem.Id > 0" width="dyn"></VInput>
                             </VSet>
 
@@ -54,7 +55,8 @@
                                 </VSet>
                             </VSet>
 
-                            <VHead level="h3" style="margin: 20px 0;">Add new field</VHead>
+                            <VHead level="h3" style="margin: 20px 0;" v-if="currentEntityItem.IsFilter">Add new filter</VHead>
+                            <VHead level="h3" style="margin: 20px 0;" v-else>Add new field</VHead>
                             <VSet vertical>
                                 <VSet v-if="isPanelCreate" width="dyn" :key="'newf-id'">
                                     <VInput width="dyn" value="Id" disabled></VInput>
@@ -320,7 +322,10 @@
                 }
             },
             getTypes() {
-                return this.getListFieldType().map( (item)=> {return item.Name});
+                return this.getListFieldType().filter((item)=>{
+                    return (this.currentEntityItem.IsFilter && item.Type === "filter") ||
+                        (! this.currentEntityItem.IsFilter && item.Type !== "filter")
+                }).map( (item)=> {return item.Name});
             },
             entity() {
                 return this.getEntityById();
