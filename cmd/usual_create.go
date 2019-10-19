@@ -100,6 +100,9 @@ func usualCreate(c *ishell.Context) {
 	CreateFile(usualTemplateCommonValidator.Path, usualTemplateCommonValidator.Content, c)
 	CreateFile(usualTemplateCommonGenerator.Path, usualTemplateCommonGenerator.Content, c)
 
+	//flags
+	CreateFile(usualTemplateFlags.Path, usualTemplateFlags.Content, c)
+
 	////ms folder
 	//CreateFile(msTemplateMsTicket.Path, msTemplateMsTicket.Content, c)
 
@@ -124,6 +127,7 @@ func usualCreateMain(c *ishell.Context) {
 		"static",
 		"types",
 		"webapp",
+		"flags",
 		"mdl",
 		"common",
 	} {

@@ -7,38 +7,115 @@ type TypeConfig struct {
 const usualTypesAuthenticator = `package types
 
 import (
-    "{ms-name}/settings"
-    "{ms-name}/dbmodels"
-    "net/http"
     "{ms-name}/core"
+    "{ms-name}/dbmodels"
+    "{ms-name}/flags"
+    "{ms-name}/settings"
+    "net/http"
+    "strings"
 )
 
 type Authenticator struct {
-    Token string
+    Token        string
+    FunctionType string
+    UrlPath      string
     validator
 }
 
 func (auth *Authenticator) IsAuthorized() bool {
+    if *flags.Auth {
+        return true
+    }
 
     if len(auth.Token) < 1 {
         return false
     }
 
-    dbUser := dbmodels.User{}
-    core.Db.Where(dbmodels.User{Token: auth.Token}).Find(&dbUser)
+    dbAuth := dbmodels.Auth{}
+    core.Db.Where(dbmodels.Auth{Token: auth.Token}).First(&dbAuth)
+    if dbAuth.IsActive {
+        usedResources := []dbmodels.Resource{}
+        core.Db.Where(dbmodels.Resource{
+            Code:   clearPath(auth.UrlPath),
+            TypeId: 1,
+        }).Find(&usedResources)
+        ids := []int{}
+        for _, r := range usedResources {
+            ids = append(ids, r.ID)
+        }
+        roleResources := []dbmodels.RoleResource{}
+        if dbAuth.UserId > 0 {
+            core.Db.Model(dbmodels.RoleResource{}).Where("role_id in (select role_id from user_roles where user_id = ?) and resource_id in (?)", dbAuth.UserId, ids).Find(&roleResources)
+        } else {
+            core.Db.Model(dbmodels.RoleResource{}).Where("role_id = 4 and resource_id in (?)", ids).Find(&roleResources)
+        }
+        switch auth.FunctionType {
+        case settings.FunctionTypeFind:
+            for _, rr := range roleResources {
+                if rr.Find {
+                    return true
+                }
+            }
+            return false
 
-    if len(dbUser.Token) < 1 {
-        return false
+        case settings.FunctionTypeRead:
+            for _, rr := range roleResources {
+                if rr.Read {
+                    return true
+                }
+            }
+            return false
+
+        case settings.FunctionTypeCreate:
+            for _, rr := range roleResources {
+                if rr.Create {
+                    return true
+                }
+            }
+            return false
+
+        case settings.FunctionTypeUpdate:
+            for _, rr := range roleResources {
+                if rr.Update {
+                    return true
+                }
+            }
+            return false
+
+        case settings.FunctionTypeDelete:
+            for _, rr := range roleResources {
+                if rr.Delete {
+                    return true
+                }
+            }
+            return false
+
+        case settings.FunctionTypeFindOrCreate:
+            for _, rr := range roleResources {
+                if rr.FindOrCreate {
+                    return true
+                }
+            }
+            return false
+        }
     }
 
-    return  true
+    return false
+}
+
+func clearPath(s string) string {
+    if strings.Count(s, "/") > 3 {
+        return s[0:strings.LastIndex(s, "/")]
+    }
+
+    return s
 }
 
 func (auth *Authenticator) SetToken(r *http.Request) error {
 
     auth.Token = r.Header.Get("Token")
 
-    return  nil
+    return nil
 }
 
 func (authenticator *Authenticator) Validate(functionType string) {
@@ -50,17 +127,11 @@ func (authenticator *Authenticator) Validate(functionType string) {
         break;
     case settings.FunctionTypeCreate:
 
-
-
         break;
     case settings.FunctionTypeRead:
 
-
-
         break;
     case settings.FunctionTypeUpdate:
-
-
 
         break;
     case settings.FunctionTypeDelete:
@@ -68,7 +139,7 @@ func (authenticator *Authenticator) Validate(functionType string) {
         break;
 
     default:
-        authenticator.validator.validationErrors = append(authenticator.validator.validationErrors, "Usupported function type: " + functionType)
+        authenticator.validator.validationErrors = append(authenticator.validator.validationErrors, "Usupported function type: "+functionType)
         break;
     }
 }
@@ -105,6 +176,7 @@ import (
     "strings"
     "strconv"
     "github.com/gorilla/mux"
+    "github.com/jinzhu/gorm"
     "net/url"
 )
 
@@ -148,29 +220,16 @@ func (filter *FilterIds) Validate(functionType string) {
 
     switch functionType {
         case settings.FunctionTypeFind:
-
-
-
             break;
         case settings.FunctionTypeCreate:
-
-
-
             break;
         case settings.FunctionTypeRead:
-
-
-
             break;
         case settings.FunctionTypeUpdate:
-
-
-
             break;
         case settings.FunctionTypeDelete:
-
-
-
+            break;
+        case settings.FunctionTypeFindOrCreate:
             break;
         default:
             filter.validator.validationErrors = append(filter.validator.validationErrors, "Usupported method")
@@ -182,6 +241,7 @@ func (filter *FilterIds) Validate(functionType string) {
 type SearchFilter struct {
 
     Search string
+    SearchBy []string
 }
 
 type OrderFilter struct {
@@ -206,19 +266,22 @@ func GetAbstractFilter(request *http.Request, functionType string) AbstractFilte
     var filter AbstractFilter
 
     filter.request = request
+    filter.FunctionType = functionType
+    filter.UrlPath = request.URL.Path
 
     ReadJSON(filter.request, &filter)
     ReadJSON(filter.request, &filter.FilterIds)
 
-    filter.Pagination.CurrentPage,_  = strconv.Atoi(request.FormValue("CurrentPage"))
-    filter.Pagination.PerPage,_  = strconv.Atoi(request.FormValue("PerPage"))
-    filter.Search  = request.FormValue("Search")
+    filter.Pagination.CurrentPage, _ = strconv.Atoi(request.FormValue("CurrentPage"))
+    filter.Pagination.PerPage, _ = strconv.Atoi(request.FormValue("PerPage"))
+    filter.Search = request.FormValue("Search")
 
-    arr, _ := url.ParseQuery(request.RequestURI)
+    arr, _ := url.ParseQuery(request.URL.RawQuery)
 
     dirs := []string{}
 
     for _, dir := range arr["OrderDirection[]"] {
+
         if strings.ToLower(dir) == "desc" {
             dirs = append(dirs, "desc")
         } else {
@@ -226,8 +289,10 @@ func GetAbstractFilter(request *http.Request, functionType string) AbstractFilte
         }
     }
 
-    for index, Field := range arr["Order[]"] {
-        filter.Order = append(filter.Order, Field)
+    for index, field := range arr["Order[]"] {
+
+        filter.Order = append(filter.Order, gorm.ToColumnName(field))
+
         if len(dirs) > index && dirs[index] == "desc" {
             filter.OrderDirection = append(filter.OrderDirection, "desc")
         } else {
@@ -235,6 +300,13 @@ func GetAbstractFilter(request *http.Request, functionType string) AbstractFilte
         }
     }
 
+    for _, field := range arr["SearchBy[]"] {
+        filter.SearchBy = append(filter.SearchBy, gorm.ToColumnName(field))
+    }
+    for _, s := range arr["Ids[]"] {
+        id, _ := strconv.Atoi(s)
+        filter.AddId(id)
+    }
 
     filter.SetToken(request)
 
@@ -249,7 +321,7 @@ func GetAbstractFilter(request *http.Request, functionType string) AbstractFilte
 
     filter.Validate(functionType)
 
-    return  filter
+    return filter
 }
 
 func (filter *AbstractFilter) IsValid() bool  {
