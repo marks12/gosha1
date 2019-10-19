@@ -26,7 +26,9 @@ const USUAL_ENTITY_ADD  = "usual:entity:add"
 
 const USUAL_AUTH_ADD    = "usual:auth:add"
 
-const ENTITY_ADD_FIELD = "entity:Field:add"
+const ENTITY_ADD_FIELD = "entity:field:add"
+
+const ENTITY_ADD_FILTER = "entity:filter:add"
 
 func setAppType(c *ishell.Context) {
 
@@ -170,6 +172,7 @@ func setAppCommands(choice int, c *ishell.Context) {
             green(USUAL_ENTITY_ADD), " - Add entity. NIM: --entity=SomeName --crud=fcruda --check-auth=fcruda, where a=findOrCreate",
             green(USUAL_AUTH_ADD), " - Add user, roles, auth, to app",
             green(ENTITY_ADD_FIELD), " - Add Field to model. NIM: --entity=SomeName2 --Field=SomeField --data-type=string",
+            green(ENTITY_ADD_FILTER), " - Add filter to type. NIM: --entity=SomeName2 --filter=SomeFilter --data-type=string",
         })
 
         setUsualAppCreate()
@@ -179,6 +182,8 @@ func setAppCommands(choice int, c *ishell.Context) {
 		setUsualAuthAdd()
 
         setModelFieldAdd()
+
+        setModelFilterAdd()
 
         break
 
@@ -271,5 +276,18 @@ func setModelFieldAdd() {
             "--Field=SomeField" +
             "--data-type=string",
         Func: entityFieldAdd,
+    })
+}
+
+func setModelFilterAdd() {
+
+    shell.AddCmd(&ishell.Cmd{
+        Name: ENTITY_ADD_FILTER,
+        Help: "Command add new filter to model." +
+            "NIM:" +
+            "--entity=SomeName2" +
+            "--filter=SomeFilter" +
+            "--data-type=string",
+        Func: entityFilterdAdd,
     })
 }
