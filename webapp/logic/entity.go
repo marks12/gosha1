@@ -227,7 +227,18 @@ func addFields(entityName string, fields []types.Field) {
     var args []string
 
     for _, f := range fields {
-        args = []string{"", "exit", "setAppType", "--type=Usual", "entity:Field:add", "--entity=" + entityName, "--Field="+f.Name, "--data-type=" + f.Type}
+        args = []string{"", "exit", "setAppType", "--type=Usual", cmd.ENTITY_ADD_FIELD, "--entity=" + entityName, "--Field="+f.Name, "--data-type=" + f.Type}
+        os.Args = args
+        cmd.RunShell()
+    }
+}
+
+func addFilters(entityName string, fields []types.Field) {
+
+    var args []string
+
+    for _, f := range fields {
+        args = []string{"", "exit", "setAppType", "--type=Usual", cmd.ENTITY_ADD_FILTER, "--entity=" + entityName, "--filter="+f.Name, "--data-type=" + f.Type}
         os.Args = args
         cmd.RunShell()
     }
@@ -240,7 +251,13 @@ func EntityUpdate(filter types.EntityFilter) (data types.Entity, err error) {
 
     e := filter.GetEntityModel()
 
-    addFields(e.Name, e.Fields)
+    isFilter, _ := regexp.Match("Filter", []byte(e.Name))
+
+    if isFilter {
+        addFilters(e.Name, e.Fields)
+    } else {
+        addFields(e.Name, e.Fields)
+    }
 
     defer func(){
         shell := cmd.GetShell()
