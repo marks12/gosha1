@@ -202,7 +202,19 @@ func EntityCreate(filter types.EntityFilter) (data types.Entity, err error) {
 
     e := filter.GetEntityModel()
 
-    args := []string{"", "exit", "setAppType", "--type=Usual", "usual:entity:add", "--entity=" + e.Name, "--crud=fcruda", "--check-auth=fcruda"}
+    fcruda := ""
+
+    if filter.IsFind { fcruda += "f"}
+    if filter.IsCreate { fcruda += "c"}
+    if filter.IsRead { fcruda += "r"}
+    if filter.IsUpdate { fcruda += "u"}
+    if filter.IsDelete { fcruda += "d"}
+    if filter.IsFindOrCreate { fcruda += "a"}
+
+    fmt.Println("+++++++++++++fcruda", fcruda)
+    return
+
+    args := []string{"", "exit", "setAppType", "--type=Usual", "usual:entity:add", "--entity=" + e.Name, "--crud="+fcruda, "--check-auth=fcruda"}
 
     os.Args = args
     cmd.RunShell()
