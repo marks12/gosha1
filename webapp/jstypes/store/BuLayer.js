@@ -22,7 +22,8 @@ const buLayer = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         deleteBuLayer(context, {id, header}) {
@@ -33,7 +34,8 @@ const buLayer = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findBuLayer(context, {filter, header}) {
@@ -42,11 +44,11 @@ const buLayer = {
                 .then(function(response) {
 
                     context.commit("setBuLayer__List", response.List);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         loadBuLayer(context, {id, filter, header}) {
@@ -55,11 +57,11 @@ const buLayer = {
                 .then(function(response) {
 
                     context.commit("setBuLayer", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         updateBuLayer(context, {id, data, filter, header}) {
@@ -68,11 +70,11 @@ const buLayer = {
                 .then(function(response) {
 
                     context.commit("setBuLayer", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findOrCreateBuLayer(context, {id, data, filter, header}) {
@@ -81,11 +83,11 @@ const buLayer = {
                 .then(function(response) {
 
                     context.commit("setBuLayer", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListBuLayer(context) {

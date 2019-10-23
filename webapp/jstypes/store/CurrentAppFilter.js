@@ -22,7 +22,8 @@ const currentAppFilter = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         deleteCurrentAppFilter(context, {id, header}) {
@@ -33,7 +34,8 @@ const currentAppFilter = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findCurrentAppFilter(context, {filter, header}) {
@@ -42,11 +44,11 @@ const currentAppFilter = {
                 .then(function(response) {
 
                     context.commit("setCurrentAppFilter__List", response.List);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         loadCurrentAppFilter(context, {id, filter, header}) {
@@ -55,11 +57,11 @@ const currentAppFilter = {
                 .then(function(response) {
 
                     context.commit("setCurrentAppFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         updateCurrentAppFilter(context, {id, data, filter, header}) {
@@ -68,11 +70,11 @@ const currentAppFilter = {
                 .then(function(response) {
 
                     context.commit("setCurrentAppFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findOrCreateCurrentAppFilter(context, {id, data, filter, header}) {
@@ -81,11 +83,11 @@ const currentAppFilter = {
                 .then(function(response) {
 
                     context.commit("setCurrentAppFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListCurrentAppFilter(context) {

@@ -22,7 +22,8 @@ const projectInfoFilter = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         deleteProjectInfoFilter(context, {id, header}) {
@@ -33,7 +34,8 @@ const projectInfoFilter = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findProjectInfoFilter(context, {filter, header}) {
@@ -42,11 +44,11 @@ const projectInfoFilter = {
                 .then(function(response) {
 
                     context.commit("setProjectInfoFilter__List", response.List);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         loadProjectInfoFilter(context, {id, filter, header}) {
@@ -55,11 +57,11 @@ const projectInfoFilter = {
                 .then(function(response) {
 
                     context.commit("setProjectInfoFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         updateProjectInfoFilter(context, {id, data, filter, header}) {
@@ -68,11 +70,11 @@ const projectInfoFilter = {
                 .then(function(response) {
 
                     context.commit("setProjectInfoFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findOrCreateProjectInfoFilter(context, {id, data, filter, header}) {
@@ -81,11 +83,11 @@ const projectInfoFilter = {
                 .then(function(response) {
 
                     context.commit("setProjectInfoFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListProjectInfoFilter(context) {

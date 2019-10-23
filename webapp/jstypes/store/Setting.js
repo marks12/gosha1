@@ -22,7 +22,8 @@ const setting = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         deleteSetting(context, {id, header}) {
@@ -33,7 +34,8 @@ const setting = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findSetting(context, {filter, header}) {
@@ -42,11 +44,11 @@ const setting = {
                 .then(function(response) {
 
                     context.commit("setSetting__List", response.List);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         loadSetting(context, {id, filter, header}) {
@@ -55,11 +57,11 @@ const setting = {
                 .then(function(response) {
 
                     context.commit("setSetting", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         updateSetting(context, {id, data, filter, header}) {
@@ -68,11 +70,11 @@ const setting = {
                 .then(function(response) {
 
                     context.commit("setSetting", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findOrCreateSetting(context, {id, data, filter, header}) {
@@ -81,11 +83,11 @@ const setting = {
                 .then(function(response) {
 
                     context.commit("setSetting", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListSetting(context) {

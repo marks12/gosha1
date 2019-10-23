@@ -6,6 +6,14 @@
                 <VSign width="M">Db</VSign>
                 <VSign width="M">Types</VSign>
             </VSet>
+            <VSet>
+                <VBadge :color="entityItem.IsFind ? 'action' : 'weak'">F</VBadge>
+                <VBadge :color="entityItem.IsCreate ? 'action' : 'weak'">C</VBadge>
+                <VBadge :color="entityItem.IsRead ? 'action' : 'weak'">R</VBadge>
+                <VBadge :color="entityItem.IsUpdate ? 'action' : 'weak'">U</VBadge>
+                <VBadge :color="entityItem.IsDelete ? 'action' : 'weak'">D</VBadge>
+                <VBadge :color="entityItem.IsFindOrCreate ? 'action' : 'weak'" title="Find or create">FoC</VBadge>
+            </VSet>
             <VSet vertical hasNoIndent>
                 <template v-for="(field, i) in entityItem.Fields">
                     <VSet>
@@ -53,8 +61,10 @@
 </script>
 
 <style scoped lang="scss">
-
     .bg-filter {
         background: #daffc9;
+    }
+    .sw-icon {
+        background: transparent;
     }
 </style>
