@@ -22,7 +22,8 @@ const currentApp = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         deleteCurrentApp(context, {id, header}) {
@@ -33,7 +34,8 @@ const currentApp = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findCurrentApp(context, {filter, header}) {
@@ -42,11 +44,11 @@ const currentApp = {
                 .then(function(response) {
 
                     context.commit("setCurrentApp__List", response.List);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         loadCurrentApp(context, {id, filter, header}) {
@@ -55,11 +57,11 @@ const currentApp = {
                 .then(function(response) {
 
                     context.commit("setCurrentApp", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         updateCurrentApp(context, {id, data, filter, header}) {
@@ -68,11 +70,11 @@ const currentApp = {
                 .then(function(response) {
 
                     context.commit("setCurrentApp", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findOrCreateCurrentApp(context, {id, data, filter, header}) {
@@ -81,11 +83,11 @@ const currentApp = {
                 .then(function(response) {
 
                     context.commit("setCurrentApp", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListCurrentApp(context) {

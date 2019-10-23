@@ -22,8 +22,11 @@ type Entity struct {
 	ModelFields	 []cmd.Field
 	Fields	 []Field
 	IsFilter bool
+
+	cmd.HttpMethods
 	//Entity remove this line for disable generator functionality
 }
+
 
 func (unit *Entity) Validate() {
 

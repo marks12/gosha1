@@ -22,7 +22,8 @@ const orderFilter = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         deleteOrderFilter(context, {id, header}) {
@@ -33,7 +34,8 @@ const orderFilter = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findOrderFilter(context, {filter, header}) {
@@ -42,11 +44,11 @@ const orderFilter = {
                 .then(function(response) {
 
                     context.commit("setOrderFilter__List", response.List);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         loadOrderFilter(context, {id, filter, header}) {
@@ -55,11 +57,11 @@ const orderFilter = {
                 .then(function(response) {
 
                     context.commit("setOrderFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         updateOrderFilter(context, {id, data, filter, header}) {
@@ -68,11 +70,11 @@ const orderFilter = {
                 .then(function(response) {
 
                     context.commit("setOrderFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findOrCreateOrderFilter(context, {id, data, filter, header}) {
@@ -81,11 +83,11 @@ const orderFilter = {
                 .then(function(response) {
 
                     context.commit("setOrderFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListOrderFilter(context) {

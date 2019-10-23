@@ -9,11 +9,12 @@ import (
 	"go/token"
 	"gopkg.in/abiosoft/ishell.v2"
 	"gosha/mode"
+	"gosha/settings"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
-	"gosha/settings"
 )
 
 type ModelRepository struct {
@@ -35,6 +36,15 @@ type Field struct {
 type Relation struct {
 	ModelName string
 	FieldName string
+}
+
+type HttpMethods struct {
+	IsFind bool
+	IsCreate bool
+	IsRead bool
+	IsUpdate bool
+	IsDelete bool
+	IsFindOrCreate bool
 }
 
 func (mr *ModelRepository) GetModels() (models []string) {
@@ -475,6 +485,64 @@ func getDataType(c *ishell.Context, dataTypes []string) (dataType string, err er
 	}
 
 	return "", errors.New("cancel")
+}
+
+func GetModelsMethods(repo ModelRepository) (map[string]HttpMethods) {
+
+	list := make(map[string]HttpMethods)
+
+	fmt.Println(len(repo.list))
+	regMethods := regexp.MustCompile(`func ([A-Za-z0-9]+)(Find|Create|Update|Delete|Read|FindOrCreate)\(filter`)
+
+	for _, model := range repo.list {
+
+		path := filepath.Dir(model.FilePath) + "/../logic/" + filepath.Base(model.FilePath)
+		_, e := os.Stat(path)
+
+		if e != nil {
+			continue
+		}
+
+		src, _ := ioutil.ReadFile(path)
+		methods := regMethods.FindAllSubmatch(src, -1)
+
+		for _, mt := range methods {
+
+			if _, ok := list[string(mt[1])]; !ok {
+				list[string(mt[1])] = HttpMethods{}
+			}
+
+			if len(mt) == 3 {
+
+				mp := list[string(mt[1])]
+
+				switch (string(mt[2])) {
+				case "Find":
+					mp.IsFind = true
+					break
+				case "Read":
+					mp.IsRead = true
+					break
+				case "Create":
+					mp.IsCreate = true
+					break
+				case "Update":
+					mp.IsUpdate = true
+					break
+				case "Delete":
+					mp.IsDelete = true
+					break
+				case "FindOrCreate":
+					mp.IsFindOrCreate = true
+					break
+				}
+
+				list[string(mt[1])] = mp
+			}
+		}
+	}
+
+	return list
 }
 
 func GetModelsList(repository ModelRepository) (list []string) {

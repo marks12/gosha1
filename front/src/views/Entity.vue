@@ -42,6 +42,21 @@
                                 <VSign v-if="currentEntityItem.IsFilter">Filter name</VSign>
                                 <VSign v-else>Entity name</VSign>
                                 <VInput v-model="currentEntityItem.Name" :disabled="currentEntityItem.Id > 0" width="dyn"></VInput>
+
+                                <template v-if="! currentEntityItem.IsFilter">
+                                    <VSign>Http methods</VSign>
+                                    <VSet>
+                                        <VCheckbox v-model="currentEntityItem.IsFind" :disabled="currentEntityItem.Id > 0"><VText>Find</VText></VCheckbox>
+                                        <VCheckbox v-model="currentEntityItem.IsCreate" :disabled="currentEntityItem.Id > 0"><VText>Create</VText></VCheckbox>
+                                        <VCheckbox v-model="currentEntityItem.IsRead" :disabled="currentEntityItem.Id > 0"><VText>Read</VText></VCheckbox>
+                                    </VSet>
+                                    <VSet>
+                                        <VCheckbox v-model="currentEntityItem.IsUpdate" :disabled="currentEntityItem.Id > 0"><VText>Update</VText></VCheckbox>
+                                        <VCheckbox v-model="currentEntityItem.IsDelete" :disabled="currentEntityItem.Id > 0"><VText>Delete</VText></VCheckbox>
+                                        <VCheckbox v-model="currentEntityItem.IsFindOrCreate" :disabled="currentEntityItem.Id > 0"><VText>FindOrCreate</VText></VCheckbox>
+                                    </VSet>
+                                </template>
+
                             </VSet>
 
                             <VSet vertical indent-size="XS">
@@ -157,7 +172,7 @@
             return {
                 searchModel: "",
                 entityFilter: new EntityFilter(),
-                currentEntityItem: new Entity(),
+                currentEntityItem: this.getNewEntity(),
                 newFields: [
                     new EntityField(),
                 ],
@@ -191,6 +206,18 @@
                 "getListFieldType",
                 "getEntityById",
             ]),
+            getNewEntity() {
+                let ne = new Entity();
+
+                ne.IsFind = true;
+                ne.IsCreate = true;
+                ne.IsRead = true;
+                ne.IsUpdate = true;
+                ne.IsDelete = true;
+                ne.IsFindOrCreate = false;
+
+                return ne;
+            },
             search() {
 
                 this.entityFilter.Search = this.searchModel;
@@ -309,7 +336,7 @@
                 this.panel.show = true;
             },
             showCreateForm() {
-                this.currentEntityItem = new Entity();
+                this.currentEntityItem = this.getNewEntity();
                 this.showPanel(this.panel.create)
             },
         },

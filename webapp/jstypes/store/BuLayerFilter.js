@@ -22,7 +22,8 @@ const buLayerFilter = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         deleteBuLayerFilter(context, {id, header}) {
@@ -33,7 +34,8 @@ const buLayerFilter = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findBuLayerFilter(context, {filter, header}) {
@@ -42,11 +44,11 @@ const buLayerFilter = {
                 .then(function(response) {
 
                     context.commit("setBuLayerFilter__List", response.List);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         loadBuLayerFilter(context, {id, filter, header}) {
@@ -55,11 +57,11 @@ const buLayerFilter = {
                 .then(function(response) {
 
                     context.commit("setBuLayerFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         updateBuLayerFilter(context, {id, data, filter, header}) {
@@ -68,11 +70,11 @@ const buLayerFilter = {
                 .then(function(response) {
 
                     context.commit("setBuLayerFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findOrCreateBuLayerFilter(context, {id, data, filter, header}) {
@@ -81,11 +83,11 @@ const buLayerFilter = {
                 .then(function(response) {
 
                     context.commit("setBuLayerFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListBuLayerFilter(context) {

@@ -22,7 +22,8 @@ const projectInfo = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         deleteProjectInfo(context, {id, header}) {
@@ -33,7 +34,8 @@ const projectInfo = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findProjectInfo(context, {filter, header}) {
@@ -42,11 +44,11 @@ const projectInfo = {
                 .then(function(response) {
 
                     context.commit("setProjectInfo__List", response.List);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         loadProjectInfo(context, {id, filter, header}) {
@@ -55,11 +57,11 @@ const projectInfo = {
                 .then(function(response) {
 
                     context.commit("setProjectInfo", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         updateProjectInfo(context, {id, data, filter, header}) {
@@ -68,11 +70,11 @@ const projectInfo = {
                 .then(function(response) {
 
                     context.commit("setProjectInfo", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findOrCreateProjectInfo(context, {id, data, filter, header}) {
@@ -81,11 +83,11 @@ const projectInfo = {
                 .then(function(response) {
 
                     context.commit("setProjectInfo", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListProjectInfo(context) {
