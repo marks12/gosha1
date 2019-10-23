@@ -22,7 +22,8 @@ const pagination = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         deletePagination(context, {id, header}) {
@@ -33,7 +34,8 @@ const pagination = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findPagination(context, {filter, header}) {
@@ -42,11 +44,11 @@ const pagination = {
                 .then(function(response) {
 
                     context.commit("setPagination__List", response.List);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         loadPagination(context, {id, filter, header}) {
@@ -55,11 +57,11 @@ const pagination = {
                 .then(function(response) {
 
                     context.commit("setPagination", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         updatePagination(context, {id, data, filter, header}) {
@@ -68,11 +70,11 @@ const pagination = {
                 .then(function(response) {
 
                     context.commit("setPagination", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findOrCreatePagination(context, {id, data, filter, header}) {
@@ -81,11 +83,11 @@ const pagination = {
                 .then(function(response) {
 
                     context.commit("setPagination", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListPagination(context) {

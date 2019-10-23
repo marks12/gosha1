@@ -22,7 +22,8 @@ const fieldType = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         deleteFieldType(context, {id, header}) {
@@ -33,7 +34,8 @@ const fieldType = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findFieldType(context, {filter, header}) {
@@ -42,11 +44,11 @@ const fieldType = {
                 .then(function(response) {
 
                     context.commit("setFieldType__List", response.List);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         loadFieldType(context, {id, filter, header}) {
@@ -55,11 +57,11 @@ const fieldType = {
                 .then(function(response) {
 
                     context.commit("setFieldType", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         updateFieldType(context, {id, data, filter, header}) {
@@ -68,11 +70,11 @@ const fieldType = {
                 .then(function(response) {
 
                     context.commit("setFieldType", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findOrCreateFieldType(context, {id, data, filter, header}) {
@@ -81,11 +83,11 @@ const fieldType = {
                 .then(function(response) {
 
                     context.commit("setFieldType", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListFieldType(context) {

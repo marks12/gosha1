@@ -22,7 +22,8 @@ const aPIStatus = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         deleteAPIStatus(context, {id, header}) {
@@ -33,7 +34,8 @@ const aPIStatus = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findAPIStatus(context, {filter, header}) {
@@ -42,11 +44,11 @@ const aPIStatus = {
                 .then(function(response) {
 
                     context.commit("setAPIStatus__List", response.List);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         loadAPIStatus(context, {id, filter, header}) {
@@ -55,11 +57,11 @@ const aPIStatus = {
                 .then(function(response) {
 
                     context.commit("setAPIStatus", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         updateAPIStatus(context, {id, data, filter, header}) {
@@ -68,11 +70,11 @@ const aPIStatus = {
                 .then(function(response) {
 
                     context.commit("setAPIStatus", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findOrCreateAPIStatus(context, {id, data, filter, header}) {
@@ -81,11 +83,11 @@ const aPIStatus = {
                 .then(function(response) {
 
                     context.commit("setAPIStatus", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListAPIStatus(context) {

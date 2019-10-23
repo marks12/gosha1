@@ -127,6 +127,7 @@ func usualCreateMain(c *ishell.Context) {
 		"static",
 		"types",
 		"webapp",
+		"database",
 		"flags",
 		"mdl",
 		"common",

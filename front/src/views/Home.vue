@@ -1,19 +1,23 @@
 <template>
-    <WorkSpace>
+    <WorkSpace footer-position="bottom">
         <template #content>
-            <VHead level="h1">Start page</VHead>
-
             <template v-if="isLoaded">
-                <template v-if="currentApp.IsValidStructure">
-                    Your application successfully created!
-                </template>
-                <template v-else>
-                    <VSet>
-                        <VButton text="Create application" @click="createApp"></VButton>
+                <VSet height="dyn" vertical vertical-align="center" horizontal-align="center">
+                    <VSet width="fit">
+                        <VHead level="h1" width="fit">Application dashboard</VHead>
                     </VSet>
-                </template>
-            </template>
+                    <VText width="fit">
+                        Please create application in current folder
+                    </VText>
+                    <template v-if="currentApp.IsValidStructure">
+                        Your application successfully created!
+                    </template>
+                    <template v-else>
+                        <VButton text="Create application" @click="createApp" accent></VButton>
+                    </template>
+                </VSet>
 
+            </template>
         </template>
     </WorkSpace>
 </template>
@@ -28,6 +32,7 @@
     import {CurrentApp, CurrentAppFilter} from "../../../webapp/jstypes/apiModel";
     import currentApp from "../../../webapp/jstypes/store/CurrentApp";
     import VSet from "swtui/src/components/VSet";
+    import VText from "swtui/src/components/VText";
 
     export default {
         name: 'home',
@@ -37,7 +42,7 @@
                 isLoaded: false,
             }
         },
-        components: {VSet, VHead, WorkSpace, VButton},
+        components: {VText, VSet, VHead, WorkSpace, VButton},
         created: function () {
             this.loadCurrentAppData();
         },

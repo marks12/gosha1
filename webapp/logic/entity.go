@@ -1,6 +1,7 @@
 package logic
 
 import (
+    "fmt"
     "gosha/webapp/types"
     "os"
     "gosha/cmd"
@@ -17,6 +18,7 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 
     existsModels := cmd.GetExistsModels()
     modelsNames := cmd.GetModelsList(existsModels)
+    modelsMethods := cmd.GetModelsMethods(existsTypes)
 
     resModels := []types.Entity{}
     res := []types.Entity{}
@@ -149,6 +151,19 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
     }
 
     totalRecords = len(result)
+
+    for k, _ := range modelsMethods {
+        fmt.Println(k)
+    }
+
+    for k, model := range result {
+        result[k].IsFind = modelsMethods[model.Name].IsFind
+        result[k].IsCreate = modelsMethods[model.Name].IsCreate
+        result[k].IsRead = modelsMethods[model.Name].IsRead
+        result[k].IsUpdate = modelsMethods[model.Name].IsUpdate
+        result[k].IsDelete = modelsMethods[model.Name].IsDelete
+        result[k].IsFindOrCreate = modelsMethods[model.Name].IsFindOrCreate
+    }
 
     return
 }

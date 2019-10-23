@@ -22,7 +22,8 @@ const fieldTypeFilter = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         deleteFieldTypeFilter(context, {id, header}) {
@@ -33,7 +34,8 @@ const fieldTypeFilter = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findFieldTypeFilter(context, {filter, header}) {
@@ -42,11 +44,11 @@ const fieldTypeFilter = {
                 .then(function(response) {
 
                     context.commit("setFieldTypeFilter__List", response.List);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         loadFieldTypeFilter(context, {id, filter, header}) {
@@ -55,11 +57,11 @@ const fieldTypeFilter = {
                 .then(function(response) {
 
                     context.commit("setFieldTypeFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         updateFieldTypeFilter(context, {id, data, filter, header}) {
@@ -68,11 +70,11 @@ const fieldTypeFilter = {
                 .then(function(response) {
 
                     context.commit("setFieldTypeFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findOrCreateFieldTypeFilter(context, {id, data, filter, header}) {
@@ -81,11 +83,11 @@ const fieldTypeFilter = {
                 .then(function(response) {
 
                     context.commit("setFieldTypeFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListFieldTypeFilter(context) {
