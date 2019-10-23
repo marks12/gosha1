@@ -22,7 +22,8 @@ const settingFilter = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         deleteSettingFilter(context, {id, header}) {
@@ -33,7 +34,8 @@ const settingFilter = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findSettingFilter(context, {filter, header}) {
@@ -42,11 +44,11 @@ const settingFilter = {
                 .then(function(response) {
 
                     context.commit("setSettingFilter__List", response.List);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         loadSettingFilter(context, {id, filter, header}) {
@@ -55,11 +57,11 @@ const settingFilter = {
                 .then(function(response) {
 
                     context.commit("setSettingFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         updateSettingFilter(context, {id, data, filter, header}) {
@@ -68,11 +70,11 @@ const settingFilter = {
                 .then(function(response) {
 
                     context.commit("setSettingFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findOrCreateSettingFilter(context, {id, data, filter, header}) {
@@ -81,11 +83,11 @@ const settingFilter = {
                 .then(function(response) {
 
                     context.commit("setSettingFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListSettingFilter(context) {

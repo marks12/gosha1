@@ -22,7 +22,8 @@ const field = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         deleteField(context, {id, header}) {
@@ -33,7 +34,8 @@ const field = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findField(context, {filter, header}) {
@@ -42,11 +44,11 @@ const field = {
                 .then(function(response) {
 
                     context.commit("setField__List", response.List);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         loadField(context, {id, filter, header}) {
@@ -55,11 +57,11 @@ const field = {
                 .then(function(response) {
 
                     context.commit("setField", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         updateField(context, {id, data, filter, header}) {
@@ -68,11 +70,11 @@ const field = {
                 .then(function(response) {
 
                     context.commit("setField", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findOrCreateField(context, {id, data, filter, header}) {
@@ -81,11 +83,11 @@ const field = {
                 .then(function(response) {
 
                     context.commit("setField", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListField(context) {

@@ -22,7 +22,8 @@ const entityFieldFilter = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         deleteEntityFieldFilter(context, {id, header}) {
@@ -33,7 +34,8 @@ const entityFieldFilter = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findEntityFieldFilter(context, {filter, header}) {
@@ -42,11 +44,11 @@ const entityFieldFilter = {
                 .then(function(response) {
 
                     context.commit("setEntityFieldFilter__List", response.List);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         loadEntityFieldFilter(context, {id, filter, header}) {
@@ -55,11 +57,11 @@ const entityFieldFilter = {
                 .then(function(response) {
 
                     context.commit("setEntityFieldFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         updateEntityFieldFilter(context, {id, data, filter, header}) {
@@ -68,11 +70,11 @@ const entityFieldFilter = {
                 .then(function(response) {
 
                     context.commit("setEntityFieldFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findOrCreateEntityFieldFilter(context, {id, data, filter, header}) {
@@ -81,11 +83,11 @@ const entityFieldFilter = {
                 .then(function(response) {
 
                     context.commit("setEntityFieldFilter", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListEntityFieldFilter(context) {

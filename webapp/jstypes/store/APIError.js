@@ -22,7 +22,8 @@ const aPIError = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         deleteAPIError(context, {id, header}) {
@@ -33,7 +34,8 @@ const aPIError = {
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findAPIError(context, {filter, header}) {
@@ -42,11 +44,11 @@ const aPIError = {
                 .then(function(response) {
 
                     context.commit("setAPIError__List", response.List);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         loadAPIError(context, {id, filter, header}) {
@@ -55,11 +57,11 @@ const aPIError = {
                 .then(function(response) {
 
                     context.commit("setAPIError", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         updateAPIError(context, {id, data, filter, header}) {
@@ -68,11 +70,11 @@ const aPIError = {
                 .then(function(response) {
 
                     context.commit("setAPIError", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         findOrCreateAPIError(context, {id, data, filter, header}) {
@@ -81,11 +83,11 @@ const aPIError = {
                 .then(function(response) {
 
                     context.commit("setAPIError", response.Model);
-
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListAPIError(context) {
