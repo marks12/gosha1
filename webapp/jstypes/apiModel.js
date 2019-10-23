@@ -56,24 +56,7 @@ export function Entity() {
     this.ModelFields = [];
     this.Fields = [];
     this.IsFilter = false;
-    this.IsFind = false;
-    this.IsCreate = false;
-    this.IsRead = false;
-    this.IsUpdate = false;
-    this.IsDelete = false;
-    this.IsFindOrCreate = false;
-
-    return this;
-}
-
-export function HttpMethods() {
-
-    this.IsFind = false;
-    this.IsCreate = false;
-    this.IsRead = false;
-    this.IsUpdate = false;
-    this.IsDelete = false;
-    this.IsFindOrCreate = false;
+    this.HttpMethods = {};
 
     return this;
 }
@@ -83,6 +66,12 @@ export function EntityFilter() {
     this.Cats = [];
     this.WithFilter = false;
     this.WithHiddenFields = false;
+    this.IsFind = false;
+    this.IsCreate = false;
+    this.IsRead = false;
+    this.IsUpdate = false;
+    this.IsDelete = false;
+    this.IsFindOrCreate = false;
     this.Search = "";
     this.SearchBy = [];
     this.Order = [];

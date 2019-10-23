@@ -4,7 +4,6 @@ import (
 	"github.com/fatih/color"
 	"gopkg.in/abiosoft/ishell.v2"
 	"strings"
-	"fmt"
 )
 
 func usualEntityAdd(c *ishell.Context) {
@@ -231,9 +230,6 @@ func getRouteContent() string {
 	routeContent := usualTemplateRouteEntity.Content
 
 	crudArgs, _ := GetOsArgument("crud")
-
-	fmt.Println("==========crud")
-	fmt.Printf("%+v\n", crudArgs)
 
 	if len(crudArgs.StringResult) > 0 {
 
