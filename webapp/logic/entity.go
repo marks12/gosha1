@@ -157,12 +157,12 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
     }
 
     for k, model := range result {
-        result[k].IsFind = modelsMethods[model.Name].IsFind
-        result[k].IsCreate = modelsMethods[model.Name].IsCreate
-        result[k].IsRead = modelsMethods[model.Name].IsRead
-        result[k].IsUpdate = modelsMethods[model.Name].IsUpdate
-        result[k].IsDelete = modelsMethods[model.Name].IsDelete
-        result[k].IsFindOrCreate = modelsMethods[model.Name].IsFindOrCreate
+        result[k].HttpMethods.IsFind = modelsMethods[model.Name].IsFind
+        result[k].HttpMethods.IsCreate = modelsMethods[model.Name].IsCreate
+        result[k].HttpMethods.IsRead = modelsMethods[model.Name].IsRead
+        result[k].HttpMethods.IsUpdate = modelsMethods[model.Name].IsUpdate
+        result[k].HttpMethods.IsDelete = modelsMethods[model.Name].IsDelete
+        result[k].HttpMethods.IsFindOrCreate = modelsMethods[model.Name].IsFindOrCreate
     }
 
     return
@@ -204,15 +204,12 @@ func EntityCreate(filter types.EntityFilter) (data types.Entity, err error) {
 
     fcruda := ""
 
-    if filter.IsFind { fcruda += "f"}
-    if filter.IsCreate { fcruda += "c"}
-    if filter.IsRead { fcruda += "r"}
-    if filter.IsUpdate { fcruda += "u"}
-    if filter.IsDelete { fcruda += "d"}
-    if filter.IsFindOrCreate { fcruda += "a"}
-
-    fmt.Println("+++++++++++++fcruda", fcruda)
-    return
+    if e.HttpMethods.IsFind { fcruda += "f"}
+    if e.HttpMethods.IsCreate { fcruda += "c"}
+    if e.HttpMethods.IsRead { fcruda += "r"}
+    if e.HttpMethods.IsUpdate { fcruda += "u"}
+    if e.HttpMethods.IsDelete { fcruda += "d"}
+    if e.HttpMethods.IsFindOrCreate { fcruda += "a"}
 
     args := []string{"", "exit", "setAppType", "--type=Usual", "usual:entity:add", "--entity=" + e.Name, "--crud="+fcruda, "--check-auth=fcruda"}
 

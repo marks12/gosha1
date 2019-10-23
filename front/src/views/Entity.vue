@@ -289,12 +289,14 @@
                 if (this.isPanelCreate) {
                     this.currentEntityItem.item.Name = this.currentEntityItem.Name;
                     this.currentEntityItem.item.Fields = this.newFields.slice(0, -1);
-                    this.currentEntityItem.item.IsFind =  this.currentEntityItem.IsFind;
-                    this.currentEntityItem.item.IsCreate =  this.currentEntityItem.IsCreate;
-                    this.currentEntityItem.item.IsRead =  this.currentEntityItem.IsRead;
-                    this.currentEntityItem.item.IsUpdate =  this.currentEntityItem.IsUpdate;
-                    this.currentEntityItem.item.IsDelete =  this.currentEntityItem.IsDelete;
-                    this.currentEntityItem.item.IsFindOrCreate =  this.currentEntityItem.IsFindOrCreate;
+                    this.currentEntityItem.item.HttpMethods =  {
+                        IsFind: this.currentEntityItem.IsFind,
+                        IsCreate: this.currentEntityItem.IsCreate,
+                        IsRead: this.currentEntityItem.IsRead,
+                        IsUpdate: this.currentEntityItem.IsUpdate,
+                        IsDelete: this.currentEntityItem.IsDelete,
+                        IsFindOrCreate: this.currentEntityItem.IsFindOrCreate,
+                    };
 
                     this.createEntityItemSubmit().then(()=>{
                         this.fetchEntityData();

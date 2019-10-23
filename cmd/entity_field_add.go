@@ -12,7 +12,6 @@ import (
 	"gosha/settings"
 	"io/ioutil"
 	"os"
-	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -491,54 +490,61 @@ func GetModelsMethods(repo ModelRepository) (map[string]HttpMethods) {
 
 	list := make(map[string]HttpMethods)
 
-	fmt.Println(len(repo.list))
-	regMethods := regexp.MustCompile(`func ([A-Za-z0-9]+)(Find|Create|Update|Delete|Read|FindOrCreate)\(filter`)
+	//regMethods := regexp.MustCompile(`router.HandleFunc[(]settings.[A-Za-z0-9]Route, webapp.([A-Za-z0-9]+)(Find|Create|Update|Delete|Read|FindOrCreate)`)
+	regMethods := regexp.MustCompile(`(//){0,}\s{0,}router\.HandleFunc\(settings\.([A-Z]{1}[A-Za-z0-9]+)+Route,\s{0,}webapp\.[A-Za-z0-9]+\).Methods`)
 
-	for _, model := range repo.list {
+	path := "./router/router.go"
+	_, e := os.Stat(path)
 
-		path := filepath.Dir(model.FilePath) + "/../logic/" + filepath.Base(model.FilePath)
-		_, e := os.Stat(path)
+	if e != nil {
+		return list
+	}
 
-		if e != nil {
-			continue
+	src, _ := ioutil.ReadFile(path)
+	methods := regMethods.FindAllSubmatch(src, -1)
+
+	fmt.Println(methods)
+
+	for _, mt := range methods {
+
+		if _, ok := list[string(mt[1])]; !ok {
+			list[string(mt[1])] = HttpMethods{}
 		}
 
-		src, _ := ioutil.ReadFile(path)
-		methods := regMethods.FindAllSubmatch(src, -1)
+		fmt.Println("==============")
+		for _, m := range mt {
+			fmt.Println("m", string(m))
+		}
+		fmt.Println("--------------")
 
-		for _, mt := range methods {
+		if len(mt) >= 4 && string(mt[1]) != "//" {
 
-			if _, ok := list[string(mt[1])]; !ok {
-				list[string(mt[1])] = HttpMethods{}
+			mp := list[string(mt[2])]
+
+			fmt.Println("2-3", string(mt[2]), string(mt[3]))
+
+			switch (string(mt[3])) {
+			case "Find":
+				mp.IsFind = true
+				break
+			case "Read":
+				mp.IsRead = true
+				break
+			case "Create":
+				mp.IsCreate = true
+				break
+			case "Update":
+				mp.IsUpdate = true
+				break
+			case "Delete":
+				mp.IsDelete = true
+				break
+			case "FindOrCreate":
+				mp.IsFindOrCreate = true
+				break
 			}
 
-			if len(mt) == 3 {
-
-				mp := list[string(mt[1])]
-
-				switch (string(mt[2])) {
-				case "Find":
-					mp.IsFind = true
-					break
-				case "Read":
-					mp.IsRead = true
-					break
-				case "Create":
-					mp.IsCreate = true
-					break
-				case "Update":
-					mp.IsUpdate = true
-					break
-				case "Delete":
-					mp.IsDelete = true
-					break
-				case "FindOrCreate":
-					mp.IsFindOrCreate = true
-					break
-				}
-
-				list[string(mt[1])] = mp
-			}
+			list[string(mt[2])] = mp
 		}
 	}
 
