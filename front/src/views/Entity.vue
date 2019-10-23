@@ -46,7 +46,7 @@
                                 <template v-if="! currentEntityItem.IsFilter">
                                     <VSign>Http methods</VSign>
                                     <VSet>
-                                        <VCheckbox v-model="currentEntityItem.IsFind" :disabled="currentEntityItem.Id > 0"><VText>Find</VText></VCheckbox>
+                                        <VCheckbox v-model="currentEntityItem.IsFind" :disabled="currentEntityItem.Id > 0"><VText>Find {{currentEntityItem.IsFind}}</VText></VCheckbox>
                                         <VCheckbox v-model="currentEntityItem.IsCreate" :disabled="currentEntityItem.Id > 0"><VText>Create</VText></VCheckbox>
                                         <VCheckbox v-model="currentEntityItem.IsRead" :disabled="currentEntityItem.Id > 0"><VText>Read</VText></VCheckbox>
                                     </VSet>
@@ -289,6 +289,13 @@
                 if (this.isPanelCreate) {
                     this.currentEntityItem.item.Name = this.currentEntityItem.Name;
                     this.currentEntityItem.item.Fields = this.newFields.slice(0, -1);
+                    this.currentEntityItem.item.IsFind =  this.currentEntityItem.IsFind;
+                    this.currentEntityItem.item.IsCreate =  this.currentEntityItem.IsCreate;
+                    this.currentEntityItem.item.IsRead =  this.currentEntityItem.IsRead;
+                    this.currentEntityItem.item.IsUpdate =  this.currentEntityItem.IsUpdate;
+                    this.currentEntityItem.item.IsDelete =  this.currentEntityItem.IsDelete;
+                    this.currentEntityItem.item.IsFindOrCreate =  this.currentEntityItem.IsFindOrCreate;
+
                     this.createEntityItemSubmit().then(()=>{
                         this.fetchEntityData();
                         this.closePanel();

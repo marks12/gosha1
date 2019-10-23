@@ -4,6 +4,7 @@ import (
 	"github.com/fatih/color"
 	"gopkg.in/abiosoft/ishell.v2"
 	"strings"
+	"fmt"
 )
 
 func usualEntityAdd(c *ishell.Context) {
@@ -128,20 +129,22 @@ func usualEntityAdd(c *ishell.Context) {
 
 func getLogicContent() (c string) {
 
-	crudArgs, _ := GetOsArgument("crud")
+	// DISABLED crudParams. Just comment in ROUTES for routes not in logic
+
+	//crudArgs, _ := GetOsArgument("crud")
 	crudParams := Crud{}
 
-	if len(crudArgs.StringResult) > 0 {
-
-		crudParams.IsFind = strings.Contains(crudArgs.StringResult, "f")
-		crudParams.IsCreate = strings.Contains(crudArgs.StringResult, "c")
-		crudParams.IsRead = strings.Contains(crudArgs.StringResult, "r")
-		crudParams.IsUpdate = strings.Contains(crudArgs.StringResult, "u")
-		crudParams.IsDelete = strings.Contains(crudArgs.StringResult, "d")
-		crudParams.IsFindOrCreate = strings.Contains(crudArgs.StringResult, "a")
-	} else {
+	//if len(crudArgs.StringResult) > 0 {
+	//
+	//	crudParams.IsFind = strings.Contains(crudArgs.StringResult, "f")
+	//	crudParams.IsCreate = strings.Contains(crudArgs.StringResult, "c")
+	//	crudParams.IsRead = strings.Contains(crudArgs.StringResult, "r")
+	//	crudParams.IsUpdate = strings.Contains(crudArgs.StringResult, "u")
+	//	crudParams.IsDelete = strings.Contains(crudArgs.StringResult, "d")
+	//	crudParams.IsFindOrCreate = strings.Contains(crudArgs.StringResult, "a")
+	//} else {
 		crudParams = Crud{true, true, true, true, true, true}
-	}
+	//}
 
 	c = GetUsualTemplateLogicContent(crudParams)
 	return
@@ -187,19 +190,21 @@ func getWebAppContent() (webappContent string) {
 
 	}
 
-	methodCrudArgs, _ := GetOsArgument("crud")
+	// DISABLED crudParams. Just comment in ROUTES for routes not in logic
+
+	//methodCrudArgs, _ := GetOsArgument("crud")
 	methodCrudParams := Crud{true, true, true, true, true, true}
-
-	if len(methodCrudArgs.StringResult) > 0 {
-
-		methodCrudParams.IsFind = strings.Contains(methodCrudArgs.StringResult, "f")
-		methodCrudParams.IsCreate = strings.Contains(methodCrudArgs.StringResult, "c")
-		methodCrudParams.IsRead = strings.Contains(methodCrudArgs.StringResult, "r")
-		methodCrudParams.IsUpdate = strings.Contains(methodCrudArgs.StringResult, "u")
-		methodCrudParams.IsDelete = strings.Contains(methodCrudArgs.StringResult, "d")
-		methodCrudParams.IsFindOrCreate = strings.Contains(methodCrudArgs.StringResult, "a")
-
-	}
+	//
+	//if len(methodCrudArgs.StringResult) > 0 {
+	//
+	//	methodCrudParams.IsFind = strings.Contains(methodCrudArgs.StringResult, "f")
+	//	methodCrudParams.IsCreate = strings.Contains(methodCrudArgs.StringResult, "c")
+	//	methodCrudParams.IsRead = strings.Contains(methodCrudArgs.StringResult, "r")
+	//	methodCrudParams.IsUpdate = strings.Contains(methodCrudArgs.StringResult, "u")
+	//	methodCrudParams.IsDelete = strings.Contains(methodCrudArgs.StringResult, "d")
+	//	methodCrudParams.IsFindOrCreate = strings.Contains(methodCrudArgs.StringResult, "a")
+	//
+	//}
 
 	webappContent = assignMsName(GetUsualTemplateWebAppContent(authParams, methodCrudParams))
 
@@ -226,6 +231,9 @@ func getRouteContent() string {
 	routeContent := usualTemplateRouteEntity.Content
 
 	crudArgs, _ := GetOsArgument("crud")
+
+	fmt.Println("==========crud")
+	fmt.Printf("%+v\n", crudArgs)
 
 	if len(crudArgs.StringResult) > 0 {
 

@@ -38,6 +38,12 @@ type EntityFilter struct {
 	model Entity
 	WithFilter bool
 	WithHiddenFields bool
+	IsFind bool
+	IsCreate bool
+	IsRead bool
+	IsUpdate bool
+	IsDelete bool
+	IsFindOrCreate bool
 	//EntityFilter remove this line for disable generator functionality
 
 	AbstractFilter
@@ -62,6 +68,12 @@ func GetEntityFilter(request *http.Request, functionType string) EntityFilter {
 	filter.WithFilter = strings.ToLower(wf) != "false" && len(wf) > 0
 	filter.WithHiddenFields = strings.ToLower(whf) != "false" && len(whf) > 0
 
+	filter.IsFind = strings.ToLower(request.FormValue("IsFind")) != "false" && len(request.FormValue("IsFind")) > 0
+	filter.IsCreate = strings.ToLower(request.FormValue("IsCreate")) != "false" && len(request.FormValue("IsCreate")) > 0
+	filter.IsRead = strings.ToLower(request.FormValue("IsRead")) != "false" && len(request.FormValue("IsRead")) > 0
+	filter.IsUpdate = strings.ToLower(request.FormValue("IsUpdate")) != "false" && len(request.FormValue("IsUpdate")) > 0
+	filter.IsDelete = strings.ToLower(request.FormValue("IsDelete")) != "false" && len(request.FormValue("IsDelete")) > 0
+	filter.IsFindOrCreate = strings.ToLower(request.FormValue("IsFindOrCreate")) != "false" && len(request.FormValue("IsFindOrCreate")) > 0
 	//GetEntityFilter remove this line for disable generator functionality
 
 	ReadJSON(request, &filter.model)
