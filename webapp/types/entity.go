@@ -23,7 +23,7 @@ type Entity struct {
 	Fields	 []Field
 	IsFilter bool
 
-	cmd.HttpMethods
+	HttpMethods cmd.HttpMethods
 	//Entity remove this line for disable generator functionality
 }
 
