@@ -33,26 +33,38 @@ func GetUsualTemplateRouteEntity(c Crud) (res string) {
 
 	if c.IsFind {
 		res += "\n" + usualRouteEntityFind
+	} else {
+		res += "\n\\" + usualRouteEntityFind
 	}
 
 	if c.IsCreate {
 		res += "\n" + usualRouteEntityCreate
+	} else {
+		res += "\n\\" + usualRouteEntityCreate
 	}
 
 	if c.IsRead {
 		res += "\n" + usualRouteEntityRead
+	} else {
+		res += "\n\\" + usualRouteEntityRead
 	}
 
 	if c.IsUpdate {
 		res += "\n" + usualRouteEntityUpdate
+	} else {
+		res += "\n\\" + usualRouteEntityUpdate
 	}
 
 	if c.IsDelete {
 		res += "\n" + usualRouteEntityDelete
+	} else {
+		res += "\n\\" + usualRouteEntityDelete
 	}
 
 	if c.IsFindOrCreate {
 		res += "\n" + usualRouteEntityFindOrCreate
+	} else {
+		res += "\n\\" + usualRouteEntityFindOrCreate
 	}
 
 	res += usualRouteEntityGen
