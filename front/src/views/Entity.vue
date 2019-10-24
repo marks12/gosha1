@@ -207,6 +207,7 @@
                 "getEntityById",
             ]),
             getNewEntity() {
+
                 let ne = new Entity();
 
                 ne.IsFind = true;
@@ -215,6 +216,15 @@
                 ne.IsUpdate = true;
                 ne.IsDelete = true;
                 ne.IsFindOrCreate = false;
+
+                ne.HttpMethods =  {
+                    IsFind: true,
+                    IsCreate: true,
+                    IsRead: true,
+                    IsUpdate: true,
+                    IsDelete: true,
+                    IsFindOrCreate: true,
+                };
 
                 return ne;
             },
@@ -290,12 +300,12 @@
                     this.currentEntityItem.item.Name = this.currentEntityItem.Name;
                     this.currentEntityItem.item.Fields = this.newFields.slice(0, -1);
                     this.currentEntityItem.item.HttpMethods =  {
-                        IsFind: this.currentEntityItem.IsFind,
-                        IsCreate: this.currentEntityItem.IsCreate,
-                        IsRead: this.currentEntityItem.IsRead,
-                        IsUpdate: this.currentEntityItem.IsUpdate,
-                        IsDelete: this.currentEntityItem.IsDelete,
-                        IsFindOrCreate: this.currentEntityItem.IsFindOrCreate,
+                        IsFind: this.currentEntityItem.HttpMethods.IsFind || false,
+                        IsCreate: this.currentEntityItem.HttpMethods.IsCreate || false,
+                        IsRead: this.currentEntityItem.HttpMethods.IsRead || false,
+                        IsUpdate: this.currentEntityItem.HttpMethods.IsUpdate || false,
+                        IsDelete: this.currentEntityItem.HttpMethods.IsDelete || false,
+                        IsFindOrCreate: this.currentEntityItem.HttpMethods.IsFindOrCreate || false,
                     };
 
                     this.createEntityItemSubmit().then(()=>{
