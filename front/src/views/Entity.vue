@@ -8,7 +8,7 @@
                     <VSet>
                         <VInput  placeholder="Поиск" v-model="searchModel" @input="search"></VInput>
                         <VCheckbox v-model="entityFilter.WithFilter">
-                            <VText font-size="txs">Отображать фильтры</VText>
+                            <VText font-size="txs">Show filters</VText>
                         </VCheckbox>
                     </VSet>
                 </VSet>
@@ -46,14 +46,14 @@
                                 <template v-if="! currentEntityItem.IsFilter">
                                     <VSign>Http methods</VSign>
                                     <VSet>
-                                        <VCheckbox v-model="currentEntityItem.IsFind" :disabled="currentEntityItem.Id > 0"><VText>Find {{currentEntityItem.IsFind}}</VText></VCheckbox>
-                                        <VCheckbox v-model="currentEntityItem.IsCreate" :disabled="currentEntityItem.Id > 0"><VText>Create</VText></VCheckbox>
-                                        <VCheckbox v-model="currentEntityItem.IsRead" :disabled="currentEntityItem.Id > 0"><VText>Read</VText></VCheckbox>
+                                        <VCheckbox v-model="currentEntityItem.HttpMethods.IsFind" :disabled="currentEntityItem.Id > 0"><VText>Find</VText></VCheckbox>
+                                        <VCheckbox v-model="currentEntityItem.HttpMethods.IsCreate" :disabled="currentEntityItem.Id > 0"><VText>Create</VText></VCheckbox>
+                                        <VCheckbox v-model="currentEntityItem.HttpMethods.IsRead" :disabled="currentEntityItem.Id > 0"><VText>Read</VText></VCheckbox>
                                     </VSet>
                                     <VSet>
-                                        <VCheckbox v-model="currentEntityItem.IsUpdate" :disabled="currentEntityItem.Id > 0"><VText>Update</VText></VCheckbox>
-                                        <VCheckbox v-model="currentEntityItem.IsDelete" :disabled="currentEntityItem.Id > 0"><VText>Delete</VText></VCheckbox>
-                                        <VCheckbox v-model="currentEntityItem.IsFindOrCreate" :disabled="currentEntityItem.Id > 0"><VText>FindOrCreate</VText></VCheckbox>
+                                        <VCheckbox v-model="currentEntityItem.HttpMethods.IsUpdate" :disabled="currentEntityItem.Id > 0"><VText>Update</VText></VCheckbox>
+                                        <VCheckbox v-model="currentEntityItem.HttpMethods.IsDelete" :disabled="currentEntityItem.Id > 0"><VText>Delete</VText></VCheckbox>
+                                        <VCheckbox v-model="currentEntityItem.HttpMethods.IsFindOrCreate" :disabled="currentEntityItem.Id > 0"><VText>FindOrCreate</VText></VCheckbox>
                                     </VSet>
                                 </template>
 
@@ -73,12 +73,12 @@
                             <VHead level="h3" style="margin: 20px 0;" v-if="currentEntityItem.IsFilter">Add new filter</VHead>
                             <VHead level="h3" style="margin: 20px 0;" v-else>Add new field</VHead>
                             <VSet vertical>
-                                <VSet v-if="isPanelCreate" width="dyn" :key="'newf-id'">
-                                    <VInput width="dyn" value="Id" disabled></VInput>
-                                    <VInput value="int" disabled></VInput>
+                                <VSet v-if="isPanelCreate" width="fit" :key="'newf-id'">
+                                    <VText><strong>Id</strong></VText>
+                                    <VSign>Integer</VSign>
                                 </VSet>
                                 <VSet v-for="(f, index) in newFields" width="dyn" :key="'newf-' + index">
-                                    <VInput v-model="f.Name" @input="updateNewFieldsList" width="dyn"></VInput>
+                                    <VInput v-model="f.Name" @input="updateNewFieldsList"></VInput>
                                     <VSelect v-model="f.Type" :items="getTypes"></VSelect>
                                 </VSet>
                             </VSet>
