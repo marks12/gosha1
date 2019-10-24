@@ -7,6 +7,7 @@ import (
     "{ms-name}/dbmodels"
     "{ms-name}/core"
     "{ms-name}/settings"
+    "{ms-name}/common"
     "errors"
     "fmt"
     "golang.org/x/crypto/bcrypt"
@@ -38,7 +39,10 @@ func AuthCreate(filter types.AuthFilter) (data types.Auth, err error) {
 
         if hashErr == nil {
 
-            core.Db.Model(dbmodels.Auth{}).Where(dbmodels.Auth{Token: filter.Token}).First(&dbAuth)
+            token := common.RandomString(32)
+            dbAuth.Token = token
+
+            core.Db.Model(dbmodels.Auth{}).Where(dbmodels.Auth{Token: token}).First(&dbAuth)
             dbAuth.IsActive = true
             dbAuth.UserId = dbUser.ID
             dbAuth.Email = dbUser.Email
