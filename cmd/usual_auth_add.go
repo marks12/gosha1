@@ -1,10 +1,10 @@
 package cmd
 
 import (
-	"gopkg.in/abiosoft/ishell.v2"
 	"github.com/fatih/color"
-	"os"
+	"gopkg.in/abiosoft/ishell.v2"
 	"gosha/common"
+	"os"
 )
 
 func usualAuthAdd(c *ishell.Context) {
@@ -41,6 +41,7 @@ func usualAuthAdd(c *ishell.Context) {
 	os.Args = append(os.Args,"--check-auth=d")
 	os.Args = append(os.Args,"--no-id")
 	os.Args = append(os.Args,"--no-assign")
+
 	usualEntityAdd(c)
 	os.Args = os.Args[:len(os.Args)-5]
 
