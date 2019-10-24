@@ -43,7 +43,15 @@ func usualAuthAdd(c *ishell.Context) {
 	os.Args = append(os.Args,"--no-assign")
 
 	usualEntityAdd(c)
+
 	os.Args = os.Args[:len(os.Args)-5]
+
+	os.Args = append(os.Args,"--entity=CurrentUser")
+	os.Args = append(os.Args,"--crud=f")
+	os.Args = append(os.Args,"--check-auth=fcruda")
+
+	usualEntityAdd(c)
+	os.Args = os.Args[:len(os.Args)-3]
 
 	c.Println("Models created success")
 
@@ -128,6 +136,15 @@ func fillUser(c *ishell.Context) {
     Token       string
     `+ getRemoveLine("User")},
 		c)
+
+	CopyFile(
+		"logic/current_user.go",
+		"logic/current_user.go",
+		[]string{"criteria := core.Db.Where(dbmodels.CurrentUser{})"},
+		[]string{
+			`criteria := core.Db.Where(dbmodels.User{})
+	    criteria = criteria.Where(dbmodels.User{Token: filter.Authenticator.Token})
+    	q := criteria.Model(dbmodels.User{}).Count(&count)`}, c)
 
 	CopyFile(
 		"logic/assigner.go",
@@ -233,7 +250,7 @@ func fillAuth(c *ishell.Context) {
 		[]string{getRemoveLine("Auth")},
 		[]string{
 			`Email     string
-    Password  string	` + "`" + `json:"-"` + "`" + `
+    Password  string
     Token     string
     UserId   int
     `+ getRemoveLine("Auth")},
@@ -284,5 +301,14 @@ func fillAuth(c *ishell.Context) {
     `+ getRemoveLine("Validate")},
 		c)
 
+
+	CopyFile(
+		"logic/assigner.go",
+		"logic/assigner.go",
+		[]string{getRemoveLine("AssignAuthDbFromType.Field")},
+		[]string{`Email: typeModel.Email,
+        Password: typeModel.Password,
+		` + getRemoveLine("AssignAuthDbFromType.Field")},
+		c)
 
 }
