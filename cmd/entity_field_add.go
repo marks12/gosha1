@@ -490,8 +490,7 @@ func GetModelsMethods(repo ModelRepository) (map[string]HttpMethods) {
 
 	list := make(map[string]HttpMethods)
 
-	//regMethods := regexp.MustCompile(`router.HandleFunc[(]settings.[A-Za-z0-9]Route, webapp.([A-Za-z0-9]+)(Find|Create|Update|Delete|Read|FindOrCreate)`)
-	regMethods := regexp.MustCompile(`(//){0,}\s{0,}router\.HandleFunc\(settings\.([A-Z]{1}[A-Za-z0-9]+)+Route,\s{0,}webapp\.[A-Za-z0-9]+\).Methods`)
+	reg := regexp.MustCompile(`(//){0,}\s{0,}router\.HandleFunc\(settings\.([A-Z]{1}[A-Za-z0-9]+)+Route.*,\s{0,}webapp\.[A-Za-z0-9]+\).Methods`)
 
 	path := "./router/router.go"
 	_, e := os.Stat(path)
@@ -501,29 +500,33 @@ func GetModelsMethods(repo ModelRepository) (map[string]HttpMethods) {
 	}
 
 	src, _ := ioutil.ReadFile(path)
-	methods := regMethods.FindAllSubmatch(src, -1)
-
-	fmt.Println(methods)
+	methods := reg.FindAllSubmatch(src, -1)
 
 	for _, mt := range methods {
 
-		if _, ok := list[string(mt[1])]; !ok {
-			list[string(mt[1])] = HttpMethods{}
-		}
+		if len(mt) == 3 && string(mt[1]) != "//" {
 
-		fmt.Println("==============")
-		for _, m := range mt {
-			fmt.Println("m", string(m))
-		}
-		fmt.Println("--------------")
+			row := strings.TrimSpace(string(mt[0]))
+			modelName := string(mt[2])
 
-		if len(mt) >= 4 && string(mt[1]) != "//" {
+			if _, ok := list[modelName]; !ok {
+				list[modelName] = HttpMethods{}
+			}
 
-			mp := list[string(mt[2])]
+			mp := list[modelName]
 
-			fmt.Println("2-3", string(mt[2]), string(mt[3]))
+			regMethod := regexp.MustCompile("webapp\\." + modelName + "([a-zA-Z]+)")
+			hm := regMethod.FindAllStringSubmatch(row, -1)
 
-			switch (string(mt[3])) {
+			if len(hm) < 1 {
+				continue
+			}
+
+			if len(hm[0]) < 2 {
+				continue
+			}
+
+			switch hm[0][1] {
 			case "Find":
 				mp.IsFind = true
 				break
@@ -544,7 +547,7 @@ func GetModelsMethods(repo ModelRepository) (map[string]HttpMethods) {
 				break
 			}
 
-			list[string(mt[2])] = mp
+			list[modelName] = mp
 		}
 	}
 
