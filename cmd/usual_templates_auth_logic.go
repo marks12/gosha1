@@ -13,6 +13,10 @@ import (
     "log"
 )
 
+func AuthFind(filter types.AuthFilter)  (result []types.Auth, totalRecords int, err error) {
+	return
+}
+
 func AuthCreate(filter types.AuthFilter) (data types.Auth, err error) {
 
     query := core.Db
@@ -63,6 +67,14 @@ func AuthCreate(filter types.AuthFilter) (data types.Auth, err error) {
     }
 }
 
+func AuthRead(filter types.AuthFilter)  (data types.Auth, err error) {
+	return
+}
+
+func AuthUpdate(filter types.AuthFilter)  (data types.Auth, err error) {
+	return 
+}
+
 func AuthDelete(filter types.AuthFilter) (isOk bool, err error) {
 
     dbAuth := dbmodels.Auth{}
@@ -82,6 +94,11 @@ func AuthDelete(filter types.AuthFilter) (isOk bool, err error) {
     isOk = true
     return
 }
+
+func AuthFindOrCreate(filter types.AuthFilter)  (data types.Auth, err error) {
+	return 
+}
+
 `
 var usualTemplateAuthLogic = template{
 	Path:    "./logic/auth.go",
