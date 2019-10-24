@@ -6,13 +6,15 @@
                     <VSet width="fit">
                         <VHead level="h1" width="fit">Application dashboard</VHead>
                     </VSet>
-                    <VText width="fit">
-                        Please create application in current folder
-                    </VText>
                     <template v-if="currentApp.IsValidStructure">
-                        Your application successfully created!
+                        <VText width="fit">
+                            Your application successfully created!
+                        </VText>
                     </template>
                     <template v-else>
+                        <VText width="fit">
+                            Please create application in current folder
+                        </VText>
                         <VButton text="Create application" @click="createApp" accent></VButton>
                     </template>
                 </VSet>

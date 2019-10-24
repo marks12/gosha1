@@ -1,14 +1,13 @@
 package logic
 
 import (
-    "fmt"
-    "gosha/webapp/types"
-    "os"
-    "gosha/cmd"
-    "strings"
-    "regexp"
     "github.com/jinzhu/gorm"
     "github.com/pkg/errors"
+    "gosha/cmd"
+    "gosha/webapp/types"
+    "os"
+    "regexp"
+    "strings"
 )
 
 func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords int, err error) {
@@ -151,10 +150,6 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
     }
 
     totalRecords = len(result)
-
-    for k, _ := range modelsMethods {
-        fmt.Println(k)
-    }
 
     for k, model := range result {
         result[k].HttpMethods.IsFind = modelsMethods[model.Name].IsFind
