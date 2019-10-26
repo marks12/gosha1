@@ -74,6 +74,7 @@ func usualCreate(c *ishell.Context) {
 	CreateFile(usualTemplateServicesCaller.Path, usualTemplateServicesCaller.Content, c)
 	CreateFile(usualTemplateServicesTicket.Path, usualTemplateServicesTicket.Content, c)
 
+
 	//settings
 	CreateFile(msTemplateSettingsApp.Path, msTemplateSettingsApp.Content, c)
 	CreateFile(msTemplateSettingsDb.Path, msTemplateSettingsDb.Content, c)
@@ -108,6 +109,9 @@ func usualCreate(c *ishell.Context) {
 
 	CreateFile("./.gitignore", "./\\.idea\n", c)
 
+	//docker
+	CreateFile(usualTemplateDockerCallontent.Path, usualTemplateDockerCallontent.Content, c)
+
 	c.Println(red("New app with usual structure created"))
 }
 
@@ -116,6 +120,7 @@ func usualCreateMain(c *ishell.Context) {
 	CreateFile(usualTemplateMain.Path, usualTemplateMain.Content, c)
 
 	for _, folder := range []string{
+		"postgres",
 		"bootstrap",
 		"core",
 		"dbmodels",
