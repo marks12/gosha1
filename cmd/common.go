@@ -162,6 +162,7 @@ func getCurrentDirName() string {
 func CreateFile(file, content string, c *ishell.Context) (err error) {
 
     var choice int
+    var fmode os.FileMode = 0644
 
     if _, err := os.Stat(file); !os.IsNotExist(err) {
 
@@ -176,7 +177,12 @@ func CreateFile(file, content string, c *ishell.Context) (err error) {
         }
     }
 
-    err = ioutil.WriteFile(file, []byte(content), 0644)
+    reg := regexp.MustCompile("\\.sh$")
+    if reg.MatchString(file) {
+        fmode = 0755
+    }
+
+    err = ioutil.WriteFile(file, []byte(content), fmode)
 
     if err != nil {
         fmt.Println("Error creating", file)
@@ -215,10 +221,10 @@ func assignMsName(template string) string {
     return microserviceNameRegexp.ReplaceAllString(template, getCurrentDirName())
 }
 
-func assignPass(template string) string {
+func assignPass(template, pass string) string {
 
     var newPassRegexp = regexp.MustCompile("{new-pass}")
-    template = newPassRegexp.ReplaceAllString(template, generatePassword(8))
+    template = newPassRegexp.ReplaceAllString(template, pass)
 
     return template
 }

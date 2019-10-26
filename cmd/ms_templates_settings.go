@@ -59,26 +59,27 @@ const msTemplageSettingsWebAppContent = `package settings
 const ServerPort = "7005"
 
 `
+var dbPass = generatePassword(8)
 
-var msTemplageSettingsAppContent =
+var msTemplateSettingsAppContent =
         assignMsName(
             assignGuid(
                 assignPass(
-                    msSettingsApp)))
+                    msSettingsApp, dbPass)))
 
-var msTemplageSettingsDbContent =
+var msTemplateSettingsDbContent =
         assignMsName(
             assignPass(
-                msSettingsDb))
+                msSettingsDb, dbPass))
 
 var msTemplateSettingsApp = template{
     Path:    "./settings/app.go",
-    Content: msTemplageSettingsAppContent,
+    Content: msTemplateSettingsAppContent,
 }
 
 var msTemplateSettingsDb = template{
     Path:    "./settings/db.go",
-    Content: msTemplageSettingsDbContent,
+    Content: msTemplateSettingsDbContent,
 }
 
 var msTemplateSettingsWebApp = template{
