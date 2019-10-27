@@ -80,6 +80,7 @@ func usualCreate(c *ishell.Context) {
 	CreateFile(msTemplateSettingsDb.Path, msTemplateSettingsDb.Content, c)
 	CreateFile(usualTemplateSettingsWebapp.Path, usualTemplateSettingsWebapp.Content, c)
 	CreateFile(usualTemplateSettingsRoutes.Path, usualTemplateSettingsRoutes.Content, c)
+	CreateFile(msTemplateSettingsWss.Path, msTemplateSettingsWss.Content, c)
 
 	//types
 	CreateFile(usualTemplateTypesAuthenticator.Path, usualTemplateTypesAuthenticator.Content, c)
@@ -136,6 +137,7 @@ func usualCreateMain(c *ishell.Context) {
 		"flags",
 		"mdl",
 		"common",
+		"wsserver",
 	} {
 		if _, err := os.Stat(folder); os.IsNotExist(err) {
 			os.Mkdir(folder, 0755)
