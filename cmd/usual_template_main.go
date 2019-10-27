@@ -6,6 +6,7 @@ import (
     "{ms-name}/bootstrap"
     "{ms-name}/router"
     "{ms-name}/settings"
+    "{ms-name}/wsserver"
     "fmt"
     "os"
     "gosha/cmd"
@@ -30,9 +31,7 @@ func main() {
 func runWsServer() {
 
     wsserver.SetMessageHandler("", router.HandleWss)
-
     wsserver.Run("", settings.GetWssPort())
-
 }
 
 `
