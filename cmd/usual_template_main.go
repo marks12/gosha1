@@ -26,6 +26,15 @@ func main() {
 	http.ListenAndServe("0.0.0.0:" + settings.ServerPort, router.Router())
 
 }
+
+func runWsServer() {
+
+    wsserver.SetMessageHandler("", router.HandleWss)
+
+    wsserver.Run("", settings.GetWssPort())
+
+}
+
 `
 
 var usualTemplateMain = template{
