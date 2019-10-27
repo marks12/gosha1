@@ -69,6 +69,14 @@ func usualCreate(c *ishell.Context) {
 
 	//router
 	CreateFile(usualTemplateRouter.Path, usualTemplateRouter.Content, c)
+	CreateFile(usualTemplateWssRouter.Path, usualTemplateWssRouter.Content, c)
+
+	//wss
+	CreateFile(usualTemplateWsserver.Path, usualTemplateWsserver.Content, c)
+	CreateFile(usualTemplateWssHandlers.Path, usualTemplateWssHandlers.Content, c)
+
+	//google
+	CreateFile(usualTemplateGoogleAnalytics.Path, usualTemplateGoogleAnalytics.Content, c)
 
 	//service
 	CreateFile(usualTemplateServicesCaller.Path, usualTemplateServicesCaller.Content, c)
@@ -77,6 +85,7 @@ func usualCreate(c *ishell.Context) {
 
 	//settings
 	CreateFile(msTemplateSettingsApp.Path, msTemplateSettingsApp.Content, c)
+	CreateFile(msTemplateSettingsGoogle.Path, msTemplateSettingsGoogle.Content, c)
 	CreateFile(msTemplateSettingsDb.Path, msTemplateSettingsDb.Content, c)
 	CreateFile(usualTemplateSettingsWebapp.Path, usualTemplateSettingsWebapp.Content, c)
 	CreateFile(usualTemplateSettingsRoutes.Path, usualTemplateSettingsRoutes.Content, c)
@@ -130,10 +139,10 @@ func usualCreateMain(c *ishell.Context) {
 		"router",
 		"services",
 		"settings",
+		"google",
 		"static",
 		"types",
 		"webapp",
-		"database",
 		"flags",
 		"mdl",
 		"common",
