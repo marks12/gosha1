@@ -40,7 +40,27 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 }
 `
 
+const usualWssRouter = `package router
+
+import (
+    "{ms-name}/wsserver"
+
+    "github.com/google/uuid"
+)
+
+func HandleWss(msg wsserver.UserMessage, con *wsserver.UserConnection) (answer wsserver.UserResponse) {
+
+    answer = wsserver.UserResponse{
+        Type:    msg.Type,
+        Result:  "response from home",
+        Success: true,
+    }
+
+    return
+}
+`
+
 var usualTemplateRouter = template{
-	Path:    "./router/router.go",
+	Path:    "./router/wss.go",
 	Content: assignCurrentDateTime(assignMsName(usualRouter)),
 }
