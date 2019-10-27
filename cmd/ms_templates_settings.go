@@ -54,6 +54,26 @@ const DbPass = "{new-pass}"
 const DbName = "{ms-name}"
 `
 
+const msSettingsWss = `package settings
+
+import (
+    "{ms-name}/flags"
+)
+
+const WssPortDev = "5500"
+
+const WssPortProd = "5050"
+
+func GetWssPort() string {
+
+    if flags.IsDev {
+        return WssPortDev
+    }
+
+    return WssPortProd
+}
+`
+
 const msTemplageSettingsWebAppContent = `package settings
 
 const ServerPort = "7005"
@@ -72,6 +92,8 @@ var msTemplateSettingsDbContent =
             assignPass(
                 msSettingsDb, dbPass))
 
+var msTemplateSettingsWssContent = assignMsName(msSettingsWss)
+
 var msTemplateSettingsApp = template{
     Path:    "./settings/app.go",
     Content: msTemplateSettingsAppContent,
@@ -80,6 +102,11 @@ var msTemplateSettingsApp = template{
 var msTemplateSettingsDb = template{
     Path:    "./settings/db.go",
     Content: msTemplateSettingsDbContent,
+}
+
+var msTemplateSettingsWss = template{
+    Path:    "./settings/wss.go",
+    Content: msTemplateSettingsWssContent,
 }
 
 var msTemplateSettingsWebApp = template{
