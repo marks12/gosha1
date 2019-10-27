@@ -44,8 +44,6 @@ const usualWssRouter = `package router
 
 import (
     "{ms-name}/wsserver"
-
-    "github.com/google/uuid"
 )
 
 func HandleWss(msg wsserver.UserMessage, con *wsserver.UserConnection) (answer wsserver.UserResponse) {
@@ -61,6 +59,11 @@ func HandleWss(msg wsserver.UserMessage, con *wsserver.UserConnection) (answer w
 `
 
 var usualTemplateRouter = template{
-	Path:    "./router/wss.go",
+	Path:    "./router/router.go",
 	Content: assignCurrentDateTime(assignMsName(usualRouter)),
+}
+
+var usualTemplateWssRouter = template{
+	Path:    "./router/wss.go",
+	Content: assignCurrentDateTime(assignMsName(usualWssRouter)),
 }

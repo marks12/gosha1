@@ -6,6 +6,7 @@ import (
     "os"
     "fmt"
     "regexp"
+    "{ms-name}/flags"
 )
 
 const RabbitServerPassword = "{new-pass}"
@@ -19,7 +20,7 @@ const MicroserviceAuthKey = "{new-guid}"
 
 func IsDev() bool {
     var matchDev = regexp.MustCompile("^/tmp/go-build")
-    return matchDev.Match([]byte(os.Args[0]))
+    return matchDev.Match([]byte(os.Args[0])) || *flags.IsDev
 }
 
 func GetVirtualHost() string {
@@ -41,11 +42,18 @@ func GetVirtualHost() string {
     return rabbitServerVirtualhost
 }`
 
+const msSettingsGoogle = `package settings
+
+const GoogleAnalyticsUrl = "https://www.google-analytics.com/collect"
+const GoogleTrackingId = "G-6EQD27PJGY"
+
+`
+
 const msSettingsDb = `package settings
 
 const DbHost = "127.0.0.1"
 
-const DbPort = "5432"
+const DbPort = "35432"
 
 const DbUser = "{ms-name}"
 
@@ -56,17 +64,13 @@ const DbName = "{ms-name}"
 
 const msSettingsWss = `package settings
 
-import (
-    "{ms-name}/flags"
-)
-
-const WssPortDev = "5500"
+const WssPortDev = "5600"
 
 const WssPortProd = "5050"
 
 func GetWssPort() string {
 
-    if flags.IsDev {
+    if IsDev() {
         return WssPortDev
     }
 
@@ -87,6 +91,12 @@ var msTemplateSettingsAppContent =
                 assignPass(
                     msSettingsApp, dbPass)))
 
+var msTemplateSettingsGoogleContent =
+        assignMsName(
+            assignGuid(
+                assignPass(
+                    msSettingsGoogle, dbPass)))
+
 var msTemplateSettingsDbContent =
         assignMsName(
             assignPass(
@@ -97,6 +107,11 @@ var msTemplateSettingsWssContent = assignMsName(msSettingsWss)
 var msTemplateSettingsApp = template{
     Path:    "./settings/app.go",
     Content: msTemplateSettingsAppContent,
+}
+
+var msTemplateSettingsGoogle = template{
+    Path:    "./settings/google.go",
+    Content: msTemplateSettingsGoogleContent,
 }
 
 var msTemplateSettingsDb = template{

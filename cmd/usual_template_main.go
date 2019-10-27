@@ -23,17 +23,23 @@ func main() {
     // делаем автомиграцию
     bootstrap.FillDBTestData()
 
-	fmt.Println("API сервер запущен :" + settings.ServerPort)
-	http.ListenAndServe("0.0.0.0:" + settings.ServerPort, router.Router())
+    go runWsServer()
 
+    runHttpServer()
 }
 
 func runWsServer() {
 
+	fmt.Println("Websocket сервер запущен :" + settings.GetWssPort())
     wsserver.SetMessageHandler("", router.HandleWss)
     wsserver.Run("", settings.GetWssPort())
 }
 
+func runHttpServer() {
+
+	fmt.Println("API сервер запущен :" + settings.ServerPort)
+	http.ListenAndServe("0.0.0.0:" + settings.ServerPort, router.Router())
+}
 `
 
 var usualTemplateMain = template{
