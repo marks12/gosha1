@@ -46,6 +46,11 @@ func AuthCreate(filter types.AuthFilter) (data types.Auth, err error) {
             dbAuth.IsActive = true
             dbAuth.UserId = dbUser.ID
             dbAuth.Email = dbUser.Email
+            passLen := "empty"
+            if len(dbUser.Password) > 0 {
+                passLen = "used"
+            }
+            dbAuth.Password = passLen
             q := core.Db.Save(&dbAuth)
 
             if q.Error != nil {
