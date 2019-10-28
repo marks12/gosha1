@@ -16,7 +16,16 @@ const DbConnectString =
     "' dbname='" +    	settings.DbName +
     "' sslmode='disable'"
 
-var Db, DbErr = gorm.Open("postgres", DbConnectString)`
+var Db, DbErr = gorm.Open("postgres", DbConnectString)
+
+func EnableSqlLog() {
+	Db.LogMode(true)
+}
+
+func DisableSqlLog() {
+	Db.LogMode(false)
+}
+`
 
 var msTemplateCoreDb = template{
     Path:    "./core/db.go",

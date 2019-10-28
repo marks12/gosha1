@@ -7,8 +7,6 @@ import (
     "{ms-name}/router"
     "{ms-name}/settings"
     "fmt"
-    "os"
-    "gosha/cmd"
     "net/http"
 )
 
@@ -22,7 +20,14 @@ func main() {
     // делаем автомиграцию
     bootstrap.FillDBTestData()
 
-	fmt.Println("API сервер запущен :" + settings.ServerPort)
+	fmt.Println("API running :" + settings.ServerPort)
+
+    if settings.IsDev() {
+        fmt.Println("Running in DEV mode")
+    } else {
+        fmt.Println("Running in PROD mode")
+    }
+
 	http.ListenAndServe("0.0.0.0:" + settings.ServerPort, router.Router())
 
 }
