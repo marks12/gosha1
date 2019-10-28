@@ -1,0 +1,187 @@
+// Variables
+
+// project colors
+$color-selection:       #00ADEE !default; // выделение
+$color-selection-light: #4CD2FF !default; // выделение светлое
+$color-selection-dark:  #009EE3 !default; // выделение темное
+$color-action:          #7DAF19 !default; // действие
+$color-action-light:    rgba(125, 175, 25, 0.5) !default; // действие светлое
+$color-action-dark:     #6C8B2F !default; // действие темное
+$color-attention:       #F24800 !default; // внимание
+$color-attention-light: rgba(242, 72, 0, 0.5) !default; // внимание светлое
+$color-base:            #1C222C !default; // основной
+$color-base-light:      #39474E !default; // основной светлый
+$color-weak:            #8C8A85 !default; // слабый
+$color-weak-light:      rgba(28, 34, 44, 0.2) !default; // слабый светлый
+$color-soft:            rgba(140, 138, 133, 0.2) !default; // легкий
+$color-soft-light:      rgba(0, 0, 0, 0.05) !default; // легкий светлый
+$color-bg:              #F5F4F2 !default; // фон
+$color-bg-light:        #FFFFFF !default; // фон светлый
+
+// effects
+$shadow-big:   0px 0px 24px rgba(0, 0, 0, 0.05), 0px 4px 4px rgba(0, 0, 0, 0.05) !default; // тени больших массивов
+$shadow-small: 0px 0px 12px rgba(0, 0, 0, 0.05), 0px 4px 2px rgba(0, 0, 0, 0.05) !default; // тени маленьких массивов
+$shadow-inner: inset 0px 2px 0px rgba(28, 34, 44, 0.2) !default; // внутренняя тень
+
+// размеры константы XS, S, M, L, XL, XXL
+$size-xs:  4px !default;
+$size-s:   8px !default;
+$size-m:   16px !default;
+$size-l:   24px !default;
+$size-x:   32px !default;
+$size-xl:  48px !default;
+$size-xxl: 64px !default;
+
+// buttons
+$button-medium:     32px;
+$button-small:      24px;
+$button-min-width:  80px;
+
+// scaffoldings
+
+$color-base:             $color-base;
+$body-bg:                $color-bg-light;
+
+$link-color:             $color-selection;
+$link-color-hover:       $color-selection-dark;
+$link-decoration:        none;
+$link-decoration-hover:  none;
+
+$border-radius-base:     5px;
+$border-radius-large:    20px;
+$border-radius-small:    2px;
+
+$margin:                 14px;
+
+// fonts
+
+$font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-serif:       Georgia, "Times New Roman", Times, serif;
+$font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
+$font-family-base:        $font-family-sans-serif;
+
+$font-base:               "Roboto", $font-family-base;
+$font-weight-base:        400;
+
+$font-header:             "Roboto Condensed", $font-family-base;
+
+$font-size-m:            18px;
+$font-size-l:            24px;
+$font-size-x:           32px;
+
+$font-size-base:          14px; // Стандартный размер шрифта (T)
+$line-height-base:        1.42857; // 20px
+$font-size-small:         12px; // Уменьшенный размер шрифта (Ts)
+$line-height-small:       1.33333; // 16px
+$font-size-tiny:          10px; // Сильно уменьшенный размер шрифта (Txs)
+$line-height-tiny:        1.6; // 16px
+
+// headers
+
+// h0
+$font-weight-h0: 400;
+$font-style-h0:  normal;
+$font-size-h0:   48px;
+$line-height-h0: 1.1667; // 56px
+$font-family-h0: $font-header;
+$color-h0:       $color-base-light;
+
+// h1
+$font-weight-h1: 400;
+$font-style-h1:  normal;
+$font-size-h1:   26px;
+$line-height-h1: 1.2308; // 32px
+$font-family-h1: $font-base;
+$color-h1:       $color-base;
+
+// h2
+$font-weight-h2: 400;
+$font-style-h2:  normal;
+$font-size-h2:   20px;
+$line-height-h2: 1.2; // 24px
+$font-family-h2: $font-base;
+$color-h2:       $color-base;
+
+// h3
+$font-weight-h3: 400;
+$font-style-h3:  normal;
+$font-size-h3:   16px;
+$line-height-h3: 1.25; // 20px
+$font-family-h3: $font-base;
+$color-h3:       $color-base;
+
+// hx
+$font-weight-h4: 700;
+$font-style-h4:  normal;
+$font-size-h4:   14px;
+$line-height-h4: 1.4286; // 20px
+$font-family-h4: $font-base;
+$color-h4:       $color-base-light;
+
+// layout
+
+//$gutter-width:           30px;
+
+$screen-xs:              576px;
+$screen-sm:              768px;
+$screen-md:              992px;
+$screen-lg:              1200px;
+
+$container-gutter-width: 10px;
+
+$container-width-xs:     320px;
+$container-width-sm:     720px;
+$container-width-lg:     1166px + $container-gutter-width * 2;
+
+$container-min-width:    320px;
+$container-max-width:    $container-width-lg;
+
+// forms
+
+
+// forms
+$size-height-input:               $button-medium;
+$size-padding-input:              0 12px 1px 12px;
+$size-padding-textarea:           9px 12px;
+$size-min-width-input:            120px;
+
+$color-font-input:                $color-base;
+$color-font-input-placeholder:    $color-weak-light;
+
+$color-background-input:          $color-bg-light;
+$color-background-input-focus:    $color-background-input;
+$color-background-input-disabled: $color-soft-light;
+$color-background-input-readonly: $color-background-input-disabled;
+$color-background-input-error:    $color-attention;
+
+$color-border-input:              $color-weak-light;
+$color-border-input-focus:        $color-selection;
+$color-border-input-disabled:     $color-background-input-disabled;
+$color-border-input-readonly:     $color-background-input-readonly;
+$color-border-input-error:        $color-background-input-error;
+
+$size-font-input:                 $font-size-small;
+$size-font-input-placeholder:     $size-font-input;
+$size-border-input:               1px;
+$size-border-radius-input:        16px;
+
+$weight-font-input:               $font-weight-base;
+
+$font-input:                      $font-base;
+$font-input-placeholder:          $font-input;
+
+$shadow-input:                    none;
+$shadow-input-focus:              $shadow-small;
+$shadow-input-disabled:           none;
+$shadow-input-readonly:           $shadow-small;
+$shadow-input-error:              $shadow-small;
+
+$color-background-button:         $color-selection;
+$color-text-button:               $color-bg-light;
+$border-button:                   none;
+$border-radius-button:            $border-radius-large;
+$padding-button:                  12px 18px 12px 18px;
+$font-size-button:                17px;
+$color-background-hover:          $color-selection-light;
+$color-background-active:         $color-selection-dark;
+$color-background-disabled:       rgba(245, 244, 242, 1) !default;
