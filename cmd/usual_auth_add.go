@@ -133,7 +133,7 @@ func fillUser(c *ishell.Context) {
     IsActive    bool
     LastName    string
     MobilePhone string
-    Password    string  ` + "`" + `json:"-"` + "`" + `
+    Password    string
     Token       string
     `+ getRemoveLine("User")},
 		c)
