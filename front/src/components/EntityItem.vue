@@ -33,7 +33,10 @@
             </VSet>
         </VSet>
         <template slot="footer">
-            <VButton text="Edit" small @click="onEdit(entityItem)"></VButton>
+            <VSet>
+                <VButton text="Edit" small @click="onEdit(entityItem)"></VButton>
+                <VButton text="Request" small accent @click="onRequest(entityItem)"></VButton>
+            </VSet>
         </template>
     </WorkSpace>
 </template>
@@ -56,6 +59,7 @@
         props: {
             entityItem: Object,
             onEdit: Function,
+            onRequest: Function,
         },
     }
 </script>

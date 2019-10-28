@@ -13,9 +13,10 @@ func usualAuthAdd(c *ishell.Context) {
 	c.Println(yellow("Hello we start adding auth to app"))
 
 	os.Args = append(os.Args, "--entity=User")
+	os.Args = append(os.Args,"--check-auth=fruda")
 	usualEntityAdd(c)
-	os.Args = os.Args[:len(os.Args)-1]
 
+	os.Args = os.Args[:len(os.Args)-2]
 	os.Args = append(os.Args, "--entity=Role")
 	usualEntityAdd(c)
 	os.Args = os.Args[:len(os.Args)-1]
@@ -190,7 +191,7 @@ func fillUser(c *ishell.Context) {
 		"dbmodels/user.go",
 		[]string{getRemoveLine("User")},
 		[]string{
-			`Email       string
+			`Email       string  `+"`"+`gorm:"type:varchar(100);unique_index"`+"`"+`
     FirstName   string
     IsActive    bool
     LastName    string
