@@ -13,11 +13,6 @@ import (
 
 func main() {
 
-    if len(os.Args) > 1 && os.Args[1] == "shell" {
-        cmd.Run()
-        os.Exit(1)
-    }
-
     // делаем автомиграцию
     bootstrap.FillDBTestData()
 
