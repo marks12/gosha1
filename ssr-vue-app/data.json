@@ -1,0 +1,726 @@
+{
+  "Index": {
+    "Components": [
+      {
+        "Type": "ProductsNew",
+        "Id": "38280f47-6739-445d-a212-8ab72f9c06c3"
+      },
+      {
+        "Type": "CategoriesList",
+        "Id": "b3fc07a4-35c0-4d74-9620-2b8894892e18"
+      },
+      {
+        "Type": "ProductsSlider",
+        "Id": "5ebb5b8f-ce53-4985-b96c-ab0350392a2b"
+      },
+      {
+        "Type": "SectionTextWithButtons",
+        "Id": "2e1799ea-3c8c-40ae-8143-24e1634d9bff"
+      },
+      {
+        "Type": "PromoBannerMiddle",
+        "Id": "a84be750-3ed6-4eae-86f7-1c8776d7af92"
+      },
+      {
+        "Type": "IndexArticles",
+        "Id": "7c77edcf-7843-42b9-a118-bde3d98a93a6"
+      },
+      {
+        "Type": "ProductList",
+        "Id": "29dbb32a-634a-44e0-b81c-1bacf46981a1"
+      },
+      {
+        "Type": "CollectionList",
+        "Id": "69e9a86b-801d-4134-a8eb-acbb12d938c6"
+      }
+    ]
+  },
+  "PromoLine": {
+    "Text": "Промо топ",
+    "Url": "#"
+  },
+  "Header": {
+    "CatalogMenu": [
+      {
+        "Id": "1",
+        "Title": "Здоровье",
+        "Url": "/health",
+        "Children": [
+          {
+            "Title": "Антипаразитарная защита",
+            "Url": "#"
+          },
+          {
+            "Title": "Высокая работоспособность",
+            "Url": "#"
+          }
+        ]
+      },
+      {
+        "Id": "2",
+        "Title": "Спорт",
+        "Url": "#",
+        "Children": [
+          {
+            "Title": "Протеин",
+            "Url": "#"
+          },
+          {
+            "Title": "Аминокислоты",
+            "Url": "#"
+          }
+        ]
+      },
+      {
+        "Id": "3",
+        "Title": "Питание",
+        "Url": "#",
+        "Children": []
+      },
+      {
+        "Id": "4",
+        "Title": "Красота",
+        "Url": "#",
+        "Children": []
+      },
+      {
+        "Id": "5",
+        "Title": "Дом",
+        "Url": "#",
+        "Children": []
+      },
+      {
+        "Id": "6",
+        "Title": "Книги",
+        "Url": "#",
+        "Children": []
+      },
+      {
+        "Id": "7",
+        "Title": "Разное",
+        "Url": "#",
+        "Children": []
+      }
+    ],
+    "MainMenu": [
+      {
+        "Id": "1",
+        "Title": "Компания",
+        "Url": "#",
+        "Children": [
+          {
+            "Title": "О нас",
+            "Url": "#"
+          },
+          {
+            "Title": "Наука и производство",
+            "Url": "#"
+          }
+        ]
+      },
+      {
+        "Id": "2",
+        "Title": "Бизнес",
+        "Url": "#",
+        "Children": []
+      },
+      {
+        "Id": "3",
+        "Title": "Партнеры",
+        "Url": "#",
+        "Children": []
+      },
+      {
+        "Id": "4",
+        "Title": "Блоги",
+        "Url": "#",
+        "Children": []
+      }
+    ]
+  },
+  "Footer": {
+    "Contacts": {
+      "Phone": "8 800 755-87-55",
+      "Title": "Ежедневно c 5:00 до 20:00 по московскому времени"
+    },
+    "Copyright": "© 1996 - 2019 ООО Международная компания «Сибирское здоровье». Все права защищены.<br>\n              Воспроизведение материалов данного сайта возможно при условии обязательного размещения активной ссылки на\n              www.siberianhealth.com.<br>\n              Вся бизнес-информация, представленная на данном сайте, является недействительной для Республики Узбекистан",
+    "MainMenu": [
+      {
+        "SectionTitle": "Потребителям",
+        "Groups": [
+          {
+            "Items": [
+              {
+                "Title": "Каталоги и прайс-листы",
+                "Url": "#"
+              },
+              {
+                "Title": "Акции месяца",
+                "Url": "#"
+              }
+            ]
+          },
+          {
+            "Items": [
+              {
+                "Title": "Пользовательское соглашение ",
+                "Url": "#"
+              },
+              {
+                "Title": "Политика конфиденциальности",
+                "Url": "#"
+              }
+            ]
+          },
+          {
+            "Items": [
+              {
+                "Title": "Как заказать",
+                "Url": "#"
+              },
+              {
+                "Title": "Доставка и оплата",
+                "Url": "#"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "SectionTitle": "Бизнес-партнёрам",
+        "Groups": [
+          {
+            "Items": [
+              {
+                "Title": "Бизнес с компанией",
+                "Url": "#"
+              },
+              {
+                "Title": "Преимущества",
+                "Url": "#"
+              },
+              {
+                "Title": "Возможности",
+                "Url": "#"
+              },
+              {
+                "Title": "Истории успеха",
+                "Url": "#"
+              }
+            ]
+          },
+          {
+            "Items": [
+              {
+                "Title": "Поставщикам",
+                "Url": "#"
+              },
+              {
+                "Title": "Профессионалам индустрии",
+                "Url": "#"
+              }
+            ]
+          },
+          {
+            "Items": [
+              {
+                "Title": "Открытие новой страны",
+                "Url": "#"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "SectionTitle": "Компания",
+        "Groups": [
+          {
+            "Items": [
+              {
+                "Title": "История компании",
+                "Url": "#"
+              },
+              {
+                "Title": "Наука и производство",
+                "Url": "#"
+              },
+              {
+                "Title": "FAQ",
+                "Url": "#"
+              }
+            ]
+          },
+          {
+            "Items": [
+              {
+                "Title": "Блог",
+                "Url": "#"
+              },
+              {
+                "Title": "Новости",
+                "Url": "#"
+              }
+            ]
+          },
+          {
+            "Items": [
+              {
+                "Title": "Адреса магазинов",
+                "Url": "#"
+              },
+              {
+                "Title": "Контакты",
+                "Url": "#"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "Projects": [
+      {
+        "Id": "1",
+        "Title": "SIBVALEOTV",
+        "Img": "/images/projects/footer-project-1.jpg"
+      },
+      {
+        "Id": "2",
+        "Title": "Мир вокруг тебя",
+        "Img": "/images/projects/footer-project-2.jpg"
+      }
+    ],
+    "InfoMenu": [
+      {
+        "Id": "1",
+        "Title": "Пользовательское соглашение",
+        "Link": "#"
+      },
+      {
+        "Id": "2",
+        "Title": "Политика конфиденциальности",
+        "Link": "#"
+      },
+      {
+        "Id": "3",
+        "Title": "Условия покупки",
+        "Link": "#"
+      }
+    ]
+  },
+  "Products": [
+    {
+      "Id": "1",
+      "PreviewImgSrc": "https://static.siberianhealth.com/public/projects/shopen/images/50/_resize/500443_bd7c3cf3_fit_300_300.png",
+      "Price": 75,
+      "Points": 60,
+      "Title": "Крем для лица ночной с антиоксидантами - косметика с комплексом ENDMIX",
+      "Description": "Крем для лица ночной с ореховыми маслами, цветочной водой и антиоксидантами",
+      "ButtonText": "Купить",
+      "Url": "/",
+      "Discount": 0
+    },
+    {
+      "Id": "2",
+      "PreviewImgSrc": "https://static.siberianhealth.com/public/projects/shopen/images/50/_resize/500020_0e3b5ba8_fit_300_300.png",
+      "Price": 1100,
+      "Points": 9030,
+      "Title": "Антиоксидантный комплекс",
+      "Description": "Новомин",
+      "ButtonText": "Купить",
+      "Url": "/",
+      "Discount": 0
+    },
+    {
+      "Id": "3",
+      "PreviewImgSrc": "https://static.siberianhealth.com/public/projects/shopen/images/50/_resize/500031_1f55fdd4_fit_300_300.png",
+      "Price": 1100,
+      "Points": 9030,
+      "Title": "Антиоксидантный комплекс",
+      "Description": "Элемвитал с органическим селеном",
+      "ButtonText": "Купить",
+      "Url": "/",
+      "Discount": 0
+    },
+    {
+      "Id": "4",
+      "PreviewImgSrc": "https://static.siberianhealth.com/public/projects/shopen/images/50/_resize/500031_1f55fdd4_fit_300_300.png",
+      "Price": 1100,
+      "Points": 9030,
+      "Title": "Источник природного селена для активной жизни клеток",
+      "Description": "Элемвитал с органическим селеном",
+      "ButtonText": "Купить",
+      "Url": "/",
+      "Discount": 0
+    },
+    {
+      "Id": "5",
+      "PreviewImgSrc": "https://static.siberianhealth.com/public/projects/shopen/images/50/_resize/500443_bd7c3cf3_fit_300_300.png",
+      "Price": 9939,
+      "Points": 9030,
+      "Title": "Пульс бокс / Pulse Box",
+      "Description": "Набор Daily Box",
+      "ButtonText": "Купить",
+      "Url": "/",
+      "Discount": 0
+    },
+    {
+      "Id": "6",
+      "PreviewImgSrc": "https://static.siberianhealth.com/public/projects/shopen/images/50/_resize/500020_0e3b5ba8_fit_300_300.png",
+      "Price": 1100,
+      "Points": 9030,
+      "Title": "Антиоксидантный комплекс",
+      "Description": "Новомин",
+      "ButtonText": "Купить",
+      "Url": "/",
+      "Discount": 0
+    },
+    {
+      "Id": "7",
+      "PreviewImgSrc": "https://static.siberianhealth.com/public/projects/shopen/images/50/_resize/500031_1f55fdd4_fit_300_300.png",
+      "Price": 1100,
+      "Points": 9030,
+      "Title": "Антиоксидантный комплекс",
+      "Description": "Элемвитал с органическим селеном",
+      "ButtonText": "Купить",
+      "Url": "/",
+      "Discount": 0
+    },
+    {
+      "Id": "8",
+      "PreviewImgSrc": "https://static.siberianhealth.com/public/projects/shopen/images/50/_resize/500031_1f55fdd4_fit_300_300.png",
+      "Price": 1100,
+      "Points": 9030,
+      "Title": "Источник природного селена для активной жизни клеток",
+      "Description": "Элемвитал с органическим селеном",
+      "ButtonText": "Купить",
+      "Url": "/",
+      "Discount": 0
+    }
+  ],
+  "CallToRegistration": {
+    "Header": "Качество, натуральные компоненты и инновационные продукты - секрет ежегодного роста компании",
+    "Title": "",
+    "Buttons": [
+      {
+        "Text": "Все преимущества",
+        "Url": "#",
+        "IsAccent": false,
+        "IsShow": true
+      },
+      {
+        "Text": "Зарегистрироваться",
+        "Url": "#",
+        "IsAccent": true,
+        "IsShow": true
+      }
+    ]
+  },
+  "Actions": [
+    {
+      "Id": "1",
+      "Header": "Лучшие эко-ингредиенты для здорового перекуса",
+      "Price": "939",
+      "PriceOld": "1 595",
+      "Label": "Только в мае",
+      "Title": "<strong>Yoo Go LUNCH BOX</strong><br>2 батончика «Манго»<br>\u20282 батончика «Лесные ягоды»<br>\u20287 порций питательного коктейля и мармелад",
+      "ImgSrc": "/images/index-actions-slider-1.png",
+      "BtnText": "Добавить в корзину",
+      "LinkText": "Подробнее о предложении",
+      "Url": "#"
+    },
+    {
+      "Id": "2",
+      "Header": "Yoo Go LUNCH BOX",
+      "Price": "939",
+      "PriceOld": "1 595",
+      "Label": "Только в мае",
+      "Title": "2 батончика «Манго»<br> \u20282 батончика «Лесные ягоды»<br> \u20287 порций питательного коктейля и мармелад\u2028",
+      "ImgSrc": "/images/index-actions-slider-1.png",
+      "Url": "#"
+    },
+    {
+      "Id": "3",
+      "Header": "Yoo Go LUNCH BOX",
+      "Price": "939",
+      "PriceOld": "1 595",
+      "Label": "Только в мае",
+      "Title": "2 батончика «Манго»<br> \u20282 батончика «Лесные ягоды»<br> \u20287 порций питательного коктейля и мармелад\u2028",
+      "ImgSrc": "/images/index-actions-slider-1.png",
+      "Url": "#"
+    }
+  ],
+  "Projects": [
+    {
+      "Header": "С заботой о мире",
+      "Content": "<p>Вместе с WWF мы оберегаем снежного барса (ирбиса), в сотрудничестве с «Байкальской экологической волной» — исследуем экологию самого большого озера на планете… \nБольше о социальной и эко ответственности Siberian Wellness</p><p><a href=\"#\">Больше о социальной и эко ответственности Siberian Wellness</a></p>",
+      "ImgSrc": "/images/projects-slider/index-projects-slider-1.png",
+      "BgImgSrc": "/images/projects-slider/bg-index-projects-slider-1.png"
+    },
+    {
+      "Header": "Siberian Wellness: бизнес на трех континентах!",
+      "Content": "<p>Всего в мире – 190 стран. И в 65 из них можно заказать продукцию «Сибирского здоровья»!</p><p><a href=\"#\">Как стать представителем\u2028в новой стране</a></p>",
+      "ImgSrc": "",
+      "BgImgSrc": "/images/projects-slider/bg-index-projects-slider-2.png"
+    }
+  ],
+  "ProductsNew": {
+    "Header": "Новинки, которые придутся вам по душе",
+    "Items": ["массив аналогичный Products"]
+  },
+  "ProductsRecommended": {
+    "SectionHeader": "Рекомендуем вам",
+    "SectionTitle": "Эти продукты подобраны на основания вашего профиля посещения",
+    "Items": ["массив аналогичный Products"]
+  },
+  "ProductsBest": {
+    "SectionHeader": "Лучшие из наших линеек",
+    "SectionTitle": "Если вы не пробовали эти продукты, значит вы ещё не все знаете о настоящем сибирском здоровье",
+    "Items": ["массив аналогичный Products"]
+  },
+  "ProductsSales": {
+    "SectionHeader": "Товары со скидками более 30%",
+    "SectionTitle": "",
+    "Items": ["массив аналогичный Products"]
+  },
+  "CategoriesSet": [
+    {
+      "Id": "1",
+      "Title": "Сладости",
+      "Url": "#",
+      "ImgSrc": ""
+    },
+    {
+      "Id": "2",
+      "Title": "Витамины на каждый день",
+      "Url": "#",
+      "ImgSrc": ""
+    },
+    {
+      "Id": "3",
+      "Title": "Для женщин",
+      "Url": "#",
+      "ImgSrc": ""
+    },
+    {
+      "Id": "4",
+      "Title": "Для мужчин",
+      "Url": "#",
+      "ImgSrc": ""
+    },
+    {
+      "Id": "5",
+      "Title": "Гигиена",
+      "Url": "#",
+      "ImgSrc": ""
+    },
+    {
+      "Id": "6",
+      "Title": "Книги",
+      "Url": "#",
+      "ImgSrc": ""
+    }
+  ],
+  "PromoBannerMiddle": {
+    "Title": "Купи три товара и получи скидку 50% на четвертый",
+    "Link": "#",
+    "Items": [
+      {
+        "ImgSrc": "",
+        "ImgTitle": ""
+      },
+      {
+        "ImgSrc": "",
+        "ImgTitle": ""
+      },
+      {
+        "ImgSrc": "",
+        "ImgTitle": ""
+      }
+    ]
+  },
+  "IndexArticles": [
+    {
+      "Title": "Исследуем и поддерживаем экологию Байкала",
+      "Text": "",
+      "ImgSrc": "#",
+      "Label": "Спорт",
+      "Date": "30 мая",
+      "View": "big",
+      "Url": ""
+    },
+    {
+      "Title": "Как мы ирбисов и домашних животных подружили ",
+      "Text": "",
+      "ImgSrc": "#",
+      "Label": "Спорт",
+      "Date": "30 мая",
+      "View": "big",
+      "Url": ""
+    },
+    {
+      "Title": "Ищите территорию wellness в своем городе ",
+      "Text": "",
+      "ImgSrc": "#",
+      "Label": "Спорт",
+      "Date": "30 мая",
+      "View": "small",
+      "Url": ""
+    },
+    {
+      "Title": "Международный Business Congress в Ташкенте – первый во всем!",
+      "Text": "",
+      "ImgSrc": "#",
+      "Label": "Спорт",
+      "Date": "30 мая",
+      "View": "small",
+      "Url": ""
+    }
+  ],
+  "Collections": {
+    "SectionHeader": "Подборки, собранные заботливыми руками нутрициологов",
+    "SectionTitle": "Мы заранее позаботились о вас и предлагаем отличные наборы для того чтобы вы чувствовали себя каждый день на все 100%",
+    "Items": [
+      {
+        "Id": "1",
+        "Title": "Поддержка при подготовке к соревнованиям",
+        "PreviewImg": {
+          "ImgSrc": "#",
+          "ImgTitle": "",
+          "Url": "#"
+        },
+        "Products": [
+          {
+            "Id": "1",
+            "ImgSrc": "#",
+            "ImgTitle": "",
+            "Url": "#"
+          },
+          {
+            "Id": "2",
+            "ImgSrc": "#",
+            "ImgTitle": "",
+            "Url": "#"
+          },
+          {
+            "Id": "3",
+            "ImgSrc": "#",
+            "ImgTitle": "",
+            "Url": "#"
+          },
+          {
+            "Id": "4",
+            "ImgSrc": "#",
+            "ImgTitle": "",
+            "Url": "#"
+          },
+          {
+            "Id": "5",
+            "ImgSrc": "#",
+            "ImgTitle": "",
+            "Url": "#"
+          },
+          {
+            "Id": "6",
+            "ImgSrc": "#",
+            "ImgTitle": "",
+            "Url": "#"
+          }
+        ]
+      },
+      {
+        "Id": "2",
+        "Title": "Всё для максимальной работоспособности",
+        "PreviewImg": {
+          "ImgSrc": "#",
+          "ImgTitle": "",
+          "Url": "#"
+        },
+        "Products": [
+          {
+            "Id": "1",
+            "ImgSrc": "#",
+            "ImgTitle": "",
+            "Url": "#"
+          },
+          {
+            "Id": "2",
+            "ImgSrc": "#",
+            "ImgTitle": "",
+            "Url": "#"
+          },
+          {
+            "Id": "3",
+            "ImgSrc": "#",
+            "ImgTitle": "",
+            "Url": "#"
+          },
+          {
+            "Id": "4",
+            "ImgSrc": "#",
+            "ImgTitle": "",
+            "Url": "#"
+          },
+          {
+            "Id": "5",
+            "ImgSrc": "#",
+            "ImgTitle": "",
+            "Url": "#"
+          },
+          {
+            "Id": "6",
+            "ImgSrc": "#",
+            "ImgTitle": "",
+            "Url": "#"
+          }
+        ]
+      },
+      {
+        "Id": "3",
+        "Title": "Как привести себя в форму и изменить систему питания",
+        "PreviewImg": {
+          "ImgSrc": "#",
+          "ImgTitle": "",
+          "Url": "#"
+        },
+        "Products": [
+          {
+            "Id": "1",
+            "ImgSrc": "#",
+            "ImgTitle": "",
+            "Url": "#"
+          },
+          {
+            "Id": "2",
+            "ImgSrc": "#",
+            "ImgTitle": "",
+            "Url": "#"
+          },
+          {
+            "Id": "3",
+            "ImgSrc": "#",
+            "ImgTitle": "",
+            "Url": "#"
+          },
+          {
+            "Id": "4",
+            "ImgSrc": "#",
+            "ImgTitle": "",
+            "Url": "#"
+          },
+          {
+            "Id": "5",
+            "ImgSrc": "#",
+            "ImgTitle": "",
+            "Url": "#"
+          },
+          {
+            "Id": "6",
+            "ImgSrc": "#",
+            "ImgTitle": "",
+            "Url": "#"
+          }
+        ]
+      }
+    ]
+  }
+}

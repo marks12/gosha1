@@ -1,0 +1,229 @@
+/*--------------- begin common -------------*/
+
+html {
+    //height: 100%;
+    min-width: $container-min-width;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    box-sizing: border-box;
+}
+
+body {
+    font-size: $font-size-base;
+    font-weight: $font-weight-base;
+    font-family: $font-base;
+    line-height: $line-height-base;
+    color: $color-base;
+    background: $body-bg;
+}
+
+* {
+    &,
+    &:before,
+    &:after {
+        box-sizing: inherit;
+    }
+}
+
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    height: auto;
+}
+
+.wrapper {
+    position: relative;
+    flex: 1 0 auto;
+}
+
+.container {
+    width: $container-width-xs;
+    min-width: $container-min-width;
+    max-width: $container-max-width;
+    margin: 0 auto;
+    padding: 0 $container-gutter-width;
+
+    @media (min-width: $screen-sm) {
+        width: $container-width-sm;
+    }
+
+    @media (min-width: $screen-lg) {
+        width: $container-width-lg;
+    }
+}
+
+.clearfix {
+    @include clearfix();
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0
+}
+
+.h0 {
+    margin: 44px 0 12px 0;
+    font-weight: $font-weight-h0;
+    font-style: $font-style-h0;
+    font-size: $font-size-h0;
+    line-height: $line-height-h0;
+    font-family: $font-family-h0;
+    color: $color-h0;
+}
+
+h1,
+.h1 {
+    margin: 44px 0 12px 0;
+    font-weight: $font-weight-h1;
+    font-style: $font-style-h1;
+    font-size: $font-size-h1;
+    line-height: $line-height-h1;
+    font-family: $font-family-h1;
+    color: $color-h1;
+}
+
+h2,
+.h2 {
+    margin: 44px 0 20px 0;
+    font-weight: $font-weight-h2;
+    font-style: $font-style-h2;
+    font-size: $font-size-h2;
+    line-height: $line-height-h2;
+    font-family: $font-family-h2;
+    color: $color-h2;
+}
+
+h3,
+.h3 {
+    margin: 36px 0 12px 0;
+    font-weight: $font-weight-h3;
+    font-style: $font-style-h3;
+    font-size: $font-size-h3;
+    line-height: $line-height-h3;
+    font-family: $font-family-h3;
+    color: $color-h3;
+}
+
+h4,
+.h4{
+    margin: 28px 0 12px 0;
+    font-weight: $font-weight-h4;
+    font-style: $font-style-h4;
+    font-size: $font-size-h4;
+    line-height: $line-height-h4;
+    font-family: $font-family-h4;
+    color: $color-h4;
+}
+
+a {
+    color: $color-selection;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+        color: $color-selection-dark;
+        text-decoration: none;
+    }
+
+    &:focus {
+        color: $color-selection-dark;
+        text-decoration: none;
+    }
+
+    &:active {
+        color: $color-selection-dark;
+        text-decoration: underline;
+    }
+}
+
+//.btn_link {
+//    display: inline;
+//    padding: 0;
+//    font-family: $font-base;
+//    background: none;
+//    border: none;
+//}
+
+a[href^="tel"]{
+    color:inherit;
+    text-decoration:none;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+
+    &:active,
+    &:focus {
+        outline: none;
+    }
+}
+
+p {
+    margin: 12px 0;
+}
+
+ul,
+ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+.hidden {
+    display: none !important;
+}
+
+/*--------------- end common ----------------*/
+
+/*--------------- begin layout -------------*/
+
+.layout {
+    display: flex;
+    align-items: flex-start;
+
+    &__sidebar {
+        width: 196px;
+        flex-shrink: 0;
+        padding: $size-l 0 $size-l $size-l;
+    }
+
+    &__main {
+        flex-grow: 1;
+        padding: $size-l;
+        overflow: hidden;
+    }
+}
+
+/*---------------- end layout --------------*/
+
+/*--------------- begin admin-tool -------------*/
+
+.admin-tool {
+
+    &_hovered {
+        outline: 4px solid rgba(0, 6, 255, 0.66);
+        outline-offset: -4px;
+    }
+    &_selected {
+        outline: 4px solid red;
+        outline-offset: -4px;
+    }
+}
+
+/*---------------- end admin-tool --------------*/
