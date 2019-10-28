@@ -19,7 +19,11 @@
             <template>
                 <VSet v-if="entityList && entityList.length" wrap>
                     <template v-for="entityItem in entityList">
-                        <EntityItem :entityItem="entityItem" :onEdit="editItem"></EntityItem>
+                        <EntityItem
+                                :entityItem="entityItem"
+                                :onEdit="editItem"
+                                :onRequest="requestItem"
+                        ></EntityItem>
                     </template>
                 </VSet>
                 <VText class="loading"></VText>
@@ -183,6 +187,8 @@
         },
         created: function () {
 
+            this.panel.request = "request";
+
             this.fieldTypeFilter.CurrentPage = 1;
             this.fieldTypeFilter.PerPage = 100;
 
@@ -241,6 +247,10 @@
                 this.currentEntityItem = item;
                 this.showPanel(this.panel.edit)
             },
+            requestItem(item) {
+                this.currentEntityItem = item;
+                this.showPanel(this.panel.request)
+            },
             clearNewFields() {
                 this.newFields  = [
                     new EntityField(),
@@ -291,6 +301,10 @@
                 return this.errors.length === 0;
             },
             saveChangesSubmit() {
+
+                if (this.isPanelRequest) {
+                    return;
+                }
 
                 if (! this.IsValidEntity()) {
                     return;
@@ -350,6 +364,9 @@
                 } else if (type === this.panel.edit) {
                     this.panel.type = this.panel.edit;
                     this.currentEntityItem.isSelected = true;
+                } else if (type === this.panel.request) {
+                    this.panel.type = this.panel.request;
+                    this.currentEntityItem.isSelected = true;
                 }
 
                 this.panel.show = true;
@@ -358,6 +375,7 @@
                 this.currentEntityItem = this.getNewEntity();
                 this.showPanel(this.panel.create)
             },
+
         },
         computed: {
             hasFields(entityItem) {
@@ -375,6 +393,25 @@
             },
             entity() {
                 return this.getEntityById();
+            },
+            isPanelRequest() {
+                return this.panel.type === this.panel.request;
+            },
+            panelSubmitButtonText() {
+
+                if (this.isPanelCreate) {
+                    return this.panelSubmitButtonTextCreate;
+                }
+
+                if (this.isPanelEdit) {
+                    return this.panelSubmitButtonTextEdit;
+                }
+
+                if (this.isPanelRequest) {
+                    return 'Request';
+                }
+
+                return  '';
             },
         },
         watch: {
