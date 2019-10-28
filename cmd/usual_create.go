@@ -69,16 +69,27 @@ func usualCreate(c *ishell.Context) {
 
 	//router
 	CreateFile(usualTemplateRouter.Path, usualTemplateRouter.Content, c)
+	CreateFile(usualTemplateWssRouter.Path, usualTemplateWssRouter.Content, c)
+
+	//wss
+	CreateFile(usualTemplateWsserver.Path, usualTemplateWsserver.Content, c)
+	CreateFile(usualTemplateWssHandlers.Path, usualTemplateWssHandlers.Content, c)
+
+	//google
+	CreateFile(usualTemplateGoogleAnalytics.Path, usualTemplateGoogleAnalytics.Content, c)
 
 	//service
 	CreateFile(usualTemplateServicesCaller.Path, usualTemplateServicesCaller.Content, c)
 	CreateFile(usualTemplateServicesTicket.Path, usualTemplateServicesTicket.Content, c)
 
+
 	//settings
 	CreateFile(msTemplateSettingsApp.Path, msTemplateSettingsApp.Content, c)
+	CreateFile(msTemplateSettingsGoogle.Path, msTemplateSettingsGoogle.Content, c)
 	CreateFile(msTemplateSettingsDb.Path, msTemplateSettingsDb.Content, c)
 	CreateFile(usualTemplateSettingsWebapp.Path, usualTemplateSettingsWebapp.Content, c)
 	CreateFile(usualTemplateSettingsRoutes.Path, usualTemplateSettingsRoutes.Content, c)
+	CreateFile(msTemplateSettingsWss.Path, msTemplateSettingsWss.Content, c)
 
 	//types
 	CreateFile(usualTemplateTypesAuthenticator.Path, usualTemplateTypesAuthenticator.Content, c)
@@ -108,6 +119,9 @@ func usualCreate(c *ishell.Context) {
 
 	CreateFile("./.gitignore", "./\\.idea\n", c)
 
+	//docker
+	CreateFile(usualTemplateDockerCallontent.Path, usualTemplateDockerCallontent.Content, c)
+
 	c.Println(red("New app with usual structure created"))
 }
 
@@ -116,6 +130,7 @@ func usualCreateMain(c *ishell.Context) {
 	CreateFile(usualTemplateMain.Path, usualTemplateMain.Content, c)
 
 	for _, folder := range []string{
+		"postgres",
 		"bootstrap",
 		"core",
 		"dbmodels",
@@ -124,13 +139,14 @@ func usualCreateMain(c *ishell.Context) {
 		"router",
 		"services",
 		"settings",
+		"google",
 		"static",
 		"types",
 		"webapp",
-		"database",
 		"flags",
 		"mdl",
 		"common",
+		"wsserver",
 	} {
 		if _, err := os.Stat(folder); os.IsNotExist(err) {
 			os.Mkdir(folder, 0755)
