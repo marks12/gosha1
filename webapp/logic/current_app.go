@@ -23,7 +23,7 @@ func CurrentAppCreate(filter types.CurrentAppFilter)  (data types.CurrentApp, er
     argsBak := os.Args
     defer func(){os.Args = argsBak}()
 
-    args := []string{"", "exit", "setAppType", "--type=Usual", "usual:create"}
+    args := []string{"", "exit", "setAppType", "--type=Usual", cmd.USUAL_APP_CREATE, "--adminMail=" + filter.Email, "--adminPassword=" + filter.Password}
 
     os.Args = args
     cmd.RunShell()
