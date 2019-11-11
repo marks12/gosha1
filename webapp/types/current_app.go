@@ -16,7 +16,9 @@ func (currentApp *CurrentApp) Validate()  {
 
 type CurrentAppFilter struct {
     model CurrentApp
-    //CurrentAppFilter remove this line for disable generator functionality
+    Email string
+	Password string
+	//CurrentAppFilter remove this line for disable generator functionality
 
     AbstractFilter
 }
@@ -28,7 +30,9 @@ func GetCurrentAppFilter(request *http.Request, functionType string) CurrentAppF
     filter.request = request
     //filter.TestFilter, _ = strconv.Atoi(request.FormValue("TestFilter"))
 
-    //GetCurrentAppFilter remove this line for disable generator functionality
+    filter.Email = request.FormValue("Email")
+	filter.Password = request.FormValue("Password")
+	//GetCurrentAppFilter remove this line for disable generator functionality
 
     ReadJSON(request, &filter.model)
 
