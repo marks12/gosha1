@@ -4,9 +4,11 @@ const msInsertDataToDb = `package bootstrap
 
 import (
 	"{ms-name}/dbmodels"
+	"{ms-name}/types"
 	"fmt"
 	"os"
 	"{ms-name}/core"
+	"{ms-name}/logic"
 )
 
 func FillDBTestData()  {
@@ -38,7 +40,42 @@ func FillDBTestData()  {
 	)
 
 	// add fixtures
+	addUser()
 
+}
+
+func addUser() {
+
+	var count int
+
+	core.Db.Model(dbmodels.User{}).Count(&count)
+
+	if count < 1 {
+
+		user := logic.AssignUserDbFromType(types.User{
+			Id:          0,
+			Email:       "{email}",
+			FirstName:   "",
+			IsActive:    false,
+			LastName:    "",
+			MobilePhone: "",
+			Password:    "{password}",
+			Token:       "",
+		})
+		core.Db.Model(dbmodels.User{}).Save(&user)
+
+		role := dbmodels.Role{
+			Name:        "Admin",
+			Description: "Administrator group",
+		}
+		core.Db.Model(dbmodels.Role{}).Save(&role)
+
+		userRole := dbmodels.UserRole{
+			UserId:    user.ID,
+			RoleId:    role.ID,
+		}
+		core.Db.Model(dbmodels.UserRole{}).Save(&userRole)
+	}
 }`
 
 var msTemplateInsertDataToDb = template{
