@@ -10,6 +10,8 @@ import (
 func UsualAppInit(c *ishell.Context) {
 
 	var choice int
+	var email string
+	var password string
 
 	yellow := color.New(color.FgYellow).SprintFunc()
 	green := color.New(color.FgGreen).SprintFunc()
@@ -17,15 +19,16 @@ func UsualAppInit(c *ishell.Context) {
 	c.Println(yellow("Hello we start creating new usual app in current directory"))
 
 	if mode.IsNonInteractive() {
-
 		choice = 1
-
 	} else {
 		choice = c.MultiChoice([]string{
 			"No",
 			"Yes",
 		}, "Continue ?")
 	}
+
+	email, _ = getEmail(c)
+	password, _ = getPassword(c)
 
 	switch choice {
 
@@ -35,7 +38,7 @@ func UsualAppInit(c *ishell.Context) {
 			c.Println(green("Creating app structure"))
 		}
 
-		usualCreate(c)
+		usualCreate(c, email, password)
 		usualAuthAdd(c)
 
 		break
@@ -45,7 +48,29 @@ func UsualAppInit(c *ishell.Context) {
 	return
 }
 
-func usualCreate(c *ishell.Context) {
+func getEmail(c *ishell.Context) (email string, err error) {
+
+	var arguments RegularFind
+	arguments, err = GetOsArgument("adminMail")
+	if len(arguments.StringResult) < 1 || err != nil {
+		return getName(c, false, "Email")
+	}
+	email = arguments.StringResult
+	return
+}
+
+func getPassword(c *ishell.Context) (password string, err error) {
+
+	var arguments RegularFind
+	arguments, err = GetOsArgument("adminPassword")
+	if len(arguments.StringResult) < 1 || err != nil {
+		return getName(c, false, "Password")
+	}
+	password = arguments.StringResult
+	return
+}
+
+func usualCreate(c *ishell.Context, email, password string) {
 
 	green := color.New(color.FgCyan).SprintFunc()
 	red := color.New(color.FgRed).SprintFunc()
@@ -56,6 +81,10 @@ func usualCreate(c *ishell.Context) {
 
 	//bootstrap
 	CreateFile(msTemplateInsertDataToDb.Path, msTemplateInsertDataToDb.Content, c)
+	CopyFile(msTemplateInsertDataToDb.Path, msTemplateInsertDataToDb.Path,
+		[]string{"{email}", "{password}"},
+		[]string{email, password},
+		c)
 
 	//core
 	CreateFile(msTemplateCoreDb.Path, msTemplateCoreDb.Content, c)

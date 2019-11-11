@@ -61,6 +61,11 @@ func usualAuthAdd(c *ishell.Context) {
     os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=ResourceType", "--Field=Name", "--data-type=string"}
     entityFieldAdd(c)
 
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=UserRole", "--Field=UserId", "--data-type=int"}
+    entityFieldAdd(c)
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=UserRole", "--Field=RoleId", "--data-type=int"}
+    entityFieldAdd(c)
+
     os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Resource", "--Field=Name", "--data-type=string"}
     entityFieldAdd(c)
     os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Resource", "--Field=Code", "--data-type=string"}

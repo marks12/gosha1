@@ -87,11 +87,9 @@
                 app.Email = this.adminMail;
                 app.Password = this.adminPass;
 
-                console.log(app);
-
-                // this.createCurrentApp(new CurrentApp()).then(()=>{
-                //     this.loadCurrentAppData();
-                // });
+                this.createCurrentApp(new CurrentApp()).then(()=>{
+                    this.loadCurrentAppData();
+                });
             },
             loadCurrentAppData() {
                 this.loadCurrentApp({id: 'current'}).then(()=>{
