@@ -7,7 +7,9 @@ import (
 type CurrentApp struct {
     Id   int
     IsValidStructure bool
-    //CurrentApp remove this line for disable generator functionality
+    AdminEmail string
+	AdminPassword string
+	//CurrentApp remove this line for disable generator functionality
 }
 
 func (currentApp *CurrentApp) Validate()  {
@@ -16,8 +18,6 @@ func (currentApp *CurrentApp) Validate()  {
 
 type CurrentAppFilter struct {
     model CurrentApp
-    Email string
-	Password string
 	//CurrentAppFilter remove this line for disable generator functionality
 
     AbstractFilter
@@ -30,8 +30,6 @@ func GetCurrentAppFilter(request *http.Request, functionType string) CurrentAppF
     filter.request = request
     //filter.TestFilter, _ = strconv.Atoi(request.FormValue("TestFilter"))
 
-    filter.Email = request.FormValue("Email")
-	filter.Password = request.FormValue("Password")
 	//GetCurrentAppFilter remove this line for disable generator functionality
 
     ReadJSON(request, &filter.model)

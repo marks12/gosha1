@@ -1,9 +1,9 @@
 package logic
 
 import (
-    "gosha/webapp/types"
     "errors"
     "gosha/cmd"
+    "gosha/webapp/types"
     "os"
 )
 
@@ -23,7 +23,9 @@ func CurrentAppCreate(filter types.CurrentAppFilter)  (data types.CurrentApp, er
     argsBak := os.Args
     defer func(){os.Args = argsBak}()
 
-    args := []string{"", "exit", "setAppType", "--type=Usual", cmd.USUAL_APP_CREATE, "--adminMail=" + filter.Email, "--adminPassword=" + filter.Password}
+    model := filter.GetCurrentAppModel()
+
+    args := []string{"", "exit", "setAppType", "--type=Usual", cmd.USUAL_APP_CREATE, "--adminMail=" + model.AdminEmail, "--adminPassword=" + model.AdminPassword}
 
     os.Args = args
     cmd.RunShell()
