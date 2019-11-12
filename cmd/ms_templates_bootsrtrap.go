@@ -84,7 +84,7 @@ func addUser() {
 		resource := logic.AssignResourceDbFromType(types.Resource{
 			Name:   "User",
 			Code:   "/api/v1/user",
-			TypeId: 0,
+			TypeId: resourceType.ID,
 		})
 		core.Db.Model(dbmodels.Resource{}).Save(&resource)
 
