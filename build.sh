@@ -17,8 +17,6 @@ walk_dir () {
 add_file () {
     shopt -s nullglob dotglob
 
-#    printf '%s\n' adding "$pathname"
-
     value=`cat $pathname  | base64`
 
     files=( "${files[@]}" "$pathname" )
@@ -29,7 +27,6 @@ add_file () {
 DOWNLOADING_DIR=./front/dist
 
 walk_dir "$DOWNLOADING_DIR"
-
 
 cat > ./webapp/webapp/html.go <<EOL
 package webapp
