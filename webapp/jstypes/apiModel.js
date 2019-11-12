@@ -22,6 +22,8 @@ export function CurrentApp() {
 
     this.Id = 0;
     this.IsValidStructure = false;
+    this.AdminEmail = "";
+    this.AdminPassword = "";
 
     return this;
 }
