@@ -84,10 +84,12 @@
                 }
 
                 let app = new CurrentApp();
-                app.Email = this.adminMail;
-                app.Password = this.adminPass;
+                app.AdminEmail = this.adminMail;
+                app.AdminPassword = this.adminPass;
 
-                this.createCurrentApp(new CurrentApp()).then(()=>{
+                this.createCurrentApp({
+                    data: app
+                }).then(()=>{
                     this.loadCurrentAppData();
                 });
             },

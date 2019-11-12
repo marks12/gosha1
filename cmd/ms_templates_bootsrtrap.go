@@ -54,19 +54,19 @@ func addUser() {
 
 		user := logic.AssignUserDbFromType(types.User{
 			Id:          0,
-			Email:       "{email}",
-			FirstName:   "",
-			IsActive:    false,
-			LastName:    "",
+			Email:       "tsv@serveon.ru",
+			FirstName:   "Superuser",
+			IsActive:    true,
+			LastName:    "Admin",
 			MobilePhone: "",
-			Password:    "{password}",
+			Password:    "virq3t4",
 			Token:       "",
 		})
 		core.Db.Model(dbmodels.User{}).Save(&user)
 
 		role := dbmodels.Role{
 			Name:        "Admin",
-			Description: "Administrator group",
+			Description: "Administrator",
 		}
 		core.Db.Model(dbmodels.Role{}).Save(&role)
 
@@ -75,6 +75,30 @@ func addUser() {
 			RoleId:    role.ID,
 		}
 		core.Db.Model(dbmodels.UserRole{}).Save(&userRole)
+
+		resourceType := logic.AssignResourceTypeDbFromType(types.ResourceType{
+			Name: "Route",
+		})
+		core.Db.Model(dbmodels.ResourceType{}).Save(&resourceType)
+
+		resource := logic.AssignResourceDbFromType(types.Resource{
+			Name:   "User",
+			Code:   "/api/v1/user",
+			TypeId: 0,
+		})
+		core.Db.Model(dbmodels.Resource{}).Save(&resource)
+
+		roleResource := logic.AssignRoleResourceDbFromType(types.RoleResource{
+			RoleId:       role.ID,
+			ResourceId:   resource.ID,
+			Find:         true,
+			Read:         true,
+			Create:       true,
+			Update:       true,
+			Delete:       true,
+			FindOrCreate: false,
+		})
+		core.Db.Model(dbmodels.RoleResource{}).Save(&roleResource)
 	}
 }`
 
