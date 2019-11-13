@@ -193,7 +193,13 @@ func EntityRead(filter types.EntityFilter) (data types.Entity, err error) {
 func EntityCreate(filter types.EntityFilter) (data types.Entity, err error) {
 
     argsBak := os.Args
-    defer func(){os.Args = argsBak}()
+    defer func(){
+        args := []string{"", "exit", "gen:types:js"}
+        os.Args = args
+        cmd.RunShell()
+
+        os.Args = argsBak
+    }()
 
     e := filter.GetEntityModel()
 
@@ -266,7 +272,14 @@ func addFilters(entityName string, fields []types.Field) {
 func EntityUpdate(filter types.EntityFilter) (data types.Entity, err error) {
 
     argsBak := os.Args
-    defer func(){os.Args = argsBak}()
+    defer func(){
+
+        args := []string{"", "exit", "gen:types:js"}
+        os.Args = args
+        cmd.RunShell()
+
+        os.Args = argsBak
+    }()
 
     e := filter.GetEntityModel()
 
