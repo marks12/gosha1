@@ -66,6 +66,12 @@ func usualAuthAdd(c *ishell.Context) {
     os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=UserRole", "--Field=RoleId", "--data-type=int"}
     entityFieldAdd(c)
 
+
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Role", "--Field=Name", "--data-type=string"}
+    entityFieldAdd(c)
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Role", "--Field=Description", "--data-type=string"}
+    entityFieldAdd(c)
+
     os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Resource", "--Field=Name", "--data-type=string"}
     entityFieldAdd(c)
     os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Resource", "--Field=Code", "--data-type=string"}
@@ -94,7 +100,7 @@ func usualAuthAdd(c *ishell.Context) {
 
 	// fill fields
 	fillUser(c)
-	fillRole(c)
+	//fillRole(c)
 	fillUserRole(c)
 	fillAuth(c)
 }
@@ -206,15 +212,15 @@ func fillUser(c *ishell.Context) {
     ` + getRemoveLine("User")},
 		c)
 
-	CopyFile(
-		"dbmodels/role.go",
-		"dbmodels/role.go",
-		[]string{getRemoveLine("Role")},
-		[]string{
-			`Name       string
-    Description   string	`+"`"+`gorm:"type:text"`+"`"+`
-    ` + getRemoveLine("Role")},
-		c)
+	//CopyFile(
+		//"dbmodels/role.go",
+		//"dbmodels/role.go",
+		//[]string{getRemoveLine("Role")},
+		//[]string{
+		//	`Name       string
+    //Description   string	`+"`"+`gorm:"type:text"`+"`"+`
+    //` + getRemoveLine("Role")},
+		//c)
 
 	CopyFile(
 		"dbmodels/user.go",
