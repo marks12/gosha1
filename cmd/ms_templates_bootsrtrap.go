@@ -9,6 +9,8 @@ import (
 	"os"
 	"{ms-name}/core"
 	"{ms-name}/logic"
+	"{ms-name}/settings"
+	"strings"
 )
 
 func FillDBTestData()  {
@@ -100,7 +102,36 @@ func addUser() {
 		})
 		core.Db.Model(dbmodels.RoleResource{}).Save(&roleResource)
 	}
-}`
+
+    AddResource()
+}
+
+func AddResource() {
+    for _, route := range settings.RoutesArray {
+        dbModel := dbmodels.Resource{
+            Name:   strings.Split(route, "/")[3],
+            Code:   route,
+            TypeId: 1,
+        }
+        core.Db.Where(dbModel).FirstOrCreate(&dbModel)
+    }
+
+    for _, route := range settings.Resources {
+        name := route
+        if strings.Count(name, "/") > 2 {
+            name = strings.Split(route, "/")[3]
+        }
+        dbModel := dbmodels.Resource{
+            Name:   name,
+            Code:   route,
+            TypeId: 1,
+        }
+        core.Db.Where(dbModel).FirstOrCreate(&dbModel)
+    }
+
+}
+
+`
 
 var msTemplateInsertDataToDb = template{
     Path:    "./bootstrap/insert_data_to_db.go",
