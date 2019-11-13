@@ -119,6 +119,7 @@ func usualCreate(c *ishell.Context, email, password string) {
 	CreateFile(usualTemplateSettingsWebapp.Path, usualTemplateSettingsWebapp.Content, c)
 	CreateFile(usualTemplateSettingsRoutes.Path, usualTemplateSettingsRoutes.Content, c)
 	CreateFile(msTemplateSettingsWss.Path, msTemplateSettingsWss.Content, c)
+	CreateFile(usualTemplateSettingsResource.Path, usualTemplateSettingsResource.Content, c)
 
 	//types
 	CreateFile(usualTemplateTypesAuthenticator.Path, usualTemplateTypesAuthenticator.Content, c)
