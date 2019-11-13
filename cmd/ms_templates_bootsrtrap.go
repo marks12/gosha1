@@ -50,31 +50,31 @@ func addUser() {
 
 	var count int
 
-	core.Db.Model(dbmodels.User{}).Count(&count)
+	adminRole := dbmodels.Role{
+		Name:        "Admin",
+		Description: "Administrator",
+	}
+	core.Db.Where(adminRole).FirstOrCreate(&adminRole)
 
+	core.Db.Model(dbmodels.User{}).Count(&count)
 	if count < 1 {
 
 		user := logic.AssignUserDbFromType(types.User{
 			Id:          0,
-			Email:       "tsv@serveon.ru",
+			Email:       "{email}",
 			FirstName:   "Superuser",
 			IsActive:    true,
 			LastName:    "Admin",
 			MobilePhone: "",
-			Password:    "virq3t4",
+			Password:    "{password}",
 			Token:       "",
 		})
 		core.Db.Model(dbmodels.User{}).Save(&user)
 
-		role := dbmodels.Role{
-			Name:        "Admin",
-			Description: "Administrator",
-		}
-		core.Db.Model(dbmodels.Role{}).Save(&role)
 
 		userRole := dbmodels.UserRole{
 			UserId:    user.ID,
-			RoleId:    role.ID,
+			RoleId:    adminRole.ID,
 		}
 		core.Db.Model(dbmodels.UserRole{}).Save(&userRole)
 
@@ -91,7 +91,7 @@ func addUser() {
 		core.Db.Model(dbmodels.Resource{}).Save(&resource)
 
 		roleResource := logic.AssignRoleResourceDbFromType(types.RoleResource{
-			RoleId:       role.ID,
+			RoleId:       adminRole.ID,
 			ResourceId:   resource.ID,
 			Find:         true,
 			Read:         true,
@@ -103,17 +103,36 @@ func addUser() {
 		core.Db.Model(dbmodels.RoleResource{}).Save(&roleResource)
 	}
 
-    AddResource()
+    AddResource(adminRole.ID)
 }
 
-func AddResource() {
+func AddResource(adminRoleId int) {
+
     for _, route := range settings.RoutesArray {
-        dbModel := dbmodels.Resource{
-            Name:   strings.Split(route, "/")[3],
-            Code:   route,
-            TypeId: 1,
-        }
-        core.Db.Where(dbModel).FirstOrCreate(&dbModel)
+
+    	strArr := strings.Split(route, "/")
+
+    	if len(strArr) > 3 {
+
+			dbModel := dbmodels.Resource{
+				Name:   strArr[3],
+				Code:   route,
+				TypeId: 1,
+			}
+			core.Db.Where(dbModel).FirstOrCreate(&dbModel)
+
+			roleResource := logic.AssignRoleResourceDbFromType(types.RoleResource{
+				RoleId:       adminRoleId,
+				ResourceId:   dbModel.ID,
+				Find:         true,
+				Read:         true,
+				Create:       true,
+				Update:       true,
+				Delete:       true,
+				FindOrCreate: true,
+			})
+			core.Db.Model(dbmodels.RoleResource{}).Save(&roleResource)
+		}
     }
 
     for _, route := range settings.Resources {
