@@ -149,6 +149,8 @@ func EntityMultiCreate(filter types.EntityFilter)  (data []types.Entity, err err
 
 func EntityRead(filter types.EntityFilter)  (data types.Entity, err error) {
 
+    filter.Pagination.CurrentPage = 1
+    filter.Pagination.PerPage = 1
     filter.ClearIds()
     filter.AddId(filter.GetCurrentId())
 

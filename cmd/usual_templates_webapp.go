@@ -15,6 +15,7 @@ func ErrResponse (w http.ResponseWriter, err string, status int) {
     response.Error = true
     response.ErrorMessage = err
 
+    w.Header().Set("Content-Type", "application/json; charset=UTF-8")
     w.WriteHeader(status)
     json.NewEncoder(w).Encode(response)
 
@@ -49,6 +50,7 @@ func GetUsualTemplateWebAppContent(authCrud Crud, methodsCrud Crud) string {
     var usualWebappEntity = `package webapp
 
 import (
+    "{ms-name}/core"
     "{ms-name}/logic"
     "net/http"
     "{ms-name}/mdl"
@@ -113,6 +115,37 @@ func getWebappCreate(methodCrud Crud, authCrud Crud) (c string) {
 
     if methodCrud.IsCreate {
         c = `
+
+
+func {entity-name}MultiCreate(w http.ResponseWriter, httpRequest *http.Request) {
+
+    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeMultiCreate)
+
+    if !requestDto.IsAuthorized() {
+        ErrResponse(w, "Invalid authorize in {entity-name}MultiCreate", http.StatusForbidden)
+        return
+    }
+
+    if !requestDto.IsValid() {
+        ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+        return
+    }
+
+    // Получаем список
+    data, err := logic.{entity-name}MultiCreate(requestDto)
+
+    // Создаём структуру ответа
+    if err != nil {
+        ErrResponse(w, err.Error(), http.StatusBadRequest)
+        return
+    }
+
+    ValidResponse(w, mdl.ResponseCreate{
+        data,
+    })
+
+    return
+}
 
 func {entity-name}Create(w http.ResponseWriter, httpRequest *http.Request) {
 
@@ -193,6 +226,37 @@ func getWebappUpdate(methodCrud Crud, authCrud Crud) (c string) {
     if methodCrud.IsUpdate {
         c = `
 
+
+func {entity-name}MultiUpdate(w http.ResponseWriter, httpRequest *http.Request) {
+
+    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeMultiUpdate)
+
+    if !requestDto.IsAuthorized() {
+        ErrResponse(w, "Invalid authorize in {entity-name}Update", http.StatusForbidden)
+        return
+    }
+
+    if !requestDto.IsValid() {
+        ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+        return
+    }
+
+    // Получаем список
+    data, err := logic.{entity-name}MultiUpdate(requestDto)
+
+    // Создаём структуру ответа
+    if err != nil {
+        ErrResponse(w, err.Error(), http.StatusBadRequest)
+        return
+    }
+
+    ValidResponse(w, mdl.ResponseUpdate{
+        data,
+    })
+
+    return
+}
+
 func {entity-name}Update(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeUpdate)
@@ -228,6 +292,36 @@ func getWebappDelete(methodCrud Crud, authCrud Crud) (c string) {
 
     if methodCrud.IsDelete {
         c = `
+
+func {entity-name}MultiDelete(w http.ResponseWriter, httpRequest *http.Request) {
+
+    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeMultiDelete)
+
+    if !requestDto.IsAuthorized() {
+        ErrResponse(w, "Invalid authorize in {entity-name}Delete", http.StatusForbidden)
+        return
+    }
+
+    if !requestDto.IsValid() {
+        ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+        return
+    }
+
+    // Получаем список
+    isOk, err := logic.{entity-name}MultiDelete(requestDto)
+
+    // Создаём структуру ответа
+    if err != nil {
+        ErrResponse(w, err.Error(), http.StatusBadRequest)
+        return
+    }
+
+    ValidResponse(w, mdl.ResponseDelete{
+        isOk,
+    })
+
+    return
+}
 
 func {entity-name}Delete(w http.ResponseWriter, httpRequest *http.Request) {
 
