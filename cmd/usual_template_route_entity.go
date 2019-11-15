@@ -12,10 +12,19 @@ type Crud struct {
 const usualRouteEntityComment = `[ {Entity} ]`
 
 const usualRouteEntityFind = `router.HandleFunc(settings.{Entity}Route, webapp.{Entity}Find).Methods("GET")`
-const usualRouteEntityCreate = `router.HandleFunc(settings.{Entity}Route, webapp.{Entity}Create).Methods("POST")`
+
+const usualRouteEntityCreate = `router.HandleFunc(settings.{Entity}Route+"/list", webapp.{Entity}MultiCreate).Methods("POST")` +
+							   `router.HandleFunc(settings.{Entity}Route, webapp.{Entity}Create).Methods("POST")`
+
 const usualRouteEntityRead = `router.HandleFunc(settings.{Entity}Route+"/{id}", webapp.{Entity}Read).Methods("GET")`
-const usualRouteEntityUpdate = `router.HandleFunc(settings.{Entity}Route+"/{id}", webapp.{Entity}Update).Methods("PUT")`
-const usualRouteEntityDelete = `router.HandleFunc(settings.{Entity}Route+"/{id}", webapp.{Entity}Delete).Methods("DELETE")`
+
+const usualRouteEntityUpdate = `router.HandleFunc(settings.{Entity}Route+"/list", webapp.{Entity}MultiUpdate).Methods("PUT")` +
+							   `router.HandleFunc(settings.{Entity}Route+"/{id}", webapp.{Entity}Update).Methods("PUT")`
+
+
+const usualRouteEntityDelete = `router.HandleFunc(settings.{Entity}Route+"/list", webapp.{Entity}MultiDelete).Methods("DELETE")` +
+							   `router.HandleFunc(settings.{Entity}Route+"/{id}", webapp.{Entity}Delete).Methods("DELETE")`
+
 const usualRouteEntityFindOrCreate = `router.HandleFunc(settings.{Entity}Route, webapp.{Entity}FindOrCreate).Methods("PUT")`
 
 const usualRouteEntityGen = `

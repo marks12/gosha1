@@ -7,7 +7,6 @@ import (
     "newapp/mdl"
     "newapp/types"
     "newapp/settings"
-    "fmt"
 )
 
 func EntityFind(w http.ResponseWriter, httpRequest *http.Request) {
@@ -74,11 +73,6 @@ func EntityCreate(w http.ResponseWriter, httpRequest *http.Request) {
 func EntityMultiCreate(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.GetEntityFilter(httpRequest, settings.FunctionTypeMultiCreate)
-
-    l, e := requestDto.GetEntityModelList()
-
-    fmt.Printf("%+v\n", l)
-    fmt.Printf("%+v\n", e)
 
     if !requestDto.IsAuthorized() {
         ErrResponse(w, "Invalid authorize in EntityMultiCreate", http.StatusForbidden)
