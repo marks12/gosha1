@@ -24,6 +24,7 @@ func ({entity} *{Entity}) Validate()  {
 
 type {Entity}Filter struct {
     model {Entity}
+    list []Entity
     ` + getRemoveLine("{Entity}Filter") + `
 
     AbstractFilter
@@ -38,7 +39,14 @@ func Get{Entity}Filter(request *http.Request, functionType string) {Entity}Filte
 
     ` + getRemoveLine("Get{Entity}Filter") + `
 
-    ReadJSON(request, &filter.model)
+    switch functionType {
+    case settings.FunctionTypeMultiCreate, settings.FunctionTypeMultiUpdate, settings.FunctionTypeMultiDelete, settings.FunctionTypeMultiFindOrCreate:
+        ReadJSON(request, &filter.list)
+        break
+    default:
+        ReadJSON(request, &filter.model)
+        break
+    }
 
     filter.AbstractFilter = GetAbstractFilter(request, functionType)
 
@@ -51,6 +59,20 @@ func (filter *{Entity}Filter) Get{Entity}Model() {Entity} {
     filter.model.Validate()
 
     return  filter.model
+}
+
+func (filter *EntityFilter) GetEntityModelList() (data []Entity, err error) {
+
+    for k, _ := range filter.list {
+        filter.list[k].Validate()
+
+        if ! filter.list[k].IsValid() {
+            err = errors.New(filter.list[k].GetValidationErrors())
+            break
+        }
+    }
+
+    return  filter.list, nil
 }
 
 func (filter *{Entity}Filter) Set{Entity}Model(typeModel {Entity}) {
