@@ -19,6 +19,11 @@ type Entity struct {
 }
 
 func (entity *Entity) Validate() {
+
+    if len(entity.Name) < 1 {
+        entity.validationErrors = append(entity.validationErrors, "Name length must be more then 1 char. ")
+    }
+
     //Validate remove this line for disable generator functionality
 }
 
