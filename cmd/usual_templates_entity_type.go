@@ -11,11 +11,15 @@ func GetUsualTemplateTypeContent(cfg TypeConfig) string {
 
 import (
     "net/http"
+    "{ms-name}/settings"
+    "errors"
 )
 
 type {Entity} struct {
     ` + getTypeId(cfg) + `
     ` + getRemoveLine("{Entity}") + `
+    
+    validator
 }
 
 func ({entity} *{Entity}) Validate()  {
@@ -24,7 +28,7 @@ func ({entity} *{Entity}) Validate()  {
 
 type {Entity}Filter struct {
     model {Entity}
-    list []Entity
+    list []{Entity}
     ` + getRemoveLine("{Entity}Filter") + `
 
     AbstractFilter
@@ -61,7 +65,7 @@ func (filter *{Entity}Filter) Get{Entity}Model() {Entity} {
     return  filter.model
 }
 
-func (filter *EntityFilter) GetEntityModelList() (data []Entity, err error) {
+func (filter *{Entity}Filter) Get{Entity}ModelList() (data []{Entity}, err error) {
 
     for k, _ := range filter.list {
         filter.list[k].Validate()

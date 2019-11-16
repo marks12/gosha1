@@ -242,6 +242,12 @@ func (filter *FilterIds) Validate(functionType string) {
             break;
         case settings.FunctionTypeFindOrCreate:
             break;
+        case settings.FunctionTypeMultiCreate:
+            break;
+        case settings.FunctionTypeMultiUpdate:
+            break;
+        case settings.FunctionTypeMultiDelete:
+            break;
         default:
             filter.validator.validationErrors = append(filter.validator.validationErrors, "Usupported method")
             break;

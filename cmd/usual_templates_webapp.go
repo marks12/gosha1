@@ -159,7 +159,7 @@ func {entity-name}Create(w http.ResponseWriter, httpRequest *http.Request) {
     }
 
     // Получаем список
-    data, err := logic.{entity-name}Create(requestDto)
+    data, err := logic.{entity-name}Create(requestDto, core.Db)
 
     // Создаём структуру ответа
     if err != nil {
@@ -269,7 +269,7 @@ func {entity-name}Update(w http.ResponseWriter, httpRequest *http.Request) {
     }
 
     // Получаем список
-    data, err := logic.{entity-name}Update(requestDto)
+    data, err := logic.{entity-name}Update(requestDto, core.Db)
 
     // Создаём структуру ответа
     if err != nil {
@@ -335,7 +335,7 @@ func {entity-name}Delete(w http.ResponseWriter, httpRequest *http.Request) {
     }
 
     // Получаем список
-    isOk, err := logic.{entity-name}Delete(requestDto)
+    isOk, err := logic.{entity-name}Delete(requestDto, core.Db)
 
     // Создаём структуру ответа
     if err != nil {
