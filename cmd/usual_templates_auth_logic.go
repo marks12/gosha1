@@ -3,6 +3,7 @@ package cmd
 const usualAuthLogic = `package logic
 
 import (
+    "github.com/jinzhu/gorm"
     "{ms-name}/types"
     "{ms-name}/dbmodels"
     "{ms-name}/core"
@@ -18,9 +19,7 @@ func AuthFind(filter types.AuthFilter)  (result []types.Auth, totalRecords int, 
 	return
 }
 
-func AuthCreate(filter types.AuthFilter) (data types.Auth, err error) {
-
-    query := core.Db
+func AuthCreate(filter types.AuthFilter, query *gorm.DB) (data types.Auth, err error) {
 
     typeModel := filter.GetAuthModel()
     dbAuth := AssignAuthDbFromType(typeModel)
@@ -76,19 +75,31 @@ func AuthCreate(filter types.AuthFilter) (data types.Auth, err error) {
     }
 }
 
+func AuthMultiCreate(filter types.AuthFilter)  (data types.Auth, err error) {
+	return
+}
+
 func AuthRead(filter types.AuthFilter)  (data types.Auth, err error) {
 	return
 }
 
-func AuthUpdate(filter types.AuthFilter)  (data types.Auth, err error) {
+func AuthUpdate(filter types.AuthFilter, query *gorm.DB)  (data types.Auth, err error) {
 	return 
 }
 
-func AuthDelete(filter types.AuthFilter) (isOk bool, err error) {
+func AuthMultiUpdate(filter types.AuthFilter)  (data types.Auth, err error) {
+	return 
+}
+
+func AuthMultiDelete(filter types.AuthFilter)  (isOk bool, err error) {
+	return 
+}
+
+
+
+func AuthDelete(filter types.AuthFilter, query *gorm.DB) (isOk bool, err error) {
 
     dbAuth := dbmodels.Auth{}
-
-    query := core.Db
 
     q := query.Model(dbmodels.Auth{}).Where(dbmodels.Auth{Token: filter.Token}).Find(&dbAuth)
 

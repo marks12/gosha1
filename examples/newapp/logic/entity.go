@@ -98,7 +98,7 @@ func EntityCreate(filter types.EntityFilter,  query *gorm.DB)  (data types.Entit
 
     if dbModel.IsValid() {
 
-        query = core.Db.Create(&dbModel)
+        query = query.Create(&dbModel)
 
     } else {
 
