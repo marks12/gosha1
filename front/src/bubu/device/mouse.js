@@ -1,6 +1,7 @@
 import Coordinates from "../attributes/coordinates";
 import {IsRightButton} from "../common";
 import {IsMiddleButtton} from "../common";
+import {rounder} from "../common";
 import {TYPES} from "../constants";
 
 function Mouse(config) {
@@ -13,10 +14,6 @@ function Mouse(config) {
 
     let onMoveX = 0;
     let onMoveY = 0;
-
-    function rounder(a) {
-        return Math.round(a / 20) * 20;
-    }
 
     function MouseDevice() {
 
