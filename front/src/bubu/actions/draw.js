@@ -127,11 +127,6 @@ function Draw(config) {
                 }
 
                 if (src && x2 && y2) {
-                    // ctx.beginPath();
-                    // ctx.moveTo(src.Coords.GetX(), src.Coords.GetY());
-                    // ctx.lineTo(x2, y2);
-                    // ctx.stroke();
-
                     drawArrow(ctx, src.Coords.GetX(), src.Coords.GetY(), x2, y2, TYPES.arrowTypeSimple);
                 }
 
