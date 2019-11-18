@@ -1,6 +1,6 @@
 import ElementsRegister from "./elements-register";
 import {TYPES as constants} from "./constants";
-import {IsPointOnLine} from "./common";
+import {IsPointOnLine, rounder} from "./common";
 
 function Store(config) {
 
@@ -98,8 +98,8 @@ function Store(config) {
         let elementType = event.srcElement.getAttribute('data-bubu');
         let w = constants.elementWidth;
         let h = w;
-        let x = this.GetCanvasX(event.pageX || event.onMoveCoords.x) - w / 2;
-        let y = this.GetCanvasY(event.pageY || event.onMoveCoords.y) - h / 2;
+        let x = rounder(this.GetCanvasX(event.pageX || event.onMoveCoords.x) - w / 2);
+        let y = rounder(this.GetCanvasY(event.pageY || event.onMoveCoords.y) - h / 2);
         let item = null;
 
         function getRandomInt(max) {
@@ -294,8 +294,10 @@ function Store(config) {
                 let dst = Items[i].GetLinkDestinationPoint();
 
                 if (src && dst) {
-                    let isOnLine = IsPointOnLine(src.Coords.GetX(), src.Coords.GetY(), dst.Coords.GetX(), dst.Coords.GetY(), x, y, 10);
-                    console.log("On line: ", isOnLine);
+                    let isOnLine = IsPointOnLine(src.Coords.GetX(), src.Coords.GetY(), dst.Coords.GetX(), dst.Coords.GetY(), x, y, 20);
+                    if (isOnLine) {
+                        return Items[i];
+                    }
                 }
             }
 
