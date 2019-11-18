@@ -62,6 +62,7 @@ export const TYPES = {
     elementWidth: 120,
     connectionPointRadius: connectionPointRadius,
     cornerRadius: 5,
+    positionRound: 20,
     activeSpaceAround: connectionPointRadius * 4,
     roundCoords: 1,
 

@@ -126,6 +126,12 @@ function Draw(config) {
                     y2 = dest.Coords.GetY();
                 }
 
+                if (this.IsSelected()) {
+                    ctx.strokeStyle = TYPES.currentTheme.primaryContrast;
+                } else {
+                    ctx.strokeStyle = TYPES.currentTheme.secondaryContrast;
+                }
+
                 if (src && x2 && y2) {
                     drawArrow(ctx, src.Coords.GetX(), src.Coords.GetY(), x2, y2, TYPES.arrowTypeSimple);
                 }
