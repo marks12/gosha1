@@ -1,5 +1,6 @@
 import ElementsRegister from "./elements-register";
 import {TYPES as constants} from "./constants";
+import {IsPointOnLine} from "./common";
 
 function Store(config) {
 
@@ -286,6 +287,16 @@ function Store(config) {
             if (spaceY > 0) {
                 y1 -= spaceY;
                 y2 += spaceY;
+            }
+
+            if (Items[i].GetType() === 900) {
+                let src = Items[i].GetLinkSourcePoint();
+                let dst = Items[i].GetLinkDestinationPoint();
+
+                if (src && dst) {
+                    let isOnLine = IsPointOnLine(src.Coords.GetX(), src.Coords.GetY(), dst.Coords.GetX(), dst.Coords.GetY(), x, y, 10);
+                    console.log("On line: ", isOnLine);
+                }
             }
 
             if (x >= x1 && x <= x2 && y >= y1 && y <= y2) {
