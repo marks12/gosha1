@@ -13,6 +13,7 @@ func ErrResponse (w http.ResponseWriter, err string, status int) {
     response.Error = true
     response.ErrorMessage = err
 
+    w.Header().Set("Content-Type", "application/json; charset=UTF-8")
     w.WriteHeader(status)
     json.NewEncoder(w).Encode(response)
 

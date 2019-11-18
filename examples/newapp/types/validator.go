@@ -29,17 +29,26 @@ func (val *validator) Validate(functionType string) {
     case settings.FunctionTypeCreate:
         break
 
+    case settings.FunctionTypeMultiCreate:
+        break
+
     case settings.FunctionTypeRead:
         break
 
     case settings.FunctionTypeUpdate:
         break
 
+    case settings.FunctionTypeMultiUpdate:
+        break
+
     case settings.FunctionTypeDelete:
         break
 
+    case settings.FunctionTypeMultiDelete:
+        break
+
     default:
-        val.validationErrors = append(val.validationErrors, "Usupported function type: " + functionType)
+        val.validationErrors = append(val.validationErrors, "Unsupported function type: " + functionType)
         break
     }
 }
