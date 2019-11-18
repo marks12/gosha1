@@ -14,6 +14,10 @@ function Mouse(config) {
     let onMoveX = 0;
     let onMoveY = 0;
 
+    function rounder(a) {
+        return Math.round(a / 20) * 20;
+    }
+
     function MouseDevice() {
 
         let clickCoordsX = 0;
@@ -148,8 +152,8 @@ function Mouse(config) {
                         return m.Run(newX, newY, sItem, self, event);
 
                     } else {
-                        sItem.Coords.SetX(newX);
-                        sItem.Coords.SetY(newY);
+                        sItem.Coords.SetX(rounder(newX));
+                        sItem.Coords.SetY(rounder(newY));
                     }
                 }
 
@@ -166,8 +170,8 @@ function Mouse(config) {
                     let offsetX = self.GetCanvasX(event.pageX) - clickCoordsX;
                     let offsetY = self.GetCanvasY(event.pageY) - clickCoordsY;
 
-                    item.Coords.SetX(item.Coords.GetPreviousX() + offsetX);
-                    item.Coords.SetY(item.Coords.GetPreviousY() + offsetY);
+                    item.Coords.SetX(rounder(item.Coords.GetPreviousX() + offsetX));
+                    item.Coords.SetY(rounder(item.Coords.GetPreviousY() + offsetY));
                 };
 
                 let moveCoords = (item) => {
