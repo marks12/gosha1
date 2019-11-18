@@ -60,7 +60,7 @@ func (auth *Authenticator) IsAuthorized() bool {
             }
             return false
 
-        case settings.FunctionTypeCreate:
+        case settings.FunctionTypeCreate, settings.FunctionTypeMultiCreate:
             for _, rr := range roleResources {
                 if rr.Create {
                     return true
@@ -68,7 +68,7 @@ func (auth *Authenticator) IsAuthorized() bool {
             }
             return false
 
-        case settings.FunctionTypeUpdate:
+        case settings.FunctionTypeUpdate, settings.FunctionTypeMultiUpdate:
             for _, rr := range roleResources {
                 if rr.Update {
                     return true
@@ -76,7 +76,7 @@ func (auth *Authenticator) IsAuthorized() bool {
             }
             return false
 
-        case settings.FunctionTypeDelete:
+        case settings.FunctionTypeDelete, settings.FunctionTypeMultiDelete:
             for _, rr := range roleResources {
                 if rr.Delete {
                     return true
@@ -117,23 +117,23 @@ func (authenticator *Authenticator) Validate(functionType string) {
     switch functionType {
 
     case settings.FunctionTypeFind:
-
         break;
     case settings.FunctionTypeCreate:
-
         break;
     case settings.FunctionTypeRead:
-
         break;
     case settings.FunctionTypeUpdate:
-
         break;
     case settings.FunctionTypeDelete:
-
         break;
-
+    case settings.FunctionTypeMultiCreate:
+        break
+    case settings.FunctionTypeMultiUpdate:
+        break
+    case settings.FunctionTypeMultiDelete:
+        break
     default:
-        authenticator.validator.validationErrors = append(authenticator.validator.validationErrors, "Usupported function type: "+functionType)
+        authenticator.validator.validationErrors = append(authenticator.validator.validationErrors, "Unsupported function type: "+functionType)
         break;
     }
 }

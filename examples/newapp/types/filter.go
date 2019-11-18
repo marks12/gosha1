@@ -13,6 +13,7 @@ import (
 
 type FilterIds struct {
     Ids []int
+    CurrentId int
 
     validator
 }
@@ -28,6 +29,15 @@ func (filter *FilterIds) GetIds() []int {
     return filter.Ids
 }
 
+func (filter *FilterIds) GetCurrentId() int {
+    return filter.CurrentId
+}
+
+func (filter *FilterIds) SetCurrentId(id int) int {
+    filter.CurrentId = id
+	return filter.CurrentId
+}
+
 func (filter *FilterIds) AddId(id int) *FilterIds {
     filter.Ids = append(filter.Ids, id)
     return filter
@@ -40,7 +50,7 @@ func (filter *FilterIds) AddIds(ids []int) *FilterIds {
     return filter
 }
 
-func (filter *FilterIds) Clear() *FilterIds {
+func (filter *FilterIds) ClearIds() *FilterIds {
 
     filter.Ids = []int{}
     return filter
@@ -54,16 +64,24 @@ func (filter *FilterIds) Validate(functionType string) {
             break;
         case settings.FunctionTypeCreate:
             break;
+        case settings.FunctionTypeMultiCreate:
+            break;
         case settings.FunctionTypeRead:
             break;
         case settings.FunctionTypeUpdate:
             break;
+        case settings.FunctionTypeMultiUpdate:
+            break;
         case settings.FunctionTypeDelete:
+            break;
+        case settings.FunctionTypeMultiDelete:
             break;
         case settings.FunctionTypeFindOrCreate:
             break;
+        case settings.FunctionTypeMultiFindOrCreate:
+            break;
         default:
-            filter.validator.validationErrors = append(filter.validator.validationErrors, "Usupported method")
+            filter.validator.validationErrors = append(filter.validator.validationErrors, "Unsupported method")
             break;
     }
 }
@@ -147,7 +165,7 @@ func GetAbstractFilter(request *http.Request, functionType string) AbstractFilte
     id, _ := strconv.Atoi(vars["id"])
 
     if id > 0 {
-        filter.AddId(id)
+        filter.SetCurrentId(id)
     }
 
     filter.Validate(functionType)

@@ -265,6 +265,7 @@ func fillAuth(c *ishell.Context) {
     Password  string
     Token     string
     UserId   int
+    Id   int
     `+ getRemoveLine("Auth")},
 		c)
 

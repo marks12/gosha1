@@ -98,7 +98,7 @@ func EntityCreate(filter types.EntityFilter,  query *gorm.DB)  (data types.Entit
 
     if dbModel.IsValid() {
 
-        query = core.Db.Create(&dbModel)
+        query = query.Create(&dbModel)
 
     } else {
 
@@ -130,9 +130,6 @@ func EntityMultiCreate(filter types.EntityFilter)  (data []types.Entity, err err
         item, e := EntityCreate(filter, tx)
 
         if e != nil {
-
-            tx.Rollback()
-
             err = e
             data = nil
             break
@@ -141,12 +138,21 @@ func EntityMultiCreate(filter types.EntityFilter)  (data []types.Entity, err err
         data = append(data, item)
     }
 
-    tx.Commit()
+    if err == nil {
+        tx.Commit()
+    } else {
+        tx.Rollback()
+    }
 
-    return data, nil
+    return
 }
 
 func EntityRead(filter types.EntityFilter)  (data types.Entity, err error) {
+
+    filter.Pagination.CurrentPage = 1
+    filter.Pagination.PerPage = 1
+    filter.ClearIds()
+    filter.AddId(filter.GetCurrentId())
 
     findData, _, err := EntityFind(filter)
 
@@ -157,7 +163,7 @@ func EntityRead(filter types.EntityFilter)  (data types.Entity, err error) {
     return types.Entity{}, errors.New("Not found")
 }
 
-func EntityUpdate(filter types.EntityFilter)  (data types.Entity, err error) {
+func EntityUpdate(filter types.EntityFilter, query *gorm.DB)  (data types.Entity, err error) {
 
     filter.Pagination.CurrentPage = 1
     filter.Pagination.PerPage = 1
@@ -190,7 +196,7 @@ func EntityUpdate(filter types.EntityFilter)  (data types.Entity, err error) {
         return
     }
 
-    q := core.Db.Model(dbmodels.Entity{}).Save(&updateModel)
+    q := query.Model(dbmodels.Entity{}).Save(&updateModel)
 
     if q.Error != nil {
         err = q.Error
@@ -201,8 +207,77 @@ func EntityUpdate(filter types.EntityFilter)  (data types.Entity, err error) {
     return
 }
 
+func EntityMultiUpdate(filter types.EntityFilter)  (data []types.Entity, err error) {
 
-func EntityDelete(filter types.EntityFilter)  (isOk bool, err error) {
+    typeModelList, err := filter.GetEntityModelList()
+
+    if err != nil {
+        return
+    }
+
+    tx := core.Db.Begin()
+
+    for _, typeModel := range typeModelList {
+
+        filter.SetEntityModel(typeModel)
+        filter.ClearIds()
+        filter.SetCurrentId(typeModel.Id)
+
+        item, e := EntityUpdate(filter, tx)
+
+        if e != nil {
+            err = e
+            data = nil
+            break
+        }
+
+        data = append(data, item)
+    }
+
+    if err == nil {
+        tx.Commit()
+    } else {
+        tx.Rollback()
+    }
+
+    return data, nil
+}
+
+func EntityMultiDelete(filter types.EntityFilter)  (isOk bool, err error) {
+
+    typeModelList, err := filter.GetEntityModelList()
+
+    if err != nil {
+        return
+    }
+
+    tx := core.Db.Begin()
+
+    for _, typeModel := range typeModelList {
+
+        filter.SetEntityModel(typeModel)
+        filter.ClearIds()
+        filter.SetCurrentId(typeModel.Id)
+
+        _, e := EntityDelete(filter, tx)
+
+        if e != nil {
+            err = e
+            isOk = false
+            break
+        }
+    }
+
+    if err == nil {
+        tx.Commit()
+    } else {
+        tx.Rollback()
+    }
+
+    return true, nil
+}
+
+func EntityDelete(filter types.EntityFilter, query *gorm.DB)  (isOk bool, err error) {
 
     filter.Pagination.CurrentPage = 1
     filter.Pagination.PerPage = 1
@@ -217,7 +292,7 @@ func EntityDelete(filter types.EntityFilter)  (isOk bool, err error) {
         return
     }
 
-    q := core.Db.Model(dbmodels.Entity{}).Where(dbmodels.Entity{ID: existsModel.Id}).Delete(&existsModel)
+    q := query.Model(dbmodels.Entity{}).Where(dbmodels.Entity{ID: existsModel.Id}).Delete(&existsModel)
 
     if q.Error != nil {
         err = q.Error
