@@ -43,26 +43,22 @@ func (pagination *Pagination) Validate(functionType string) {
 
 		break
 	case settings.FunctionTypeCreate:
-
-
-
+		break
+	case settings.FunctionTypeMultiCreate:
 		break
 	case settings.FunctionTypeRead:
-
-
-
 		break
 	case settings.FunctionTypeUpdate:
-
-
-
+		break
+	case settings.FunctionTypeMultiUpdate:
 		break
 	case settings.FunctionTypeDelete:
-
+		break
+	case settings.FunctionTypeMultiDelete:
 		break
 
 	default:
-		pagination.validator.validationErrors = append(pagination.validator.validationErrors, "Usupported function type: " + functionType)
+		pagination.validator.validationErrors = append(pagination.validator.validationErrors, "Unsupported function type: " + functionType)
 		break
 	}
 }

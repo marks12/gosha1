@@ -45,7 +45,6 @@ func GetEntityFilter(request *http.Request, functionType string) EntityFilter {
         break
     }
 
-
     filter.AbstractFilter = GetAbstractFilter(request, functionType)
 
     return  filter
