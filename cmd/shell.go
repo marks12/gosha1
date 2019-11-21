@@ -53,7 +53,7 @@ func RunShell() {
     shell.AddCmd(&ishell.Cmd{
         Name: GENERATE_TYPES_JS,
         Help: "Generate types structs to JS for using in frontend " +
-            "\n\t\t\t\tNIM: "+GENERATE_TYPES_JS+" --dst=/some/destination/path",
+            "\n\t\t\t\tNIM: "+GENERATE_TYPES_JS+" --dst=/some/destination/path --map-namespace=im3 add namespace for modules",
         Func: genTypesJs,
     })
 
