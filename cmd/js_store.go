@@ -8,13 +8,21 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/{entity}";
 let readUrl = "/api/v1/{entity}/"; // + id
 let createUrl = "/api/v1/{entity}";
+let multiCreateUrl = "/api/v1/{entity}/list";
 let updateUrl = "/api/v1/{entity}/"; // + id
+let multiUpdateUrl = "/api/v1/{entity}/list"; // + id
 let deleteUrl = "/api/v1/{entity}/"; // + id
+let multiDeleteUrl = "/api/v1/{entity}/list"; // + id
 let findOrCreateUrl = "/api/v1/{entity}"; // + id
 
 const {entity} = {
     actions: {
         create{Entity}(context, {data, filter, header}) {
+
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
 
             return api.create(createUrl, data, filter, header)
                 .then(function(response) {
@@ -30,7 +38,17 @@ const {entity} = {
         },
         delete{Entity}(context, {id, header}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(arrayOrId)) {
+                url = multiDeleteUrl;
+                dataOrNull = arrayOrId;
+            } else {
+                url = deleteUrl + arrayOrId;
+            }
+
+            return api.remove(deleteUrl + id, header, dataOrNull)
                 .then(function(response) {
                     context.commit("clear{Entity}");
                     return response;
@@ -67,6 +85,11 @@ const {entity} = {
                 });
         },
         update{Entity}(context, {id, data, filter, header}) {
+
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
 
             return api.update(updateUrl + id, data, filter, header)
                 .then(function(response) {

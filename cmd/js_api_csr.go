@@ -111,8 +111,8 @@ function BackendApi() {
     getServerUrl: () => {
       return this.serverUrl;
     },
-    remove: (url, getParams, headerParams) => {
-      return request("DELETE", this.getRouteUrl(url), getParams, null, headerParams);
+    remove: (url, getParams, data, headerParams) => {
+      return request("DELETE", this.getRouteUrl(url), getParams, data, headerParams);
     },
     setServerUrl: (url) => {
       this.serverUrl = url;
