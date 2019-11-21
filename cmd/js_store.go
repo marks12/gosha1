@@ -24,7 +24,7 @@ const {entity} = {
                 url = multiCreateUrl
             }
 
-            return api.create(createUrl, data, filter, header)
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("set{Entity}", response.Model);
@@ -36,7 +36,7 @@ const {entity} = {
                     throw(err);
                 });
         },
-        delete{Entity}(context, {id, header}) {
+        delete{Entity}(context, {arrayOrId, header}) {
 
             let url;
             let dataOrNull = null;
@@ -48,7 +48,7 @@ const {entity} = {
                 url = deleteUrl + arrayOrId;
             }
 
-            return api.remove(deleteUrl + id, header, dataOrNull)
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
                     context.commit("clear{Entity}");
                     return response;
@@ -91,7 +91,7 @@ const {entity} = {
                 url = multiUpdateUrl
             }
 
-            return api.update(updateUrl + id, data, filter, header)
+            return api.update(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("set{Entity}", response.Model);
