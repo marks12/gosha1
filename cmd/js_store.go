@@ -36,16 +36,16 @@ const {entity} = {
                     throw(err);
                 });
         },
-        delete{Entity}(context, {arrayOrId, header}) {
+        delete{Entity}(context, {id, header}) {
 
             let url;
             let dataOrNull = null;
 
-            if (Array.isArray && Array.isArray(arrayOrId)) {
+            if (Array.isArray && Array.isArray(id)) {
                 url = multiDeleteUrl;
-                dataOrNull = arrayOrId;
+                dataOrNull = id;
             } else {
-                url = deleteUrl + arrayOrId;
+                url = deleteUrl + id;
             }
 
             return api.remove(url, header, dataOrNull)
