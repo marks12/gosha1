@@ -84,6 +84,60 @@ func getTypesJs(storeNameSpace string) (string, []store, []vueComponent, []vueCo
 
 func getFileContent(repository ModelRepository, typeNames []string, storeNameSpace string) (content string, stores []store, vueComponentTemplates []vueComponent, vueData []vueComponentData) {
 
+	content = `
+function Validator() {
+
+    let rules = {};
+    let errors = {};
+
+    this.GetErrors = (field) => {
+
+        if (errors[field]) {
+            return errors[field];
+        }
+        
+        return errors;
+    };
+
+    this.IsValid = () => {
+
+        for (let k in this) {
+
+            if (this.hasOwnProperty(k) && typeof this[k] !== "function") {
+                if (rules[k]) {
+
+                    if (! errors[k]) {
+                        errors[k] = [];
+                    }
+
+                    for (let i in rules[k]) {
+
+                        let err = rules[k][i]();
+
+                        if (err) {
+                            errors[k].push(err);
+                        }
+                    }
+                }
+            }
+        }
+
+        for (let i in errors) {
+            if (errors[i].length) {
+                return false;
+            }
+        }
+
+        return true;
+    };
+
+    this.addRule = (field, func, errMessage) => {
+
+    };
+}
+
+`
+
 	for _, t := range typeNames {
 
 		fields := []string{}
@@ -139,6 +193,8 @@ func getFileContent(repository ModelRepository, typeNames []string, storeNameSpa
 
 		//sort.Sort(ByCase(fields))
 		content += strings.Join(fields, "")
+
+		content += "\n    Validator.apply(this, arguments);\n"
 
 		content += "\n    return this;\n}\n"
 	}
