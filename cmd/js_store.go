@@ -118,6 +118,9 @@ const {entity} = {
         clearList{Entity}(context) {
             context.commit("clearList{Entity}");
         },
+        clear{Entity}(context) {
+            context.commit("clear{Entity}");
+        },
     },
     getters: {
         get{Entity}: (state) => {
