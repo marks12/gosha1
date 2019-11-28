@@ -1,4 +1,6 @@
 
+	//some common actions
+
 export function Auth() {
 
     this.Email = "";
@@ -15,6 +17,7 @@ export function AuthFilter() {
     this.Order = [];
     this.OrderDirection = [];
     this.Ids = [];
+    this.CurrentId = 0;
     this.CurrentPage = 0;
     this.PerPage = 0;
     this.FunctionType = "";
@@ -25,6 +28,59 @@ export function AuthFilter() {
 
 export function Authenticator() {
 
+    this.FunctionType = "";
+    this.UrlPath = "";
+
+    return this;
+}
+
+export function ComponentGroup() {
+
+    this.Id = 0;
+    this.Name = "";
+    this.Code = "";
+
+    return this;
+}
+
+export function ComponentGroupFilter() {
+
+    this.Search = "";
+    this.SearchBy = [];
+    this.Order = [];
+    this.OrderDirection = [];
+    this.Ids = [];
+    this.CurrentId = 0;
+    this.CurrentPage = 0;
+    this.PerPage = 0;
+    this.FunctionType = "";
+    this.UrlPath = "";
+
+    return this;
+}
+
+export function ComponentTemplate() {
+
+    this.Id = 0;
+    this.Name = "";
+    this.Code = "";
+    this.Path = "";
+    this.GroupCode = "";
+    this.GroupId = null;
+
+    return this;
+}
+
+export function ComponentTemplateFilter() {
+
+    this.Search = "";
+    this.SearchBy = [];
+    this.Order = [];
+    this.OrderDirection = [];
+    this.Ids = [];
+    this.CurrentId = 0;
+    this.CurrentPage = 0;
+    this.PerPage = 0;
     this.FunctionType = "";
     this.UrlPath = "";
 
@@ -45,6 +101,7 @@ export function CurrentUserFilter() {
     this.Order = [];
     this.OrderDirection = [];
     this.Ids = [];
+    this.CurrentId = 0;
     this.CurrentPage = 0;
     this.PerPage = 0;
     this.FunctionType = "";
@@ -69,6 +126,7 @@ export function EntityFilter() {
     this.Order = [];
     this.OrderDirection = [];
     this.Ids = [];
+    this.CurrentId = 0;
     this.CurrentPage = 0;
     this.PerPage = 0;
     this.FunctionType = "";
@@ -81,6 +139,222 @@ export function OrderFilter() {
 
     this.Order = [];
     this.OrderDirection = [];
+
+    return this;
+}
+
+export function Layout() {
+
+    this.Id = 0;
+    this.Name = "";
+    this.RegionId = 0;
+    this.LanguageId = 0;
+
+    return this;
+}
+
+export function LayoutFilter() {
+
+    this.Search = "";
+    this.SearchBy = [];
+    this.Order = [];
+    this.OrderDirection = [];
+    this.Ids = [];
+    this.CurrentId = 0;
+    this.CurrentPage = 0;
+    this.PerPage = 0;
+    this.FunctionType = "";
+    this.UrlPath = "";
+
+    return this;
+}
+
+export function LayoutContent() {
+
+    this.Id = 0;
+    this.LayoutId = null;
+    this.ComponentTemplateCode = "";
+    this.Position = 0;
+    this.IsActive = false;
+    this.RegionId = null;
+    this.LanguageId = null;
+    this.Name = "";
+
+    return this;
+}
+
+export function LayoutContentFilter() {
+
+    this.Search = "";
+    this.SearchBy = [];
+    this.Order = [];
+    this.OrderDirection = [];
+    this.Ids = [];
+    this.CurrentId = 0;
+    this.CurrentPage = 0;
+    this.PerPage = 0;
+    this.FunctionType = "";
+    this.UrlPath = "";
+
+    return this;
+}
+
+export function PageContent() {
+
+    this.Id = 0;
+    this.Name = "";
+    this.PageTemplateId = null;
+    this.IsActive = false;
+    this.RegionId = null;
+    this.LanguageId = null;
+    this.Position = 0;
+    this.ComponentTemplateCode = "";
+
+    return this;
+}
+
+export function PageContentFilter() {
+
+    this.Search = "";
+    this.SearchBy = [];
+    this.Order = [];
+    this.OrderDirection = [];
+    this.Ids = [];
+    this.CurrentId = 0;
+    this.CurrentPage = 0;
+    this.PerPage = 0;
+    this.FunctionType = "";
+    this.UrlPath = "";
+
+    return this;
+}
+
+export function PageInfo() {
+
+    this.Id = 0;
+    this.SeoMeta = null;
+
+    return this;
+}
+
+export function PageInfoFilter() {
+
+    this.Search = "";
+    this.SearchBy = [];
+    this.Order = [];
+    this.OrderDirection = [];
+    this.Ids = [];
+    this.CurrentId = 0;
+    this.CurrentPage = 0;
+    this.PerPage = 0;
+    this.FunctionType = "";
+    this.UrlPath = "";
+
+    return this;
+}
+
+export function PageTemplate() {
+
+    this.Id = 0;
+    this.PageTypeId = null;
+    this.Name = "";
+    this.IsActive = false;
+    this.RegionId = null;
+    this.LanguageId = null;
+    this.RootPageId = null;
+    this.LayoutId = null;
+
+    return this;
+}
+
+export function PageTemplateFilter() {
+
+    this.Search = "";
+    this.SearchBy = [];
+    this.Order = [];
+    this.OrderDirection = [];
+    this.Ids = [];
+    this.CurrentId = 0;
+    this.CurrentPage = 0;
+    this.PerPage = 0;
+    this.FunctionType = "";
+    this.UrlPath = "";
+
+    return this;
+}
+
+export function PageType() {
+
+    this.Id = 0;
+    this.Name = "";
+    this.Code = "";
+
+    return this;
+}
+
+export function PageTypeFilter() {
+
+    this.Search = "";
+    this.SearchBy = [];
+    this.Order = [];
+    this.OrderDirection = [];
+    this.Ids = [];
+    this.CurrentId = 0;
+    this.CurrentPage = 0;
+    this.PerPage = 0;
+    this.FunctionType = "";
+    this.UrlPath = "";
+
+    return this;
+}
+
+export function Region() {
+
+    this.Id = 0;
+    this.Name = "";
+    this.Code = "";
+    this.TypeId = null;
+    this.EntityId = null;
+
+    return this;
+}
+
+export function RegionFilter() {
+
+    this.Search = "";
+    this.SearchBy = [];
+    this.Order = [];
+    this.OrderDirection = [];
+    this.Ids = [];
+    this.CurrentId = 0;
+    this.CurrentPage = 0;
+    this.PerPage = 0;
+    this.FunctionType = "";
+    this.UrlPath = "";
+
+    return this;
+}
+
+export function RegionType() {
+
+    this.Id = 0;
+    this.Name = "";
+
+    return this;
+}
+
+export function RegionTypeFilter() {
+
+    this.Search = "";
+    this.SearchBy = [];
+    this.Order = [];
+    this.OrderDirection = [];
+    this.Ids = [];
+    this.CurrentId = 0;
+    this.CurrentPage = 0;
+    this.PerPage = 0;
+    this.FunctionType = "";
+    this.UrlPath = "";
 
     return this;
 }
@@ -102,6 +376,7 @@ export function ResourceFilter() {
     this.Order = [];
     this.OrderDirection = [];
     this.Ids = [];
+    this.CurrentId = 0;
     this.CurrentPage = 0;
     this.PerPage = 0;
     this.FunctionType = "";
@@ -125,6 +400,7 @@ export function ResourceTypeFilter() {
     this.Order = [];
     this.OrderDirection = [];
     this.Ids = [];
+    this.CurrentId = 0;
     this.CurrentPage = 0;
     this.PerPage = 0;
     this.FunctionType = "";
@@ -172,6 +448,7 @@ export function RoleFilter() {
     this.Order = [];
     this.OrderDirection = [];
     this.Ids = [];
+    this.CurrentId = 0;
     this.CurrentPage = 0;
     this.PerPage = 0;
     this.FunctionType = "";
@@ -202,6 +479,7 @@ export function RoleResourceFilter() {
     this.Order = [];
     this.OrderDirection = [];
     this.Ids = [];
+    this.CurrentId = 0;
     this.CurrentPage = 0;
     this.PerPage = 0;
     this.FunctionType = "";
@@ -230,6 +508,7 @@ export function UserFilter() {
     this.Order = [];
     this.OrderDirection = [];
     this.Ids = [];
+    this.CurrentId = 0;
     this.CurrentPage = 0;
     this.PerPage = 0;
     this.FunctionType = "";
@@ -256,6 +535,7 @@ export function UserRoleFilter() {
     this.Order = [];
     this.OrderDirection = [];
     this.Ids = [];
+    this.CurrentId = 0;
     this.CurrentPage = 0;
     this.PerPage = 0;
     this.FunctionType = "";
