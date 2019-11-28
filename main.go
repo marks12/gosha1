@@ -9,7 +9,6 @@ import (
 
 func main() {
 
-
     if len(os.Args) > 1 {
         cmd.Run()
         return

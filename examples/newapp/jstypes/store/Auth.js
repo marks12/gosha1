@@ -6,15 +6,23 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/auth";
 let readUrl = "/api/v1/auth/"; // + id
 let createUrl = "/api/v1/auth";
+let multiCreateUrl = "/api/v1/auth/list";
 let updateUrl = "/api/v1/auth/"; // + id
+let multiUpdateUrl = "/api/v1/auth/list"; // + id
 let deleteUrl = "/api/v1/auth/"; // + id
+let multiDeleteUrl = "/api/v1/auth/list"; // + id
 let findOrCreateUrl = "/api/v1/auth"; // + id
 
 const auth = {
     actions: {
         createAuth(context, {data, filter, header}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setAuth", response.Model);
@@ -28,7 +36,17 @@ const auth = {
         },
         deleteAuth(context, {id, header}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id;
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
                     context.commit("clearAuth");
                     return response;
@@ -66,7 +84,12 @@ const auth = {
         },
         updateAuth(context, {id, data, filter, header}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setAuth", response.Model);
@@ -92,6 +115,9 @@ const auth = {
         },
         clearListAuth(context) {
             context.commit("clearListAuth");
+        },
+        clearAuth(context) {
+            context.commit("clearAuth");
         },
     },
     getters: {
