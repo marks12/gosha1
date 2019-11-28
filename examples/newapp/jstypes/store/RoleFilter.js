@@ -6,15 +6,23 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/roleFilter";
 let readUrl = "/api/v1/roleFilter/"; // + id
 let createUrl = "/api/v1/roleFilter";
+let multiCreateUrl = "/api/v1/roleFilter/list";
 let updateUrl = "/api/v1/roleFilter/"; // + id
+let multiUpdateUrl = "/api/v1/roleFilter/list"; // + id
 let deleteUrl = "/api/v1/roleFilter/"; // + id
+let multiDeleteUrl = "/api/v1/roleFilter/list"; // + id
 let findOrCreateUrl = "/api/v1/roleFilter"; // + id
 
 const roleFilter = {
     actions: {
         createRoleFilter(context, {data, filter, header}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setRoleFilter", response.Model);
@@ -28,7 +36,17 @@ const roleFilter = {
         },
         deleteRoleFilter(context, {id, header}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id;
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
                     context.commit("clearRoleFilter");
                     return response;
@@ -66,7 +84,12 @@ const roleFilter = {
         },
         updateRoleFilter(context, {id, data, filter, header}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setRoleFilter", response.Model);
@@ -92,6 +115,9 @@ const roleFilter = {
         },
         clearListRoleFilter(context) {
             context.commit("clearListRoleFilter");
+        },
+        clearRoleFilter(context) {
+            context.commit("clearRoleFilter");
         },
     },
     getters: {

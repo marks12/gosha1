@@ -6,15 +6,23 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/entity";
 let readUrl = "/api/v1/entity/"; // + id
 let createUrl = "/api/v1/entity";
+let multiCreateUrl = "/api/v1/entity/list";
 let updateUrl = "/api/v1/entity/"; // + id
+let multiUpdateUrl = "/api/v1/entity/list"; // + id
 let deleteUrl = "/api/v1/entity/"; // + id
+let multiDeleteUrl = "/api/v1/entity/list"; // + id
 let findOrCreateUrl = "/api/v1/entity"; // + id
 
 const entity = {
     actions: {
         createEntity(context, {data, filter, header}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setEntity", response.Model);
@@ -28,7 +36,17 @@ const entity = {
         },
         deleteEntity(context, {id, header}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id;
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
                     context.commit("clearEntity");
                     return response;
@@ -66,7 +84,12 @@ const entity = {
         },
         updateEntity(context, {id, data, filter, header}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setEntity", response.Model);
@@ -92,6 +115,9 @@ const entity = {
         },
         clearListEntity(context) {
             context.commit("clearListEntity");
+        },
+        clearEntity(context) {
+            context.commit("clearEntity");
         },
     },
     getters: {
