@@ -6,15 +6,23 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/userRole";
 let readUrl = "/api/v1/userRole/"; // + id
 let createUrl = "/api/v1/userRole";
+let multiCreateUrl = "/api/v1/userRole/list";
 let updateUrl = "/api/v1/userRole/"; // + id
+let multiUpdateUrl = "/api/v1/userRole/list"; // + id
 let deleteUrl = "/api/v1/userRole/"; // + id
+let multiDeleteUrl = "/api/v1/userRole/list"; // + id
 let findOrCreateUrl = "/api/v1/userRole"; // + id
 
 const userRole = {
     actions: {
         createUserRole(context, {data, filter, header}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setUserRole", response.Model);
@@ -28,7 +36,17 @@ const userRole = {
         },
         deleteUserRole(context, {id, header}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id;
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
                     context.commit("clearUserRole");
                     return response;
@@ -66,7 +84,12 @@ const userRole = {
         },
         updateUserRole(context, {id, data, filter, header}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setUserRole", response.Model);
@@ -92,6 +115,9 @@ const userRole = {
         },
         clearListUserRole(context) {
             context.commit("clearListUserRole");
+        },
+        clearUserRole(context) {
+            context.commit("clearUserRole");
         },
     },
     getters: {

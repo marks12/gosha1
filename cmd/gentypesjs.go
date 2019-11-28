@@ -84,120 +84,8 @@ func getTypesJs(storeNameSpace string) (string, []store, []vueComponent, []vueCo
 
 func getFileContent(repository ModelRepository, typeNames []string, storeNameSpace string) (content string, stores []store, vueComponentTemplates []vueComponent, vueData []vueComponentData) {
 
-	content = `function Validator() {
-
-    let rules = {};
-    let errors = {};
-
-    this.GetErrors = (field) => {
-
-        if (errors[field]) {
-            return errors[field];
-        }
-        
-        return errors;
-    };
-
-    this.IsValid = () => {
-
-        errors = {};
-
-        for (let field in this) {
-            validateField(field);
-        }
-
-        for (let i in errors) {
-            if (errors[i].length) {
-                return false;
-            }
-        }
-
-        return true;
-    };
-
-    let validateField = (field) => {
-
-        if (this.hasOwnProperty(field) && typeof this[field] !== "function") {
-            if (rules[field]) {
-                for (let i in rules[field]) {
-                    let err = rules[field][i](this);
-                    if (err) {
-                        setError(field, err);
-                    }
-                }
-            }
-        }
-    };
-
-    let setError = (field, err) => {
-        if (! errors[field]) {
-            errors[field] = [];
-        }
-        errors[field].push(err);
-    };
-
-    this.AddValidatorRule = (field, func) => {
-
-        if (! rules[field]) {
-            rules[field] = [];
-        }
-
-        rules[field].push(func);
-
-        return this;
-    };
-
-    this.NotEmpty = (field) => {
-        this.AddValidatorRule(field, function (item) {
-            if (item[field].length < 1) {
-                return field + " must be not empty";
-            }
-        });
-    };
-
-    this.Min = (field, min) => {
-        this.AddValidatorRule(field, function (item) {
-            if (item[field] <= min) {
-                return field + " must be greater then " + min;
-            }
-        });
-    };
-
-    this.Max = (field, max) => {
-        this.AddValidatorRule(field, function (item) {
-            if (item[field] >= max) {
-                return field + " must be less then " + max;
-            }
-        });
-    };
-
-    this.Regular = (field, regularString) => {
-        this.AddValidatorRule(field, function (item) {
-            let re = new RegExp(regularString);
-            if (! re.test(item[field])) {
-                return field + " must be match regular " + regularString;
-            }
-        });
-    };
-
-    this.StrictType = (field) => {
-
-        this.AddValidatorRule(field, function (item) {
-            let el = JSON.parse(JSON.stringify(new item.constructor()));
-            if (typeof el[field] !== typeof item[field]) {
-                return field + " has wrong data type " + typeof item[field] + ". Need " + typeof el[field];
-            }
-        });
-    };
-
-    this.StrictTypesAll = () => {
-        for (let field in this) {
-            if (this.hasOwnProperty(field) && typeof this[field] !== "function") {
-                this.StrictType(field);
-            }
-        }
-    }
-}
+	content = `
+	//some common actions
 `
 
 	for _, t := range typeNames {
@@ -255,8 +143,6 @@ func getFileContent(repository ModelRepository, typeNames []string, storeNameSpa
 
 		//sort.Sort(ByCase(fields))
 		content += strings.Join(fields, "")
-
-		content += "\n    Validator.apply(this, arguments);\n"
 
 		content += "\n    return this;\n}\n"
 	}

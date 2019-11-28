@@ -6,15 +6,23 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/orderFilter";
 let readUrl = "/api/v1/orderFilter/"; // + id
 let createUrl = "/api/v1/orderFilter";
+let multiCreateUrl = "/api/v1/orderFilter/list";
 let updateUrl = "/api/v1/orderFilter/"; // + id
+let multiUpdateUrl = "/api/v1/orderFilter/list"; // + id
 let deleteUrl = "/api/v1/orderFilter/"; // + id
+let multiDeleteUrl = "/api/v1/orderFilter/list"; // + id
 let findOrCreateUrl = "/api/v1/orderFilter"; // + id
 
 const orderFilter = {
     actions: {
         createOrderFilter(context, {data, filter, header}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setOrderFilter", response.Model);
@@ -28,7 +36,17 @@ const orderFilter = {
         },
         deleteOrderFilter(context, {id, header}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id;
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
                     context.commit("clearOrderFilter");
                     return response;
@@ -66,7 +84,12 @@ const orderFilter = {
         },
         updateOrderFilter(context, {id, data, filter, header}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setOrderFilter", response.Model);
@@ -92,6 +115,9 @@ const orderFilter = {
         },
         clearListOrderFilter(context) {
             context.commit("clearListOrderFilter");
+        },
+        clearOrderFilter(context) {
+            context.commit("clearOrderFilter");
         },
     },
     getters: {
