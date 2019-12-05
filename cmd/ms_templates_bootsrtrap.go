@@ -67,7 +67,6 @@ func addUser() {
 			LastName:    "Admin",
 			MobilePhone: "",
 			Password:    "{password}",
-			Token:       "",
 		})
 		core.Db.Model(dbmodels.User{}).Save(&user)
 
