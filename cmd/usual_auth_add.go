@@ -193,7 +193,6 @@ func fillUser(c *ishell.Context) {
 		Email:       dbUser.Email,
 		Password:    "*****",
 		IsActive:    dbUser.IsActive,
-		Token:       dbUser.Token,
     	` + getRemoveLine("AssignUserTypeFromDb.Field")},
 		c)
 
@@ -208,7 +207,6 @@ func fillUser(c *ishell.Context) {
     LastName    string
     MobilePhone string
     Password    string
-    Token       string
     ` + getRemoveLine("User")},
 		c)
 

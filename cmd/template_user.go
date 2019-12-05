@@ -49,7 +49,6 @@ type User struct {
     LastName    string
     MobilePhone string
     Password    string
-    Token       string
 
     CreatedAt time.Time
     UpdatedAt time.Time
