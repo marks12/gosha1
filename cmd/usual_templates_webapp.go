@@ -25,7 +25,14 @@ func ErrResponse (w http.ResponseWriter, err string, status int) {
 func ValidResponse (w http.ResponseWriter, data interface{}) {
 
     w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-    w.WriteHeader(http.StatusOK)
+    switch data.(type) {
+    case mdl.ResponseCreate:
+        w.WriteHeader(http.StatusCreated)
+        break
+    default:
+        w.WriteHeader(http.StatusOK)
+        break
+    }
     json.NewEncoder(w).Encode(data)
 
     return
