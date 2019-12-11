@@ -118,6 +118,8 @@ func usualCreate(c *ishell.Context, email, password string) {
 	CreateFile(msTemplateSettingsDb.Path, msTemplateSettingsDb.Content, c)
 	CreateFile(usualTemplateSettingsWebapp.Path, usualTemplateSettingsWebapp.Content, c)
 	CreateFile(usualTemplateSettingsRoutes.Path, usualTemplateSettingsRoutes.Content, c)
+	CreateFile(usualTemplateTestsRequest.Path, usualTemplateTestsRequest.Content, c)
+	CreateFile(usualTemplateTestsUsers.Path, usualTemplateTestsUsers.Content, c)
 	CreateFile(msTemplateSettingsWss.Path, msTemplateSettingsWss.Content, c)
 	CreateFile(usualTemplateSettingsResource.Path, usualTemplateSettingsResource.Content, c)
 
@@ -169,6 +171,7 @@ func usualCreateMain(c *ishell.Context) {
 		"router",
 		"services",
 		"settings",
+		"tests",
 		"google",
 		"static",
 		"types",
