@@ -293,7 +293,8 @@ func {Entity}Delete(filter types.{Entity}Filter, query *gorm.DB)  (isOk bool, er
         return
     }
 
-    q := query.Model(dbmodels.{Entity}{}).Where(dbmodels.{Entity}{ID: existsModel.Id}).Delete(&existsModel)
+    dbModel := Assign{Entity}DbFromType(existsModel)
+    q := query.Model(dbmodels.{Entity}{}).Where(dbmodels.{Entity}{ID: dbModel.ID}).Delete(&dbModel)
 
     if q.Error != nil {
         err = q.Error

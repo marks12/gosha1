@@ -73,6 +73,18 @@ func usualEntityAdd(c *ishell.Context) {
 		[]string{CamelCase, CamelCase, firstLowerCase},
 		c)
 
+	sourceFile = "./webapp/" + snakeCase + "_test.go"
+	destinationFile = "./webapp/" + snakeCase + "_test.go"
+
+	CreateFile(sourceFile, getWebAppTestContent(), c)
+
+	CopyFile(
+		sourceFile,
+		destinationFile,
+		[]string{"{entity-name}", "{Entity}", "{entity}"},
+		[]string{CamelCase, CamelCase, firstLowerCase},
+		c)
+
 	sourceFile = "./types/" + snakeCase + ".go"
 	destinationFile = "./types/" + snakeCase + ".go"
 
@@ -206,6 +218,29 @@ func getWebAppContent() (webappContent string) {
 	//}
 
 	webappContent = assignMsName(GetUsualTemplateWebAppContent(authParams, methodCrudParams))
+
+	return
+}
+
+func getWebAppTestContent() (webappTestContent string) {
+
+	webappTestContent = usualTemplateWebappTestEntity.Content
+
+	//methodCrudArgs, _ := GetOsArgument("crud")
+	methodCrudParams := Crud{true, true, true, true, true, true}
+	//
+	//if len(methodCrudArgs.StringResult) > 0 {
+	//
+	//	methodCrudParams.IsFind = strings.Contains(methodCrudArgs.StringResult, "f")
+	//	methodCrudParams.IsCreate = strings.Contains(methodCrudArgs.StringResult, "c")
+	//	methodCrudParams.IsRead = strings.Contains(methodCrudArgs.StringResult, "r")
+	//	methodCrudParams.IsUpdate = strings.Contains(methodCrudArgs.StringResult, "u")
+	//	methodCrudParams.IsDelete = strings.Contains(methodCrudArgs.StringResult, "d")
+	//	methodCrudParams.IsFindOrCreate = strings.Contains(methodCrudArgs.StringResult, "a")
+	//
+	//}
+
+	webappTestContent = assignMsName(GetUsualTemplateWebAppTestContent(methodCrudParams))
 
 	return
 }

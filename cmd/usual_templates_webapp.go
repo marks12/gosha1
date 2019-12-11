@@ -4,6 +4,7 @@ const usualWebappErrors = `package webapp
 
 import (
     "{ms-name}/types"
+    "{ms-name}/mdl"
     "net/http"
     "encoding/json"
 )
@@ -37,7 +38,6 @@ func ValidResponse (w http.ResponseWriter, data interface{}) {
 
     return
 }`
-
 
 var usualTemplateWebappErrors = template{
     Path:    "./webapp/errors.go",
@@ -122,8 +122,6 @@ func getWebappCreate(methodCrud Crud, authCrud Crud) (c string) {
 
     if methodCrud.IsCreate {
         c = `
-
-
 func {entity-name}MultiCreate(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeMultiCreate)
