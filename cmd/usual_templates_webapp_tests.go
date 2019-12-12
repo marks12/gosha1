@@ -57,17 +57,11 @@ var testCreateFunc{entity-name} = func(tt tests.WebTest) (*httptest.ResponseReco
 var createAdminRequest{entity-name} = tests.GetCreateAdminRequest(settings.{entity-name}Route, validModel{entity-name})
 
 var testCases{entity-name} = []tests.WebTest{
-
     ` + getWebappTestFind(methodsCrud) + `
-
     ` + getWebappTestCreate(methodsCrud) + `
-
     ` + getWebappTestRead(methodsCrud) + `
-
     ` + getWebappTestUpdate(methodsCrud) + `
-
     ` + getWebappTestDelete(methodsCrud) + `
-
     ` + getWebappTestFindOrCreate(methodsCrud) + `
 }
 
@@ -132,8 +126,7 @@ func Test{entity-name}(t *testing.T) {
 func getWebappTestFind(methodCrud Crud) (c string) {
 
     if methodCrud.IsFind {
-        c = `
-	{
+        c = `{
 		Name:         "Find {entity-name}s as admin",
 		ResponseCode: 200,
 		TestFunc: func(tt tests.WebTest) (*httptest.ResponseRecorder, error) {
@@ -165,8 +158,7 @@ func getWebappTestFind(methodCrud Crud) (c string) {
 func getWebappTestCreate(methodCrud Crud) (c string) {
 
     if methodCrud.IsCreate {
-        c = `
-	{
+        c = `{
 		Name:         "Create new {entity-name} as admin",
 		Request:      createAdminRequest{entity-name},
 		ResponseCode: 201,
@@ -193,8 +185,7 @@ func getWebappTestCreate(methodCrud Crud) (c string) {
 func getWebappTestRead(methodCrud Crud) (c string) {
 
     if methodCrud.IsRead {
-        c = `
-	{
+        c = `{
 		Name:         "Read {entity-name} as non authorized user",
 		ResponseCode: 403,
 		TestFunc: func(tt tests.WebTest) (*httptest.ResponseRecorder, error) {
@@ -241,8 +232,7 @@ func getWebappTestRead(methodCrud Crud) (c string) {
 func getWebappTestUpdate(methodCrud Crud) (c string) {
 
     if methodCrud.IsUpdate {
-        c = `
-    {
+        c = `{
 		Name:         "Update {entity-name} as admin",
 		ResponseCode: 200,
 		TestFunc: func(tt tests.WebTest) (*httptest.ResponseRecorder, error) {
@@ -289,8 +279,7 @@ func getWebappTestUpdate(methodCrud Crud) (c string) {
 func getWebappTestDelete(methodCrud Crud) (c string) {
 
     if methodCrud.IsDelete {
-        c = `
-	{
+        c = `{
 		Name: "Delete {entity-name} as unauthorized user",
 		//Request: inside delete func,
 		ResponseCode: 403,

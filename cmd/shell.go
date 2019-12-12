@@ -12,6 +12,7 @@ var shell = ishell.New()
 const SET_APP_TYPE = "setAppType"
 const GET_APP_INFO = "getAppInfo"
 const GENERATE_TYPES_JS = "gen:types:js"
+const GENERATE_TESTS_WEBAPP = "gen:tests:webapp"
 
 func RunShell() {
 
@@ -55,6 +56,12 @@ func RunShell() {
         Help: "Generate types structs to JS for using in frontend " +
             "\n\t\t\t\tNIM: "+GENERATE_TYPES_JS+" --dst=/some/destination/path --map-namespace=im3 add namespace for modules",
         Func: genTypesJs,
+    })
+
+    shell.AddCmd(&ishell.Cmd{
+        Name: GENERATE_TESTS_WEBAPP,
+        Help: "Generate tests for webapp",
+        Func: genTestsWebapp,
     })
 
 
