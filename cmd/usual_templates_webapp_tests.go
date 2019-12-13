@@ -309,7 +309,7 @@ func getWebappTestDelete(methodCrud Crud) (c string) {
 
 			// create {entity-name} for next delete
 			responseCreate := httptest.NewRecorder()
-			{entity-name}Create(responseCreate, createAdminRequest{entity-name})
+			{entity-name}Create(responseCreate, tests.GetCreateAdminRequest(settings.{entity-name}Route, validModel{entity-name}))
 
 			responseData, err := get{entity-name}ResponseModel(tt, responseCreate)
 
@@ -330,7 +330,7 @@ func getWebappTestDelete(methodCrud Crud) (c string) {
 
 			// create {entity-name} for next delete
 			responseCreate := httptest.NewRecorder()
-			{entity-name}Create(responseCreate, createAdminRequest{entity-name})
+			{entity-name}Create(responseCreate, tests.GetCreateAdminRequest(settings.{entity-name}Route, validModel{entity-name}))
 
 			responseData, err := get{entity-name}ResponseModel(tt, responseCreate)
 			if err != nil {
