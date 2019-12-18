@@ -131,6 +131,16 @@ func getWebappTestFind(methodCrud Crud) (c string) {
 		ResponseCode: 200,
 		TestFunc: func(tt tests.WebTest) (*httptest.ResponseRecorder, error) {
 
+			req := tests.GetCreateAdminRequest(settings.{entity-name}Route, validModel{entity-name})
+			webtest := tests.WebTest{Request: req}
+			webtest.Name = "Creating before find"
+
+			_, err := testCreateFunc{entity-name}(webtest)
+
+			if err != nil {
+				return nil, err
+			}
+
 			route := settings.{entity-name}Route
 			request := tests.GetFindAdminRequest(route, 1, 1)
 
