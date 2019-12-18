@@ -2,6 +2,8 @@ package flags
 
 import (
     "flag"
+    "regexp"
+    "os"
 )
 
 var IsDev = flag.Bool("dev", false, "Enable development mode")
@@ -14,7 +16,13 @@ var Auth = flag.Bool("auth", false, "Disable authorisation")
 var _ = ParseFlags()
 
 func ParseFlags() error{
-    flag.Parse()
+
+    isTest, _ := regexp.MatchString(`\.test$`, os.Args[0])
+
+    if ! isTest {
+        flag.Parse()
+    }
+
     return nil
 }
 
