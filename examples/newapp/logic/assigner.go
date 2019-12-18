@@ -232,6 +232,292 @@ func AssignRoleDbFromType(typeModel types.Role) dbmodels.Role {
 
 
 
+func AssignComponentGroupTypeFromDb(dbRole dbmodels.ComponentGroup) types.ComponentGroup {
+
+    //AssignRoleTypeFromDb predefine remove this line for disable generator functionality
+
+    return types.ComponentGroup{
+        Id: dbRole.ID,
+        Name: dbRole.Name,
+		Code: dbRole.Code,
+		//AssignRoleTypeFromDb.Field remove this line for disable generator functionality
+    }
+}
+
+func AssignComponentGroupDbFromType(typeModel types.ComponentGroup) dbmodels.ComponentGroup {
+
+    //AssignRoleDbFromType predefine remove this line for disable generator functionality
+
+    return dbmodels.ComponentGroup{
+        ID: typeModel.Id,
+        Name: typeModel.Name,
+		Code: typeModel.Code,
+		//AssignRoleDbFromType.Field remove this line for disable generator functionality
+    }
+}
+
+
+func AssignComponentTemplateTypeFromDb(dbRole dbmodels.ComponentTemplate) types.ComponentTemplate {
+
+    //AssignRoleTypeFromDb predefine remove this line for disable generator functionality
+
+    return types.ComponentTemplate{
+        Id: dbRole.ID,
+        Name: dbRole.Name,
+		Code: dbRole.Code,
+		Path: dbRole.Path,
+		GroupCode: dbRole.GroupCode,
+		GroupId: dbRole.GroupId,
+		//AssignRoleTypeFromDb.Field remove this line for disable generator functionality
+    }
+}
+
+func AssignComponentTemplateDbFromType(typeModel types.ComponentTemplate) dbmodels.ComponentTemplate {
+
+    //AssignRoleDbFromType predefine remove this line for disable generator functionality
+
+    return dbmodels.ComponentTemplate{
+        ID: typeModel.Id,
+        Name: typeModel.Name,
+		Code: typeModel.Code,
+		Path: typeModel.Path,
+		GroupCode: typeModel.GroupCode,
+		GroupId: typeModel.GroupId,
+		//AssignRoleDbFromType.Field remove this line for disable generator functionality
+    }
+}
+
+func AssignLayoutTypeFromDb(dbRole dbmodels.Layout) types.Layout {
+
+    //AssignRoleTypeFromDb predefine remove this line for disable generator functionality
+
+    return types.Layout{
+        Id: dbRole.ID,
+        Name: dbRole.Name,
+        RegionId: dbRole.RegionId,
+        LanguageId: dbRole.LanguageId,
+		//AssignRoleTypeFromDb.Field remove this line for disable generator functionality
+    }
+}
+
+func AssignLayoutDbFromType(typeModel types.Layout) dbmodels.Layout {
+
+    //AssignRoleDbFromType predefine remove this line for disable generator functionality
+
+    return dbmodels.Layout{
+        ID: typeModel.Id,
+        Name: typeModel.Name,
+        RegionId: typeModel.RegionId,
+        LanguageId: typeModel.LanguageId,
+		//AssignRoleDbFromType.Field remove this line for disable generator functionality
+    }
+}
+
+func AssignLayoutContentTypeFromDb(dbRole dbmodels.LayoutContent) types.LayoutContent {
+
+    //AssignRoleTypeFromDb predefine remove this line for disable generator functionality
+
+    return types.LayoutContent{
+        Id: dbRole.ID,
+        LayoutId: dbRole.LayoutId,
+        ComponentTemplateCode: dbRole.ComponentTemplateCode,
+        Position: dbRole.Position,
+        IsActive: dbRole.IsActive,
+        Name: dbRole.Name,
+        RegionId: dbRole.RegionId,
+        LanguageId: dbRole.LanguageId,
+		//AssignRoleTypeFromDb.Field remove this line for disable generator functionality
+    }
+}
+
+func AssignLayoutContentDbFromType(typeModel types.LayoutContent) dbmodels.LayoutContent {
+
+    //AssignRoleDbFromType predefine remove this line for disable generator functionality
+
+    return dbmodels.LayoutContent{
+        ID: typeModel.Id,
+		LayoutId: typeModel.LayoutId,
+		ComponentTemplateCode: typeModel.ComponentTemplateCode,
+		Position: typeModel.Position,
+		IsActive: typeModel.IsActive,
+		Name: typeModel.Name,
+		RegionId: typeModel.RegionId,
+		LanguageId: typeModel.LanguageId,
+		//AssignRoleDbFromType.Field remove this line for disable generator functionality
+    }
+}
+
+
+func AssignPageContentTypeFromDb(dbRole dbmodels.PageContent) types.PageContent {
+
+    //AssignRoleTypeFromDb predefine remove this line for disable generator functionality
+
+    return types.PageContent{
+        Id: dbRole.ID,
+		Name: dbRole.Name,
+		PageTemplateId: dbRole.PageTemplateId,
+        ComponentTemplateCode: dbRole.ComponentTemplateCode,
+        Position: dbRole.Position,
+        IsActive: dbRole.IsActive,
+        RegionId: dbRole.RegionId,
+        LanguageId: dbRole.LanguageId,
+		//AssignRoleTypeFromDb.Field remove this line for disable generator functionality
+    }
+}
+
+func AssignPageContentDbFromType(typeModel types.PageContent) dbmodels.PageContent {
+
+    //AssignRoleDbFromType predefine remove this line for disable generator functionality
+
+    return dbmodels.PageContent{
+        ID: typeModel.Id,
+		Name: typeModel.Name,
+		PageTemplateId: typeModel.PageTemplateId,
+		ComponentTemplateCode: typeModel.ComponentTemplateCode,
+		Position: typeModel.Position,
+		IsActive: typeModel.IsActive,
+		RegionId: typeModel.RegionId,
+		LanguageId: typeModel.LanguageId,
+		//AssignRoleDbFromType.Field remove this line for disable generator functionality
+    }
+}
+
+
+func AssignPageInfoTypeFromDb(dbRole dbmodels.PageInfo) types.PageInfo {
+
+    //AssignRoleTypeFromDb predefine remove this line for disable generator functionality
+
+    return types.PageInfo{
+        Id: dbRole.ID,
+        SeoMeta: dbRole.SeoMeta,
+		//AssignRoleTypeFromDb.Field remove this line for disable generator functionality
+    }
+}
+
+func AssignPageInfoDbFromType(typeModel types.PageInfo) dbmodels.PageInfo {
+
+    //AssignRoleDbFromType predefine remove this line for disable generator functionality
+
+    return dbmodels.PageInfo{
+        ID: typeModel.Id,
+		SeoMeta: typeModel.SeoMeta,
+		//AssignRoleDbFromType.Field remove this line for disable generator functionality
+    }
+}
+
+
+func AssignPageTemplateTypeFromDb(dbRole dbmodels.PageTemplate) types.PageTemplate {
+
+    //AssignRoleTypeFromDb predefine remove this line for disable generator functionality
+
+    return types.PageTemplate{
+        Id: dbRole.ID,
+        PageTypeId: dbRole.PageTypeId,
+        Name: dbRole.Name,
+        IsActive: dbRole.IsActive,
+        RegionId: dbRole.RegionId,
+        LanguageId: dbRole.LanguageId,
+        RootPageId: dbRole.RootPageId,
+        LayoutId: dbRole.LayoutId,
+		//AssignRoleTypeFromDb.Field remove this line for disable generator functionality
+    }
+}
+
+func AssignPageTemplateDbFromType(typeModel types.PageTemplate) dbmodels.PageTemplate {
+
+    //AssignRoleDbFromType predefine remove this line for disable generator functionality
+
+    return dbmodels.PageTemplate{
+        ID: typeModel.Id,
+		PageTypeId: typeModel.PageTypeId,
+		Name: typeModel.Name,
+		IsActive: typeModel.IsActive,
+		RegionId: typeModel.RegionId,
+		LanguageId: typeModel.LanguageId,
+		RootPageId: typeModel.RootPageId,
+		LayoutId: typeModel.LayoutId,
+		//AssignRoleDbFromType.Field remove this line for disable generator functionality
+    }
+}
+
+func AssignPageTypeTypeFromDb(dbRole dbmodels.PageType) types.PageType {
+
+    //AssignRoleTypeFromDb predefine remove this line for disable generator functionality
+
+    return types.PageType{
+        Id: dbRole.ID,
+        Name: dbRole.Name,
+        Code: dbRole.Code,
+		//AssignRoleTypeFromDb.Field remove this line for disable generator functionality
+    }
+}
+
+func AssignPageTypeDbFromType(typeModel types.PageType) dbmodels.PageType {
+
+    //AssignRoleDbFromType predefine remove this line for disable generator functionality
+
+    return dbmodels.PageType{
+        ID: typeModel.Id,
+		Name: typeModel.Name,
+		Code: typeModel.Code,
+		//AssignRoleDbFromType.Field remove this line for disable generator functionality
+    }
+}
+
+
+func AssignRegionTypeFromDb(dbRole dbmodels.Region) types.Region {
+
+    //AssignRoleTypeFromDb predefine remove this line for disable generator functionality
+
+    return types.Region{
+        Id: dbRole.ID,
+        Name: dbRole.Name,
+        Code: dbRole.Code,
+        TypeId: dbRole.TypeId,
+        EntityId: dbRole.EntityId,
+		//AssignRoleTypeFromDb.Field remove this line for disable generator functionality
+    }
+}
+
+func AssignRegionDbFromType(typeModel types.Region) dbmodels.Region {
+
+    //AssignRoleDbFromType predefine remove this line for disable generator functionality
+
+    return dbmodels.Region{
+        ID: typeModel.Id,
+		Name: typeModel.Name,
+		Code: typeModel.Code,
+		TypeId: typeModel.TypeId,
+		EntityId: typeModel.EntityId,
+		//AssignRoleDbFromType.Field remove this line for disable generator functionality
+    }
+}
+
+
+func AssignRegionTypeTypeFromDb(dbRole dbmodels.RegionType) types.RegionType {
+
+    //AssignRoleTypeFromDb predefine remove this line for disable generator functionality
+
+    return types.RegionType{
+        Id: dbRole.ID,
+        Name: dbRole.Name,
+		//AssignRoleTypeFromDb.Field remove this line for disable generator functionality
+    }
+}
+
+func AssignRegionTypeDbFromTp(typeModel types.RegionType) dbmodels.RegionType {
+
+    //AssignRoleDbFromType predefine remove this line for disable generator functionality
+
+    return dbmodels.RegionType{
+        ID: typeModel.Id,
+		Name: typeModel.Name,
+		//AssignRoleDbFromType.Field remove this line for disable generator functionality
+    }
+}
+
+
+
 func AssignUserTypeFromDb(dbUser dbmodels.User) types.User {
 
     //AssignUserTypeFromDb predefine remove this line for disable generator functionality

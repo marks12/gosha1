@@ -38,6 +38,16 @@ func FillDBTestData()  {
           &dbmodels.RoleResource{},
           &dbmodels.Role{},
           &dbmodels.User{},
+          &dbmodels.PageContent{},
+          &dbmodels.PageInfo{},
+          &dbmodels.PageTemplate{},
+          &dbmodels.PageType{},
+          &dbmodels.Layout{},
+          &dbmodels.LayoutContent{},
+          &dbmodels.RegionType{},
+			&dbmodels.Region{},
+			&dbmodels.ComponentTemplate{},
+			&dbmodels.ComponentGroup{},
 		)
 
 		fmt.Println("All tables removed")
@@ -54,7 +64,18 @@ func FillDBTestData()  {
           &dbmodels.Resource{},
           &dbmodels.RoleResource{},
           &dbmodels.Role{},
-          &dbmodels.User{},
+			&dbmodels.User{},
+			&dbmodels.PageContent{},
+			&dbmodels.PageInfo{},
+			&dbmodels.PageTemplate{},
+			&dbmodels.PageType{},
+			&dbmodels.Layout{},
+			&dbmodels.LayoutContent{},
+			&dbmodels.RegionType{},
+			&dbmodels.Region{},
+		&dbmodels.ComponentTemplate{},
+		&dbmodels.ComponentGroup{},
+
 	)
 
 	// add fixtures
@@ -86,7 +107,6 @@ func addUser() {
 			Token:       "",
 		})
 		core.Db.Model(dbmodels.User{}).Save(&user)
-
 
 		userRole := dbmodels.UserRole{
 			UserId:    user.ID,

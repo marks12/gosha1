@@ -126,7 +126,7 @@ func RegionTypeMultiCreate(filter types.RegionTypeFilter)  (data []types.RegionT
 func RegionTypeCreate(filter types.RegionTypeFilter, query *gorm.DB)  (data types.RegionType, err error) {
 
     typeModel := filter.GetRegionTypeModel()
-    dbModel := AssignRegionTypeDbFromType(typeModel)
+    dbModel := AssignRegionTypeDbFromTp(typeModel)
     dbModel.ID = 0
 
     dbModel.Validate()
@@ -219,7 +219,7 @@ func RegionTypeUpdate(filter types.RegionTypeFilter, query *gorm.DB)  (data type
 
     newModel := filter.GetRegionTypeModel()
 
-    updateModel := AssignRegionTypeDbFromType(newModel)
+    updateModel := AssignRegionTypeDbFromTp(newModel)
     updateModel.ID = existsModel.Id
 
     //updateModel.Some = newModel.Some
@@ -313,7 +313,7 @@ func RegionTypeFindOrCreate(filter types.RegionTypeFilter)  (data types.RegionTy
     filter.Pagination.CurrentPage = 1
     filter.Pagination.PerPage = 1
 
-    findOrCreateModel := AssignRegionTypeDbFromType(filter.GetRegionTypeModel())
+    findOrCreateModel := AssignRegionTypeDbFromTp(filter.GetRegionTypeModel())
 	//findOrCreateModel.Field remove this line for disable generator functionality
 
     findOrCreateModel.Validate()
