@@ -8,8 +8,6 @@ type UserRole struct {
     Id   int
     UserId int
 	RoleId int
-	RoleID int
-	UserID int
     //UserRole remove this line for disable generator functionality
 }
 
