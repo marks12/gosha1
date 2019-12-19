@@ -12,6 +12,11 @@ func genTestsWebapp(c *ishell.Context) {
 
 	for _, entity := range names {
 
+		switch entity {
+			case "Auth", "User":
+				continue
+		}
+
 		CamelCase := strings.Title(entity)
 		snakeCase := getLowerCase(entity)
 		firstLowerCase := getFirstLowerCase(entity)
