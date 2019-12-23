@@ -73,17 +73,25 @@ func usualEntityAdd(c *ishell.Context) {
 		[]string{CamelCase, CamelCase, firstLowerCase},
 		c)
 
-	sourceFile = "./webapp/" + snakeCase + "_test.go"
-	destinationFile = "./webapp/" + snakeCase + "_test.go"
+	switch CamelCase {
+	case "Auth", "User":
+		break
+	default:
+		sourceFile = "./webapp/" + snakeCase + "_test.go"
+		destinationFile = "./webapp/" + snakeCase + "_test.go"
 
-	CreateFile(sourceFile, getWebAppTestContent(), c)
+		CreateFile(sourceFile, getWebAppTestContent(), c)
 
-	CopyFile(
-		sourceFile,
-		destinationFile,
-		[]string{"{entity-name}", "{Entity}", "{entity}"},
-		[]string{CamelCase, CamelCase, firstLowerCase},
-		c)
+		CopyFile(
+			sourceFile,
+			destinationFile,
+			[]string{"{entity-name}", "{Entity}", "{entity}"},
+			[]string{CamelCase, CamelCase, firstLowerCase},
+			c)
+		break
+	}
+
+
 
 	sourceFile = "./types/" + snakeCase + ".go"
 	destinationFile = "./types/" + snakeCase + ".go"
