@@ -28,6 +28,18 @@ func randate() time.Time {
 	return time.Unix(sec, 0)
 }
 
+func randDuration() time.Duration {
+
+	d := 24 * rand.Intn(364)
+	h := strconv.Itoa(rand.Intn(23) + d)
+	m := strconv.Itoa(rand.Intn(60))
+	s := strconv.Itoa(rand.Intn(60))
+
+	dur, _ := time.ParseDuration(h + "h" + m + "m" + s + "s")
+
+	return dur
+}
+
 func round(num float64) int {
 	return int(num + math.Copysign(0.5, num))
 }
