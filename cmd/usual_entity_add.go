@@ -61,9 +61,20 @@ func usualEntityAdd(c *ishell.Context) {
 		[]string{getAssignContent(), CamelCase, firstLowerCase},
 		c)
 
+	CreateFileIfNotExists(usualTemplateGen.Path, usualTemplateGen.Content, c)
+
+	sourceFile = "./generator/" + snakeCase + ".go"
+	destinationFile = "./generator/" + snakeCase + ".go"
+	CreateFile(sourceFile, getEntityGenContent(), c)
+	CopyFile(
+		sourceFile,
+		destinationFile,
+		[]string{"{entity-name}", "{Entity}", "{entity}"},
+		[]string{CamelCase, CamelCase, firstLowerCase},
+		c)
+
 	sourceFile = "./webapp/" + snakeCase + ".go"
 	destinationFile = "./webapp/" + snakeCase + ".go"
-
 	CreateFile(sourceFile, getWebAppContent(), c)
 
 	CopyFile(
@@ -226,6 +237,13 @@ func getWebAppContent() (webappContent string) {
 	//}
 
 	webappContent = assignMsName(GetUsualTemplateWebAppContent(authParams, methodCrudParams))
+
+	return
+}
+
+func getEntityGenContent() (genContent string) {
+
+	genContent = usualTemplateGenEntity.Content
 
 	return
 }

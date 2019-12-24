@@ -141,27 +141,27 @@ func (mr *ModelRepository) addFilter(modelName string, fieldName string, dataTyp
     switch dataType {
 
         case settings.DataTypeTimeLink, settings.DataTypeTime:
-            addImportIdNeed(sourceFile, "time")
+            addImportIfNeed(sourceFile, "time")
             break
 
         case settings.DataTypeFloat64, settings.DataTypeInt:
-            addImportIdNeed(sourceFile, "strconv")
+            addImportIfNeed(sourceFile, "strconv")
             break
 
         case settings.DataTypeBool:
-            addImportIdNeed(sourceFile, "strings")
+            addImportIfNeed(sourceFile, "strings")
             break
 
         case settings.DataTypeUuid:
-            addImportIdNeed(sourceFile, "uuid")
+            addImportIfNeed(sourceFile, "uuid")
             break
 
         case settings.DataTypeArrayInt:
-            addImportIdNeed(sourceFile, "net/url")
-            addImportIdNeed(sourceFile, "strconv")
+            addImportIfNeed(sourceFile, "net/url")
+            addImportIfNeed(sourceFile, "strconv")
             break
         case settings.DataTypeArrayString:
-            addImportIdNeed(sourceFile, "net/url")
+            addImportIfNeed(sourceFile, "net/url")
             break
     }
 
