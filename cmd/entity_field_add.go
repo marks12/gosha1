@@ -124,7 +124,8 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 
 	CreateFileIfNotExists(usualTemplateGen.Path, usualTemplateGen.Content, nil)
 	sourceFile = "./generator/" + snakeCase + ".go"
-	if dataType == settings.DataTypeString {
+
+	if strings.ToLower(dataType) == settings.DataTypeString || strings.ToLower(dataType) == settings.DataTypeArrayString {
 		addImportIfNeed(sourceFile, "strings")
 	}
 
@@ -141,6 +142,8 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 func getGeneratorByDataType(dataType string) string {
 
 	switch strings.ToLower(dataType) {
+	case settings.DataTypeString:
+		return "strings.Title(Babbler2.Babble()),"
 	case settings.DataTypeInt:
 		return "rand.Intn(100500),"
 	case settings.DataTypeArrayInt:
@@ -151,12 +154,14 @@ func getGeneratorByDataType(dataType string) string {
 		return "Float64n(4),"
 	case settings.DataTypeBool:
 		return "(rand.Intn(100500) % 2 > 0),"
-	case settings.DataTypeTime, "time":
+	case strings.ToLower(settings.DataTypeTime), "time":
 		return "randate(),"
+	case strings.ToLower(settings.DataTypeDuration):
+		return "randDuration(),"
 	case settings.DataTypeIntLink:
 		return "new(int),"
 	default:
-		return "strings.Title(Babbler2.Babble()),"
+		return "nil,"
 	}
 }
 
@@ -334,7 +339,7 @@ func (mr *ModelRepository) GetFields(modelName string, fields []Field) []Field {
 								case *ast.SelectorExpr:
 									{
 										if ident, ok := x.X.(*ast.Ident); ok { // allow subsequent panic to provide a more descriptive error
-											typeString = ident.Name
+											typeString = ident.Name + "." + x.Sel.Name
 										}
 									}
 								default:
