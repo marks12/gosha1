@@ -15,6 +15,7 @@ import (
 	"{ms-name}/settings"
 	"{ms-name}/tests"
 	"{ms-name}/types"
+	"{ms-name}/core"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -107,6 +108,9 @@ func get{entity-name}ParsedModel(response *httptest.ResponseRecorder) types.{ent
 
 func Test{entity-name}(t *testing.T) {
 
+	tmpDb := core.Db
+	core.Db = tmpDb.Begin()
+
 	for _, tt := range testCases{entity-name} {
 		t.Run(tt.Name, func(t *testing.T) {
 			tests.TestFunction(t, tt)
@@ -114,9 +118,10 @@ func Test{entity-name}(t *testing.T) {
 	}
 
 	// clear created data from database
-	for _, id := range idsForRemove{entity-name} {
-		tests.SendRequest(settings.{entity-name}Route + "/{id}", tests.GetDeleteAdminRequest(settings.{entity-name}Route + "/" + strconv.Itoa(id)), {entity-name}Delete, http.MethodDelete)
-	}
+	defer func() {
+		core.Db.Rollback()
+		core.Db = tmpDb
+	}()
 }
 
 `
