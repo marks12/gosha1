@@ -10,6 +10,7 @@ const FunctionTypeCreate	= "00000000-0000-0000-0000-000000000005"
 
 const DataTypeTimeLink = "*time.Time"
 const DataTypeTime = "time.Time"
+const DataTypeDuration = "time.Duration"
 const DataTypeInt = "int"
 const DataTypeIntLink = "*int"
 const DataTypeArrayInt = "[]int"
@@ -23,6 +24,7 @@ var SupportedModelFieldDataTypes = []string{
     DataTypeString,
     DataTypeInt,
     DataTypeTime,
+	DataTypeDuration,
     DataTypeTimeLink,
     DataTypeFloat64,
     DataTypeBool,
