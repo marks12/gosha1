@@ -1,6 +1,7 @@
 package cmd
 
 import (
+    "path/filepath"
     "strings"
     "os"
     "github.com/google/uuid"
@@ -173,13 +174,18 @@ func CreateFile(file, content string, c *ishell.Context) (err error) {
         }
 
         if choice == 0 {
-            return errors.New("Cancel rewrite file")
+            return errors.New("Cancel rewrite file: " + file)
         }
     }
 
     reg := regexp.MustCompile("\\.sh$")
     if reg.MatchString(file) {
         fmode = 0755
+    }
+
+    dir := filepath.Dir(file)
+    if _, err := os.Stat(dir); os.IsNotExist(err) {
+        os.MkdirAll(dir, 0755)
     }
 
     err = ioutil.WriteFile(file, []byte(content), fmode)
@@ -190,6 +196,13 @@ func CreateFile(file, content string, c *ishell.Context) (err error) {
     }
 
     return
+}
+
+func CreateFileIfNotExists(file, content string, c *ishell.Context) (err error) {
+    if _, err := os.Stat(file); ! os.IsNotExist(err) {
+        return errors.New("Cancel rewrite file: " + file)
+    }
+    return CreateFile(file, content, c)
 }
 
 func getNewGuid() string {

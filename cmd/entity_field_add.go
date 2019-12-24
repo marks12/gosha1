@@ -89,7 +89,7 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 		nil)
 
 	if dataType == settings.DataTypeTimeLink || dataType == settings.DataTypeTime {
-		addImportIdNeed(sourceFile, "time")
+		addImportIfNeed(sourceFile, "time")
 	}
 
 	sourceFile = "./dbmodels/" + snakeCase + ".go"
@@ -122,10 +122,45 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 		[]string{"updateModel." + fieldName + " = newModel." + fieldName + "\n\t" + getRemoveLine("updateModel.Field")},
 		nil)
 
+	CreateFileIfNotExists(usualTemplateGen.Path, usualTemplateGen.Content, nil)
+	sourceFile = "./generator/" + snakeCase + ".go"
+	if dataType == settings.DataTypeString {
+		addImportIfNeed(sourceFile, "strings")
+	}
+
+	CopyFile(
+		sourceFile,
+		sourceFile,
+		[]string{getRemoveLine(CamelCase)},
+		[]string{fieldName + ": " + getGeneratorByDataType(dataType) + "\n\t\t" + getRemoveLine(CamelCase)},
+		nil)
+
 	return
 }
 
-func addImportIdNeed(file string, module string) {
+func getGeneratorByDataType(dataType string) string {
+
+	switch strings.ToLower(dataType) {
+	case settings.DataTypeInt:
+		return "rand.Intn(100500),"
+	case settings.DataTypeArrayInt:
+		return "int{rand.Intn(100500), rand.Intn(100500), rand.Intn(100500)},"
+	case settings.DataTypeArrayString:
+		return "string{strings.Title(Babbler1.Babble()), Babbler2.Babble(), Babbler3.Babble()},"
+	case settings.DataTypeFloat64:
+		return "Float64n(4),"
+	case settings.DataTypeBool:
+		return "(rand.Intn(100500) % 2 > 0),"
+	case settings.DataTypeTime, "time":
+		return "randate(),"
+	case settings.DataTypeIntLink:
+		return "new(int),"
+	default:
+		return "strings.Title(Babbler2.Babble()),"
+	}
+}
+
+func addImportIfNeed(file string, module string) {
 
 	module = strings.Replace(module, "\"", "", -1)
 	module = "\"" + module + "\""

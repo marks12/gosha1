@@ -123,6 +123,9 @@ func usualCreate(c *ishell.Context, email, password string) {
 	CreateFile(msTemplateSettingsWss.Path, msTemplateSettingsWss.Content, c)
 	CreateFile(usualTemplateSettingsResource.Path, usualTemplateSettingsResource.Content, c)
 
+	//generator
+	CreateFile(usualTemplateGen.Path, usualTemplateGen.Content, c)
+
 	//types
 	CreateFile(usualTemplateTypesAuthenticator.Path, usualTemplateTypesAuthenticator.Content, c)
 	//CreateFile(usualTemplateTypesEntity.Path, usualTemplateTypesEntity.Content, c)
@@ -172,6 +175,7 @@ func usualCreateMain(c *ishell.Context) {
 		"services",
 		"settings",
 		"tests",
+		"generator",
 		"google",
 		"static",
 		"types",

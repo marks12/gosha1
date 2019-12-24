@@ -13,6 +13,7 @@ const SET_APP_TYPE = "setAppType"
 const GET_APP_INFO = "getAppInfo"
 const GENERATE_TYPES_JS = "gen:types:js"
 const GENERATE_TESTS_WEBAPP = "gen:tests:webapp"
+const GENERATE_GENERATORS = "gen:generators"
 
 func RunShell() {
 
@@ -62,6 +63,12 @@ func RunShell() {
         Name: GENERATE_TESTS_WEBAPP,
         Help: "Generate tests for webapp",
         Func: genTestsWebapp,
+    })
+
+    shell.AddCmd(&ishell.Cmd{
+        Name: GENERATE_GENERATORS,
+        Help: "Generate generators functions",
+        Func: genGenerators,
     })
 
 
