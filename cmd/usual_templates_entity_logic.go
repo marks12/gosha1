@@ -33,9 +33,9 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
     //                return
     //            }
     //        }
+    //    } else {
+    //      criteria = criteria.Where("name like ? or code like ?", ("%" + filter.Search + "%"), ("%" + filter.Search + "%"))
     //    }
-    //} else {
-    //    criteria = criteria.Where("name like ? or code like ?", ("%" + filter.Search + "%"), ("%" + filter.Search + "%"))
     //}
 
     q := criteria.Model(dbmodels.{Entity}{}).Count(&count)
