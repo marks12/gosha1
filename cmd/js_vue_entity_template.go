@@ -210,8 +210,7 @@ const usualEntityVueComponent = `
         },
 
         created() {
-            this.fill{Entity}Filter();
-            this.fetch{Entity}Data();
+			this.onCreated();
         },
 
         computed: {
@@ -271,6 +270,11 @@ const usualEntityVueComponent = `
                 'delete{Entity}FromList',
                 'update{Entity}ById',
             ]),
+
+			onCreated() {
+				this.fill{Entity}Filter();
+	            this.fetch{Entity}Data();
+			},
 
             fill{Entity}Filter() {
                 this.{entity}Filter.CurrentPage = 1;
