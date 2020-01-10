@@ -1,5 +1,11 @@
 #!/bin/bash
 
+cd front
+
+npm run build
+
+cd ../
+
 declare -a files
 declare -a content
 
