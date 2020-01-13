@@ -151,7 +151,7 @@ const {entity} = {
                 state.{Entity}__List = [];
             }
 
-            state.{Entity}__List.concat(data);
+            state.{Entity}__List = state.{Entity}__List.concat(data);
         },
         clear{Entity}(state) {
             state.{Entity} = new {Entity}();
