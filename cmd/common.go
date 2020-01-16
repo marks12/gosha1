@@ -104,7 +104,7 @@ func GetOsArgument(arg string) (RegularFind, error) {
             return RegularFind{BoolResult:true}, nil
         }
 
-        re := regexp.MustCompile(arg + `=([a-zA-Z0-9а-яА-Я!#$%&()*+,./:;\<>?@ _{|}~\-"^=]*)`)
+        re := regexp.MustCompile(arg + `=([a-zA-Z0-9а-яА-Я!#$%&()*+,./:;\<>?@ _{|}~\-"^=\[\]]*)`)
         as := re.FindSubmatch([]byte(a))
 
         if len(as) > 1 {
