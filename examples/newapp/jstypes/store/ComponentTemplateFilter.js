@@ -56,12 +56,17 @@ const componentTemplateFilter = {
                     throw(err);
                 });
         },
-        findComponentTemplateFilter(context, {filter, header}) {
+        findComponentTemplateFilter(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setComponentTemplateFilter__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendComponentTemplateFilter__List", response.List);
+                    } else {
+                        context.commit("setComponentTemplateFilter__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const componentTemplateFilter = {
         },
         setComponentTemplateFilter__List(state, data) {
             state.ComponentTemplateFilter__List = data || [];
+        },
+        appendComponentTemplateFilter__List(state, data) {
+
+            if (! state.ComponentTemplateFilter__List) {
+                state.ComponentTemplateFilter__List = [];
+            }
+
+            state.ComponentTemplateFilter__List = state.ComponentTemplateFilter__List.concat(data);
         },
         clearComponentTemplateFilter(state) {
             state.ComponentTemplateFilter = new ComponentTemplateFilter();

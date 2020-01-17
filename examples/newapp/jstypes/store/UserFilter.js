@@ -56,12 +56,17 @@ const userFilter = {
                     throw(err);
                 });
         },
-        findUserFilter(context, {filter, header}) {
+        findUserFilter(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setUserFilter__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendUserFilter__List", response.List);
+                    } else {
+                        context.commit("setUserFilter__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const userFilter = {
         },
         setUserFilter__List(state, data) {
             state.UserFilter__List = data || [];
+        },
+        appendUserFilter__List(state, data) {
+
+            if (! state.UserFilter__List) {
+                state.UserFilter__List = [];
+            }
+
+            state.UserFilter__List = state.UserFilter__List.concat(data);
         },
         clearUserFilter(state) {
             state.UserFilter = new UserFilter();

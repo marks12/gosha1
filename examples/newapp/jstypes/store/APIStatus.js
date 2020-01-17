@@ -56,12 +56,17 @@ const aPIStatus = {
                     throw(err);
                 });
         },
-        findAPIStatus(context, {filter, header}) {
+        findAPIStatus(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAPIStatus__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendAPIStatus__List", response.List);
+                    } else {
+                        context.commit("setAPIStatus__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const aPIStatus = {
         },
         setAPIStatus__List(state, data) {
             state.APIStatus__List = data || [];
+        },
+        appendAPIStatus__List(state, data) {
+
+            if (! state.APIStatus__List) {
+                state.APIStatus__List = [];
+            }
+
+            state.APIStatus__List = state.APIStatus__List.concat(data);
         },
         clearAPIStatus(state) {
             state.APIStatus = new APIStatus();

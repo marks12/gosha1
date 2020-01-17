@@ -56,12 +56,17 @@ const pageContent = {
                     throw(err);
                 });
         },
-        findPageContent(context, {filter, header}) {
+        findPageContent(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setPageContent__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendPageContent__List", response.List);
+                    } else {
+                        context.commit("setPageContent__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const pageContent = {
         },
         setPageContent__List(state, data) {
             state.PageContent__List = data || [];
+        },
+        appendPageContent__List(state, data) {
+
+            if (! state.PageContent__List) {
+                state.PageContent__List = [];
+            }
+
+            state.PageContent__List = state.PageContent__List.concat(data);
         },
         clearPageContent(state) {
             state.PageContent = new PageContent();

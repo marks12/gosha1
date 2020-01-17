@@ -56,12 +56,17 @@ const region = {
                     throw(err);
                 });
         },
-        findRegion(context, {filter, header}) {
+        findRegion(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setRegion__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendRegion__List", response.List);
+                    } else {
+                        context.commit("setRegion__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const region = {
         },
         setRegion__List(state, data) {
             state.Region__List = data || [];
+        },
+        appendRegion__List(state, data) {
+
+            if (! state.Region__List) {
+                state.Region__List = [];
+            }
+
+            state.Region__List = state.Region__List.concat(data);
         },
         clearRegion(state) {
             state.Region = new Region();

@@ -56,12 +56,17 @@ const pagination = {
                     throw(err);
                 });
         },
-        findPagination(context, {filter, header}) {
+        findPagination(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setPagination__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendPagination__List", response.List);
+                    } else {
+                        context.commit("setPagination__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const pagination = {
         },
         setPagination__List(state, data) {
             state.Pagination__List = data || [];
+        },
+        appendPagination__List(state, data) {
+
+            if (! state.Pagination__List) {
+                state.Pagination__List = [];
+            }
+
+            state.Pagination__List = state.Pagination__List.concat(data);
         },
         clearPagination(state) {
             state.Pagination = new Pagination();

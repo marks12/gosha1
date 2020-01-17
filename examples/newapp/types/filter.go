@@ -87,13 +87,13 @@ func (filter *FilterIds) Validate(functionType string) {
 }
 
 
-type SearchFilter struct {
+type GoshaSearchFilter struct {
 
     Search string
     SearchBy []string
 }
 
-type OrderFilter struct {
+type GoshaOrderFilter struct {
 
     Order []string
     OrderDirection []string
@@ -102,8 +102,8 @@ type OrderFilter struct {
 type AbstractFilter struct {
 
     request *http.Request
-    SearchFilter
-    OrderFilter
+    GoshaSearchFilter
+    GoshaOrderFilter
     FilterIds
     Pagination
     validator

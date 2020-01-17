@@ -56,12 +56,17 @@ const authenticator = {
                     throw(err);
                 });
         },
-        findAuthenticator(context, {filter, header}) {
+        findAuthenticator(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAuthenticator__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendAuthenticator__List", response.List);
+                    } else {
+                        context.commit("setAuthenticator__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const authenticator = {
         },
         setAuthenticator__List(state, data) {
             state.Authenticator__List = data || [];
+        },
+        appendAuthenticator__List(state, data) {
+
+            if (! state.Authenticator__List) {
+                state.Authenticator__List = [];
+            }
+
+            state.Authenticator__List = state.Authenticator__List.concat(data);
         },
         clearAuthenticator(state) {
             state.Authenticator = new Authenticator();
