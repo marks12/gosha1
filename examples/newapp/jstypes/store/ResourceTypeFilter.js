@@ -56,12 +56,17 @@ const resourceTypeFilter = {
                     throw(err);
                 });
         },
-        findResourceTypeFilter(context, {filter, header}) {
+        findResourceTypeFilter(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setResourceTypeFilter__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendResourceTypeFilter__List", response.List);
+                    } else {
+                        context.commit("setResourceTypeFilter__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const resourceTypeFilter = {
         },
         setResourceTypeFilter__List(state, data) {
             state.ResourceTypeFilter__List = data || [];
+        },
+        appendResourceTypeFilter__List(state, data) {
+
+            if (! state.ResourceTypeFilter__List) {
+                state.ResourceTypeFilter__List = [];
+            }
+
+            state.ResourceTypeFilter__List = state.ResourceTypeFilter__List.concat(data);
         },
         clearResourceTypeFilter(state) {
             state.ResourceTypeFilter = new ResourceTypeFilter();

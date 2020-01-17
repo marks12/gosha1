@@ -56,12 +56,17 @@ const resource = {
                     throw(err);
                 });
         },
-        findResource(context, {filter, header}) {
+        findResource(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setResource__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendResource__List", response.List);
+                    } else {
+                        context.commit("setResource__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const resource = {
         },
         setResource__List(state, data) {
             state.Resource__List = data || [];
+        },
+        appendResource__List(state, data) {
+
+            if (! state.Resource__List) {
+                state.Resource__List = [];
+            }
+
+            state.Resource__List = state.Resource__List.concat(data);
         },
         clearResource(state) {
             state.Resource = new Resource();

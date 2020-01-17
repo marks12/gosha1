@@ -56,12 +56,17 @@ const layoutContent = {
                     throw(err);
                 });
         },
-        findLayoutContent(context, {filter, header}) {
+        findLayoutContent(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setLayoutContent__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendLayoutContent__List", response.List);
+                    } else {
+                        context.commit("setLayoutContent__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const layoutContent = {
         },
         setLayoutContent__List(state, data) {
             state.LayoutContent__List = data || [];
+        },
+        appendLayoutContent__List(state, data) {
+
+            if (! state.LayoutContent__List) {
+                state.LayoutContent__List = [];
+            }
+
+            state.LayoutContent__List = state.LayoutContent__List.concat(data);
         },
         clearLayoutContent(state) {
             state.LayoutContent = new LayoutContent();

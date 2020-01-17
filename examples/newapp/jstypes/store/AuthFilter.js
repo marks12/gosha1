@@ -56,12 +56,17 @@ const authFilter = {
                     throw(err);
                 });
         },
-        findAuthFilter(context, {filter, header}) {
+        findAuthFilter(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAuthFilter__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendAuthFilter__List", response.List);
+                    } else {
+                        context.commit("setAuthFilter__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const authFilter = {
         },
         setAuthFilter__List(state, data) {
             state.AuthFilter__List = data || [];
+        },
+        appendAuthFilter__List(state, data) {
+
+            if (! state.AuthFilter__List) {
+                state.AuthFilter__List = [];
+            }
+
+            state.AuthFilter__List = state.AuthFilter__List.concat(data);
         },
         clearAuthFilter(state) {
             state.AuthFilter = new AuthFilter();

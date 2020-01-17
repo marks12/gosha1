@@ -56,12 +56,17 @@ const userRoleFilter = {
                     throw(err);
                 });
         },
-        findUserRoleFilter(context, {filter, header}) {
+        findUserRoleFilter(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setUserRoleFilter__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendUserRoleFilter__List", response.List);
+                    } else {
+                        context.commit("setUserRoleFilter__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const userRoleFilter = {
         },
         setUserRoleFilter__List(state, data) {
             state.UserRoleFilter__List = data || [];
+        },
+        appendUserRoleFilter__List(state, data) {
+
+            if (! state.UserRoleFilter__List) {
+                state.UserRoleFilter__List = [];
+            }
+
+            state.UserRoleFilter__List = state.UserRoleFilter__List.concat(data);
         },
         clearUserRoleFilter(state) {
             state.UserRoleFilter = new UserRoleFilter();

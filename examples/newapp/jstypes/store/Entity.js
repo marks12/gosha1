@@ -56,12 +56,17 @@ const entity = {
                     throw(err);
                 });
         },
-        findEntity(context, {filter, header}) {
+        findEntity(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setEntity__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendEntity__List", response.List);
+                    } else {
+                        context.commit("setEntity__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const entity = {
         },
         setEntity__List(state, data) {
             state.Entity__List = data || [];
+        },
+        appendEntity__List(state, data) {
+
+            if (! state.Entity__List) {
+                state.Entity__List = [];
+            }
+
+            state.Entity__List = state.Entity__List.concat(data);
         },
         clearEntity(state) {
             state.Entity = new Entity();

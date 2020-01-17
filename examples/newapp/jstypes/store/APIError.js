@@ -56,12 +56,17 @@ const aPIError = {
                     throw(err);
                 });
         },
-        findAPIError(context, {filter, header}) {
+        findAPIError(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAPIError__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendAPIError__List", response.List);
+                    } else {
+                        context.commit("setAPIError__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const aPIError = {
         },
         setAPIError__List(state, data) {
             state.APIError__List = data || [];
+        },
+        appendAPIError__List(state, data) {
+
+            if (! state.APIError__List) {
+                state.APIError__List = [];
+            }
+
+            state.APIError__List = state.APIError__List.concat(data);
         },
         clearAPIError(state) {
             state.APIError = new APIError();

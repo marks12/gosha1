@@ -56,12 +56,17 @@ const regionType = {
                     throw(err);
                 });
         },
-        findRegionType(context, {filter, header}) {
+        findRegionType(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setRegionType__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendRegionType__List", response.List);
+                    } else {
+                        context.commit("setRegionType__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const regionType = {
         },
         setRegionType__List(state, data) {
             state.RegionType__List = data || [];
+        },
+        appendRegionType__List(state, data) {
+
+            if (! state.RegionType__List) {
+                state.RegionType__List = [];
+            }
+
+            state.RegionType__List = state.RegionType__List.concat(data);
         },
         clearRegionType(state) {
             state.RegionType = new RegionType();

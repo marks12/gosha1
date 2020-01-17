@@ -56,12 +56,17 @@ const user = {
                     throw(err);
                 });
         },
-        findUser(context, {filter, header}) {
+        findUser(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setUser__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendUser__List", response.List);
+                    } else {
+                        context.commit("setUser__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const user = {
         },
         setUser__List(state, data) {
             state.User__List = data || [];
+        },
+        appendUser__List(state, data) {
+
+            if (! state.User__List) {
+                state.User__List = [];
+            }
+
+            state.User__List = state.User__List.concat(data);
         },
         clearUser(state) {
             state.User = new User();
