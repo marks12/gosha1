@@ -56,12 +56,17 @@ const layoutFilter = {
                     throw(err);
                 });
         },
-        findLayoutFilter(context, {filter, header}) {
+        findLayoutFilter(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setLayoutFilter__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendLayoutFilter__List", response.List);
+                    } else {
+                        context.commit("setLayoutFilter__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const layoutFilter = {
         },
         setLayoutFilter__List(state, data) {
             state.LayoutFilter__List = data || [];
+        },
+        appendLayoutFilter__List(state, data) {
+
+            if (! state.LayoutFilter__List) {
+                state.LayoutFilter__List = [];
+            }
+
+            state.LayoutFilter__List = state.LayoutFilter__List.concat(data);
         },
         clearLayoutFilter(state) {
             state.LayoutFilter = new LayoutFilter();

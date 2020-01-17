@@ -135,14 +135,6 @@ export function EntityFilter() {
     return this;
 }
 
-export function OrderFilter() {
-
-    this.Order = [];
-    this.OrderDirection = [];
-
-    return this;
-}
-
 export function Layout() {
 
     this.Id = 0;
@@ -522,8 +514,6 @@ export function UserRole() {
     this.Id = 0;
     this.UserId = 0;
     this.RoleId = 0;
-    this.RoleID = 0;
-    this.UserID = 0;
 
     return this;
 }

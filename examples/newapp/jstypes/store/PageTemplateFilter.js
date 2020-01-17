@@ -56,12 +56,17 @@ const pageTemplateFilter = {
                     throw(err);
                 });
         },
-        findPageTemplateFilter(context, {filter, header}) {
+        findPageTemplateFilter(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setPageTemplateFilter__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendPageTemplateFilter__List", response.List);
+                    } else {
+                        context.commit("setPageTemplateFilter__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const pageTemplateFilter = {
         },
         setPageTemplateFilter__List(state, data) {
             state.PageTemplateFilter__List = data || [];
+        },
+        appendPageTemplateFilter__List(state, data) {
+
+            if (! state.PageTemplateFilter__List) {
+                state.PageTemplateFilter__List = [];
+            }
+
+            state.PageTemplateFilter__List = state.PageTemplateFilter__List.concat(data);
         },
         clearPageTemplateFilter(state) {
             state.PageTemplateFilter = new PageTemplateFilter();

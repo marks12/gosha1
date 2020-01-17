@@ -56,12 +56,17 @@ const auth = {
                     throw(err);
                 });
         },
-        findAuth(context, {filter, header}) {
+        findAuth(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAuth__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendAuth__List", response.List);
+                    } else {
+                        context.commit("setAuth__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const auth = {
         },
         setAuth__List(state, data) {
             state.Auth__List = data || [];
+        },
+        appendAuth__List(state, data) {
+
+            if (! state.Auth__List) {
+                state.Auth__List = [];
+            }
+
+            state.Auth__List = state.Auth__List.concat(data);
         },
         clearAuth(state) {
             state.Auth = new Auth();

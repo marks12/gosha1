@@ -23,7 +23,7 @@ func genGenerators(c *ishell.Context) {
 			continue
 		}
 
-		if isInvalid, _ := InArray(CamelCase, []string{"APIError", "APIStatus", "Authenticator", "FilterIds", "Pagination", "Validator"}); isInvalid {
+		if isInvalid, _ := InArray(CamelCase, []string{"APIError", "APIStatus", "Authenticator", "FilterIds", "GoshaOrderFilter", "GoshaSearchFilter", "Pagination", "Validator"}); isInvalid {
 			continue
 		}
 

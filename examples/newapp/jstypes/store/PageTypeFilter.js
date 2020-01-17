@@ -56,12 +56,17 @@ const pageTypeFilter = {
                     throw(err);
                 });
         },
-        findPageTypeFilter(context, {filter, header}) {
+        findPageTypeFilter(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setPageTypeFilter__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendPageTypeFilter__List", response.List);
+                    } else {
+                        context.commit("setPageTypeFilter__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const pageTypeFilter = {
         },
         setPageTypeFilter__List(state, data) {
             state.PageTypeFilter__List = data || [];
+        },
+        appendPageTypeFilter__List(state, data) {
+
+            if (! state.PageTypeFilter__List) {
+                state.PageTypeFilter__List = [];
+            }
+
+            state.PageTypeFilter__List = state.PageTypeFilter__List.concat(data);
         },
         clearPageTypeFilter(state) {
             state.PageTypeFilter = new PageTypeFilter();
