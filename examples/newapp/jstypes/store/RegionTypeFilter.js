@@ -56,12 +56,17 @@ const regionTypeFilter = {
                     throw(err);
                 });
         },
-        findRegionTypeFilter(context, {filter, header}) {
+        findRegionTypeFilter(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setRegionTypeFilter__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendRegionTypeFilter__List", response.List);
+                    } else {
+                        context.commit("setRegionTypeFilter__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const regionTypeFilter = {
         },
         setRegionTypeFilter__List(state, data) {
             state.RegionTypeFilter__List = data || [];
+        },
+        appendRegionTypeFilter__List(state, data) {
+
+            if (! state.RegionTypeFilter__List) {
+                state.RegionTypeFilter__List = [];
+            }
+
+            state.RegionTypeFilter__List = state.RegionTypeFilter__List.concat(data);
         },
         clearRegionTypeFilter(state) {
             state.RegionTypeFilter = new RegionTypeFilter();

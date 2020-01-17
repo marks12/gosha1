@@ -56,12 +56,17 @@ const componentGroupFilter = {
                     throw(err);
                 });
         },
-        findComponentGroupFilter(context, {filter, header}) {
+        findComponentGroupFilter(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setComponentGroupFilter__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendComponentGroupFilter__List", response.List);
+                    } else {
+                        context.commit("setComponentGroupFilter__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const componentGroupFilter = {
         },
         setComponentGroupFilter__List(state, data) {
             state.ComponentGroupFilter__List = data || [];
+        },
+        appendComponentGroupFilter__List(state, data) {
+
+            if (! state.ComponentGroupFilter__List) {
+                state.ComponentGroupFilter__List = [];
+            }
+
+            state.ComponentGroupFilter__List = state.ComponentGroupFilter__List.concat(data);
         },
         clearComponentGroupFilter(state) {
             state.ComponentGroupFilter = new ComponentGroupFilter();

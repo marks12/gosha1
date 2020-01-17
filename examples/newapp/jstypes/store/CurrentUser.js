@@ -56,12 +56,17 @@ const currentUser = {
                     throw(err);
                 });
         },
-        findCurrentUser(context, {filter, header}) {
+        findCurrentUser(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setCurrentUser__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendCurrentUser__List", response.List);
+                    } else {
+                        context.commit("setCurrentUser__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const currentUser = {
         },
         setCurrentUser__List(state, data) {
             state.CurrentUser__List = data || [];
+        },
+        appendCurrentUser__List(state, data) {
+
+            if (! state.CurrentUser__List) {
+                state.CurrentUser__List = [];
+            }
+
+            state.CurrentUser__List = state.CurrentUser__List.concat(data);
         },
         clearCurrentUser(state) {
             state.CurrentUser = new CurrentUser();

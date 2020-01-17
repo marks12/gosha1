@@ -56,12 +56,17 @@ const pageInfo = {
                     throw(err);
                 });
         },
-        findPageInfo(context, {filter, header}) {
+        findPageInfo(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setPageInfo__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendPageInfo__List", response.List);
+                    } else {
+                        context.commit("setPageInfo__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const pageInfo = {
         },
         setPageInfo__List(state, data) {
             state.PageInfo__List = data || [];
+        },
+        appendPageInfo__List(state, data) {
+
+            if (! state.PageInfo__List) {
+                state.PageInfo__List = [];
+            }
+
+            state.PageInfo__List = state.PageInfo__List.concat(data);
         },
         clearPageInfo(state) {
             state.PageInfo = new PageInfo();

@@ -56,12 +56,17 @@ const roleResource = {
                     throw(err);
                 });
         },
-        findRoleResource(context, {filter, header}) {
+        findRoleResource(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setRoleResource__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendRoleResource__List", response.List);
+                    } else {
+                        context.commit("setRoleResource__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -137,6 +142,14 @@ const roleResource = {
         },
         setRoleResource__List(state, data) {
             state.RoleResource__List = data || [];
+        },
+        appendRoleResource__List(state, data) {
+
+            if (! state.RoleResource__List) {
+                state.RoleResource__List = [];
+            }
+
+            state.RoleResource__List = state.RoleResource__List.concat(data);
         },
         clearRoleResource(state) {
             state.RoleResource = new RoleResource();
