@@ -149,7 +149,7 @@ func (mr *ModelRepository) addFilter(modelName string, fieldName string, dataTyp
             break
 
         case settings.DataTypeBool:
-            addImportIfNeed(sourceFile, "strings")
+            addImportIfNeed(sourceFile, "strconv")
             break
 
         case settings.DataTypeUuid:
@@ -185,7 +185,7 @@ func getFilterGetter(field, dataType string) (res string) {
         break
 
     case settings.DataTypeBool:
-        return fmt.Sprintf("filter.%s = strings.ToLower(request.FormValue(\"%s\")) != \"false\" && len(request.FormValue(\"%s\")) > 0", field, field, field)
+        return fmt.Sprintf("filter.%s, _ = strconv.ParseBool(request.FormValue(\"%s\"))", field, field)
         break
 
     case settings.DataTypeUuid:

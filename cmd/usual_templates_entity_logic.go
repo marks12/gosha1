@@ -27,7 +27,7 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
     //        for _, field := range filter.SearchBy {
     //
     //            if core.Db.NewScope(&dbmodels.{Entity}{}).HasColumn(field) {
-    //                criteria = criteria.Where("` + "`" + `"+field+"` + "`" + `"+" like ?", s)
+    //                criteria = criteria.Or("` + "`" + `"+field+"` + "`" + `"+" like ?", s)
     //            } else {
     //                err = errors.New("Search by unknown field " + field)
     //                return
