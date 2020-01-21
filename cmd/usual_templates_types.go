@@ -17,12 +17,14 @@ import (
 
 type Authenticator struct {
     Token        string
-    FunctionType string
-    UrlPath      string
+    functionType string
+    urlPath      string
     validator
 }
 
+
 func (auth *Authenticator) IsAuthorized() bool {
+
     if *flags.Auth {
         return true
     }
@@ -33,23 +35,49 @@ func (auth *Authenticator) IsAuthorized() bool {
 
     dbAuth := dbmodels.Auth{}
     core.Db.Where(dbmodels.Auth{Token: auth.Token}).First(&dbAuth)
+
     if dbAuth.IsActive {
+
+        if dbAuth.UserId < 1 {
+            return false
+        }
+
+        auth.userId = dbAuth.UserId
+
+        userRoles := []dbmodels.UserRole{}
+        core.Db.Where(dbmodels.UserRole{UserId: auth.userId}).Find(&userRoles)
+
+        if len(userRoles) < 1 {
+            return false
+        }
+
+        for _, ur := range userRoles {
+            auth.roleIds = append(auth.roleIds, ur.RoleId)
+        }
+
         usedResources := []dbmodels.Resource{}
+
         core.Db.Where(dbmodels.Resource{
-            Code:   clearPath(auth.UrlPath),
-            TypeId: 1,
+            Code:   clearPath(auth.urlPath),
+            TypeId: settings.HttpResource,
         }).Find(&usedResources)
+
+        if len(usedResources) < 1 {
+            return false
+        }
+
         ids := []int{}
+
         for _, r := range usedResources {
             ids = append(ids, r.ID)
         }
+
         roleResources := []dbmodels.RoleResource{}
-        if dbAuth.UserId > 0 {
-            core.Db.Model(dbmodels.RoleResource{}).Where("role_id in (select role_id from user_roles where user_id = ?) and resource_id in (?)", dbAuth.UserId, ids).Find(&roleResources)
-        } else {
-            core.Db.Model(dbmodels.RoleResource{}).Where("role_id = 4 and resource_id in (?)", ids).Find(&roleResources)
-        }
-        switch auth.FunctionType {
+
+        core.Db.Model(dbmodels.RoleResource{}).
+            Where("role_id in (select role_id from user_roles where deleted_at IS NULL and user_id = ?) and resource_id in (?)", dbAuth.UserId, ids).Find(&roleResources)
+
+        switch auth.functionType {
         case settings.FunctionTypeFind:
             for _, rr := range roleResources {
                 if rr.Find {
@@ -283,8 +311,8 @@ func GetAbstractFilter(request *http.Request, functionType string) AbstractFilte
     var filter AbstractFilter
 
     filter.request = request
-    filter.FunctionType = functionType
-    filter.UrlPath = request.URL.Path
+    filter.functionType = functionType
+    filter.urlPath = request.URL.Path
 
     ReadJSON(filter.request, &filter)
     ReadJSON(filter.request, &filter.FilterIds)
