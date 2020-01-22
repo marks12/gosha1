@@ -19,9 +19,9 @@ type Authenticator struct {
     Token        string
     functionType string
     urlPath      string
+    roleIds      []int
     validator
 }
-
 
 func (auth *Authenticator) IsAuthorized() bool {
 
@@ -42,14 +42,8 @@ func (auth *Authenticator) IsAuthorized() bool {
             return false
         }
 
-        auth.userId = dbAuth.UserId
-
         userRoles := []dbmodels.UserRole{}
-        core.Db.Where(dbmodels.UserRole{UserId: auth.userId}).Find(&userRoles)
-
-        if len(userRoles) < 1 {
-            return false
-        }
+        core.Db.Where(dbmodels.UserRole{UserId: dbAuth.UserId}).Find(&userRoles)
 
         for _, ur := range userRoles {
             auth.roleIds = append(auth.roleIds, ur.RoleId)
@@ -59,7 +53,7 @@ func (auth *Authenticator) IsAuthorized() bool {
 
         core.Db.Where(dbmodels.Resource{
             Code:   clearPath(auth.urlPath),
-            TypeId: settings.HttpResource,
+            TypeId: settings.HttpRouteResourceType,
         }).Find(&usedResources)
 
         if len(usedResources) < 1 {
