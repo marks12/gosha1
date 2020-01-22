@@ -78,6 +78,7 @@ func addUser() {
 		core.Db.Model(dbmodels.UserRole{}).Save(&userRole)
 
 		resourceType := logic.AssignResourceTypeDbFromType(types.ResourceType{
+			Id: settings.HttpRouteResourceType,
 			Name: "Route",
 		})
 		core.Db.Model(dbmodels.ResourceType{}).Save(&resourceType)
@@ -134,7 +135,7 @@ func AddResource(adminRoleId int) {
 		}
     }
 
-    for _, route := range settings.Resources {
+    for _, route := range settings.ExtResources {
         name := route
         if strings.Count(name, "/") > 2 {
             name = strings.Split(route, "/")[3]
