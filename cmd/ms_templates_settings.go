@@ -45,7 +45,7 @@ func GetVirtualHost() string {
 const msSettingsGoogle = `package settings
 
 const GoogleAnalyticsUrl = "https://www.google-analytics.com/collect"
-const GoogleTrackingId = "G-6EQD27PJGY"
+const GoogleTrackingId = "G-SOMETRACKINGID"
 
 `
 
