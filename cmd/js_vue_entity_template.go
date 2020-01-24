@@ -47,7 +47,7 @@ const usualEntityVueComponent = `
         
                     <template #content>
                         <form @submit.prevent="saveChangesSubmit">
-                            <VSet direction="vertical">
+                            <VSet vertical>
                                 <VSet
                                     v-for="(filed, key) in editFields" :key="key + '-editFields'"
                                     vertical-align="center"
