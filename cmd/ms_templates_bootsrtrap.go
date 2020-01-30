@@ -68,27 +68,27 @@ func addUser() {
 			MobilePhone: "",
 			Password:    "{password}",
 		})
-		core.Db.Model(dbmodels.User{}).Save(&user)
+		core.Db.Model(dbmodels.User{}).FirstOrCreate(&user)
 
 
 		userRole := dbmodels.UserRole{
 			UserId:    user.ID,
 			RoleId:    adminRole.ID,
 		}
-		core.Db.Model(dbmodels.UserRole{}).Save(&userRole)
+		core.Db.Model(dbmodels.UserRole{}).FirstOrCreate(&userRole)
 
 		resourceType := logic.AssignResourceTypeDbFromType(types.ResourceType{
 			Id: settings.HttpRouteResourceType,
 			Name: "Route",
 		})
-		core.Db.Model(dbmodels.ResourceType{}).Save(&resourceType)
+		core.Db.Model(dbmodels.ResourceType{}).FirstOrCreate(&resourceType)
 
 		resource := logic.AssignResourceDbFromType(types.Resource{
 			Name:   "User",
 			Code:   "/api/v1/user",
 			TypeId: resourceType.ID,
 		})
-		core.Db.Model(dbmodels.Resource{}).Save(&resource)
+		core.Db.Model(dbmodels.Resource{}).FirstOrCreate(&resource)
 
 		roleResource := logic.AssignRoleResourceDbFromType(types.RoleResource{
 			RoleId:       adminRole.ID,
@@ -98,9 +98,9 @@ func addUser() {
 			Create:       true,
 			Update:       true,
 			Delete:       true,
-			FindOrCreate: false,
+			FindOrCreate: true,
 		})
-		core.Db.Model(dbmodels.RoleResource{}).Save(&roleResource)
+		core.Db.Model(dbmodels.RoleResource{}).FirstOrCreate(&roleResource)
 	}
 
     AddResource(adminRole.ID)
@@ -131,7 +131,7 @@ func AddResource(adminRoleId int) {
 				Delete:       true,
 				FindOrCreate: true,
 			})
-			core.Db.Model(dbmodels.RoleResource{}).Save(&roleResource)
+			core.Db.Model(dbmodels.RoleResource{}).FirstOrCreate(&roleResource)
 		}
     }
 
