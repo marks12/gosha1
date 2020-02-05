@@ -112,7 +112,7 @@ func AddResource(adminRoleId int) {
 
     	strArr := strings.Split(route, "/")
 
-    	if len(strArr) > 3 {
+    	if len(strArr) > 2 {
 
 			dbModel := dbmodels.Resource{
 				Name:   strArr[3],
@@ -131,7 +131,7 @@ func AddResource(adminRoleId int) {
 				Delete:       true,
 				FindOrCreate: true,
 			})
-			core.Db.Model(dbmodels.RoleResource{}).FirstOrCreate(&roleResource)
+			core.Db.Model(dbmodels.RoleResource{}).FirstOrCreate(&roleResource, "role_id = ? AND resource_id = ?", adminRoleId, dbModel.ID)
 		}
     }
 
