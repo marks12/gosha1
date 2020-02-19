@@ -288,13 +288,19 @@ func getEntity(c *ishell.Context) (entity string, err error) {
 
 func getRouteContent() string {
 
-	routeContent := usualTemplateRouteEntity.Content
+	crudParams := Crud{
+		IsFind:         true,
+		IsCreate:       true,
+		IsRead:         true,
+		IsUpdate:       true,
+		IsDelete:       true,
+		IsFindOrCreate: true,
+	}
 
 	crudArgs, _ := GetOsArgument("crud")
 
 	if len(crudArgs.StringResult) > 0 {
 
-		crudParams := Crud{}
 		crudParams.IsFind = strings.Contains(crudArgs.StringResult, "f")
 		crudParams.IsCreate = strings.Contains(crudArgs.StringResult, "c")
 		crudParams.IsRead = strings.Contains(crudArgs.StringResult, "r")
@@ -302,8 +308,7 @@ func getRouteContent() string {
 		crudParams.IsDelete = strings.Contains(crudArgs.StringResult, "d")
 		crudParams.IsFindOrCreate = strings.Contains(crudArgs.StringResult, "a")
 
-		routeContent = GetUsualTemplateRouteEntity(crudParams)
 	}
 
-	return routeContent
+	return GetUsualTemplateRouteEntity(crudParams)
 }
