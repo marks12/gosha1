@@ -29,7 +29,6 @@ const WsResourceType = 2
 // route-constant-generator here dont touch this line
 
 var RoutesArray = []string{
-    HomePageRoute,
 
     // router-list-generator here dont touch this line
 }

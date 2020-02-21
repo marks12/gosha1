@@ -5,6 +5,8 @@ const usualSettingsResource = `package settings
 var ExtResources = []string{
     "ws",
 }
+
+const HttpResource = 1
 `
 
 var usualTemplateSettingsResource = template{

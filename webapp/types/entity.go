@@ -24,6 +24,7 @@ type Entity struct {
 	IsFilter bool
 
 	HttpMethods cmd.HttpMethods
+	Structures cmd.Structures
 	//Entity remove this line for disable generator functionality
 }
 
