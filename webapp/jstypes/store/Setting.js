@@ -6,15 +6,23 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/setting";
 let readUrl = "/api/v1/setting/"; // + id
 let createUrl = "/api/v1/setting";
+let multiCreateUrl = "/api/v1/setting/list";
 let updateUrl = "/api/v1/setting/"; // + id
+let multiUpdateUrl = "/api/v1/setting/list"; // + id
 let deleteUrl = "/api/v1/setting/"; // + id
+let multiDeleteUrl = "/api/v1/setting/list"; // + id
 let findOrCreateUrl = "/api/v1/setting"; // + id
 
 const setting = {
     actions: {
         createSetting(context, {data, filter, header}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setSetting", response.Model);
@@ -28,7 +36,17 @@ const setting = {
         },
         deleteSetting(context, {id, header}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id;
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
                     context.commit("clearSetting");
                     return response;
@@ -38,12 +56,17 @@ const setting = {
                     throw(err);
                 });
         },
-        findSetting(context, {filter, header}) {
+        findSetting(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setSetting__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendSetting__List", response.List);
+                    } else {
+                        context.commit("setSetting__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -66,7 +89,12 @@ const setting = {
         },
         updateSetting(context, {id, data, filter, header}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setSetting", response.Model);
@@ -93,6 +121,9 @@ const setting = {
         clearListSetting(context) {
             context.commit("clearListSetting");
         },
+        clearSetting(context) {
+            context.commit("clearSetting");
+        },
     },
     getters: {
         getSetting: (state) => {
@@ -111,6 +142,14 @@ const setting = {
         },
         setSetting__List(state, data) {
             state.Setting__List = data || [];
+        },
+        appendSetting__List(state, data) {
+
+            if (! state.Setting__List) {
+                state.Setting__List = [];
+            }
+
+            state.Setting__List = state.Setting__List.concat(data);
         },
         clearSetting(state) {
             state.Setting = new Setting();

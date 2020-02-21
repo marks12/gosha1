@@ -6,15 +6,23 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/aPIStatus";
 let readUrl = "/api/v1/aPIStatus/"; // + id
 let createUrl = "/api/v1/aPIStatus";
+let multiCreateUrl = "/api/v1/aPIStatus/list";
 let updateUrl = "/api/v1/aPIStatus/"; // + id
+let multiUpdateUrl = "/api/v1/aPIStatus/list"; // + id
 let deleteUrl = "/api/v1/aPIStatus/"; // + id
+let multiDeleteUrl = "/api/v1/aPIStatus/list"; // + id
 let findOrCreateUrl = "/api/v1/aPIStatus"; // + id
 
 const aPIStatus = {
     actions: {
         createAPIStatus(context, {data, filter, header}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setAPIStatus", response.Model);
@@ -28,7 +36,17 @@ const aPIStatus = {
         },
         deleteAPIStatus(context, {id, header}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id;
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
                     context.commit("clearAPIStatus");
                     return response;
@@ -38,12 +56,17 @@ const aPIStatus = {
                     throw(err);
                 });
         },
-        findAPIStatus(context, {filter, header}) {
+        findAPIStatus(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAPIStatus__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendAPIStatus__List", response.List);
+                    } else {
+                        context.commit("setAPIStatus__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -66,7 +89,12 @@ const aPIStatus = {
         },
         updateAPIStatus(context, {id, data, filter, header}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setAPIStatus", response.Model);
@@ -93,6 +121,9 @@ const aPIStatus = {
         clearListAPIStatus(context) {
             context.commit("clearListAPIStatus");
         },
+        clearAPIStatus(context) {
+            context.commit("clearAPIStatus");
+        },
     },
     getters: {
         getAPIStatus: (state) => {
@@ -111,6 +142,14 @@ const aPIStatus = {
         },
         setAPIStatus__List(state, data) {
             state.APIStatus__List = data || [];
+        },
+        appendAPIStatus__List(state, data) {
+
+            if (! state.APIStatus__List) {
+                state.APIStatus__List = [];
+            }
+
+            state.APIStatus__List = state.APIStatus__List.concat(data);
         },
         clearAPIStatus(state) {
             state.APIStatus = new APIStatus();

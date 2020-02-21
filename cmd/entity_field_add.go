@@ -47,7 +47,7 @@ type HttpMethods struct {
 }
 
 type Structures struct {
-	WithoutDbModels bool
+	WithoutDbModel bool
 }
 
 func (mr *ModelRepository) GetModels() (models []string) {

@@ -6,15 +6,23 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/entityField";
 let readUrl = "/api/v1/entityField/"; // + id
 let createUrl = "/api/v1/entityField";
+let multiCreateUrl = "/api/v1/entityField/list";
 let updateUrl = "/api/v1/entityField/"; // + id
+let multiUpdateUrl = "/api/v1/entityField/list"; // + id
 let deleteUrl = "/api/v1/entityField/"; // + id
+let multiDeleteUrl = "/api/v1/entityField/list"; // + id
 let findOrCreateUrl = "/api/v1/entityField"; // + id
 
 const entityField = {
     actions: {
         createEntityField(context, {data, filter, header}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setEntityField", response.Model);
@@ -28,7 +36,17 @@ const entityField = {
         },
         deleteEntityField(context, {id, header}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id;
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
                     context.commit("clearEntityField");
                     return response;
@@ -38,12 +56,17 @@ const entityField = {
                     throw(err);
                 });
         },
-        findEntityField(context, {filter, header}) {
+        findEntityField(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setEntityField__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendEntityField__List", response.List);
+                    } else {
+                        context.commit("setEntityField__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -66,7 +89,12 @@ const entityField = {
         },
         updateEntityField(context, {id, data, filter, header}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setEntityField", response.Model);
@@ -93,6 +121,9 @@ const entityField = {
         clearListEntityField(context) {
             context.commit("clearListEntityField");
         },
+        clearEntityField(context) {
+            context.commit("clearEntityField");
+        },
     },
     getters: {
         getEntityField: (state) => {
@@ -111,6 +142,14 @@ const entityField = {
         },
         setEntityField__List(state, data) {
             state.EntityField__List = data || [];
+        },
+        appendEntityField__List(state, data) {
+
+            if (! state.EntityField__List) {
+                state.EntityField__List = [];
+            }
+
+            state.EntityField__List = state.EntityField__List.concat(data);
         },
         clearEntityField(state) {
             state.EntityField = new EntityField();

@@ -6,15 +6,23 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/pagination";
 let readUrl = "/api/v1/pagination/"; // + id
 let createUrl = "/api/v1/pagination";
+let multiCreateUrl = "/api/v1/pagination/list";
 let updateUrl = "/api/v1/pagination/"; // + id
+let multiUpdateUrl = "/api/v1/pagination/list"; // + id
 let deleteUrl = "/api/v1/pagination/"; // + id
+let multiDeleteUrl = "/api/v1/pagination/list"; // + id
 let findOrCreateUrl = "/api/v1/pagination"; // + id
 
 const pagination = {
     actions: {
         createPagination(context, {data, filter, header}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setPagination", response.Model);
@@ -28,7 +36,17 @@ const pagination = {
         },
         deletePagination(context, {id, header}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id;
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
                     context.commit("clearPagination");
                     return response;
@@ -38,12 +56,17 @@ const pagination = {
                     throw(err);
                 });
         },
-        findPagination(context, {filter, header}) {
+        findPagination(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setPagination__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendPagination__List", response.List);
+                    } else {
+                        context.commit("setPagination__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -66,7 +89,12 @@ const pagination = {
         },
         updatePagination(context, {id, data, filter, header}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setPagination", response.Model);
@@ -93,6 +121,9 @@ const pagination = {
         clearListPagination(context) {
             context.commit("clearListPagination");
         },
+        clearPagination(context) {
+            context.commit("clearPagination");
+        },
     },
     getters: {
         getPagination: (state) => {
@@ -111,6 +142,14 @@ const pagination = {
         },
         setPagination__List(state, data) {
             state.Pagination__List = data || [];
+        },
+        appendPagination__List(state, data) {
+
+            if (! state.Pagination__List) {
+                state.Pagination__List = [];
+            }
+
+            state.Pagination__List = state.Pagination__List.concat(data);
         },
         clearPagination(state) {
             state.Pagination = new Pagination();
