@@ -169,13 +169,14 @@
     import VSpoiler from "swtui/src/components/VSpoiler";
     import VGroup from "swtui/src/components/VGroup";
     import VSelect from "swtui/src/components/VSelect";
+    import VSign from "swtui/src/components/VSign";
     import EntityItem from "../components/EntityItem";
     import { mapGetters, mapMutations, mapActions } from 'vuex';
     import {Entity, EntityField, EntityFilter, FieldTypeFilter} from "../../../webapp/jstypes/apiModel";
 
     export default {
         name: "Entity",
-        components: {EntityItem, VSpoiler, VBadge, EntityGen, VGroup, VSelect},
+        components: {EntityItem, VSpoiler, VBadge, EntityGen, VGroup, VSelect, VSign},
         mixins: [
             EntityGen,
         ],

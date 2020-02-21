@@ -98,9 +98,13 @@ func GetCurrentApp() types.App {
 
 func GetOsArgument(arg string) (RegularFind, error) {
 
+    arg = strings.TrimSpace(arg)
+
     for _, a := range os.Args {
 
-        if a == arg || a == `--` + arg {
+        a = strings.TrimSpace(a)
+
+        if a == arg || a == `--` + arg || strings.ToLower(a) == strings.ToLower(`--` + arg + `=true`) {
             return RegularFind{BoolResult:true}, nil
         }
 

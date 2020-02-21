@@ -6,15 +6,23 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/currentApp";
 let readUrl = "/api/v1/currentApp/"; // + id
 let createUrl = "/api/v1/currentApp";
+let multiCreateUrl = "/api/v1/currentApp/list";
 let updateUrl = "/api/v1/currentApp/"; // + id
+let multiUpdateUrl = "/api/v1/currentApp/list"; // + id
 let deleteUrl = "/api/v1/currentApp/"; // + id
+let multiDeleteUrl = "/api/v1/currentApp/list"; // + id
 let findOrCreateUrl = "/api/v1/currentApp"; // + id
 
 const currentApp = {
     actions: {
         createCurrentApp(context, {data, filter, header}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setCurrentApp", response.Model);
@@ -28,7 +36,17 @@ const currentApp = {
         },
         deleteCurrentApp(context, {id, header}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id;
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
                     context.commit("clearCurrentApp");
                     return response;
@@ -38,12 +56,17 @@ const currentApp = {
                     throw(err);
                 });
         },
-        findCurrentApp(context, {filter, header}) {
+        findCurrentApp(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setCurrentApp__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendCurrentApp__List", response.List);
+                    } else {
+                        context.commit("setCurrentApp__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -66,7 +89,12 @@ const currentApp = {
         },
         updateCurrentApp(context, {id, data, filter, header}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setCurrentApp", response.Model);
@@ -93,6 +121,9 @@ const currentApp = {
         clearListCurrentApp(context) {
             context.commit("clearListCurrentApp");
         },
+        clearCurrentApp(context) {
+            context.commit("clearCurrentApp");
+        },
     },
     getters: {
         getCurrentApp: (state) => {
@@ -111,6 +142,14 @@ const currentApp = {
         },
         setCurrentApp__List(state, data) {
             state.CurrentApp__List = data || [];
+        },
+        appendCurrentApp__List(state, data) {
+
+            if (! state.CurrentApp__List) {
+                state.CurrentApp__List = [];
+            }
+
+            state.CurrentApp__List = state.CurrentApp__List.concat(data);
         },
         clearCurrentApp(state) {
             state.CurrentApp = new CurrentApp();

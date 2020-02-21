@@ -1,4 +1,5 @@
 
+
 import axios from "axios";
 
 function BackendApi() {
@@ -24,8 +25,8 @@ function BackendApi() {
     getServerUrl: () => {
       return this.serverUrl;
     },
-    remove: (url, getParams, headerParams) => {
-      return axios.delete(this.getRouteUrl(url), {params: getParams, headers: headerParams }).then((response) => {
+    remove: (url, getParams, data, headerParams) => {
+      return axios.delete(this.getRouteUrl(url), {data: data, params: getParams, headers: headerParams }).then((response) => {
         return response.data;
       });
     },

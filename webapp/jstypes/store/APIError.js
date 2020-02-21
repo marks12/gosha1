@@ -6,15 +6,23 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/aPIError";
 let readUrl = "/api/v1/aPIError/"; // + id
 let createUrl = "/api/v1/aPIError";
+let multiCreateUrl = "/api/v1/aPIError/list";
 let updateUrl = "/api/v1/aPIError/"; // + id
+let multiUpdateUrl = "/api/v1/aPIError/list"; // + id
 let deleteUrl = "/api/v1/aPIError/"; // + id
+let multiDeleteUrl = "/api/v1/aPIError/list"; // + id
 let findOrCreateUrl = "/api/v1/aPIError"; // + id
 
 const aPIError = {
     actions: {
         createAPIError(context, {data, filter, header}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setAPIError", response.Model);
@@ -28,7 +36,17 @@ const aPIError = {
         },
         deleteAPIError(context, {id, header}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id;
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
                     context.commit("clearAPIError");
                     return response;
@@ -38,12 +56,17 @@ const aPIError = {
                     throw(err);
                 });
         },
-        findAPIError(context, {filter, header}) {
+        findAPIError(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAPIError__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendAPIError__List", response.List);
+                    } else {
+                        context.commit("setAPIError__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -66,7 +89,12 @@ const aPIError = {
         },
         updateAPIError(context, {id, data, filter, header}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setAPIError", response.Model);
@@ -93,6 +121,9 @@ const aPIError = {
         clearListAPIError(context) {
             context.commit("clearListAPIError");
         },
+        clearAPIError(context) {
+            context.commit("clearAPIError");
+        },
     },
     getters: {
         getAPIError: (state) => {
@@ -111,6 +142,14 @@ const aPIError = {
         },
         setAPIError__List(state, data) {
             state.APIError__List = data || [];
+        },
+        appendAPIError__List(state, data) {
+
+            if (! state.APIError__List) {
+                state.APIError__List = [];
+            }
+
+            state.APIError__List = state.APIError__List.concat(data);
         },
         clearAPIError(state) {
             state.APIError = new APIError();

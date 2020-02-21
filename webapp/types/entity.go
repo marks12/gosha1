@@ -1,9 +1,9 @@
 package types
 
 import (
+	"gosha/cmd"
 	"net/http"
 	"strconv"
-	"gosha/cmd"
 	"strings"
 )
 
@@ -23,8 +23,8 @@ type Entity struct {
 	Fields	 []Field
 	IsFilter bool
 
-	HttpMethods cmd.HttpMethods
 	Structures cmd.Structures
+	HttpMethods cmd.HttpMethods
 	//Entity remove this line for disable generator functionality
 }
 

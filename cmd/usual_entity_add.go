@@ -11,6 +11,8 @@ func usualEntityAdd(c *ishell.Context) {
 	yellow := color.New(color.FgYellow).SprintFunc()
 	c.Println(yellow("Start creating new entity and api"))
 
+	WoDbModel, _ := GetOsArgument("without-db-models")
+
 	entity, err := getEntity(c)
 
 	if err != nil {
@@ -51,15 +53,19 @@ func usualEntityAdd(c *ishell.Context) {
 		[]string{getRouteContent(), CamelCase, firstLowerCase},
 		c)
 
-	sourceFile = "./logic/assigner.go"
-	destinationFile = "./logic/assigner.go"
 
-	CopyFile(
-		sourceFile,
-		destinationFile,
-		[]string{"// add all assign functions", "{Entity}", "{entity}"},
-		[]string{getAssignContent(), CamelCase, firstLowerCase},
-		c)
+	if ! WoDbModel.BoolResult {
+
+		sourceFile = "./logic/assigner.go"
+		destinationFile = "./logic/assigner.go"
+
+		CopyFile(
+			sourceFile,
+			destinationFile,
+			[]string{"// add all assign functions", "{Entity}", "{entity}"},
+			[]string{getAssignContent(), CamelCase, firstLowerCase},
+			c)
+	}
 
 	CreateFileIfNotExists(usualTemplateGen.Path, usualTemplateGen.Content, c)
 
@@ -116,17 +122,21 @@ func usualEntityAdd(c *ishell.Context) {
 		[]string{CamelCase, CamelCase, firstLowerCase},
 		c)
 
-	sourceFile = "./dbmodels/" + snakeCase + ".go"
-	destinationFile = "./dbmodels/" + snakeCase + ".go"
 
-	CreateFile(sourceFile, usualTemplateWebappEntityDbModels.Content, c)
+	if ! WoDbModel.BoolResult {
 
-	CopyFile(
-		sourceFile,
-		destinationFile,
-		[]string{"{entity-name}", "{Entity}", "{entity}"},
-		[]string{CamelCase, CamelCase, firstLowerCase},
-		c)
+		sourceFile = "./dbmodels/" + snakeCase + ".go"
+		destinationFile = "./dbmodels/" + snakeCase + ".go"
+
+		CreateFile(sourceFile, usualTemplateWebappEntityDbModels.Content, c)
+
+		CopyFile(
+			sourceFile,
+			destinationFile,
+			[]string{"{entity-name}", "{Entity}", "{entity}"},
+			[]string{CamelCase, CamelCase, firstLowerCase},
+			c)
+	}
 
 	sourceFile = "./logic/" + snakeCase + ".go"
 	destinationFile = "./logic/" + snakeCase + ".go"
@@ -140,19 +150,22 @@ func usualEntityAdd(c *ishell.Context) {
 		[]string{CamelCase, CamelCase, firstLowerCase},
 		c)
 
-	sourceFile = "./bootstrap/insert_data_to_db.go"
-	destinationFile = "./bootstrap/insert_data_to_db.go"
+	if ! WoDbModel.BoolResult {
 
-	replaceFrom := `//generator insert entity`
-	replaceTo := `//generator insert entity
+		sourceFile = "./bootstrap/insert_data_to_db.go"
+		destinationFile = "./bootstrap/insert_data_to_db.go"
+
+		replaceFrom := `//generator insert entity`
+		replaceTo := `//generator insert entity
           ` + "&dbmodels." + CamelCase + "{},"
 
-	CopyFile(
-		sourceFile,
-		destinationFile,
-		[]string{replaceFrom},
-		[]string{replaceTo},
-		c)
+		CopyFile(
+			sourceFile,
+			destinationFile,
+			[]string{replaceFrom},
+			[]string{replaceTo},
+			c)
+	}
 
 	c.Println("New entity " + CamelCase + " was created")
 }
@@ -163,6 +176,8 @@ func getLogicContent() (c string) {
 
 	//crudArgs, _ := GetOsArgument("crud")
 	crudParams := Crud{}
+
+	WoDbModel, _ := GetOsArgument("without-db-models")
 
 	//if len(crudArgs.StringResult) > 0 {
 	//
@@ -176,7 +191,7 @@ func getLogicContent() (c string) {
 		crudParams = Crud{true, true, true, true, true, true}
 	//}
 
-	c = GetUsualTemplateLogicContent(crudParams)
+	c = GetUsualTemplateLogicContent(crudParams, WoDbModel.BoolResult)
 	return
 }
 
