@@ -6,15 +6,23 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/entityFieldFilter";
 let readUrl = "/api/v1/entityFieldFilter/"; // + id
 let createUrl = "/api/v1/entityFieldFilter";
+let multiCreateUrl = "/api/v1/entityFieldFilter/list";
 let updateUrl = "/api/v1/entityFieldFilter/"; // + id
+let multiUpdateUrl = "/api/v1/entityFieldFilter/list"; // + id
 let deleteUrl = "/api/v1/entityFieldFilter/"; // + id
+let multiDeleteUrl = "/api/v1/entityFieldFilter/list"; // + id
 let findOrCreateUrl = "/api/v1/entityFieldFilter"; // + id
 
 const entityFieldFilter = {
     actions: {
         createEntityFieldFilter(context, {data, filter, header}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setEntityFieldFilter", response.Model);
@@ -28,7 +36,17 @@ const entityFieldFilter = {
         },
         deleteEntityFieldFilter(context, {id, header}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id;
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
                     context.commit("clearEntityFieldFilter");
                     return response;
@@ -38,12 +56,17 @@ const entityFieldFilter = {
                     throw(err);
                 });
         },
-        findEntityFieldFilter(context, {filter, header}) {
+        findEntityFieldFilter(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setEntityFieldFilter__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendEntityFieldFilter__List", response.List);
+                    } else {
+                        context.commit("setEntityFieldFilter__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -66,7 +89,12 @@ const entityFieldFilter = {
         },
         updateEntityFieldFilter(context, {id, data, filter, header}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setEntityFieldFilter", response.Model);
@@ -93,6 +121,9 @@ const entityFieldFilter = {
         clearListEntityFieldFilter(context) {
             context.commit("clearListEntityFieldFilter");
         },
+        clearEntityFieldFilter(context) {
+            context.commit("clearEntityFieldFilter");
+        },
     },
     getters: {
         getEntityFieldFilter: (state) => {
@@ -111,6 +142,14 @@ const entityFieldFilter = {
         },
         setEntityFieldFilter__List(state, data) {
             state.EntityFieldFilter__List = data || [];
+        },
+        appendEntityFieldFilter__List(state, data) {
+
+            if (! state.EntityFieldFilter__List) {
+                state.EntityFieldFilter__List = [];
+            }
+
+            state.EntityFieldFilter__List = state.EntityFieldFilter__List.concat(data);
         },
         clearEntityFieldFilter(state) {
             state.EntityFieldFilter = new EntityFieldFilter();

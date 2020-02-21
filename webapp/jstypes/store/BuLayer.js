@@ -6,15 +6,23 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/buLayer";
 let readUrl = "/api/v1/buLayer/"; // + id
 let createUrl = "/api/v1/buLayer";
+let multiCreateUrl = "/api/v1/buLayer/list";
 let updateUrl = "/api/v1/buLayer/"; // + id
+let multiUpdateUrl = "/api/v1/buLayer/list"; // + id
 let deleteUrl = "/api/v1/buLayer/"; // + id
+let multiDeleteUrl = "/api/v1/buLayer/list"; // + id
 let findOrCreateUrl = "/api/v1/buLayer"; // + id
 
 const buLayer = {
     actions: {
         createBuLayer(context, {data, filter, header}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setBuLayer", response.Model);
@@ -28,7 +36,17 @@ const buLayer = {
         },
         deleteBuLayer(context, {id, header}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id;
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
                     context.commit("clearBuLayer");
                     return response;
@@ -38,12 +56,17 @@ const buLayer = {
                     throw(err);
                 });
         },
-        findBuLayer(context, {filter, header}) {
+        findBuLayer(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setBuLayer__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendBuLayer__List", response.List);
+                    } else {
+                        context.commit("setBuLayer__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -66,7 +89,12 @@ const buLayer = {
         },
         updateBuLayer(context, {id, data, filter, header}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setBuLayer", response.Model);
@@ -93,6 +121,9 @@ const buLayer = {
         clearListBuLayer(context) {
             context.commit("clearListBuLayer");
         },
+        clearBuLayer(context) {
+            context.commit("clearBuLayer");
+        },
     },
     getters: {
         getBuLayer: (state) => {
@@ -111,6 +142,14 @@ const buLayer = {
         },
         setBuLayer__List(state, data) {
             state.BuLayer__List = data || [];
+        },
+        appendBuLayer__List(state, data) {
+
+            if (! state.BuLayer__List) {
+                state.BuLayer__List = [];
+            }
+
+            state.BuLayer__List = state.BuLayer__List.concat(data);
         },
         clearBuLayer(state) {
             state.BuLayer = new BuLayer();

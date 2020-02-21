@@ -6,15 +6,23 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/fieldTypeFilter";
 let readUrl = "/api/v1/fieldTypeFilter/"; // + id
 let createUrl = "/api/v1/fieldTypeFilter";
+let multiCreateUrl = "/api/v1/fieldTypeFilter/list";
 let updateUrl = "/api/v1/fieldTypeFilter/"; // + id
+let multiUpdateUrl = "/api/v1/fieldTypeFilter/list"; // + id
 let deleteUrl = "/api/v1/fieldTypeFilter/"; // + id
+let multiDeleteUrl = "/api/v1/fieldTypeFilter/list"; // + id
 let findOrCreateUrl = "/api/v1/fieldTypeFilter"; // + id
 
 const fieldTypeFilter = {
     actions: {
         createFieldTypeFilter(context, {data, filter, header}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setFieldTypeFilter", response.Model);
@@ -28,7 +36,17 @@ const fieldTypeFilter = {
         },
         deleteFieldTypeFilter(context, {id, header}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id;
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
                     context.commit("clearFieldTypeFilter");
                     return response;
@@ -38,12 +56,17 @@ const fieldTypeFilter = {
                     throw(err);
                 });
         },
-        findFieldTypeFilter(context, {filter, header}) {
+        findFieldTypeFilter(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setFieldTypeFilter__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendFieldTypeFilter__List", response.List);
+                    } else {
+                        context.commit("setFieldTypeFilter__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -66,7 +89,12 @@ const fieldTypeFilter = {
         },
         updateFieldTypeFilter(context, {id, data, filter, header}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setFieldTypeFilter", response.Model);
@@ -93,6 +121,9 @@ const fieldTypeFilter = {
         clearListFieldTypeFilter(context) {
             context.commit("clearListFieldTypeFilter");
         },
+        clearFieldTypeFilter(context) {
+            context.commit("clearFieldTypeFilter");
+        },
     },
     getters: {
         getFieldTypeFilter: (state) => {
@@ -111,6 +142,14 @@ const fieldTypeFilter = {
         },
         setFieldTypeFilter__List(state, data) {
             state.FieldTypeFilter__List = data || [];
+        },
+        appendFieldTypeFilter__List(state, data) {
+
+            if (! state.FieldTypeFilter__List) {
+                state.FieldTypeFilter__List = [];
+            }
+
+            state.FieldTypeFilter__List = state.FieldTypeFilter__List.concat(data);
         },
         clearFieldTypeFilter(state) {
             state.FieldTypeFilter = new FieldTypeFilter();

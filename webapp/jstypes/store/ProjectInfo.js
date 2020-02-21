@@ -6,15 +6,23 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/projectInfo";
 let readUrl = "/api/v1/projectInfo/"; // + id
 let createUrl = "/api/v1/projectInfo";
+let multiCreateUrl = "/api/v1/projectInfo/list";
 let updateUrl = "/api/v1/projectInfo/"; // + id
+let multiUpdateUrl = "/api/v1/projectInfo/list"; // + id
 let deleteUrl = "/api/v1/projectInfo/"; // + id
+let multiDeleteUrl = "/api/v1/projectInfo/list"; // + id
 let findOrCreateUrl = "/api/v1/projectInfo"; // + id
 
 const projectInfo = {
     actions: {
         createProjectInfo(context, {data, filter, header}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setProjectInfo", response.Model);
@@ -28,7 +36,17 @@ const projectInfo = {
         },
         deleteProjectInfo(context, {id, header}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id;
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
                     context.commit("clearProjectInfo");
                     return response;
@@ -38,12 +56,17 @@ const projectInfo = {
                     throw(err);
                 });
         },
-        findProjectInfo(context, {filter, header}) {
+        findProjectInfo(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setProjectInfo__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendProjectInfo__List", response.List);
+                    } else {
+                        context.commit("setProjectInfo__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -66,7 +89,12 @@ const projectInfo = {
         },
         updateProjectInfo(context, {id, data, filter, header}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setProjectInfo", response.Model);
@@ -93,6 +121,9 @@ const projectInfo = {
         clearListProjectInfo(context) {
             context.commit("clearListProjectInfo");
         },
+        clearProjectInfo(context) {
+            context.commit("clearProjectInfo");
+        },
     },
     getters: {
         getProjectInfo: (state) => {
@@ -111,6 +142,14 @@ const projectInfo = {
         },
         setProjectInfo__List(state, data) {
             state.ProjectInfo__List = data || [];
+        },
+        appendProjectInfo__List(state, data) {
+
+            if (! state.ProjectInfo__List) {
+                state.ProjectInfo__List = [];
+            }
+
+            state.ProjectInfo__List = state.ProjectInfo__List.concat(data);
         },
         clearProjectInfo(state) {
             state.ProjectInfo = new ProjectInfo();

@@ -1,5 +1,12 @@
 package cmd
 
+const usualEntityLogicFindWoDb = `
+func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalRecords int, err error) {
+
+    return
+}
+`
+
 const usualEntityLogicFind = `
 func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalRecords int, err error) {
 
@@ -80,6 +87,18 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
 }
 `
 
+const usualEntityLogicCreateWoDb = `
+func {Entity}MultiCreate(filter types.{Entity}Filter)  (data []types.{Entity}, err error) {
+
+    return
+}
+
+func {Entity}Create(filter types.{Entity}Filter, query *gorm.DB)  (data types.{Entity}, err error) {
+    
+    return
+}
+`
+
 const usualEntityLogicCreate = `
 
 func {Entity}MultiCreate(filter types.{Entity}Filter)  (data []types.{Entity}, err error) {
@@ -142,6 +161,13 @@ func {Entity}Create(filter types.{Entity}Filter, query *gorm.DB)  (data types.{E
 }
 `
 
+const usualEntityLogicReadWoDb = `
+func {Entity}Read(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
+
+    return
+}
+`
+
 const usualEntityLogicRead = `
 func {Entity}Read(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
 
@@ -158,6 +184,20 @@ func {Entity}Read(filter types.{Entity}Filter)  (data types.{Entity}, err error)
 
     return types.{Entity}{}, errors.New("Not found")
 }
+`
+
+const usualEntityLogicUpdateWoDb = `
+
+func {Entity}MultiUpdate(filter types.{Entity}Filter)  (data []types.{Entity}, err error) {
+
+    return
+}
+
+func {Entity}Update(filter types.{Entity}Filter, query *gorm.DB)  (data types.{Entity}, err error) {
+
+    return
+}
+
 `
 
 var usualEntityLogicUpdate = `
@@ -241,6 +281,20 @@ func {Entity}Update(filter types.{Entity}Filter, query *gorm.DB)  (data types.{E
 }
 
 `
+const usualEntityLogicDeleteWoDb = `
+
+func {Entity}MultiDelete(filter types.{Entity}Filter)  (isOk bool, err error) {
+
+    return
+}
+
+func {Entity}Delete(filter types.{Entity}Filter, query *gorm.DB)  (isOk bool, err error) {
+
+    return
+}
+
+`
+
 const usualEntityLogicDelete = `
 func {Entity}MultiDelete(filter types.{Entity}Filter)  (isOk bool, err error) {
 
@@ -306,6 +360,14 @@ func {Entity}Delete(filter types.{Entity}Filter, query *gorm.DB)  (isOk bool, er
 }
 `
 
+const usualEntityLogicFindOrCreateWoDb = `
+
+func {Entity}FindOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
+    
+    return
+}
+`
+
 const usualEntityLogicFindOrCreate = `
 func {Entity}FindOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
 
@@ -334,51 +396,91 @@ func {Entity}FindOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, er
 }
 
 `
-const usualEntityLogic = `package logic
 
-import (
-    "{ms-name}/types"
-    "{ms-name}/dbmodels"
-    "{ms-name}/core"
-    "log"
-    "errors"
-    "fmt"
-    "github.com/jinzhu/gorm"
-    "strconv"
-)
+func getUsualEntityLogicHeader(isWoModels bool) (header string) {
+
+    top := `package logic
+
+    import (
+        "{ms-name}/types"
 `
 
-var usualTemplateEntityLogic = template{
-    Path:    "",
-    Content: assignMsName(GetUsualTemplateLogicContent(Crud{true, true, true, true, true, true})),
+    footer := `
+        "github.com/jinzhu/gorm"
+    )
+`
+    middle := ""
+
+    if ! isWoModels {
+        middle = `
+        "log"
+        "fmt"
+        "{ms-name}/core"
+        "errors"
+        "strconv"
+         "{ms-name}/dbmodels"` + "\n"
+    }
+
+    return top + middle + footer
+
 }
 
-func GetUsualTemplateLogicContent(crud Crud) (content string) {
+//var usualTemplateEntityLogic = template{
+//    Path:    "",
+//    Content: assignMsName(GetUsualTemplateLogicContent(Crud{true, true, true, true, true, true}, false)),
+//}
 
-    content = usualEntityLogic
+func GetUsualTemplateLogicContent(crud Crud, isWoDbModel bool) (content string) {
+
+    content = getUsualEntityLogicHeader(isWoDbModel)
 
     if crud.IsFind {
-        content += usualEntityLogicFind
+        if isWoDbModel {
+            content += usualEntityLogicFindWoDb
+        } else {
+            content += usualEntityLogicFind
+        }
+
     }
 
     if crud.IsCreate {
-        content += usualEntityLogicCreate
+        if isWoDbModel {
+            content += usualEntityLogicCreateWoDb
+        } else {
+            content += usualEntityLogicCreate
+        }
     }
 
     if crud.IsRead {
-        content += usualEntityLogicRead
+        if isWoDbModel {
+            content += usualEntityLogicReadWoDb
+        } else {
+            content += usualEntityLogicRead
+        }
     }
 
     if crud.IsUpdate {
-        content += usualEntityLogicUpdate
+        if isWoDbModel {
+            content += usualEntityLogicUpdateWoDb
+        } else {
+            content += usualEntityLogicUpdate
+        }
     }
 
     if crud.IsDelete {
-        content += usualEntityLogicDelete
+        if isWoDbModel {
+            content += usualEntityLogicDeleteWoDb
+        } else {
+            content += usualEntityLogicDelete
+        }
     }
 
     if crud.IsFindOrCreate {
-        content += usualEntityLogicFindOrCreate
+        if isWoDbModel {
+            content += usualEntityLogicFindOrCreateWoDb
+        } else {
+            content += usualEntityLogicFindOrCreate
+        }
     }
 
     content = assignMsName(content)
