@@ -45,7 +45,7 @@
         
                     <template #content>
                         <form @submit.prevent="saveChangesSubmit">
-                            <VSet direction="vertical">
+                            <VSet vertical>
                                 <VSet
                                     v-for="(filed, key) in editFields" :key="key + '-editFields'"
                                     vertical-align="center"
@@ -152,14 +152,11 @@
     import VText from "swui/src/components/VText";
     import VPanel from "swui/src/components/VPanel";
     import VButton from "swui/src/components/VButton";
-    import VIcon from "swui/src/components/VIcon";
-    import VSign from "swui/src/components/VSign";
-    import VSelectSimple from "swui/src/components/VSelectSimple";
 
     export default {
         name: 'ProjectInfoGen',
 
-        components: {VSelectSimple, VSign, VIcon, VButton, VPanel, VText, VInput, VLabel, VSet, VHead, WorkSpace, VCheckbox},
+        components: {VButton, VPanel, VText, VInput, VLabel, VSet, VHead, WorkSpace, VCheckbox},
 
         props: {
             fields: {
@@ -211,8 +208,7 @@
         },
 
         created() {
-            this.fillProjectInfoFilter();
-            this.fetchProjectInfoData();
+			this.onCreated();
         },
 
         computed: {
@@ -272,6 +268,11 @@
                 'deleteProjectInfoFromList',
                 'updateProjectInfoById',
             ]),
+
+			onCreated() {
+				this.fillProjectInfoFilter();
+	            this.fetchProjectInfoData();
+			},
 
             fillProjectInfoFilter() {
                 this.projectInfoFilter.CurrentPage = 1;

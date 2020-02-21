@@ -212,7 +212,13 @@ func EntityCreate(filter types.EntityFilter) (data types.Entity, err error) {
     if e.HttpMethods.IsDelete { fcruda += "d"}
     if e.HttpMethods.IsFindOrCreate { fcruda += "a"}
 
-    args := []string{"", "exit", "setAppType", "--type=Usual", "usual:entity:add", "--entity=" + e.Name, "--crud="+fcruda, "--check-auth=fcruda"}
+    structuresCmd := ""
+
+    if e.Structures.WithoutDbModel {
+        structuresCmd = structuresCmd + " --without-db-models=true"
+    }
+
+    args := []string{"", "exit", "setAppType", "--type=Usual", "usual:entity:add", "--entity=" + e.Name, "--crud="+fcruda, "--check-auth=fcruda", structuresCmd}
 
     os.Args = args
     cmd.RunShell()

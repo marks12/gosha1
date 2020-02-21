@@ -6,15 +6,23 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/entityFilter";
 let readUrl = "/api/v1/entityFilter/"; // + id
 let createUrl = "/api/v1/entityFilter";
+let multiCreateUrl = "/api/v1/entityFilter/list";
 let updateUrl = "/api/v1/entityFilter/"; // + id
+let multiUpdateUrl = "/api/v1/entityFilter/list"; // + id
 let deleteUrl = "/api/v1/entityFilter/"; // + id
+let multiDeleteUrl = "/api/v1/entityFilter/list"; // + id
 let findOrCreateUrl = "/api/v1/entityFilter"; // + id
 
 const entityFilter = {
     actions: {
         createEntityFilter(context, {data, filter, header}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setEntityFilter", response.Model);
@@ -28,7 +36,17 @@ const entityFilter = {
         },
         deleteEntityFilter(context, {id, header}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id;
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
                     context.commit("clearEntityFilter");
                     return response;
@@ -38,12 +56,17 @@ const entityFilter = {
                     throw(err);
                 });
         },
-        findEntityFilter(context, {filter, header}) {
+        findEntityFilter(context, {filter, header, isAppend}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setEntityFilter__List", response.List);
+                    if (isAppend) {
+                        context.commit("appendEntityFilter__List", response.List);
+                    } else {
+                        context.commit("setEntityFilter__List", response.List);
+                    }
+
                     return response;
                 })
                 .catch(function(err) {
@@ -66,7 +89,12 @@ const entityFilter = {
         },
         updateEntityFilter(context, {id, data, filter, header}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
 
                     context.commit("setEntityFilter", response.Model);
@@ -93,6 +121,9 @@ const entityFilter = {
         clearListEntityFilter(context) {
             context.commit("clearListEntityFilter");
         },
+        clearEntityFilter(context) {
+            context.commit("clearEntityFilter");
+        },
     },
     getters: {
         getEntityFilter: (state) => {
@@ -111,6 +142,14 @@ const entityFilter = {
         },
         setEntityFilter__List(state, data) {
             state.EntityFilter__List = data || [];
+        },
+        appendEntityFilter__List(state, data) {
+
+            if (! state.EntityFilter__List) {
+                state.EntityFilter__List = [];
+            }
+
+            state.EntityFilter__List = state.EntityFilter__List.concat(data);
         },
         clearEntityFilter(state) {
             state.EntityFilter = new EntityFilter();

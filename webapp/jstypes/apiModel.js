@@ -1,4 +1,6 @@
 
+	//some common actions
+
 export function BuLayer() {
 
     this.Id = 0;
@@ -59,6 +61,7 @@ export function Entity() {
     this.Fields = [];
     this.IsFilter = false;
     this.HttpMethods = {};
+    this.Structures = {};
 
     return this;
 }
@@ -123,14 +126,6 @@ export function FieldTypeFilter() {
     this.OrderDirection = [];
     this.CurrentPage = 0;
     this.PerPage = 0;
-
-    return this;
-}
-
-export function OrderFilter() {
-
-    this.Order = [];
-    this.OrderDirection = [];
 
     return this;
 }
