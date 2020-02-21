@@ -25,12 +25,12 @@ import (
 )
 
 var validModel{entity-name} = types.{entity-name}{
-		Id:   0,
+		Id:   1,
 		//Name: "Some Name",
 	}
 
 var updateModel{entity-name} = types.{entity-name}{
-		Id:   0,
+		Id:   1,
 		//Name: "Some Another Name",
 	}
 

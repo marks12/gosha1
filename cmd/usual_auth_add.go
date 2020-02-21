@@ -132,7 +132,11 @@ func fillRole(c *ishell.Context) {
 func fillUser(c *ishell.Context) {
 
 	CreateFile("settings/user.go", `package settings
-	const PASSWORD_SALT = "` + common.RandomString(10) + `"`, c)
+	const PASSWORD_SALT = "` + common.RandomString(10) + `"
+
+	const AdminRoleId = 1
+	const UserRoleId = 2
+`, c)
 
 	CopyFile(
 		"types/user.go",
