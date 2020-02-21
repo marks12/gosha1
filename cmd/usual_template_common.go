@@ -2,7 +2,10 @@ package cmd
 
 const usualCommonValidator = `package common
 
-import "regexp"
+import (
+	"regexp"
+	"reflect"
+)
 
 func ValidateEmail(email string) bool {
     Re := regexp.MustCompile(` + "`" + `^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$` + "`" + `)
@@ -12,6 +15,53 @@ func ValidateEmail(email string) bool {
 func ValidateMobile(phone string) bool {
     Re := regexp.MustCompile(` + "`" + `^[+][0-9]{11,}` + "`" + `)
     return Re.MatchString(phone)
+}
+
+func InArray (item interface{}, array interface{}) bool {
+
+	rt := reflect.TypeOf(array)
+
+	switch rt.Kind() {
+	case reflect.Slice:
+		return checkInArray(item, array)
+	case reflect.Array:
+		return checkInArray(item, array)
+	default:
+		return false
+	}
+
+}
+
+func checkInArray(item interface{}, array interface{}) bool {
+
+	listS, ok := array.([]string)
+	if ok {
+		for _, i := range listS {
+			if i == item {
+				return true
+			}
+		}
+	}
+
+	listInt, ok := array.([]int)
+	if ok {
+		for _, i := range listInt {
+			if i == item {
+				return true
+			}
+		}
+	}
+
+	listI, ok := array.([]interface{})
+	if ok {
+		for _, i := range listI {
+			if i == item {
+				return true
+			}
+		}
+	}
+
+	return false
 }
 `
 

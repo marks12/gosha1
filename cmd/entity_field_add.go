@@ -46,6 +46,10 @@ type HttpMethods struct {
 	IsFindOrCreate bool
 }
 
+type Structures struct {
+	WithoutDbModels bool
+}
+
 func (mr *ModelRepository) GetModels() (models []string) {
 
 	for _, m := range mr.list {

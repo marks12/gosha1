@@ -61,6 +61,13 @@
                                     </VSet>
                                 </template>
 
+                                <template v-if="! currentEntityItem.IsFilter">
+                                    <VSign>Backend structures</VSign>
+                                    <VSet>
+                                        <VCheckbox v-model="currentEntityItem.Structures.WithoutDbModel" :disabled="currentEntityItem.Id > 0"><VText>Without Db Model</VText></VCheckbox>
+                                    </VSet>
+                                </template>
+
                             </VSet>
 
                             <VSet vertical indent-size="XS">
@@ -232,6 +239,10 @@
                     IsFindOrCreate: true,
                 };
 
+                ne.Structures = {
+                    WithoutDbModel: false,
+                };
+
                 return ne;
             },
             search() {
@@ -313,6 +324,10 @@
                 if (this.isPanelCreate) {
                     this.currentEntityItem.item.Name = this.currentEntityItem.Name;
                     this.currentEntityItem.item.Fields = this.newFields.slice(0, -1);
+                    this.currentEntityItem.item.Structures =  {
+                        WithoutDbModel: this.currentEntityItem.Structures.WithoutDbModel || false,
+                    };
+
                     this.currentEntityItem.item.HttpMethods =  {
                         IsFind: this.currentEntityItem.HttpMethods.IsFind || false,
                         IsCreate: this.currentEntityItem.HttpMethods.IsCreate || false,

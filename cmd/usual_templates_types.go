@@ -11,16 +11,43 @@ import (
     "{ms-name}/dbmodels"
     "{ms-name}/flags"
     "{ms-name}/settings"
+    "{ms-name}/common"
     "net/http"
     "strings"
 )
+
+type Access struct {
+	Find bool
+	Read bool
+	Create bool
+	Update bool
+	Delete bool
+	FindOrCreate bool
+}
 
 type Authenticator struct {
     Token        string
     functionType string
     urlPath      string
+    userId       int
     roleIds      []int
     validator
+}
+
+func (auth *Authenticator) GetCurrentUserId() int {
+    return auth.userId
+}
+
+func (auth *Authenticator) SetCurrentUserId(id int) {
+    auth.userId = id
+}
+
+func (auth *Authenticator) GetCurrentUserRoleIds() []int {
+    return auth.roleIds
+}
+
+func (auth *Authenticator) IsCurrentUserAdmin() bool {
+    return common.InArray(settings.AdminRoleId, auth.roleIds)
 }
 
 func (auth *Authenticator) IsAuthorized() bool {
@@ -41,6 +68,8 @@ func (auth *Authenticator) IsAuthorized() bool {
         if dbAuth.UserId < 1 {
             return false
         }
+
+        auth.SetCurrentUserId(dbAuth.UserId)
 
         userRoles := []dbmodels.UserRole{}
         core.Db.Where(dbmodels.UserRole{UserId: dbAuth.UserId}).Find(&userRoles)
