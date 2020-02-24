@@ -1,6 +1,7 @@
 package cmd
 
-const usualSettingsRoutesConstEntity = `const {Entity}Route = "/api/v1/{entity}"
+const usualSettingsRoutesConstEntity = `
+const {Entity}Route = "/api/v1/{entity}"
 
 // route-constant-generator here dont touch this line`
 
