@@ -70,6 +70,7 @@ func Router() http.Handler {
     //router.HandleFunc(settings.AuthRoute+"/{id}", webapp.AuthUpdate).Methods("PUT")
     router.HandleFunc(settings.AuthRoute+"/{id}", webapp.AuthDelete).Methods("DELETE")
     //router.HandleFunc(settings.AuthRoute, webapp.AuthFindOrCreate).Methods("PUT")
+    //router.HandleFunc(settings.AuthRoute, webapp.AuthUpdateOrCreate).Methods("PUT")
 
     //[ CurrentUser ]
     router.HandleFunc(settings.CurrentUserRoute, webapp.CurrentUserFind).Methods("GET")

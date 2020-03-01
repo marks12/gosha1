@@ -13,6 +13,7 @@ const FunctionTypeMultiDelete	= "00000000-0000-0000-0000-000000000024"
 const FunctionTypeCreate	= "00000000-0000-0000-0000-000000000005"
 const FunctionTypeMultiCreate	= "00000000-0000-0000-0000-000000000025"
 const FunctionTypeFindOrCreate	= "00000000-0000-0000-0000-000000000006"
+const FunctionTypeUpdateOrCreate	= "00000000-0000-0000-0000-000000000007"
 const FunctionTypeMultiFindOrCreate	= "00000000-0000-0000-0000-000000000026"
 
 `

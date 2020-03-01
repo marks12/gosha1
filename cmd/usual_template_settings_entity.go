@@ -13,6 +13,7 @@ var usualTemplateSettingsRoutesConstEntity = template{
 	Path:    "./path_error.txt",
 	Content: usualSettingsRoutesConstEntity,
 }
+
 var usualTemplateSettingsRoutesListEntity = template{
 	Path:    "./path_error.txt",
 	Content: usualSettingsRoutesListEntity,

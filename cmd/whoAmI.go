@@ -169,7 +169,7 @@ func setAppCommands(choice int, c *ishell.Context) {
         InteractiveEcho([]string{
             "Hello " + blue("usual") + " application:",
             green(USUAL_APP_CREATE), " - Create new app",
-            green(USUAL_ENTITY_ADD), " - Add entity. NIM: --entity=SomeName --crud=fcruda --check-auth=fcruda, where a=findOrCreate",
+            green(USUAL_ENTITY_ADD), " - Add entity. NIM: --entity=SomeName --crud=fcrudax --check-auth=fcruda, where a=findOrCreate x=updateOrCreate",
             green(USUAL_AUTH_ADD), " - Add user, roles, auth, to app",
             green(ENTITY_ADD_FIELD), " - Add Field to model. NIM: --entity=SomeName2 --Field=SomeField --data-type=string",
             green(ENTITY_ADD_FILTER), " - Add filter to type. NIM: --entity=SomeName2 --filter=SomeFilter --data-type=string",
@@ -251,8 +251,8 @@ func setUsualEntityAdd() {
         Name: USUAL_ENTITY_ADD,
         Help: "Command add new entity to usual app NIM. Use follow arguments:" +
             "\n\t\t\t\t--entity=SomeName - create entity with name SomeName" +
-            "\n\t\t\t\t--crud=fcruda - add follow methods to route" +
-            "\n\t\t\t\t--check-auth=fcruda  - add auth, where a=findOrCreate",
+            "\n\t\t\t\t--crud=fcrudax - add follow methods to route" +
+            "\n\t\t\t\t--check-auth=fcrudax - add auth, where a=findOrCreate x=updateOrCreate",
         Func: usualEntityAdd,
     })
 }

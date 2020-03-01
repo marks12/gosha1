@@ -108,6 +108,10 @@ type ResponseFindOrCreate struct {
 	Model 	interface{}
 }
 
+type ResponseUpdateOrCreate struct {
+	Model 	interface{}
+}
+
 `
 
 var usualTemplateMdlPagination = template{

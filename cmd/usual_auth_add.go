@@ -49,7 +49,7 @@ func usualAuthAdd(c *ishell.Context) {
 
 	os.Args = append(os.Args,"--entity=CurrentUser")
 	os.Args = append(os.Args,"--crud=f")
-	os.Args = append(os.Args,"--check-auth=fcruda")
+	os.Args = append(os.Args,"--check-auth=fcrudax")
 
 	usualEntityAdd(c)
 	os.Args = os.Args[:len(os.Args)-3]
@@ -94,6 +94,8 @@ func usualAuthAdd(c *ishell.Context) {
     os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=Delete", "--data-type=bool"}
     entityFieldAdd(c)
     os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=FindOrCreate", "--data-type=bool"}
+	entityFieldAdd(c)
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=UpdateOrCreate", "--data-type=bool"}
     entityFieldAdd(c)
 
     os.Args = argsBak
