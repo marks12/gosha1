@@ -15,6 +15,7 @@ type RoleResource struct {
 	Update bool
 	Delete bool
 	FindOrCreate bool
+	UpdateOrCreate bool
 	//RoleResource remove this line for disable generator functionality
 
     CreatedAt time.Time

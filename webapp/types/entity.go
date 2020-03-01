@@ -45,6 +45,7 @@ type EntityFilter struct {
 	IsUpdate bool
 	IsDelete bool
 	IsFindOrCreate bool
+	IsUpdateOrCreate bool
 	//EntityFilter remove this line for disable generator functionality
 
 	AbstractFilter
@@ -75,6 +76,7 @@ func GetEntityFilter(request *http.Request, functionType string) EntityFilter {
 	filter.IsUpdate = strings.ToLower(request.FormValue("IsUpdate")) != "false" && len(request.FormValue("IsUpdate")) > 0
 	filter.IsDelete = strings.ToLower(request.FormValue("IsDelete")) != "false" && len(request.FormValue("IsDelete")) > 0
 	filter.IsFindOrCreate = strings.ToLower(request.FormValue("IsFindOrCreate")) != "false" && len(request.FormValue("IsFindOrCreate")) > 0
+	filter.IsUpdateOrCreate = strings.ToLower(request.FormValue("IsUpdateOrCreate")) != "false" && len(request.FormValue("IsUpdateOrCreate")) > 0
 	//GetEntityFilter remove this line for disable generator functionality
 
 	ReadJSON(request, &filter.model)

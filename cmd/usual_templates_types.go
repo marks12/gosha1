@@ -23,6 +23,7 @@ type Access struct {
 	Update bool
 	Delete bool
 	FindOrCreate bool
+	UpdateOrCreate bool
 }
 
 type Authenticator struct {
@@ -144,6 +145,14 @@ func (auth *Authenticator) IsAuthorized() bool {
         case settings.FunctionTypeFindOrCreate:
             for _, rr := range roleResources {
                 if rr.FindOrCreate {
+                    return true
+                }
+            }
+            return false
+
+        case settings.FunctionTypeUpdateOrCreate:
+            for _, rr := range roleResources {
+                if rr.UpdateOrCreate {
                     return true
                 }
             }
@@ -292,6 +301,8 @@ func (filter *FilterIds) Validate(functionType string) {
         case settings.FunctionTypeDelete:
             break;
         case settings.FunctionTypeFindOrCreate:
+            break;
+        case settings.FunctionTypeUpdateOrCreate:
             break;
         case settings.FunctionTypeMultiCreate:
             break;

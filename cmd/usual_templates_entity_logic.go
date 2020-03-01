@@ -368,6 +368,14 @@ func {Entity}FindOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, er
 }
 `
 
+const usualEntityLogicUpdateOrCreateWoDb = `
+
+func {Entity}UpdateOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
+    
+    return
+}
+`
+
 const usualEntityLogicFindOrCreate = `
 func {Entity}FindOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
 
@@ -392,6 +400,36 @@ func {Entity}FindOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, er
     }
 
     data = Assign{Entity}TypeFromDb(findOrCreateModel)
+    return
+}
+
+`
+
+const usualEntityLogicUpdateOrCreate = `
+func {Entity}UpdateOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
+
+    filter.Pagination.CurrentPage = 1
+    filter.Pagination.PerPage = 1
+
+    updateOrCreateModel := Assign{Entity}DbFromType(filter.Get{Entity}Model())
+	//updateOrCreateModel.Field remove this line for disable generator functionality
+
+    updateOrCreateModel.Validate()
+
+    if !updateOrCreateModel.IsValid() {
+        err = errors.New(updateOrCreateModel.GetValidationErrors())
+        return
+    }
+
+    //please uncomment and set criteria
+    //q := core.Db.Model(dbmodels.{Entity}{}).Where(dbmodels.{Entity}{ID: updateOrCreateModel.ID}).Assign(dbmodels.{Entity}{/*PLEASE SET CRITERIA*/}).FirstOrCreate(&updateOrCreateModel)
+
+    //if q.Error != nil {
+    //    err = q.Error
+    //    return
+    //}
+
+    data = Assign{Entity}TypeFromDb(updateOrCreateModel)
     return
 }
 
@@ -480,6 +518,14 @@ func GetUsualTemplateLogicContent(crud Crud, isWoDbModel bool) (content string) 
             content += usualEntityLogicFindOrCreateWoDb
         } else {
             content += usualEntityLogicFindOrCreate
+        }
+    }
+
+    if crud.IsUpdateOrCreate {
+        if isWoDbModel {
+            content += usualEntityLogicUpdateOrCreateWoDb
+        } else {
+            content += usualEntityLogicUpdateOrCreate
         }
     }
 

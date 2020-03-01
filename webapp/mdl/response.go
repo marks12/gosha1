@@ -31,3 +31,7 @@ type ResponseDelete struct {
 type ResponseFindOrCreate struct {
 	Model interface{}
 }
+
+type ResponseUpdateOrCreate struct {
+	Model interface{}
+}

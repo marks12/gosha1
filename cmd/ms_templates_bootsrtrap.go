@@ -119,6 +119,7 @@ func AddAdminResources(adminRoleId int) {
 			Update:       true,
 			Delete:       true,
 			FindOrCreate: true,
+			UpdateOrCreate: true,
 		})
 
 		if err != nil {
@@ -174,6 +175,7 @@ func setRoleAccess(roleId int, route string, access types.Access) error {
 			Update:       access.Update,
 			Delete:       access.Delete,
 			FindOrCreate: access.FindOrCreate,
+			UpdateOrCreate: access.UpdateOrCreate,
 		})
 		core.Db.Model(dbmodels.RoleResource{}).FirstOrCreate(&roleResource, "role_id = ? AND resource_id = ?", roleId, dbModel.ID)
 
