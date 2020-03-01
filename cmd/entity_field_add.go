@@ -44,6 +44,7 @@ type HttpMethods struct {
 	IsUpdate bool
 	IsDelete bool
 	IsFindOrCreate bool
+	IsUpdateOrCreate bool
 }
 
 type Structures struct {
@@ -588,6 +589,9 @@ func GetModelsMethods(repo ModelRepository) (map[string]HttpMethods) {
 				break
 			case "FindOrCreate":
 				mp.IsFindOrCreate = true
+				break
+			case "UpdateOrCreate":
+				mp.IsUpdateOrCreate = true
 				break
 			}
 

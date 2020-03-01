@@ -119,6 +119,10 @@ func AuthFindOrCreate(filter types.AuthFilter)  (data types.Auth, err error) {
 	return 
 }
 
+func AuthUpdateOrCreate(filter types.AuthFilter)  (data types.Auth, err error) {
+	return 
+}
+
 `
 var usualTemplateAuthLogic = template{
 	Path:    "./logic/auth.go",

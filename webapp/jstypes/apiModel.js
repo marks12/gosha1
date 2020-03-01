@@ -60,8 +60,8 @@ export function Entity() {
     this.ModelFields = [];
     this.Fields = [];
     this.IsFilter = false;
-    this.HttpMethods = {};
     this.Structures = {};
+    this.HttpMethods = {};
 
     return this;
 }
@@ -77,6 +77,7 @@ export function EntityFilter() {
     this.IsUpdate = false;
     this.IsDelete = false;
     this.IsFindOrCreate = false;
+    this.IsUpdateOrCreate = false;
     this.Search = "";
     this.SearchBy = [];
     this.Order = [];

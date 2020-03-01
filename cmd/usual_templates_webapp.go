@@ -47,8 +47,8 @@ var usualTemplateWebappErrors = template{
 var usualTemplateWebappEntity = template{
     Path:    "./webapp/{entity-name}.go",
     Content: assignMsName(GetUsualTemplateWebAppContent(
-        Crud{true, true, true, true, true, true},
-        Crud{true, true, true, true, true, true},
+        Crud{true, true, true, true, true, true, true},
+        Crud{true, true, true, true, true, true, true},
     )),
 }
 
@@ -76,6 +76,8 @@ import (
     ` + getWebappDelete(methodsCrud, authCrud) + `
 
     ` + getWebappFindOrCreate(methodsCrud, authCrud) + `
+
+    ` + getWebappUpdateOrCreate(methodsCrud, authCrud) + `
 
 `
     return usualWebappEntity
@@ -396,6 +398,42 @@ func {entity-name}FindOrCreate(w http.ResponseWriter, httpRequest *http.Request)
     return
 }
 
+func getWebappUpdateOrCreate(methodCrud Crud, authCrud Crud) (c string) {
+
+    if methodCrud.IsUpdateOrCreate {
+        c = `
+
+func {entity-name}UpdateOrCreate(w http.ResponseWriter, httpRequest *http.Request) {
+
+    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeDelete)
+
+    ` + getAuth("UpdateOrCreate", authCrud) + `
+
+    if !requestDto.IsValid() {
+        ErrResponse(w, requestDto.GetValidationErrors(), http.StatusBadRequest)
+        return
+    }
+
+    // Получаем список
+    data, err := logic.{entity-name}UpdateOrCreate(requestDto)
+
+    // Создаём структуру ответа
+    if err != nil {
+        ErrResponse(w, err.Error(), http.StatusBadRequest)
+        return
+    }
+
+    ValidResponse(w, mdl.ResponseUpdateOrCreate{
+        data,
+    })
+
+    return
+}`
+    }
+
+    return
+}
+
 func getAuth(method string, crud Crud) (auth string) {
 
     switch method {
@@ -432,6 +470,12 @@ func getAuth(method string, crud Crud) (auth string) {
 
         case "FindOrCreate":
             if ! crud.IsFindOrCreate {
+                return
+            }
+            break
+
+        case "UpdateOrCreate":
+            if ! crud.IsUpdateOrCreate {
                 return
             }
             break
