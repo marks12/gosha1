@@ -187,8 +187,9 @@ func getLogicContent() (c string) {
 	//	crudParams.IsUpdate = strings.Contains(crudArgs.StringResult, "u")
 	//	crudParams.IsDelete = strings.Contains(crudArgs.StringResult, "d")
 	//	crudParams.IsFindOrCreate = strings.Contains(crudArgs.StringResult, "a")
+	//	crudParams.IsUpdateOrCreate = strings.Contains(crudArgs.StringResult, "x")
 	//} else {
-		crudParams = Crud{true, true, true, true, true, true}
+		crudParams = Crud{true, true, true, true, true, true, true}
 	//}
 
 	c = GetUsualTemplateLogicContent(crudParams, WoDbModel.BoolResult)
@@ -222,7 +223,7 @@ func getWebAppContent() (webappContent string) {
 	webappContent = usualTemplateWebappEntity.Content
 
 	AuthcrudArgs, _ := GetOsArgument("check-auth")
-	authParams := Crud{true, true, true, true, true, true}
+	authParams := Crud{true, true, true, true, true, true, true}
 
 	if len(AuthcrudArgs.StringResult) > 0 {
 
@@ -232,13 +233,14 @@ func getWebAppContent() (webappContent string) {
 		authParams.IsUpdate = strings.Contains(AuthcrudArgs.StringResult, "u")
 		authParams.IsDelete = strings.Contains(AuthcrudArgs.StringResult, "d")
 		authParams.IsFindOrCreate = strings.Contains(AuthcrudArgs.StringResult, "a")
+		authParams.IsUpdateOrCreate = strings.Contains(AuthcrudArgs.StringResult, "x")
 
 	}
 
 	// DISABLED crudParams. Just comment in ROUTES for routes not in logic
 
 	//methodCrudArgs, _ := GetOsArgument("crud")
-	methodCrudParams := Crud{true, true, true, true, true, true}
+	methodCrudParams := Crud{true, true, true, true, true, true, true}
 	//
 	//if len(methodCrudArgs.StringResult) > 0 {
 	//
@@ -248,6 +250,7 @@ func getWebAppContent() (webappContent string) {
 	//	methodCrudParams.IsUpdate = strings.Contains(methodCrudArgs.StringResult, "u")
 	//	methodCrudParams.IsDelete = strings.Contains(methodCrudArgs.StringResult, "d")
 	//	methodCrudParams.IsFindOrCreate = strings.Contains(methodCrudArgs.StringResult, "a")
+	//	methodCrudParams.IsUpdateOrCreate = strings.Contains(methodCrudArgs.StringResult, "x")
 	//
 	//}
 
@@ -268,7 +271,7 @@ func getWebAppTestContent() (webappTestContent string) {
 	webappTestContent = usualTemplateWebappTestEntity.Content
 
 	//methodCrudArgs, _ := GetOsArgument("crud")
-	methodCrudParams := Crud{true, true, true, true, true, true}
+	methodCrudParams := Crud{true, true, true, true, true, true, true}
 	//
 	//if len(methodCrudArgs.StringResult) > 0 {
 	//
@@ -278,6 +281,7 @@ func getWebAppTestContent() (webappTestContent string) {
 	//	methodCrudParams.IsUpdate = strings.Contains(methodCrudArgs.StringResult, "u")
 	//	methodCrudParams.IsDelete = strings.Contains(methodCrudArgs.StringResult, "d")
 	//	methodCrudParams.IsFindOrCreate = strings.Contains(methodCrudArgs.StringResult, "a")
+	//	methodCrudParams.IsUpdateOrCreate = strings.Contains(methodCrudArgs.StringResult, "x")
 	//
 	//}
 
@@ -310,6 +314,7 @@ func getRouteContent() string {
 		IsUpdate:       true,
 		IsDelete:       true,
 		IsFindOrCreate: true,
+		IsUpdateOrCreate: true,
 	}
 
 	crudArgs, _ := GetOsArgument("crud")
@@ -322,6 +327,7 @@ func getRouteContent() string {
 		crudParams.IsUpdate = strings.Contains(crudArgs.StringResult, "u")
 		crudParams.IsDelete = strings.Contains(crudArgs.StringResult, "d")
 		crudParams.IsFindOrCreate = strings.Contains(crudArgs.StringResult, "a")
+		crudParams.IsUpdateOrCreate = strings.Contains(crudArgs.StringResult, "x")
 
 	}
 

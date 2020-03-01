@@ -135,6 +135,7 @@ func addUser() {
 			Update:       true,
 			Delete:       true,
 			FindOrCreate: false,
+			UpdateOrCreate: false,
 		})
 		core.Db.Model(dbmodels.RoleResource{}).Save(&roleResource)
 	}
@@ -166,6 +167,7 @@ func AddResource(adminRoleId int) {
 				Update:       true,
 				Delete:       true,
 				FindOrCreate: true,
+				UpdateOrCreate: true,
 			})
 			core.Db.Model(dbmodels.RoleResource{}).Save(&roleResource)
 		}

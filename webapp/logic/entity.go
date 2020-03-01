@@ -158,6 +158,7 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
         result[k].HttpMethods.IsUpdate = modelsMethods[model.Name].IsUpdate
         result[k].HttpMethods.IsDelete = modelsMethods[model.Name].IsDelete
         result[k].HttpMethods.IsFindOrCreate = modelsMethods[model.Name].IsFindOrCreate
+        result[k].HttpMethods.IsUpdateOrCreate = modelsMethods[model.Name].IsUpdateOrCreate
     }
 
     return
@@ -203,14 +204,15 @@ func EntityCreate(filter types.EntityFilter) (data types.Entity, err error) {
 
     e := filter.GetEntityModel()
 
-    fcruda := ""
+    fcrudax := ""
 
-    if e.HttpMethods.IsFind { fcruda += "f"}
-    if e.HttpMethods.IsCreate { fcruda += "c"}
-    if e.HttpMethods.IsRead { fcruda += "r"}
-    if e.HttpMethods.IsUpdate { fcruda += "u"}
-    if e.HttpMethods.IsDelete { fcruda += "d"}
-    if e.HttpMethods.IsFindOrCreate { fcruda += "a"}
+    if e.HttpMethods.IsFind { fcrudax += "f"}
+    if e.HttpMethods.IsCreate { fcrudax += "c"}
+    if e.HttpMethods.IsRead { fcrudax += "r"}
+    if e.HttpMethods.IsUpdate { fcrudax += "u"}
+    if e.HttpMethods.IsDelete { fcrudax += "d"}
+    if e.HttpMethods.IsFindOrCreate { fcrudax += "a"}
+    if e.HttpMethods.IsUpdateOrCreate { fcrudax += "x"}
 
     structuresCmd := ""
 
@@ -218,7 +220,7 @@ func EntityCreate(filter types.EntityFilter) (data types.Entity, err error) {
         structuresCmd = structuresCmd + " --without-db-models=true"
     }
 
-    args := []string{"", "exit", "setAppType", "--type=Usual", "usual:entity:add", "--entity=" + e.Name, "--crud="+fcruda, "--check-auth=fcruda", structuresCmd}
+    args := []string{"", "exit", "setAppType", "--type=Usual", "usual:entity:add", "--entity=" + e.Name, "--crud="+fcrudax, "--check-auth=fcrudax", structuresCmd}
 
     os.Args = args
     cmd.RunShell()

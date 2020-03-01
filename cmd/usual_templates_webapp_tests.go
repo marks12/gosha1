@@ -3,7 +3,7 @@ package cmd
 var usualTemplateWebappTestEntity = template{
     Path:    "./webapp/{entity-name}.go",
     Content: assignMsName(GetUsualTemplateWebAppTestContent(
-        Crud{true, true, true, true, true, true},
+        Crud{true, true, true, true, true, true, true},
     )),
 }
 
@@ -64,6 +64,7 @@ var testCases{entity-name} = []tests.WebTest{
     ` + getWebappTestUpdate(methodsCrud) + `
     ` + getWebappTestDelete(methodsCrud) + `
     ` + getWebappTestFindOrCreate(methodsCrud) + `
+    ` + getWebappTestUpdateOrCreate(methodsCrud) + `
 }
 
 func get{entity-name}ResponseModel(tt tests.WebTest, response *httptest.ResponseRecorder) (types.{entity-name}, error) {
@@ -367,6 +368,16 @@ func getWebappTestDelete(methodCrud Crud) (c string) {
 func getWebappTestFindOrCreate(methodCrud Crud) (c string) {
 
     if methodCrud.IsFindOrCreate {
+        c = `
+`
+    }
+
+    return
+}
+
+func getWebappTestUpdateOrCreate(methodCrud Crud) (c string) {
+
+    if methodCrud.IsUpdateOrCreate {
         c = `
 `
     }

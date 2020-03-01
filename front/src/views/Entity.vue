@@ -57,7 +57,10 @@
                                     <VSet>
                                         <VCheckbox v-model="currentEntityItem.HttpMethods.IsUpdate" :disabled="currentEntityItem.Id > 0"><VText>Update</VText></VCheckbox>
                                         <VCheckbox v-model="currentEntityItem.HttpMethods.IsDelete" :disabled="currentEntityItem.Id > 0"><VText>Delete</VText></VCheckbox>
+                                    </VSet>
+                                    <VSet>
                                         <VCheckbox v-model="currentEntityItem.HttpMethods.IsFindOrCreate" :disabled="currentEntityItem.Id > 0"><VText>FindOrCreate</VText></VCheckbox>
+                                        <VCheckbox v-model="currentEntityItem.HttpMethods.IsUpdateOrCreate" :disabled="currentEntityItem.Id > 0"><VText>IsUpdateOrCreate</VText></VCheckbox>
                                     </VSet>
                                 </template>
 
@@ -230,6 +233,7 @@
                 ne.IsUpdate = true;
                 ne.IsDelete = true;
                 ne.IsFindOrCreate = false;
+                ne.IsUpdateOrCreate = false;
 
                 ne.HttpMethods =  {
                     IsFind: true,
@@ -238,6 +242,7 @@
                     IsUpdate: true,
                     IsDelete: true,
                     IsFindOrCreate: true,
+                    IsUpdateOrCreate: true,
                 };
 
                 ne.Structures = {
@@ -336,6 +341,7 @@
                         IsUpdate: this.currentEntityItem.HttpMethods.IsUpdate || false,
                         IsDelete: this.currentEntityItem.HttpMethods.IsDelete || false,
                         IsFindOrCreate: this.currentEntityItem.HttpMethods.IsFindOrCreate || false,
+                        IsUpdateOrCreate: this.currentEntityItem.HttpMethods.IsUpdateOrCreate || false,
                     };
 
                     this.createEntityItemSubmit().then(()=>{

@@ -13,6 +13,7 @@
                 <VBadge :color="entityItem.HttpMethods.IsUpdate ? 'action' : 'weak'">U</VBadge>
                 <VBadge :color="entityItem.HttpMethods.IsDelete ? 'action' : 'weak'">D</VBadge>
                 <VBadge :color="entityItem.HttpMethods.IsFindOrCreate ? 'action' : 'weak'" title="Find or create">FoC</VBadge>
+                <VBadge :color="entityItem.HttpMethods.IsUpdateOrCreate ? 'action' : 'weak'" title="Update or create">UoC</VBadge>
             </VSet>
             <VSet vertical hasNoIndent>
                 <template v-for="(field, i) in entityItem.Fields">

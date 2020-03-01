@@ -7,6 +7,7 @@ type Crud struct {
 	IsUpdate       bool
 	IsDelete       bool
 	IsFindOrCreate bool
+	IsUpdateOrCreate bool
 }
 
 const usualRouteEntityComment = `[ {Entity} ]`
@@ -26,13 +27,15 @@ const usualRouteEntityMultiDelete = `router.HandleFunc(settings.{Entity}Route+"/
 
 const usualRouteEntityFindOrCreate = `router.HandleFunc(settings.{Entity}Route,         webapp.{Entity}FindOrCreate).Methods("PUT")`
 
+const usualRouteEntityUpdateOrCreate = `router.HandleFunc(settings.{Entity}Route,         webapp.{Entity}UpdateOrCreate).Methods("PATCH")`
+
 const usualRouteEntityGen = `
 
     //router-generator here dont touch this line`
 
 var usualTemplateRouteEntity = template{
 	Path:    "./path_error.txt",
-	Content: GetUsualTemplateRouteEntity(Crud{true, true, true, true, true, true}),
+	Content: GetUsualTemplateRouteEntity(Crud{true, true, true, true, true, true, true}),
 }
 
 func GetUsualTemplateRouteEntity(c Crud) (res string) {
@@ -79,6 +82,12 @@ func GetUsualTemplateRouteEntity(c Crud) (res string) {
 		res += "\n    " + usualRouteEntityFindOrCreate
 	} else {
 		res += "\n    //" + usualRouteEntityFindOrCreate
+	}
+
+	if c.IsUpdateOrCreate {
+		res += "\n    " + usualRouteEntityUpdateOrCreate
+	} else {
+		res += "\n    //" + usualRouteEntityUpdateOrCreate
 	}
 
 	res += usualRouteEntityGen
