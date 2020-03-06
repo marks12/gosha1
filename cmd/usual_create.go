@@ -155,7 +155,10 @@ func usualCreate(c *ishell.Context, email, password string) {
 	CreateFile("./.gitignore", "./\\.idea\n", c)
 
 	//docker
-	CreateFile(usualTemplateDockerCallontent.Path, usualTemplateDockerCallontent.Content, c)
+	CreateFile(usualTemplateDockerPs.Path, usualTemplateDockerPs.Content, c)
+
+	//docker
+	CreateFile(usualTemplateDockerMy.Path, usualTemplateDockerMy.Content, c)
 
 	c.Println(red("New app with usual structure created"))
 }
