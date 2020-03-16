@@ -28,6 +28,10 @@
                                 <VText>Re-Password</VText>
                                 <VInput v-model="adminRePass" type="password"></VInput>
                             </VSet>
+                            <VSet>
+                                <VText>Database</VText>
+                                <VRadioGroup :items="segmentControls" v-model="appDb"/>
+                            </VSet>
                         </VSet>
                         <VSet width="fit">
                             <VText color="attention">{{ error }}</VText>
@@ -53,6 +57,7 @@
     import VSet from "swtui/src/components/VSet";
     import VText from "swtui/src/components/VText";
     import VInput from "swtui/src/components/VInput";
+    import VRadioGroup from "swtui/src/components/VRadioGroup";
 
     export default {
         name: 'home',
@@ -63,10 +68,21 @@
                 adminMail: "",
                 adminPass: "",
                 adminRePass: "",
+                appDb: "postgres",
                 error: "",
+                segmentControls: [
+                    {
+                        label: 'MySql',
+                        value: "mysql"
+                    },
+                    {
+                        label: 'Postgres',
+                        value: "postgres"
+                    }
+                ],
             }
         },
-        components: {VText, VSet, VHead, WorkSpace, VButton, VInput},
+        components: {VText, VSet, VHead, WorkSpace, VButton, VInput, VRadioGroup},
         created: function () {
             this.loadCurrentAppData();
         },
@@ -86,6 +102,7 @@
                 let app = new CurrentApp();
                 app.AdminEmail = this.adminMail;
                 app.AdminPassword = this.adminPass;
+                app.DbType = this.appDb;
 
                 this.createCurrentApp({
                     data: app
