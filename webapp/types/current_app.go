@@ -9,6 +9,7 @@ type CurrentApp struct {
     IsValidStructure bool
     AdminEmail string
 	AdminPassword string
+	DbType string
 	//CurrentApp remove this line for disable generator functionality
 }
 
