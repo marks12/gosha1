@@ -19,6 +19,7 @@ func msInit(c *ishell.Context) {
     CreateFile(msTemplateInsertDataToDb.Path, msTemplateInsertDataToDb.Content, c)
 
     //core
+    msTemplateCoreDb := getTemplateCoreDb(DatabaseType{DbTypeName:dbTypeMysql, IsMysql:true, IsPostgres:false})
     CreateFile(msTemplateCoreDb.Path, msTemplateCoreDb.Content, c)
 
     //settings

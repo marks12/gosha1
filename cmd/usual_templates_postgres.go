@@ -23,7 +23,6 @@ var usualDockerMy =
             assignPass(
                 usualDockerCallMy, dbPass))
 
-
 var usualTemplateDockerPs = template{
     Path:    "./psql-docker.sh",
     Content: usualDockerPs,
