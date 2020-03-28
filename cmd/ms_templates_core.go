@@ -1,5 +1,18 @@
 package cmd
 
+const postgresConnectionString = `const DbConnectString =
+    "host='" +          settings.DbHost +
+    "' port='" +        settings.DbPort +
+    "' user='" +	    settings.DbUser +
+    "' password='" +    settings.DbPass +
+    "' dbname='" +    	settings.DbName +
+    "' sslmode='disable'"
+`
+
+const mysqlConnectionString =  "const DbConnectString = settings.DbUser + `:` + settings.DbPass + `@tcp(` + settings.DbHost + `:` + settings.DbPort + `)/` + settings.DbName + `?parseTime=true`"
+
+const defaultConnectionString = "const DbConnectString = ``"
+
 const msCoreDb = `package core
 
 import (
@@ -8,13 +21,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-const DbConnectString =
-    "host='" +          settings.DbHost +
-    "' port='" +        settings.DbPort +
-    "' user='" +	    settings.DbUser +
-    "' password='" +    settings.DbPass +
-    "' dbname='" +    	settings.DbName +
-    "' sslmode='disable'"
+`+  defaultConnectionString + `
 
 var Db, DbErr = gorm.Open("postgres", DbConnectString)
 
@@ -27,7 +34,16 @@ func DisableSqlLog() {
 }
 `
 
-var msTemplateCoreDb = template{
-    Path:    "./core/db.go",
-    Content: assignMsName(msCoreDb),
+func getTemplateCoreDb(dbtype DatabaseType) template {
+
+    conString := postgresConnectionString
+
+    if dbtype.IsMysql {
+        conString = mysqlConnectionString
+    }
+
+    return template{
+        Path:    "./core/db.go",
+        Content: assignVar(assignVar(assignMsName(msCoreDb), "postgres", dbtype.DbTypeName), defaultConnectionString, conString),
+    }
 }
