@@ -15,15 +15,19 @@ func msInit(c *ishell.Context) {
 
     msCreateMain(c)
 
+    dbtype := DatabaseType{DbTypeName:dbTypeMysql, IsMysql:true, IsPostgres:false}
+
     //bootstrap
     CreateFile(msTemplateInsertDataToDb.Path, msTemplateInsertDataToDb.Content, c)
 
     //core
-    msTemplateCoreDb := getTemplateCoreDb(DatabaseType{DbTypeName:dbTypeMysql, IsMysql:true, IsPostgres:false})
+    msTemplateCoreDb := getTemplateCoreDb(dbtype)
     CreateFile(msTemplateCoreDb.Path, msTemplateCoreDb.Content, c)
 
     //settings
     CreateFile(msTemplateSettingsApp.Path, msTemplateSettingsApp.Content, c)
+
+    msTemplateSettingsDb := getMsTemplateSettingsDb(dbtype)
     CreateFile(msTemplateSettingsDb.Path, msTemplateSettingsDb.Content, c)
 
     //dbmodels

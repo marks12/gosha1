@@ -49,13 +49,25 @@ const GoogleTrackingId = "G-SOMETRACKINGID"
 
 `
 
+const DbHostpostgres = "127.0.0.1"
+
+const dbHostMySql = "172.17.0.2"
+
+const DbUserpostgres = "{ms-name}"
+
+const DbUserMySql = "root"
+
+const DbPortpostgres = "35432"
+
+const DbPortMySql = "3306"
+
 const msSettingsDb = `package settings
 
-const DbHost = "127.0.0.1"
+const DbHost = "dbhost"
 
-const DbPort = "35432"
+const DbPort = "dbport"
 
-const DbUser = "{ms-name}"
+const DbUser = "dbuser"
 
 const DbPass = "{new-pass}"
 
@@ -97,11 +109,6 @@ var msTemplateSettingsGoogleContent =
                 assignPass(
                     msSettingsGoogle, dbPass)))
 
-var msTemplateSettingsDbContent =
-        assignMsName(
-            assignPass(
-                msSettingsDb, dbPass))
-
 var msTemplateSettingsWssContent = assignMsName(msSettingsWss)
 
 var msTemplateSettingsApp = template{
@@ -114,9 +121,26 @@ var msTemplateSettingsGoogle = template{
     Content: msTemplateSettingsGoogleContent,
 }
 
-var msTemplateSettingsDb = template{
-    Path:    "./settings/db.go",
-    Content: msTemplateSettingsDbContent,
+func getMsTemplateSettingsDb(dbtype DatabaseType) template {
+
+    content :=  assignPass(msSettingsDb, dbPass)
+
+    if dbtype.IsMysql {
+        content = assignVar(content, "dbhost", dbHostMySql)
+        content = assignVar(content, "dbport", DbPortMySql)
+        content = assignVar(content, "dbuser", DbUserMySql)
+    } else if dbtype.IsPostgres {
+        content = assignVar(content, "dbhost", DbHostpostgres)
+        content = assignVar(content, "dbport", DbPortpostgres)
+        content = assignVar(content, "dbuser", DbUserpostgres)
+    }
+
+    content = assignMsName(content)
+
+    return template{
+        Path:    "./settings/db.go",
+        Content: content,
+    }
 }
 
 var msTemplateSettingsWss = template{
