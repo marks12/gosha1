@@ -165,6 +165,7 @@ func usualCreate(c *ishell.Context, email, password string, databaseType Databas
 	CreateFile(usualTemplateServicesTicket.Path, usualTemplateServicesTicket.Content, c)
 
 
+	msTemplateSettingsDb := getMsTemplateSettingsDb(databaseType)
 	//settings
 	CreateFile(msTemplateSettingsApp.Path, msTemplateSettingsApp.Content, c)
 	CreateFile(msTemplateSettingsGoogle.Path, msTemplateSettingsGoogle.Content, c)
