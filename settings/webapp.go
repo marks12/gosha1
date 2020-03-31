@@ -45,7 +45,6 @@ var SupportedFilterDataTypes = []string{
 var UsualDefaultStructure = []string{
 	"logic",
 	"mdl",
-	"ms",
 	"router",
 	"services",
 	"settings",
