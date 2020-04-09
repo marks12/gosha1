@@ -7,12 +7,19 @@ import currentApp from "../../webapp/jstypes/store/CurrentApp";
 
 Vue.use(Vuex);
 
-const store = {
+const gosha = {
+    namespaced: true,
     modules: {
         projectInfo,
         entity,
         fieldType,
         currentApp
+    },
+};
+
+const store = {
+    modules: {
+        gosha,
     },
     state: {
         version: "1.0.0", // a simple property

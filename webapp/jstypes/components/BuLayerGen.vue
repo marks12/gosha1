@@ -212,7 +212,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('gosha', {
                 buLayerList: 'getListBuLayer'
             }),
             isPanelCreate() {
@@ -256,14 +256,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('gosha', [
                 'findBuLayer',
                 'updateBuLayer',
                 'deleteBuLayer',
                 'createBuLayer',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('gosha', [
                 'addBuLayerItemToList',
                 'deleteBuLayerFromList',
                 'updateBuLayerById',
