@@ -87,7 +87,7 @@
             this.loadCurrentAppData();
         },
         methods: {
-            ...mapActions([
+            ...mapActions('gosha', [
                 "loadCurrentApp",
                 "createCurrentApp"
             ]),
@@ -134,7 +134,7 @@
             },
         },
         computed: {
-            ...mapGetters({
+            ...mapGetters('gosha', {
                 currentApp: "getCurrentApp"
             }),
         },

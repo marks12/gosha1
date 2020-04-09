@@ -8,7 +8,8 @@ let fieldData = function () {
             type: '',
             show: false,
             create: 'create',
-            edit: 'edit'
+            edit: 'edit',
+            request: 'request'
         },
         panelHeaderCreate: 'Создать',
         panelHeaderEdit: 'Изменить',

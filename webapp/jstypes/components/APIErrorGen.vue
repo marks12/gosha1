@@ -212,7 +212,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('gosha', {
                 aPIErrorList: 'getListAPIError'
             }),
             isPanelCreate() {
@@ -256,14 +256,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('gosha', [
                 'findAPIError',
                 'updateAPIError',
                 'deleteAPIError',
                 'createAPIError',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('gosha', [
                 'addAPIErrorItemToList',
                 'deleteAPIErrorFromList',
                 'updateAPIErrorById',

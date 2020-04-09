@@ -25,10 +25,10 @@
     export default {
         components: {VHead, VButton, MainMenu, TheLayout},
         methods: {
-            ...mapGetters([
+            ...mapGetters('gosha', [
                 'getListProjectInfo',
             ]),
-            ...mapActions([
+            ...mapActions('gosha', [
                 'findProjectInfo',
             ])
         },
