@@ -212,7 +212,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('gosha', {
                 currentAppList: 'getListCurrentApp'
             }),
             isPanelCreate() {
@@ -256,14 +256,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('gosha', [
                 'findCurrentApp',
                 'updateCurrentApp',
                 'deleteCurrentApp',
                 'createCurrentApp',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('gosha', [
                 'addCurrentAppItemToList',
                 'deleteCurrentAppFromList',
                 'updateCurrentAppById',

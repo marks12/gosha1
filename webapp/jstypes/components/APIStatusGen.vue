@@ -212,7 +212,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('gosha', {
                 aPIStatusList: 'getListAPIStatus'
             }),
             isPanelCreate() {
@@ -256,14 +256,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('gosha', [
                 'findAPIStatus',
                 'updateAPIStatus',
                 'deleteAPIStatus',
                 'createAPIStatus',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('gosha', [
                 'addAPIStatusItemToList',
                 'deleteAPIStatusFromList',
                 'updateAPIStatusById',

@@ -212,7 +212,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('gosha', {
                 entityFieldList: 'getListEntityField'
             }),
             isPanelCreate() {
@@ -256,14 +256,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('gosha', [
                 'findEntityField',
                 'updateEntityField',
                 'deleteEntityField',
                 'createEntityField',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('gosha', [
                 'addEntityFieldItemToList',
                 'deleteEntityFieldFromList',
                 'updateEntityFieldById',

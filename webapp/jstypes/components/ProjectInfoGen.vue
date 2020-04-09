@@ -212,7 +212,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('gosha', {
                 projectInfoList: 'getListProjectInfo'
             }),
             isPanelCreate() {
@@ -256,14 +256,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('gosha', [
                 'findProjectInfo',
                 'updateProjectInfo',
                 'deleteProjectInfo',
                 'createProjectInfo',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('gosha', [
                 'addProjectInfoItemToList',
                 'deleteProjectInfoFromList',
                 'updateProjectInfoById',
