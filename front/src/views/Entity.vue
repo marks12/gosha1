@@ -40,7 +40,11 @@
                     </VSet>
 
                     <template slot="content">
-                        <VSet vertical @submit.prevent="saveChangesSubmit">
+
+                        <EntityRequest v-if="panel.type === panel.request" :entity="currentEntityItem"></EntityRequest>
+
+                        <template v-else>
+                            <VSet vertical @submit.prevent="saveChangesSubmit">
 
                             <VSet vertical indent-size="XS">
                                 <VSign v-if="currentEntityItem.IsFilter">Filter name</VSign>
@@ -98,6 +102,8 @@
                             </VSet>
 
                         </VSet>
+                        </template>
+
                     </template>
 
                     <template #footer>
@@ -176,10 +182,11 @@
     import EntityItem from "../components/EntityItem";
     import { mapGetters, mapMutations, mapActions } from 'vuex';
     import {Entity, EntityField, EntityFilter, FieldTypeFilter} from "../../../webapp/jstypes/apiModel";
+    import EntityRequest from "../components/EntityRequest";
 
     export default {
         name: "Entity",
-        components: {EntityItem, VSpoiler, VBadge, EntityGen, VGroup, VSelect, VSign},
+        components: {EntityRequest, EntityItem, VSpoiler, VBadge, EntityGen, VGroup, VSelect, VSign},
         mixins: [
             EntityGen,
         ],
@@ -198,7 +205,7 @@
         },
         created: function () {
 
-            this.panel.request = "request";
+            // this.panel.request = "request";
 
             this.fieldTypeFilter.CurrentPage = 1;
             this.fieldTypeFilter.PerPage = 100;
@@ -215,11 +222,11 @@
 
         },
         methods: {
-            ...mapActions([
+            ...mapActions('gosha', [
                 "findFieldType",
                 "createEntity",
             ]),
-            ...mapGetters([
+            ...mapGetters('gosha', [
                 "getListFieldType",
                 "getEntityById",
             ]),

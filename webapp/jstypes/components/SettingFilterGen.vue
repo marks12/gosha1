@@ -212,7 +212,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('gosha', {
                 settingFilterList: 'getListSettingFilter'
             }),
             isPanelCreate() {
@@ -256,14 +256,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('gosha', [
                 'findSettingFilter',
                 'updateSettingFilter',
                 'deleteSettingFilter',
                 'createSettingFilter',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('gosha', [
                 'addSettingFilterItemToList',
                 'deleteSettingFilterFromList',
                 'updateSettingFilterById',

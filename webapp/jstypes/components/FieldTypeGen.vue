@@ -212,7 +212,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('gosha', {
                 fieldTypeList: 'getListFieldType'
             }),
             isPanelCreate() {
@@ -256,14 +256,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('gosha', [
                 'findFieldType',
                 'updateFieldType',
                 'deleteFieldType',
                 'createFieldType',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('gosha', [
                 'addFieldTypeItemToList',
                 'deleteFieldTypeFromList',
                 'updateFieldTypeById',

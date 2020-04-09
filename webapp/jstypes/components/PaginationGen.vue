@@ -212,7 +212,7 @@
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters('gosha', {
                 paginationList: 'getListPagination'
             }),
             isPanelCreate() {
@@ -256,14 +256,14 @@
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions('gosha', [
                 'findPagination',
                 'updatePagination',
                 'deletePagination',
                 'createPagination',
             ]),
 
-            ...mapMutations([
+            ...mapMutations('gosha', [
                 'addPaginationItemToList',
                 'deletePaginationFromList',
                 'updatePaginationById',
