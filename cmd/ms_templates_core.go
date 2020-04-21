@@ -44,6 +44,6 @@ func getTemplateCoreDb(dbtype DatabaseType) template {
 
     return template{
         Path:    "./core/db.go",
-        Content: assignVar(assignVar(assignMsName(msCoreDb), "postgres", dbtype.DbTypeName), defaultConnectionString, conString),
+        Content: AssignVar(AssignVar(assignMsName(msCoreDb), "postgres", dbtype.DbTypeName), defaultConnectionString, conString),
     }
 }

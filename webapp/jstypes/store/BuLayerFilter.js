@@ -135,6 +135,12 @@ const buLayerFilter = {
         getListBuLayerFilter: (state) => {
             return state.BuLayerFilter__List;
         },
+        getRoute__BuLayerFilter: state => action => {
+            return state.BuLayerFilter__Routes[action];
+        },
+        getRoutes__BuLayerFilter: state => {
+            return state.BuLayerFilter__Routes;
+        },
     },
     mutations: {
         setBuLayerFilter(state, data) {
@@ -187,6 +193,17 @@ const buLayerFilter = {
     state: {
         BuLayerFilter: new BuLayerFilter(),
         BuLayerFilter__List: [],
+        BuLayerFilter__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+        },
     },
 };
 

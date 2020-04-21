@@ -135,6 +135,12 @@ const field = {
         getListField: (state) => {
             return state.Field__List;
         },
+        getRoute__Field: state => action => {
+            return state.Field__Routes[action];
+        },
+        getRoutes__Field: state => {
+            return state.Field__Routes;
+        },
     },
     mutations: {
         setField(state, data) {
@@ -187,6 +193,17 @@ const field = {
     state: {
         Field: new Field(),
         Field__List: [],
+        Field__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+        },
     },
 };
 

@@ -22,7 +22,7 @@ func msrpcEntityAdd(c *ishell.Context) {
 
     camelCase := strings.Title(entity)
     snakeCase := getLowerCase(entity)
-    FirstLowerCase := getFirstLowerCase(entity)
+    FirstLowerCase := GetFirstLowerCase(entity)
 
     sourceFile := "./api/new_entity.go"
     destinationFile1 := "./api/" + snakeCase + ".go"

@@ -25,6 +25,7 @@ type Entity struct {
 
 	Structures cmd.Structures
 	HttpMethods cmd.HttpMethods
+	HttpRoutes cmd.HttpRoutes
 	//Entity remove this line for disable generator functionality
 }
 

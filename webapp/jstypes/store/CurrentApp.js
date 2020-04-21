@@ -135,6 +135,12 @@ const currentApp = {
         getListCurrentApp: (state) => {
             return state.CurrentApp__List;
         },
+        getRoute__CurrentApp: state => action => {
+            return state.CurrentApp__Routes[action];
+        },
+        getRoutes__CurrentApp: state => {
+            return state.CurrentApp__Routes;
+        },
     },
     mutations: {
         setCurrentApp(state, data) {
@@ -187,6 +193,17 @@ const currentApp = {
     state: {
         CurrentApp: new CurrentApp(),
         CurrentApp__List: [],
+        CurrentApp__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+        },
     },
 };
 

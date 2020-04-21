@@ -126,13 +126,13 @@ func getMsTemplateSettingsDb(dbtype DatabaseType) template {
     content :=  assignPass(msSettingsDb, dbPass)
 
     if dbtype.IsMysql {
-        content = assignVar(content, "dbhost", dbHostMySql)
-        content = assignVar(content, "dbport", DbPortMySql)
-        content = assignVar(content, "dbuser", DbUserMySql)
+        content = AssignVar(content, "dbhost", dbHostMySql)
+        content = AssignVar(content, "dbport", DbPortMySql)
+        content = AssignVar(content, "dbuser", DbUserMySql)
     } else if dbtype.IsPostgres {
-        content = assignVar(content, "dbhost", DbHostpostgres)
-        content = assignVar(content, "dbport", DbPortpostgres)
-        content = assignVar(content, "dbuser", DbUserpostgres)
+        content = AssignVar(content, "dbhost", DbHostpostgres)
+        content = AssignVar(content, "dbport", DbPortpostgres)
+        content = AssignVar(content, "dbuser", DbUserpostgres)
     }
 
     content = assignMsName(content)

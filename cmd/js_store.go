@@ -1,19 +1,31 @@
 package cmd
 
+const FindUrl = "/api/v1/{entity}"
+const ReadUrl = "/api/v1/{entity}/" // + id
+const CreateUrl = "/api/v1/{entity}"
+const MultiCreateUrl = "/api/v1/{entity}/list"
+const UpdateUrl = "/api/v1/{entity}/" // + id
+const MultiUpdateUrl = "/api/v1/{entity}/list"
+const DeleteUrl = "/api/v1/{entity}/" // + id
+const MultiDeleteUrl = "/api/v1/{entity}/list"
+const FindOrCreateUrl = "/api/v1/{entity}"
+const UpdateOrCreateUrl = "/api/v1/{entity}"
+
 const storeTemplate = `
 import {{Entity}} from "../apiModel";
 import api from "../api";
 import {findItemIndex} from "../common";
 
-let findUrl = "/api/v1/{entity}";
-let readUrl = "/api/v1/{entity}/"; // + id
-let createUrl = "/api/v1/{entity}";
-let multiCreateUrl = "/api/v1/{entity}/list";
-let updateUrl = "/api/v1/{entity}/"; // + id
-let multiUpdateUrl = "/api/v1/{entity}/list"; // + id
-let deleteUrl = "/api/v1/{entity}/"; // + id
-let multiDeleteUrl = "/api/v1/{entity}/list"; // + id
-let findOrCreateUrl = "/api/v1/{entity}"; // + id
+let findUrl = "` + FindUrl + `";
+let readUrl = "` + ReadUrl + `"; // + id
+let createUrl = "` + CreateUrl + `";
+let multiCreateUrl = "` + MultiCreateUrl + `";
+let updateUrl = "` + UpdateUrl + `"; // + id
+let multiUpdateUrl = "` + MultiUpdateUrl + `";
+let deleteUrl = "` + DeleteUrl + `"; // + id
+let multiDeleteUrl = "` + MultiDeleteUrl + `";
+let findOrCreateUrl = "` + FindOrCreateUrl + `";
+let findOrCreateUrl = "` + UpdateOrCreateUrl + `";
 
 const {entity} = {
     actions: {
@@ -137,6 +149,12 @@ const {entity} = {
         getList{Entity}: (state) => {
             return state.{Entity}__List;
         },
+        getRoute__{Entity}: state => action => {
+            return state.{Entity}__Routes[action];
+        },
+        getRoutes__{Entity}: state => {
+            return state.{Entity}__Routes;
+        },
     },
     mutations: {
         set{Entity}(state, data) {
@@ -189,6 +207,18 @@ const {entity} = {
     state: {
         {Entity}: new {Entity}(),
         {Entity}__List: [],
+        {Entity}__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+            updateOrCreate: updateOrCreateUrl,
+        },
     },
 };
 
