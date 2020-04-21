@@ -159,6 +159,14 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
         result[k].HttpMethods.IsDelete = modelsMethods[model.Name].IsDelete
         result[k].HttpMethods.IsFindOrCreate = modelsMethods[model.Name].IsFindOrCreate
         result[k].HttpMethods.IsUpdateOrCreate = modelsMethods[model.Name].IsUpdateOrCreate
+
+        result[k].HttpRoutes.Find = cmd.AssignVar(cmd.FindUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
+        result[k].HttpRoutes.Create = cmd.AssignVar(cmd.CreateUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
+        result[k].HttpRoutes.Read = cmd.AssignVar(cmd.ReadUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
+        result[k].HttpRoutes.Update = cmd.AssignVar(cmd.UpdateUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
+        result[k].HttpRoutes.Delete = cmd.AssignVar(cmd.DeleteUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
+        result[k].HttpRoutes.FindOrCreate = cmd.AssignVar(cmd.FindOrCreateUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
+        result[k].HttpRoutes.UpdateOrCreate = cmd.AssignVar(cmd.UpdateOrCreateUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
     }
 
     return

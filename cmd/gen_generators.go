@@ -17,7 +17,7 @@ func genGenerators(c *ishell.Context) {
 
 		CamelCase := strings.Title(modelName)
 		snakeCase := getLowerCase(modelName)
-		firstLowerCase := getFirstLowerCase(modelName)
+		firstLowerCase := GetFirstLowerCase(modelName)
 
 		if strings.Replace(snakeCase + ".go", "_filter.go", "", 1) != snakeCase + ".go" {
 			continue

@@ -135,6 +135,12 @@ const projectInfoFilter = {
         getListProjectInfoFilter: (state) => {
             return state.ProjectInfoFilter__List;
         },
+        getRoute__ProjectInfoFilter: state => action => {
+            return state.ProjectInfoFilter__Routes[action];
+        },
+        getRoutes__ProjectInfoFilter: state => {
+            return state.ProjectInfoFilter__Routes;
+        },
     },
     mutations: {
         setProjectInfoFilter(state, data) {
@@ -187,6 +193,17 @@ const projectInfoFilter = {
     state: {
         ProjectInfoFilter: new ProjectInfoFilter(),
         ProjectInfoFilter__List: [],
+        ProjectInfoFilter__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+        },
     },
 };
 

@@ -228,7 +228,7 @@ func generatePassword(n int) string {
     return string(b)
 }
 
-func assignVar(template string, variable string, value string) string {
+func AssignVar(template string, variable string, value string) string {
     var microserviceNameRegexp = regexp.MustCompile(variable)
     return microserviceNameRegexp.ReplaceAllString(template, value)
 }
@@ -356,7 +356,7 @@ func getLowerCase(ent string) string {
     return strings.ToLower(snake)
 }
 
-func getFirstLowerCase(s string) string {
+func GetFirstLowerCase(s string) string {
 
     if len(s) < 2 {
         return strings.ToLower(s)

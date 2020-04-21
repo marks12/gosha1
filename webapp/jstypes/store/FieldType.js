@@ -135,6 +135,12 @@ const fieldType = {
         getListFieldType: (state) => {
             return state.FieldType__List;
         },
+        getRoute__FieldType: state => action => {
+            return state.FieldType__Routes[action];
+        },
+        getRoutes__FieldType: state => {
+            return state.FieldType__Routes;
+        },
     },
     mutations: {
         setFieldType(state, data) {
@@ -187,6 +193,17 @@ const fieldType = {
     state: {
         FieldType: new FieldType(),
         FieldType__List: [],
+        FieldType__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+        },
     },
 };
 
