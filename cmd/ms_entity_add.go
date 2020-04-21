@@ -20,7 +20,7 @@ func msEntityAdd(c *ishell.Context) {
 
     CamelCase := strings.Title(entity)
     snakeCase := getLowerCase(entity)
-    FirstLowerCase := getFirstLowerCase(entity)
+    FirstLowerCase := GetFirstLowerCase(entity)
 
     sourceFile := "./dbmodels/entity.go"
     destinationFile := "./dbmodels/" + snakeCase + ".go"

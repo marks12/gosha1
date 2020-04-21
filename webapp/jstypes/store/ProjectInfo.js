@@ -135,6 +135,12 @@ const projectInfo = {
         getListProjectInfo: (state) => {
             return state.ProjectInfo__List;
         },
+        getRoute__ProjectInfo: state => action => {
+            return state.ProjectInfo__Routes[action];
+        },
+        getRoutes__ProjectInfo: state => {
+            return state.ProjectInfo__Routes;
+        },
     },
     mutations: {
         setProjectInfo(state, data) {
@@ -187,6 +193,17 @@ const projectInfo = {
     state: {
         ProjectInfo: new ProjectInfo(),
         ProjectInfo__List: [],
+        ProjectInfo__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+        },
     },
 };
 

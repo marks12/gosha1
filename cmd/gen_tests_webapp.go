@@ -19,7 +19,7 @@ func genTestsWebapp(c *ishell.Context) {
 
 		CamelCase := strings.Title(entity)
 		snakeCase := getLowerCase(entity)
-		firstLowerCase := getFirstLowerCase(entity)
+		firstLowerCase := GetFirstLowerCase(entity)
 
 		sourceFile := "./webapp/" + snakeCase + "_test.go"
 		destinationFile := "./webapp/" + snakeCase + "_test.go"

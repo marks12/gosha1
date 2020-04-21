@@ -47,6 +47,16 @@ type HttpMethods struct {
 	IsUpdateOrCreate bool
 }
 
+type HttpRoutes struct {
+	Find string
+	Create string
+	Read string
+	Update string
+	Delete string
+	FindOrCreate string
+	UpdateOrCreate string
+}
+
 type Structures struct {
 	WithoutDbModel bool
 }

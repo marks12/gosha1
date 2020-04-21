@@ -135,6 +135,12 @@ const buLayer = {
         getListBuLayer: (state) => {
             return state.BuLayer__List;
         },
+        getRoute__BuLayer: state => action => {
+            return state.BuLayer__Routes[action];
+        },
+        getRoutes__BuLayer: state => {
+            return state.BuLayer__Routes;
+        },
     },
     mutations: {
         setBuLayer(state, data) {
@@ -187,6 +193,17 @@ const buLayer = {
     state: {
         BuLayer: new BuLayer(),
         BuLayer__List: [],
+        BuLayer__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+        },
     },
 };
 

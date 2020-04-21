@@ -6,6 +6,9 @@ import (
 	"strings"
 )
 
+const replaceCommentLink = `//generator insert entity`
+const replaceCommentObject = `//generator insert entity object`
+
 func usualEntityAdd(c *ishell.Context) {
 
 	yellow := color.New(color.FgYellow).SprintFunc()
@@ -21,7 +24,7 @@ func usualEntityAdd(c *ishell.Context) {
 
 	CamelCase := strings.Title(entity)
 	snakeCase := getLowerCase(entity)
-	firstLowerCase := getFirstLowerCase(entity)
+	firstLowerCase := GetFirstLowerCase(entity)
 
 	sourceFile := "./settings/routes.go"
 	destinationFile := "./settings/routes.go"
@@ -155,9 +158,20 @@ func usualEntityAdd(c *ishell.Context) {
 		sourceFile = "./bootstrap/insert_data_to_db.go"
 		destinationFile = "./bootstrap/insert_data_to_db.go"
 
-		replaceFrom := `//generator insert entity`
-		replaceTo := `//generator insert entity
+		replaceFrom := replaceCommentLink
+		replaceTo := replaceCommentLink + `
           ` + "&dbmodels." + CamelCase + "{},"
+
+		CopyFile(
+			sourceFile,
+			destinationFile,
+			[]string{replaceFrom},
+			[]string{replaceTo},
+			c)
+
+		replaceFrom = replaceCommentObject
+		replaceTo = replaceCommentObject + `
+          ` + "dbmodels." + CamelCase + "{},"
 
 		CopyFile(
 			sourceFile,

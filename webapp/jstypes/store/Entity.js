@@ -135,6 +135,12 @@ const entity = {
         getListEntity: (state) => {
             return state.Entity__List;
         },
+        getRoute__Entity: state => action => {
+            return state.Entity__Routes[action];
+        },
+        getRoutes__Entity: state => {
+            return state.Entity__Routes;
+        },
     },
     mutations: {
         setEntity(state, data) {
@@ -187,6 +193,17 @@ const entity = {
     state: {
         Entity: new Entity(),
         Entity__List: [],
+        Entity__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+        },
     },
 };
 

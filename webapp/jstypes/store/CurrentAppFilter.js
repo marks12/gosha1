@@ -135,6 +135,12 @@ const currentAppFilter = {
         getListCurrentAppFilter: (state) => {
             return state.CurrentAppFilter__List;
         },
+        getRoute__CurrentAppFilter: state => action => {
+            return state.CurrentAppFilter__Routes[action];
+        },
+        getRoutes__CurrentAppFilter: state => {
+            return state.CurrentAppFilter__Routes;
+        },
     },
     mutations: {
         setCurrentAppFilter(state, data) {
@@ -187,6 +193,17 @@ const currentAppFilter = {
     state: {
         CurrentAppFilter: new CurrentAppFilter(),
         CurrentAppFilter__List: [],
+        CurrentAppFilter__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+        },
     },
 };
 

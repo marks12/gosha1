@@ -135,6 +135,12 @@ const aPIStatus = {
         getListAPIStatus: (state) => {
             return state.APIStatus__List;
         },
+        getRoute__APIStatus: state => action => {
+            return state.APIStatus__Routes[action];
+        },
+        getRoutes__APIStatus: state => {
+            return state.APIStatus__Routes;
+        },
     },
     mutations: {
         setAPIStatus(state, data) {
@@ -187,6 +193,17 @@ const aPIStatus = {
     state: {
         APIStatus: new APIStatus(),
         APIStatus__List: [],
+        APIStatus__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+        },
     },
 };
 

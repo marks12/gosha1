@@ -135,6 +135,12 @@ const setting = {
         getListSetting: (state) => {
             return state.Setting__List;
         },
+        getRoute__Setting: state => action => {
+            return state.Setting__Routes[action];
+        },
+        getRoutes__Setting: state => {
+            return state.Setting__Routes;
+        },
     },
     mutations: {
         setSetting(state, data) {
@@ -187,6 +193,17 @@ const setting = {
     state: {
         Setting: new Setting(),
         Setting__List: [],
+        Setting__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+        },
     },
 };
 
