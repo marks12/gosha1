@@ -135,6 +135,12 @@ const fieldTypeFilter = {
         getListFieldTypeFilter: (state) => {
             return state.FieldTypeFilter__List;
         },
+        getRoute__FieldTypeFilter: state => action => {
+            return state.FieldTypeFilter__Routes[action];
+        },
+        getRoutes__FieldTypeFilter: state => {
+            return state.FieldTypeFilter__Routes;
+        },
     },
     mutations: {
         setFieldTypeFilter(state, data) {
@@ -187,6 +193,17 @@ const fieldTypeFilter = {
     state: {
         FieldTypeFilter: new FieldTypeFilter(),
         FieldTypeFilter__List: [],
+        FieldTypeFilter__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+        },
     },
 };
 

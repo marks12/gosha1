@@ -135,6 +135,12 @@ const entityField = {
         getListEntityField: (state) => {
             return state.EntityField__List;
         },
+        getRoute__EntityField: state => action => {
+            return state.EntityField__Routes[action];
+        },
+        getRoutes__EntityField: state => {
+            return state.EntityField__Routes;
+        },
     },
     mutations: {
         setEntityField(state, data) {
@@ -187,6 +193,17 @@ const entityField = {
     state: {
         EntityField: new EntityField(),
         EntityField__List: [],
+        EntityField__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+        },
     },
 };
 

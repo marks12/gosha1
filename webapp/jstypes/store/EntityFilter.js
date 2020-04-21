@@ -135,6 +135,12 @@ const entityFilter = {
         getListEntityFilter: (state) => {
             return state.EntityFilter__List;
         },
+        getRoute__EntityFilter: state => action => {
+            return state.EntityFilter__Routes[action];
+        },
+        getRoutes__EntityFilter: state => {
+            return state.EntityFilter__Routes;
+        },
     },
     mutations: {
         setEntityFilter(state, data) {
@@ -187,6 +193,17 @@ const entityFilter = {
     state: {
         EntityFilter: new EntityFilter(),
         EntityFilter__List: [],
+        EntityFilter__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+        },
     },
 };
 

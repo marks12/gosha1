@@ -22,7 +22,7 @@
                         <EntityItem
                                 :entityItem="entityItem"
                                 :onEdit="editItem"
-                                :onRequest="requestItem"
+                                @onRequest="requestItem"
                         ></EntityItem>
                     </template>
                 </VSet>
@@ -230,6 +230,11 @@
                 "getListFieldType",
                 "getEntityById",
             ]),
+
+            onRequest(item) {
+
+            },
+
             getNewEntity() {
 
                 let ne = new Entity();

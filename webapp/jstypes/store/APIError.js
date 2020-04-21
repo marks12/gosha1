@@ -135,6 +135,12 @@ const aPIError = {
         getListAPIError: (state) => {
             return state.APIError__List;
         },
+        getRoute__APIError: state => action => {
+            return state.APIError__Routes[action];
+        },
+        getRoutes__APIError: state => {
+            return state.APIError__Routes;
+        },
     },
     mutations: {
         setAPIError(state, data) {
@@ -187,6 +193,17 @@ const aPIError = {
     state: {
         APIError: new APIError(),
         APIError__List: [],
+        APIError__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+        },
     },
 };
 

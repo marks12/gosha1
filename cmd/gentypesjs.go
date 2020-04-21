@@ -151,9 +151,9 @@ func getFileContent(repository ModelRepository, typeNames []string, storeNameSpa
 }
 
 func getStoreJsCode(entity string) string {
-	return assignVar(
-		assignVar(storeTemplate, "{Entity}", entity),
-		"{entity}", getFirstLowerCase(entity))
+	return AssignVar(
+		AssignVar(storeTemplate, "{Entity}", entity),
+		"{entity}", GetFirstLowerCase(entity))
 }
 
 func getTemplateJsCode(entity string, storeNameSpace string) string {
@@ -162,21 +162,21 @@ func getTemplateJsCode(entity string, storeNameSpace string) string {
 	template := ""
 
 	if len(storeNameSpace) > 0 {
-		template = assignVar(usualEntityVueComponent, "{namespace}", "'" + storeNameSpace +"', ")
+		template = AssignVar(usualEntityVueComponent, "{namespace}", "'" + storeNameSpace +"', ")
 	} else {
-		template = assignVar(usualEntityVueComponent, "{namespace}", "")
+		template = AssignVar(usualEntityVueComponent, "{namespace}", "")
 	}
 
-	return assignVar(
-		assignVar(template, "{Entity}", entity),
-		"{entity}", getFirstLowerCase(entity))
+	return AssignVar(
+		AssignVar(template, "{Entity}", entity),
+		"{entity}", GetFirstLowerCase(entity))
 }
 
 func getTemplateDataJsCode(entity string) string {
 
-	return assignVar(
-		assignVar(usualEntityVueComponentData, "{Entity}", entity),
-		"{entity}", getFirstLowerCase(entity))
+	return AssignVar(
+		AssignVar(usualEntityVueComponentData, "{Entity}", entity),
+		"{entity}", GetFirstLowerCase(entity))
 }
 
 func getFiledJsVal(s string, typeNames []string) (val string) {

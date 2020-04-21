@@ -60,7 +60,12 @@
         props: {
             entityItem: Object,
             onEdit: Function,
-            onRequest: Function,
+        },
+
+        methods: {
+            onRequest(item) {
+                this.$emit("onRequest", item);
+            },
         },
     }
 </script>

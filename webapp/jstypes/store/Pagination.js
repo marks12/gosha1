@@ -135,6 +135,12 @@ const pagination = {
         getListPagination: (state) => {
             return state.Pagination__List;
         },
+        getRoute__Pagination: state => action => {
+            return state.Pagination__Routes[action];
+        },
+        getRoutes__Pagination: state => {
+            return state.Pagination__Routes;
+        },
     },
     mutations: {
         setPagination(state, data) {
@@ -187,6 +193,17 @@ const pagination = {
     state: {
         Pagination: new Pagination(),
         Pagination__List: [],
+        Pagination__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+        },
     },
 };
 

@@ -135,6 +135,12 @@ const settingFilter = {
         getListSettingFilter: (state) => {
             return state.SettingFilter__List;
         },
+        getRoute__SettingFilter: state => action => {
+            return state.SettingFilter__Routes[action];
+        },
+        getRoutes__SettingFilter: state => {
+            return state.SettingFilter__Routes;
+        },
     },
     mutations: {
         setSettingFilter(state, data) {
@@ -187,6 +193,17 @@ const settingFilter = {
     state: {
         SettingFilter: new SettingFilter(),
         SettingFilter__List: [],
+        SettingFilter__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+        },
     },
 };
 
