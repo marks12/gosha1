@@ -203,11 +203,12 @@ func EntityCreate(filter types.EntityFilter) (data types.Entity, err error) {
 
     argsBak := os.Args
     defer func(){
-        args := []string{"", "exit", "gen:types:js"}
-        os.Args = args
-        cmd.RunShell()
-
-        os.Args = argsBak
+        if filter.IsRegenerateJsTypes {
+            args := []string{"", "exit", "gen:types:js"}
+            os.Args = args
+            cmd.RunShell()
+            os.Args = argsBak
+        }
     }()
 
     e := filter.GetEntityModel()
@@ -228,7 +229,16 @@ func EntityCreate(filter types.EntityFilter) (data types.Entity, err error) {
         structuresCmd = structuresCmd + " --without-db-models=true"
     }
 
-    args := []string{"", "exit", "setAppType", "--type=Usual", "usual:entity:add", "--entity=" + e.Name, "--crud="+fcrudax, "--check-auth=fcrudax", structuresCmd}
+    args := []string{"",
+        "exit",
+        "setAppType",
+        "--type=Usual",
+        "usual:entity:add",
+        "--entity=" + e.Name,
+        "--crud="+fcrudax,
+        "--check-auth=fcrudax",
+        structuresCmd,
+    }
 
     os.Args = args
     cmd.RunShell()
@@ -289,12 +299,12 @@ func EntityUpdate(filter types.EntityFilter) (data types.Entity, err error) {
 
     argsBak := os.Args
     defer func(){
-
-        args := []string{"", "exit", "gen:types:js"}
-        os.Args = args
-        cmd.RunShell()
-
-        os.Args = argsBak
+        if filter.IsRegenerateJsTypes {
+            args := []string{"", "exit", "gen:types:js"}
+            os.Args = args
+            cmd.RunShell()
+            os.Args = argsBak
+        }
     }()
 
     e := filter.GetEntityModel()

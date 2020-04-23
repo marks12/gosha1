@@ -114,6 +114,13 @@
                             </VSet>
 
                             <VSet>
+                                <VCheckbox v-model="IsRegenerateJsTypes">
+                                    <VText>Regenerate jstypes</VText>
+                                </VCheckbox>
+                            </VSet>
+
+
+                            <VSet>
                                 <VButton
                                         @click="saveChangesSubmit"
                                         accent
@@ -201,6 +208,7 @@
                 fieldTypeFilter: new FieldTypeFilter(),
                 errors: [],
                 isLoading: true,
+                IsRegenerateJsTypes: localStorage.getItem("IsRegenerateJsTypes") === 'true',
             };
         },
         created: function () {
@@ -357,7 +365,7 @@
                         IsUpdateOrCreate: this.currentEntityItem.HttpMethods.IsUpdateOrCreate || false,
                     };
 
-                    this.createEntityItemSubmit().then(()=>{
+                    this.createEntityItemSend().then(()=>{
                         this.fetchEntityData();
                         this.closePanel();
                         this.clearNewFields();
@@ -389,6 +397,27 @@
                     });
                 }
             },
+
+            createEntityItemSend() {
+                return this.createEntity({
+                    filter: {
+                        IsRegenerateJsTypes: this.IsRegenerateJsTypes,
+                    },
+                    data: this.currentEntityItem.item,
+                }).then((response) => {
+
+                    if (response.Model) {
+                        this.addEntityItemToList(response.Model);
+                        this.clearPanelEntityItem();
+                    } else {
+                        console.error('Ошибка создания записи: ', response.Error);
+                    }
+
+                }).catch(error => {
+                    console.error('Ошибка создания записи: ', error);
+                });
+            },
+
             showPanel(type) {
 
                 this.errors = [];
@@ -455,6 +484,9 @@
                 this.findEntity({
                     filter: this.entityFilter
                 })
+            },
+            IsRegenerateJsTypes(newVal) {
+                localStorage.setItem("IsRegenerateJsTypes", newVal);
             },
         },
     }
