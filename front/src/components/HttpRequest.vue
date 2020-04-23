@@ -16,7 +16,10 @@
         components: {VSet, VBadge, VInput},
         name: "HttpRequest",
         props: {
-            action: String,
+            action: {
+                type: String,
+                default: "",
+            },
             entity: String,
             route: String,
         },
@@ -26,35 +29,6 @@
             };
         },
         computed: {
-            /**
-             * @return {string}
-             */
-            Method() {
-                let method = "";
-                switch (this.action.toLowerCase()) {
-
-                    case "find":
-                    case "read":
-                        method = "GET";
-                        break;
-
-                    case "update":
-                        method = "PUT";
-                        break;
-                    case "create":
-                    case "findOrCreate":
-                        method = "POST";
-                        break;
-                    case "delete":
-                        method = "DELETE";
-                        break;
-
-                    default:
-                        method = "UNSUPPORTED METHOD";
-                        break;
-                }
-                return method;
-            },
         },
         watch: {
             route(newval) {
