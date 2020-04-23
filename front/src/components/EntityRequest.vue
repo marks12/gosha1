@@ -1,8 +1,10 @@
 <template>
     <VSet width="dyn" vertical>
         <VText>
-            <VBadge :color="colors[action.toLowerCase()]">{{Method}}</VBadge>
+            action = {{entity.Action}}
+            <VBadge :color="colors[this.action]">{{Method}}</VBadge>
             Request entity
+
         </VText>
         <HttpRequest :entity="entity.Name" :id="id" :route="entity.HttpRoutes.Find" v-if="IsFind" action="find"></HttpRequest>
         <HttpRequest :entity="entity.Name" :id="id" :route="entity.HttpRoutes.Create" v-if="IsCreate" action="create"></HttpRequest>
@@ -18,18 +20,19 @@
     import HttpRequest from "./HttpRequest";
     import VSet from "swtui/src/components/VSet";
     import VText from "swtui/src/components/VText";
+    import VBadge from "swtui/src/components/VBadge";
     export default {
         name: "EntityRequest",
-        components: {HttpRequest, VSet, VText},
+        components: {HttpRequest, VSet, VText, VBadge},
         props: {
             entity: {
                 type: Object,
                 default: {
                     HttpMethods: [],
                     HttpRoutes: [],
+                    Action: "find",
                 },
             },
-            action: String,
         },
         data() {
             return {
@@ -46,25 +49,57 @@
         },
         computed: {
             IsFind() {
-                return this.action.toLowerCase() === "find" && entity.HttpMethods.IsFind;
+                return this.action === "find" && this.entity.HttpMethods.IsFind;
             },
             IsCreate() {
-                return this.action.toLowerCase() === "create" && entity.HttpMethods.IsCreate;
+                return this.action === "create" && this.entity.HttpMethods.IsCreate;
             },
             IsRead() {
-                return this.action.toLowerCase() === "read" && entity.HttpMethods.IsRead;
+                return this.action === "read" && this.entity.HttpMethods.IsRead;
             },
             IsUpdate() {
-                return this.action.toLowerCase() === "update" && entity.HttpMethods.IsUpdate;
+                return this.action === "update" && this.entity.HttpMethods.IsUpdate;
             },
             IsDelete() {
-                return this.action.toLowerCase() === "delete" && entity.HttpMethods.IsDelete;
+                return this.action === "delete" && this.entity.HttpMethods.IsDelete;
             },
             IsFindOrCreate() {
-                return this.action.toLowerCase() === "findorcreate" && entity.HttpMethods.IsFindOrCreate;
+                return this.action === "findorcreate" && this.entity.HttpMethods.IsFindOrCreate;
             },
             IsUpdateOrCreate() {
-                return this.action.toLowerCase() === "updateorcreate" && entity.HttpMethods.IsUpdateOrCreate;
+                return this.action === "updateorcreate" && this.entity.HttpMethods.IsUpdateOrCreate;
+            },
+            /**
+             * @return {string}
+             */
+            Method() {
+                let method = "";
+                switch (this.action.toLowerCase()) {
+
+                    case "find":
+                    case "read":
+                        method = "GET";
+                        break;
+
+                    case "update":
+                        method = "PUT";
+                        break;
+                    case "create":
+                    case "findOrCreate":
+                        method = "POST";
+                        break;
+                    case "delete":
+                        method = "DELETE";
+                        break;
+
+                    default:
+                        method = "UNSUPPORTED METHOD";
+                        break;
+                }
+                return method;
+            },
+            action() {
+                return this.entity ? this.entity.Action ? this.entity.Action : "" : "";
             },
         },
         methods: {

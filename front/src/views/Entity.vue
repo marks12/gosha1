@@ -246,6 +246,7 @@
                 ne.IsDelete = true;
                 ne.IsFindOrCreate = false;
                 ne.IsUpdateOrCreate = false;
+                ne.Action = "find";
 
                 ne.HttpMethods =  {
                     IsFind: true,
