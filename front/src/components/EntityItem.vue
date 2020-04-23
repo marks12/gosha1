@@ -62,12 +62,10 @@
     export default {
         name: "EntityItem",
         components: {WorkSpace, VSpoiler, VBadge, VGroup, VSet, VText, VIcon, VSign, VButton},
-
         props: {
             entityItem: Object,
             onEdit: Function,
         },
-
         methods: {
             onRequest(item) {
                 item.Action = "find";

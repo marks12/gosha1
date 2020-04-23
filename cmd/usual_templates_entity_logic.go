@@ -142,15 +142,12 @@ func {Entity}Create(filter types.{Entity}Filter, query *gorm.DB)  (data types.{E
 
     dbModel.Validate()
 
-    if dbModel.IsValid() {
-
-        query = query.Create(&dbModel)
-
-    } else {
-
+    if ! dbModel.IsValid() {
         fmt.Println("{Entity}Create > Create {Entity} error:", dbModel)
         return types.{Entity}{}, errors.New(dbModel.GetValidationErrors())
     }
+
+    query = query.Create(&dbModel)
 
     if query.Error != nil {
         fmt.Println("{Entity}Create > Create {Entity} error:", query.Error)
