@@ -1,18 +1,19 @@
 <template>
     <VSet width="dyn" vertical>
         <VText>
-            action = {{entity.Action}}
-            <VBadge :color="colors[this.action]">{{Method}}</VBadge>
-            Request entity
-
+            {{capitalizeFirstLetter(entity.Action)}} <VBadge :color="colors[this.action]">{{Method}}</VBadge>
+            Request to <strong>{{entity.Name}}</strong>
         </VText>
-        <HttpRequest :entity="entity.Name" :id="id" :route="entity.HttpRoutes.Find" v-if="IsFind" action="find"></HttpRequest>
-        <HttpRequest :entity="entity.Name" :id="id" :route="entity.HttpRoutes.Create" v-if="IsCreate" action="create"></HttpRequest>
-        <HttpRequest :entity="entity.Name" :id="id" :route="entity.HttpRoutes.Read" v-if="IsRead" action="read"></HttpRequest>
-        <HttpRequest :entity="entity.Name" :id="id" :route="entity.HttpRoutes.Update" v-if="IsUpdate" action="update"></HttpRequest>
-        <HttpRequest :entity="entity.Name" :id="id" :route="entity.HttpRoutes.Delete" v-if="IsDelete" action="delete"></HttpRequest>
-        <HttpRequest :entity="entity.Name" :id="id" :route="entity.HttpRoutes.FindOrCreate" v-if="IsFindOrCreate" action="findOrCreate"></HttpRequest>
-        <HttpRequest :entity="entity.Name" :id="id" :route="entity.HttpRoutes.UpdateOrCreate" v-if="IsFindOrCreate" action="updateOrCreate"></HttpRequest>
+        <VSet vertical>
+            <HttpRequest @changeUrl="changeUrl" :entity="entity.Name" :id="id" :route="entity.HttpRoutes.Find" v-if="IsFind" action="find"></HttpRequest>
+            <HttpRequest @changeUrl="changeUrl" :entity="entity.Name" :id="id" :route="entity.HttpRoutes.Create" v-if="IsCreate" action="create"></HttpRequest>
+            <HttpRequest @changeUrl="changeUrl" :entity="entity.Name" :id="id" :route="entity.HttpRoutes.Read" v-if="IsRead" action="read"></HttpRequest>
+            <HttpRequest @changeUrl="changeUrl" :entity="entity.Name" :id="id" :route="entity.HttpRoutes.Update" v-if="IsUpdate" action="update"></HttpRequest>
+            <HttpRequest @changeUrl="changeUrl" :entity="entity.Name" :id="id" :route="entity.HttpRoutes.Delete" v-if="IsDelete" action="delete"></HttpRequest>
+            <HttpRequest @changeUrl="changeUrl" :entity="entity.Name" :id="id" :route="entity.HttpRoutes.FindOrCreate" v-if="IsFindOrCreate" action="findOrCreate"></HttpRequest>
+            <HttpRequest @changeUrl="changeUrl" :entity="entity.Name" :id="id" :route="entity.HttpRoutes.UpdateOrCreate" v-if="IsUpdateOrCreate" action="updateOrCreate"></HttpRequest>
+        </VSet>
+
     </VSet>
 </template>
 
@@ -21,9 +22,10 @@
     import VSet from "swtui/src/components/VSet";
     import VText from "swtui/src/components/VText";
     import VBadge from "swtui/src/components/VBadge";
+    import VLabel from "swtui/src/components/VLabel";
     export default {
         name: "EntityRequest",
-        components: {HttpRequest, VSet, VText, VBadge},
+        components: {HttpRequest, VSet, VText, VBadge, VLabel},
         props: {
             entity: {
                 type: Object,
@@ -43,8 +45,10 @@
                     create:'attention-secondary',
                     find: 'action',
                     read: 'weak',
-                    findOrCreate:'bg-light'
+                    findorcreate:'bg-light',
+                    updateorcreate:'bg-light'
                 },
+                url: "",
             };
         },
         computed: {
@@ -73,8 +77,9 @@
              * @return {string}
              */
             Method() {
+                let action = this.entity ? this.entity.Action ? this.entity.Action.toLowerCase() : "" : "";
                 let method = "";
-                switch (this.action.toLowerCase()) {
+                switch (action) {
 
                     case "find":
                     case "read":
@@ -82,14 +87,17 @@
                         break;
 
                     case "update":
+                    case "findorcreate":
                         method = "PUT";
                         break;
                     case "create":
-                    case "findOrCreate":
                         method = "POST";
                         break;
                     case "delete":
                         method = "DELETE";
+                        break;
+                    case "updateorcreate":
+                        method = "PATCH";
                         break;
 
                     default:
@@ -103,6 +111,16 @@
             },
         },
         methods: {
+            changeUrl(newUrl) {
+                this.url = newUrl;
+            },
+            capitalizeFirstLetter(string) {
+                if (! string) {
+                    return "";
+                }
+
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
         },
     }
 </script>
