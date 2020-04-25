@@ -3,8 +3,6 @@ package cmd
 const usualMdlPagination = `package mdl
 
 type Pagination struct {
-	//TotalRecords	int will be removed
-	//TotalPages	int will be removed
 	CurrentPage		int
 	PerPage			int
 }
