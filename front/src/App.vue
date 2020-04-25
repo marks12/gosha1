@@ -11,7 +11,9 @@
 </template>
 
 <style lang="scss">
-
+    .sw-panel_min-width {
+        min-width: 440px !important;
+    }
 </style>
 
 <script>

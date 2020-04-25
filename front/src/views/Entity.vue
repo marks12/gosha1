@@ -32,7 +32,6 @@
             <template>
                 <VPanel
                         v-if="panel.show"
-                        width="col3"
                         @close="closePanel"
                 >
                     <VSet slot="header">
@@ -54,24 +53,22 @@
                                 <template v-if="! currentEntityItem.IsFilter">
                                     <VSign>Http methods</VSign>
                                     <VSet>
-                                        <VCheckbox v-model="currentEntityItem.HttpMethods.IsFind" :disabled="currentEntityItem.Id > 0"><VText>Find</VText></VCheckbox>
-                                        <VCheckbox v-model="currentEntityItem.HttpMethods.IsCreate" :disabled="currentEntityItem.Id > 0"><VText>Create</VText></VCheckbox>
-                                        <VCheckbox v-model="currentEntityItem.HttpMethods.IsRead" :disabled="currentEntityItem.Id > 0"><VText>Read</VText></VCheckbox>
+                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsFind" :disabled="currentEntityItem.Id > 0"><VText>Find</VText></VCheckbox>
+                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsCreate" :disabled="currentEntityItem.Id > 0"><VText>Create</VText></VCheckbox>
+                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsRead" :disabled="currentEntityItem.Id > 0"><VText>Read</VText></VCheckbox>
+                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsUpdate" :disabled="currentEntityItem.Id > 0"><VText>Update</VText></VCheckbox>
+                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsDelete" :disabled="currentEntityItem.Id > 0"><VText>Delete</VText></VCheckbox>
                                     </VSet>
                                     <VSet>
-                                        <VCheckbox v-model="currentEntityItem.HttpMethods.IsUpdate" :disabled="currentEntityItem.Id > 0"><VText>Update</VText></VCheckbox>
-                                        <VCheckbox v-model="currentEntityItem.HttpMethods.IsDelete" :disabled="currentEntityItem.Id > 0"><VText>Delete</VText></VCheckbox>
-                                    </VSet>
-                                    <VSet>
-                                        <VCheckbox v-model="currentEntityItem.HttpMethods.IsFindOrCreate" :disabled="currentEntityItem.Id > 0"><VText>FindOrCreate</VText></VCheckbox>
-                                        <VCheckbox v-model="currentEntityItem.HttpMethods.IsUpdateOrCreate" :disabled="currentEntityItem.Id > 0"><VText>IsUpdateOrCreate</VText></VCheckbox>
+                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsFindOrCreate" :disabled="currentEntityItem.Id > 0"><VText>FindOrCreate</VText></VCheckbox>
+                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsUpdateOrCreate" :disabled="currentEntityItem.Id > 0"><VText>IsUpdateOrCreate</VText></VCheckbox>
                                     </VSet>
                                 </template>
 
                                 <template v-if="! currentEntityItem.IsFilter">
                                     <VSign>Backend structures</VSign>
                                     <VSet>
-                                        <VCheckbox v-model="currentEntityItem.Structures.WithoutDbModel" :disabled="currentEntityItem.Id > 0"><VText>Without Db Model</VText></VCheckbox>
+                                        <VCheckbox v-if="currentEntityItem && currentEntityItem.Structures" v-model="currentEntityItem.Structures.WithoutDbModel" :disabled="currentEntityItem.Id > 0"><VText>Without Db Model</VText></VCheckbox>
                                     </VSet>
                                 </template>
 
@@ -113,12 +110,11 @@
                                 <VGroup v-for="(e, index) in errors" color="attention-light" :key="'err-' + index" width="dyn">{{e}}</VGroup>
                             </VSet>
 
-                            <VSet>
+                            <VSet v-if="panel.type !== panel.request">
                                 <VCheckbox v-model="IsRegenerateJsTypes">
                                     <VText>Regenerate jstypes</VText>
                                 </VCheckbox>
                             </VSet>
-
 
                             <VSet>
                                 <VButton
@@ -286,8 +282,11 @@
                 this.showPanel(this.panel.edit)
             },
             requestItem(item) {
-                this.currentEntityItem = item;
-                this.showPanel(this.panel.request)
+                this.currentEntityItem = {};
+                this.$nextTick(()=>{
+                    this.currentEntityItem = item;
+                    this.showPanel(this.panel.request)
+                })
             },
             clearNewFields() {
                 this.newFields  = [
@@ -338,9 +337,13 @@
 
                 return this.errors.length === 0;
             },
+            sendRequest() {
+
+            },
             saveChangesSubmit() {
 
                 if (this.isPanelRequest) {
+                    this.sendRequest();
                     return;
                 }
 
@@ -442,6 +445,11 @@
 
         },
         computed: {
+
+            isHttpMethods() {
+                return this.currentEntityItem && this.currentEntityItem.HttpMethods;
+            },
+
             hasFields(entityItem) {
                 return (entityItem) => {
                     return  entityItem &&
