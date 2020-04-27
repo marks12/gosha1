@@ -7,7 +7,7 @@ import (
 )
 
 const replaceCommentLink = `//generator insert entity`
-const replaceCommentObject = `//generator insert entity object`
+const replaceCommentObject = `//generator insert object_entity`
 
 func usualEntityAdd(c *ishell.Context) {
 
