@@ -5,13 +5,13 @@
             Request to <strong>{{entity.Name}}</strong>
         </VText>
         <VSet vertical>
-            <HttpRequest @changeUrl="changeUrl" :entity="entity.Name" :id="id" :route="entity.HttpRoutes.Find" v-if="IsFind" action="find"></HttpRequest>
-            <HttpRequest @changeUrl="changeUrl" :entity="entity.Name" :id="id" :route="entity.HttpRoutes.Create" v-if="IsCreate" action="create"></HttpRequest>
-            <HttpRequest @changeUrl="changeUrl" :entity="entity.Name" :id="id" :route="entity.HttpRoutes.Read" v-if="IsRead" action="read"></HttpRequest>
-            <HttpRequest @changeUrl="changeUrl" :entity="entity.Name" :id="id" :route="entity.HttpRoutes.Update" v-if="IsUpdate" action="update"></HttpRequest>
-            <HttpRequest @changeUrl="changeUrl" :entity="entity.Name" :id="id" :route="entity.HttpRoutes.Delete" v-if="IsDelete" action="delete"></HttpRequest>
-            <HttpRequest @changeUrl="changeUrl" :entity="entity.Name" :id="id" :route="entity.HttpRoutes.FindOrCreate" v-if="IsFindOrCreate" action="findOrCreate"></HttpRequest>
-            <HttpRequest @changeUrl="changeUrl" :entity="entity.Name" :id="id" :route="entity.HttpRoutes.UpdateOrCreate" v-if="IsUpdateOrCreate" action="updateOrCreate"></HttpRequest>
+            <HttpRequest @changeUrl="changeUrl" :entity="entity" :id="id" :route="entity.HttpRoutes.Find" v-if="IsFind" action="find"></HttpRequest>
+            <HttpRequest @changeUrl="changeUrl" :entity="entity" :id="id" :route="entity.HttpRoutes.Create" v-if="IsCreate" action="create"></HttpRequest>
+            <HttpRequest @changeUrl="changeUrl" :entity="entity" :id="id" :route="entity.HttpRoutes.Read" v-if="IsRead" action="read"></HttpRequest>
+            <HttpRequest @changeUrl="changeUrl" :entity="entity" :id="id" :route="entity.HttpRoutes.Update" v-if="IsUpdate" action="update"></HttpRequest>
+            <HttpRequest @changeUrl="changeUrl" :entity="entity" :id="id" :route="entity.HttpRoutes.Delete" v-if="IsDelete" action="delete"></HttpRequest>
+            <HttpRequest @changeUrl="changeUrl" :entity="entity" :id="id" :route="entity.HttpRoutes.FindOrCreate" v-if="IsFindOrCreate" action="findOrCreate"></HttpRequest>
+            <HttpRequest @changeUrl="changeUrl" :entity="entity" :id="id" :route="entity.HttpRoutes.UpdateOrCreate" v-if="IsUpdateOrCreate" action="updateOrCreate"></HttpRequest>
         </VSet>
 
     </VSet>

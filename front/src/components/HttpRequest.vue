@@ -1,20 +1,43 @@
 <template>
-    <VSet vertical indent-size="XL" width="dyn">
+    <VSet vertical indent-size="XL" width="dyn" divider>
         <VSet>
             <VInputAutocomplete
                     width="col5"
                     v-model="serverUrl"
                     :items="servers"
-                    not-found-text="not found"
-                    placeholder="введите название фрукта"
+                    not-found-text="not used before"
+                    placeholder="Server: http://server.com"
             >
-                <template #header>
-                    header
-                </template>
             </VInputAutocomplete>
             <VInput width="dyn" v-model="routeUrl"></VInput>
         </VSet>
-        <VText>{{url}}</VText>
+        <VSet>
+            <VSet vertical>
+                <VSet>
+                    <VText>Token</VText>
+                    <VText>
+                        <VInput></VInput>
+                    </VText>
+                </VSet>
+            </VSet>
+            <VSet vertical>
+                <VSet>
+                    <VText>CurrentPage</VText>
+                    <VText>
+                        <VInput value="1"></VInput>
+                    </VText>
+                </VSet>
+                <VSet>
+                    <VText>PerPage</VText>
+                    <VText>
+                        <VInput value="10"></VInput>
+                    </VText>
+                </VSet>
+            </VSet>
+        </VSet>
+        <VSet vertical>
+            <VText>{{getFilter}}</VText>
+        </VSet>
     </VSet>
 </template>
 
@@ -25,6 +48,7 @@
     import VInput from "swtui/src/components/VInput";
     import VText from "swtui/src/components/VText";
     import VInputAutocomplete from "swtui/src/components/VInputAutocomplete";
+    import {mapGetters} from "vuex";
 
     export default {
         components: {VSet, VBadge, VInput, VInputAutocomplete, VText},
@@ -34,7 +58,7 @@
                 type: String,
                 default: "",
             },
-            entity: String,
+            entity: Object,
             route: String,
         },
         data() {
@@ -43,6 +67,7 @@
                 serverUrl: localStorage.getItem("serverUrl") || "",
                 servers: [],
                 url: "",
+                filter: {},
             };
         },
         created() {
@@ -52,9 +77,19 @@
             })
 
             this.fillServers();
+            this.findFilter();
 
         },
         methods: {
+
+            ...mapGetters('gosha', {
+                entityList: 'getListEntity'
+            }),
+
+            findFilter() {
+
+            },
+
             urlChanged() {
                 this.$emit("changeUrl", this.serverUrl + "" + this.routeUrl);
             },
