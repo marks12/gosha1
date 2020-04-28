@@ -29,7 +29,7 @@ let findOrCreateUrl = "` + UpdateOrCreateUrl + `";
 
 const {entity} = {
     actions: {
-        create{Entity}(context, {data, filter, header}) {
+        create{Entity}(context, {data, filter, header, noMutation}) {
 
             let url = createUrl;
             if (Array.isArray && Array.isArray(data)) {
@@ -39,7 +39,9 @@ const {entity} = {
             return api.create(url, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("set{Entity}", response.Model);
+					if(! noMutation) {
+	                    context.commit("set{Entity}", response.Model);
+					}
 
                     return response;
                 })
@@ -48,7 +50,7 @@ const {entity} = {
                     throw(err);
                 });
         },
-        delete{Entity}(context, {id, header}) {
+        delete{Entity}(context, {id, header, noMutation}) {
 
             let url;
             let dataOrNull = null;
@@ -62,7 +64,9 @@ const {entity} = {
 
             return api.remove(url, header, dataOrNull)
                 .then(function(response) {
-                    context.commit("clear{Entity}");
+					if(! noMutation) {
+	                    context.commit("clear{Entity}");
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -70,16 +74,18 @@ const {entity} = {
                     throw(err);
                 });
         },
-        find{Entity}(context, {filter, header, isAppend}) {
+        find{Entity}(context, {filter, header, isAppend, noMutation}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    if (isAppend) {
-                        context.commit("append{Entity}__List", response.List);
-                    } else {
-                        context.commit("set{Entity}__List", response.List);
-                    }
+					if(! noMutation) {
+						if (isAppend) {
+							context.commit("append{Entity}__List", response.List);
+						} else {
+							context.commit("set{Entity}__List", response.List);
+						}
+					}
 
                     return response;
                 })
@@ -88,12 +94,14 @@ const {entity} = {
                     throw(err);
                 });
         },
-        load{Entity}(context, {id, filter, header}) {
+        load{Entity}(context, {id, filter, header, noMutation}) {
 
             return api.find(readUrl + id, filter, header)
                 .then(function(response) {
 
-                    context.commit("set{Entity}", response.Model);
+					if(! noMutation) {
+	                    context.commit("set{Entity}", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -101,7 +109,7 @@ const {entity} = {
                     throw(err);
                 });
         },
-        update{Entity}(context, {id, data, filter, header}) {
+        update{Entity}(context, {id, data, filter, header, noMutation}) {
 
             let url = updateUrl + id;
             if (Array.isArray && Array.isArray(data)) {
@@ -110,8 +118,9 @@ const {entity} = {
 
             return api.update(url, data, filter, header)
                 .then(function(response) {
-
-                    context.commit("set{Entity}", response.Model);
+					if(! noMutation) {
+	                    context.commit("set{Entity}", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -119,12 +128,14 @@ const {entity} = {
                     throw(err);
                 });
         },
-        findOrCreate{Entity}(context, {id, data, filter, header}) {
+        findOrCreate{Entity}(context, {id, data, filter, header, noMutation}) {
 
             return api.update(findOrCreateUrl, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("set{Entity}", response.Model);
+					if(! noMutation) {
+	                    context.commit("set{Entity}", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
