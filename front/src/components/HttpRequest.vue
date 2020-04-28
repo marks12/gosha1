@@ -1,37 +1,40 @@
 <template>
-    <VSet vertical indent-size="XL" width="dyn" divider v-if="! error">
+    <VSet>
         <VSet>
-            <VInputAutocomplete
-                    width="col5"
-                    v-model="serverUrl"
-                    :items="servers"
-                    not-found-text="not used before"
-                    placeholder="Server: http://server.com"
-            >
-            </VInputAutocomplete>
-            <VInput width="dyn" v-model="routeUrl"></VInput>
-        </VSet>
-        <VSet width="col12">
-            <VSet vertical indent-size="XS">
-                <VLabel>Token</VLabel>
+            <VSet vertical indent-size="XL" divider v-if="! error">
                 <VSet>
-                    <VInput width="dyn"></VInput>
-                    <VButton text="Auth"></VButton>
+                    <VInputAutocomplete
+                            v-model="serverUrl"
+                            :items="servers"
+                            not-found-text="not used before"
+                            placeholder="Server: http://server.com"
+                    >
+                    </VInputAutocomplete>
+                    <VInput width="dyn" v-model="routeUrl"></VInput>
+                </VSet>
+                <VSet>
+                    <VSet vertical indent-size="XS">
+                        <VLabel>Token</VLabel>
+                        <VSet>
+                            <VInput width="dyn"></VInput>
+                            <VButton text="Auth"></VButton>
+                        </VSet>
+                    </VSet>
+                </VSet>
+                <VSet vertical>
+                    <VSet wrap>
+                        <VSet vertical v-if="entityFilter.Fields && entityFilter.Fields.length" v-for="item in entityFilter.Fields" :key="'k-' + item.Name" width="fit" indent-size="XS">
+                            <VLabel>{{item.Name}}</VLabel>
+                            <VText>
+                                <VInput v-model="requestFilter[item.Name]"></VInput>
+                            </VText>
+                        </VSet>
+                    </VSet>
                 </VSet>
             </VSet>
-        </VSet>
-        <VSet vertical>
-            <VSet wrap>
-                <VSet vertical v-if="entityFilter.Fields && entityFilter.Fields.length" v-for="item in entityFilter.Fields" :key="'k-' + item.Name" width="fit" indent-size="XS">
-                    <VLabel>{{item.Name}}</VLabel>
-                    <VText>
-                        <VInput v-model="requestFilter[item.Name]"></VInput>
-                    </VText>
-                </VSet>
-            </VSet>
+            <VText v-else>{{error}}</VText>
         </VSet>
     </VSet>
-    <VText v-else>{{error}}</VText>
 </template>
 
 <script>
