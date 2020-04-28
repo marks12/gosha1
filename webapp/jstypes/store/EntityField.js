@@ -8,14 +8,15 @@ let readUrl = "/api/v1/entityField/"; // + id
 let createUrl = "/api/v1/entityField";
 let multiCreateUrl = "/api/v1/entityField/list";
 let updateUrl = "/api/v1/entityField/"; // + id
-let multiUpdateUrl = "/api/v1/entityField/list"; // + id
+let multiUpdateUrl = "/api/v1/entityField/list";
 let deleteUrl = "/api/v1/entityField/"; // + id
-let multiDeleteUrl = "/api/v1/entityField/list"; // + id
-let findOrCreateUrl = "/api/v1/entityField"; // + id
+let multiDeleteUrl = "/api/v1/entityField/list";
+let findOrCreateUrl = "/api/v1/entityField";
+let updateOrCreateUrl = "/api/v1/entityField";
 
 const entityField = {
     actions: {
-        createEntityField(context, {data, filter, header}) {
+        createEntityField(context, {data, filter, header, noMutation}) {
 
             let url = createUrl;
             if (Array.isArray && Array.isArray(data)) {
@@ -25,7 +26,9 @@ const entityField = {
             return api.create(url, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setEntityField", response.Model);
+					if(! noMutation) {
+	                    context.commit("setEntityField", response.Model);
+					}
 
                     return response;
                 })
@@ -34,7 +37,7 @@ const entityField = {
                     throw(err);
                 });
         },
-        deleteEntityField(context, {id, header}) {
+        deleteEntityField(context, {id, header, noMutation}) {
 
             let url;
             let dataOrNull = null;
@@ -48,7 +51,9 @@ const entityField = {
 
             return api.remove(url, header, dataOrNull)
                 .then(function(response) {
-                    context.commit("clearEntityField");
+					if(! noMutation) {
+	                    context.commit("clearEntityField");
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -56,16 +61,18 @@ const entityField = {
                     throw(err);
                 });
         },
-        findEntityField(context, {filter, header, isAppend}) {
+        findEntityField(context, {filter, header, isAppend, noMutation}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    if (isAppend) {
-                        context.commit("appendEntityField__List", response.List);
-                    } else {
-                        context.commit("setEntityField__List", response.List);
-                    }
+					if(! noMutation) {
+						if (isAppend) {
+							context.commit("appendEntityField__List", response.List);
+						} else {
+							context.commit("setEntityField__List", response.List);
+						}
+					}
 
                     return response;
                 })
@@ -74,12 +81,14 @@ const entityField = {
                     throw(err);
                 });
         },
-        loadEntityField(context, {id, filter, header}) {
+        loadEntityField(context, {id, filter, header, noMutation}) {
 
             return api.find(readUrl + id, filter, header)
                 .then(function(response) {
 
-                    context.commit("setEntityField", response.Model);
+					if(! noMutation) {
+	                    context.commit("setEntityField", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -87,7 +96,7 @@ const entityField = {
                     throw(err);
                 });
         },
-        updateEntityField(context, {id, data, filter, header}) {
+        updateEntityField(context, {id, data, filter, header, noMutation}) {
 
             let url = updateUrl + id;
             if (Array.isArray && Array.isArray(data)) {
@@ -96,8 +105,9 @@ const entityField = {
 
             return api.update(url, data, filter, header)
                 .then(function(response) {
-
-                    context.commit("setEntityField", response.Model);
+					if(! noMutation) {
+	                    context.commit("setEntityField", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -105,12 +115,14 @@ const entityField = {
                     throw(err);
                 });
         },
-        findOrCreateEntityField(context, {id, data, filter, header}) {
+        findOrCreateEntityField(context, {id, data, filter, header, noMutation}) {
 
             return api.update(findOrCreateUrl, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setEntityField", response.Model);
+					if(! noMutation) {
+	                    context.commit("setEntityField", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -203,6 +215,7 @@ const entityField = {
             delete: deleteUrl,
             multiDelete: multiDeleteUrl,
             findOrCreate: findOrCreateUrl,
+            updateOrCreate: updateOrCreateUrl,
         },
     },
 };

@@ -8,14 +8,15 @@ let readUrl = "/api/v1/entity/"; // + id
 let createUrl = "/api/v1/entity";
 let multiCreateUrl = "/api/v1/entity/list";
 let updateUrl = "/api/v1/entity/"; // + id
-let multiUpdateUrl = "/api/v1/entity/list"; // + id
+let multiUpdateUrl = "/api/v1/entity/list";
 let deleteUrl = "/api/v1/entity/"; // + id
-let multiDeleteUrl = "/api/v1/entity/list"; // + id
-let findOrCreateUrl = "/api/v1/entity"; // + id
+let multiDeleteUrl = "/api/v1/entity/list";
+let findOrCreateUrl = "/api/v1/entity";
+let updateOrCreateUrl = "/api/v1/entity";
 
 const entity = {
     actions: {
-        createEntity(context, {data, filter, header}) {
+        createEntity(context, {data, filter, header, noMutation}) {
 
             let url = createUrl;
             if (Array.isArray && Array.isArray(data)) {
@@ -25,7 +26,9 @@ const entity = {
             return api.create(url, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setEntity", response.Model);
+					if(! noMutation) {
+	                    context.commit("setEntity", response.Model);
+					}
 
                     return response;
                 })
@@ -34,7 +37,7 @@ const entity = {
                     throw(err);
                 });
         },
-        deleteEntity(context, {id, header}) {
+        deleteEntity(context, {id, header, noMutation}) {
 
             let url;
             let dataOrNull = null;
@@ -48,7 +51,9 @@ const entity = {
 
             return api.remove(url, header, dataOrNull)
                 .then(function(response) {
-                    context.commit("clearEntity");
+					if(! noMutation) {
+	                    context.commit("clearEntity");
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -56,16 +61,18 @@ const entity = {
                     throw(err);
                 });
         },
-        findEntity(context, {filter, header, isAppend}) {
+        findEntity(context, {filter, header, isAppend, noMutation}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    if (isAppend) {
-                        context.commit("appendEntity__List", response.List);
-                    } else {
-                        context.commit("setEntity__List", response.List);
-                    }
+					if(! noMutation) {
+						if (isAppend) {
+							context.commit("appendEntity__List", response.List);
+						} else {
+							context.commit("setEntity__List", response.List);
+						}
+					}
 
                     return response;
                 })
@@ -74,12 +81,14 @@ const entity = {
                     throw(err);
                 });
         },
-        loadEntity(context, {id, filter, header}) {
+        loadEntity(context, {id, filter, header, noMutation}) {
 
             return api.find(readUrl + id, filter, header)
                 .then(function(response) {
 
-                    context.commit("setEntity", response.Model);
+					if(! noMutation) {
+	                    context.commit("setEntity", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -87,7 +96,7 @@ const entity = {
                     throw(err);
                 });
         },
-        updateEntity(context, {id, data, filter, header}) {
+        updateEntity(context, {id, data, filter, header, noMutation}) {
 
             let url = updateUrl + id;
             if (Array.isArray && Array.isArray(data)) {
@@ -96,8 +105,9 @@ const entity = {
 
             return api.update(url, data, filter, header)
                 .then(function(response) {
-
-                    context.commit("setEntity", response.Model);
+					if(! noMutation) {
+	                    context.commit("setEntity", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -105,12 +115,14 @@ const entity = {
                     throw(err);
                 });
         },
-        findOrCreateEntity(context, {id, data, filter, header}) {
+        findOrCreateEntity(context, {id, data, filter, header, noMutation}) {
 
             return api.update(findOrCreateUrl, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setEntity", response.Model);
+					if(! noMutation) {
+	                    context.commit("setEntity", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -203,6 +215,7 @@ const entity = {
             delete: deleteUrl,
             multiDelete: multiDeleteUrl,
             findOrCreate: findOrCreateUrl,
+            updateOrCreate: updateOrCreateUrl,
         },
     },
 };

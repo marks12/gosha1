@@ -63,6 +63,7 @@ export function Entity() {
     this.IsFilter = false;
     this.Structures = {};
     this.HttpMethods = {};
+    this.HttpRoutes = {};
 
     return this;
 }
@@ -79,6 +80,7 @@ export function EntityFilter() {
     this.IsDelete = false;
     this.IsFindOrCreate = false;
     this.IsUpdateOrCreate = false;
+    this.IsRegenerateJsTypes = false;
     this.Search = "";
     this.SearchBy = [];
     this.Order = [];

@@ -8,14 +8,15 @@ let readUrl = "/api/v1/buLayerFilter/"; // + id
 let createUrl = "/api/v1/buLayerFilter";
 let multiCreateUrl = "/api/v1/buLayerFilter/list";
 let updateUrl = "/api/v1/buLayerFilter/"; // + id
-let multiUpdateUrl = "/api/v1/buLayerFilter/list"; // + id
+let multiUpdateUrl = "/api/v1/buLayerFilter/list";
 let deleteUrl = "/api/v1/buLayerFilter/"; // + id
-let multiDeleteUrl = "/api/v1/buLayerFilter/list"; // + id
-let findOrCreateUrl = "/api/v1/buLayerFilter"; // + id
+let multiDeleteUrl = "/api/v1/buLayerFilter/list";
+let findOrCreateUrl = "/api/v1/buLayerFilter";
+let updateOrCreateUrl = "/api/v1/buLayerFilter";
 
 const buLayerFilter = {
     actions: {
-        createBuLayerFilter(context, {data, filter, header}) {
+        createBuLayerFilter(context, {data, filter, header, noMutation}) {
 
             let url = createUrl;
             if (Array.isArray && Array.isArray(data)) {
@@ -25,7 +26,9 @@ const buLayerFilter = {
             return api.create(url, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setBuLayerFilter", response.Model);
+					if(! noMutation) {
+	                    context.commit("setBuLayerFilter", response.Model);
+					}
 
                     return response;
                 })
@@ -34,7 +37,7 @@ const buLayerFilter = {
                     throw(err);
                 });
         },
-        deleteBuLayerFilter(context, {id, header}) {
+        deleteBuLayerFilter(context, {id, header, noMutation}) {
 
             let url;
             let dataOrNull = null;
@@ -48,7 +51,9 @@ const buLayerFilter = {
 
             return api.remove(url, header, dataOrNull)
                 .then(function(response) {
-                    context.commit("clearBuLayerFilter");
+					if(! noMutation) {
+	                    context.commit("clearBuLayerFilter");
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -56,16 +61,18 @@ const buLayerFilter = {
                     throw(err);
                 });
         },
-        findBuLayerFilter(context, {filter, header, isAppend}) {
+        findBuLayerFilter(context, {filter, header, isAppend, noMutation}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    if (isAppend) {
-                        context.commit("appendBuLayerFilter__List", response.List);
-                    } else {
-                        context.commit("setBuLayerFilter__List", response.List);
-                    }
+					if(! noMutation) {
+						if (isAppend) {
+							context.commit("appendBuLayerFilter__List", response.List);
+						} else {
+							context.commit("setBuLayerFilter__List", response.List);
+						}
+					}
 
                     return response;
                 })
@@ -74,12 +81,14 @@ const buLayerFilter = {
                     throw(err);
                 });
         },
-        loadBuLayerFilter(context, {id, filter, header}) {
+        loadBuLayerFilter(context, {id, filter, header, noMutation}) {
 
             return api.find(readUrl + id, filter, header)
                 .then(function(response) {
 
-                    context.commit("setBuLayerFilter", response.Model);
+					if(! noMutation) {
+	                    context.commit("setBuLayerFilter", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -87,7 +96,7 @@ const buLayerFilter = {
                     throw(err);
                 });
         },
-        updateBuLayerFilter(context, {id, data, filter, header}) {
+        updateBuLayerFilter(context, {id, data, filter, header, noMutation}) {
 
             let url = updateUrl + id;
             if (Array.isArray && Array.isArray(data)) {
@@ -96,8 +105,9 @@ const buLayerFilter = {
 
             return api.update(url, data, filter, header)
                 .then(function(response) {
-
-                    context.commit("setBuLayerFilter", response.Model);
+					if(! noMutation) {
+	                    context.commit("setBuLayerFilter", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -105,12 +115,14 @@ const buLayerFilter = {
                     throw(err);
                 });
         },
-        findOrCreateBuLayerFilter(context, {id, data, filter, header}) {
+        findOrCreateBuLayerFilter(context, {id, data, filter, header, noMutation}) {
 
             return api.update(findOrCreateUrl, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setBuLayerFilter", response.Model);
+					if(! noMutation) {
+	                    context.commit("setBuLayerFilter", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -203,6 +215,7 @@ const buLayerFilter = {
             delete: deleteUrl,
             multiDelete: multiDeleteUrl,
             findOrCreate: findOrCreateUrl,
+            updateOrCreate: updateOrCreateUrl,
         },
     },
 };
