@@ -1,5 +1,5 @@
 <template>
-    <VSet vertical indent-size="XL" width="dyn" divider>
+    <VSet vertical indent-size="XL" width="dyn" divider v-if="! error">
         <VSet>
             <VInputAutocomplete
                     width="col5"
@@ -11,47 +11,43 @@
             </VInputAutocomplete>
             <VInput width="dyn" v-model="routeUrl"></VInput>
         </VSet>
-        <VSet>
-            <VSet vertical>
+        <VSet width="col12">
+            <VSet vertical indent-size="XS">
+                <VLabel>Token</VLabel>
                 <VSet>
-                    <VText>Token</VText>
-                    <VText>
-                        <VInput></VInput>
-                    </VText>
-                </VSet>
-            </VSet>
-            <VSet vertical>
-                <VSet>
-                    <VText>CurrentPage</VText>
-                    <VText>
-                        <VInput value="1"></VInput>
-                    </VText>
-                </VSet>
-                <VSet>
-                    <VText>PerPage</VText>
-                    <VText>
-                        <VInput value="10"></VInput>
-                    </VText>
+                    <VInput width="dyn"></VInput>
+                    <VButton text="Auth"></VButton>
                 </VSet>
             </VSet>
         </VSet>
         <VSet vertical>
-            <VText>{{getFilter}}</VText>
+            <VSet wrap>
+                <VSet vertical v-if="entityFilter.Fields && entityFilter.Fields.length" v-for="item in entityFilter.Fields" :key="'k-' + item.Name" width="fit" indent-size="XS">
+                    <VLabel>{{item.Name}}</VLabel>
+                    <VText>
+                        <VInput v-model="requestFilter[item.Name]"></VInput>
+                    </VText>
+                </VSet>
+            </VSet>
         </VSet>
     </VSet>
+    <VText v-else>{{error}}</VText>
 </template>
 
 <script>
 
     import VSet from "swtui/src/components/VSet";
     import VBadge from "swtui/src/components/VBadge";
+    import VButton from "swtui/src/components/VButton";
     import VInput from "swtui/src/components/VInput";
+    import VLabel from "swtui/src/components/VLabel";
     import VText from "swtui/src/components/VText";
     import VInputAutocomplete from "swtui/src/components/VInputAutocomplete";
-    import {mapGetters} from "vuex";
+    import {mapGetters, mapActions} from "vuex";
+    import {EntityFilter} from "../../../webapp/jstypes/apiModel";
 
     export default {
-        components: {VSet, VBadge, VInput, VInputAutocomplete, VText},
+        components: {VButton, VSet, VBadge, VInput, VInputAutocomplete, VText, VLabel},
         name: "HttpRequest",
         props: {
             action: {
@@ -67,14 +63,16 @@
                 serverUrl: localStorage.getItem("serverUrl") || "",
                 servers: [],
                 url: "",
-                filter: {},
+                entityFilter: {},
+                requestFilter: {},
+                error: "",
             };
         },
         created() {
 
             this.$nextTick(()=>{
                 this.urlChanged();
-            })
+            });
 
             this.fillServers();
             this.findFilter();
@@ -86,7 +84,38 @@
                 entityList: 'getListEntity'
             }),
 
+            ...mapActions('gosha', {
+                findEntity: 'findEntity',
+            }),
+
             findFilter() {
+                let f = new EntityFilter();
+                f.PerPage = 1000;
+                f.CurrentPage = 1;
+                f.WithFilter = true;
+                f.Search = this.entity.Name + "Filter";
+
+                this.findEntity({
+                    filter: f,
+                    noMutation: true,
+                }).then((res)=>{
+
+                    if (res && res.List && res.List.length) {
+
+                        for (let k in res.List) {
+
+                            if (res.List[k].Name === this.entity.Name + "Filter" && res.List[k].IsFilter === true) {
+                                this.entityFilter = res.List[k];
+                            }
+                        }
+
+                        return;
+                    }
+
+                    this.error = "Filter not found";
+
+                    return false;
+                });
 
             },
 
