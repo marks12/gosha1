@@ -1,5 +1,5 @@
 <template>
-    <VSet width="dyn" vertical>
+    <VSet vertical>
         <VText>
             {{capitalizeFirstLetter(entity.Action)}} <VBadge :color="colors[this.action]">{{Method}}</VBadge>
             Request to <strong>{{entity.Name}}</strong>
