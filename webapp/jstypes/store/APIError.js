@@ -8,14 +8,15 @@ let readUrl = "/api/v1/aPIError/"; // + id
 let createUrl = "/api/v1/aPIError";
 let multiCreateUrl = "/api/v1/aPIError/list";
 let updateUrl = "/api/v1/aPIError/"; // + id
-let multiUpdateUrl = "/api/v1/aPIError/list"; // + id
+let multiUpdateUrl = "/api/v1/aPIError/list";
 let deleteUrl = "/api/v1/aPIError/"; // + id
-let multiDeleteUrl = "/api/v1/aPIError/list"; // + id
-let findOrCreateUrl = "/api/v1/aPIError"; // + id
+let multiDeleteUrl = "/api/v1/aPIError/list";
+let findOrCreateUrl = "/api/v1/aPIError";
+let updateOrCreateUrl = "/api/v1/aPIError";
 
 const aPIError = {
     actions: {
-        createAPIError(context, {data, filter, header}) {
+        createAPIError(context, {data, filter, header, noMutation}) {
 
             let url = createUrl;
             if (Array.isArray && Array.isArray(data)) {
@@ -25,7 +26,9 @@ const aPIError = {
             return api.create(url, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAPIError", response.Model);
+					if(! noMutation) {
+	                    context.commit("setAPIError", response.Model);
+					}
 
                     return response;
                 })
@@ -34,7 +37,7 @@ const aPIError = {
                     throw(err);
                 });
         },
-        deleteAPIError(context, {id, header}) {
+        deleteAPIError(context, {id, header, noMutation}) {
 
             let url;
             let dataOrNull = null;
@@ -48,7 +51,9 @@ const aPIError = {
 
             return api.remove(url, header, dataOrNull)
                 .then(function(response) {
-                    context.commit("clearAPIError");
+					if(! noMutation) {
+	                    context.commit("clearAPIError");
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -56,16 +61,18 @@ const aPIError = {
                     throw(err);
                 });
         },
-        findAPIError(context, {filter, header, isAppend}) {
+        findAPIError(context, {filter, header, isAppend, noMutation}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    if (isAppend) {
-                        context.commit("appendAPIError__List", response.List);
-                    } else {
-                        context.commit("setAPIError__List", response.List);
-                    }
+					if(! noMutation) {
+						if (isAppend) {
+							context.commit("appendAPIError__List", response.List);
+						} else {
+							context.commit("setAPIError__List", response.List);
+						}
+					}
 
                     return response;
                 })
@@ -74,12 +81,14 @@ const aPIError = {
                     throw(err);
                 });
         },
-        loadAPIError(context, {id, filter, header}) {
+        loadAPIError(context, {id, filter, header, noMutation}) {
 
             return api.find(readUrl + id, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAPIError", response.Model);
+					if(! noMutation) {
+	                    context.commit("setAPIError", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -87,7 +96,7 @@ const aPIError = {
                     throw(err);
                 });
         },
-        updateAPIError(context, {id, data, filter, header}) {
+        updateAPIError(context, {id, data, filter, header, noMutation}) {
 
             let url = updateUrl + id;
             if (Array.isArray && Array.isArray(data)) {
@@ -96,8 +105,9 @@ const aPIError = {
 
             return api.update(url, data, filter, header)
                 .then(function(response) {
-
-                    context.commit("setAPIError", response.Model);
+					if(! noMutation) {
+	                    context.commit("setAPIError", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -105,12 +115,14 @@ const aPIError = {
                     throw(err);
                 });
         },
-        findOrCreateAPIError(context, {id, data, filter, header}) {
+        findOrCreateAPIError(context, {id, data, filter, header, noMutation}) {
 
             return api.update(findOrCreateUrl, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAPIError", response.Model);
+					if(! noMutation) {
+	                    context.commit("setAPIError", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -203,6 +215,7 @@ const aPIError = {
             delete: deleteUrl,
             multiDelete: multiDeleteUrl,
             findOrCreate: findOrCreateUrl,
+            updateOrCreate: updateOrCreateUrl,
         },
     },
 };
