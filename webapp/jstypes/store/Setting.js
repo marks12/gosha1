@@ -8,14 +8,15 @@ let readUrl = "/api/v1/setting/"; // + id
 let createUrl = "/api/v1/setting";
 let multiCreateUrl = "/api/v1/setting/list";
 let updateUrl = "/api/v1/setting/"; // + id
-let multiUpdateUrl = "/api/v1/setting/list"; // + id
+let multiUpdateUrl = "/api/v1/setting/list";
 let deleteUrl = "/api/v1/setting/"; // + id
-let multiDeleteUrl = "/api/v1/setting/list"; // + id
-let findOrCreateUrl = "/api/v1/setting"; // + id
+let multiDeleteUrl = "/api/v1/setting/list";
+let findOrCreateUrl = "/api/v1/setting";
+let updateOrCreateUrl = "/api/v1/setting";
 
 const setting = {
     actions: {
-        createSetting(context, {data, filter, header}) {
+        createSetting(context, {data, filter, header, noMutation}) {
 
             let url = createUrl;
             if (Array.isArray && Array.isArray(data)) {
@@ -25,7 +26,9 @@ const setting = {
             return api.create(url, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setSetting", response.Model);
+					if(! noMutation) {
+	                    context.commit("setSetting", response.Model);
+					}
 
                     return response;
                 })
@@ -34,7 +37,7 @@ const setting = {
                     throw(err);
                 });
         },
-        deleteSetting(context, {id, header}) {
+        deleteSetting(context, {id, header, noMutation}) {
 
             let url;
             let dataOrNull = null;
@@ -48,7 +51,9 @@ const setting = {
 
             return api.remove(url, header, dataOrNull)
                 .then(function(response) {
-                    context.commit("clearSetting");
+					if(! noMutation) {
+	                    context.commit("clearSetting");
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -56,16 +61,18 @@ const setting = {
                     throw(err);
                 });
         },
-        findSetting(context, {filter, header, isAppend}) {
+        findSetting(context, {filter, header, isAppend, noMutation}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    if (isAppend) {
-                        context.commit("appendSetting__List", response.List);
-                    } else {
-                        context.commit("setSetting__List", response.List);
-                    }
+					if(! noMutation) {
+						if (isAppend) {
+							context.commit("appendSetting__List", response.List);
+						} else {
+							context.commit("setSetting__List", response.List);
+						}
+					}
 
                     return response;
                 })
@@ -74,12 +81,14 @@ const setting = {
                     throw(err);
                 });
         },
-        loadSetting(context, {id, filter, header}) {
+        loadSetting(context, {id, filter, header, noMutation}) {
 
             return api.find(readUrl + id, filter, header)
                 .then(function(response) {
 
-                    context.commit("setSetting", response.Model);
+					if(! noMutation) {
+	                    context.commit("setSetting", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -87,7 +96,7 @@ const setting = {
                     throw(err);
                 });
         },
-        updateSetting(context, {id, data, filter, header}) {
+        updateSetting(context, {id, data, filter, header, noMutation}) {
 
             let url = updateUrl + id;
             if (Array.isArray && Array.isArray(data)) {
@@ -96,8 +105,9 @@ const setting = {
 
             return api.update(url, data, filter, header)
                 .then(function(response) {
-
-                    context.commit("setSetting", response.Model);
+					if(! noMutation) {
+	                    context.commit("setSetting", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -105,12 +115,14 @@ const setting = {
                     throw(err);
                 });
         },
-        findOrCreateSetting(context, {id, data, filter, header}) {
+        findOrCreateSetting(context, {id, data, filter, header, noMutation}) {
 
             return api.update(findOrCreateUrl, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setSetting", response.Model);
+					if(! noMutation) {
+	                    context.commit("setSetting", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -203,6 +215,7 @@ const setting = {
             delete: deleteUrl,
             multiDelete: multiDeleteUrl,
             findOrCreate: findOrCreateUrl,
+            updateOrCreate: updateOrCreateUrl,
         },
     },
 };

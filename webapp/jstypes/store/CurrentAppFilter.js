@@ -8,14 +8,15 @@ let readUrl = "/api/v1/currentAppFilter/"; // + id
 let createUrl = "/api/v1/currentAppFilter";
 let multiCreateUrl = "/api/v1/currentAppFilter/list";
 let updateUrl = "/api/v1/currentAppFilter/"; // + id
-let multiUpdateUrl = "/api/v1/currentAppFilter/list"; // + id
+let multiUpdateUrl = "/api/v1/currentAppFilter/list";
 let deleteUrl = "/api/v1/currentAppFilter/"; // + id
-let multiDeleteUrl = "/api/v1/currentAppFilter/list"; // + id
-let findOrCreateUrl = "/api/v1/currentAppFilter"; // + id
+let multiDeleteUrl = "/api/v1/currentAppFilter/list";
+let findOrCreateUrl = "/api/v1/currentAppFilter";
+let updateOrCreateUrl = "/api/v1/currentAppFilter";
 
 const currentAppFilter = {
     actions: {
-        createCurrentAppFilter(context, {data, filter, header}) {
+        createCurrentAppFilter(context, {data, filter, header, noMutation}) {
 
             let url = createUrl;
             if (Array.isArray && Array.isArray(data)) {
@@ -25,7 +26,9 @@ const currentAppFilter = {
             return api.create(url, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setCurrentAppFilter", response.Model);
+					if(! noMutation) {
+	                    context.commit("setCurrentAppFilter", response.Model);
+					}
 
                     return response;
                 })
@@ -34,7 +37,7 @@ const currentAppFilter = {
                     throw(err);
                 });
         },
-        deleteCurrentAppFilter(context, {id, header}) {
+        deleteCurrentAppFilter(context, {id, header, noMutation}) {
 
             let url;
             let dataOrNull = null;
@@ -48,7 +51,9 @@ const currentAppFilter = {
 
             return api.remove(url, header, dataOrNull)
                 .then(function(response) {
-                    context.commit("clearCurrentAppFilter");
+					if(! noMutation) {
+	                    context.commit("clearCurrentAppFilter");
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -56,16 +61,18 @@ const currentAppFilter = {
                     throw(err);
                 });
         },
-        findCurrentAppFilter(context, {filter, header, isAppend}) {
+        findCurrentAppFilter(context, {filter, header, isAppend, noMutation}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    if (isAppend) {
-                        context.commit("appendCurrentAppFilter__List", response.List);
-                    } else {
-                        context.commit("setCurrentAppFilter__List", response.List);
-                    }
+					if(! noMutation) {
+						if (isAppend) {
+							context.commit("appendCurrentAppFilter__List", response.List);
+						} else {
+							context.commit("setCurrentAppFilter__List", response.List);
+						}
+					}
 
                     return response;
                 })
@@ -74,12 +81,14 @@ const currentAppFilter = {
                     throw(err);
                 });
         },
-        loadCurrentAppFilter(context, {id, filter, header}) {
+        loadCurrentAppFilter(context, {id, filter, header, noMutation}) {
 
             return api.find(readUrl + id, filter, header)
                 .then(function(response) {
 
-                    context.commit("setCurrentAppFilter", response.Model);
+					if(! noMutation) {
+	                    context.commit("setCurrentAppFilter", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -87,7 +96,7 @@ const currentAppFilter = {
                     throw(err);
                 });
         },
-        updateCurrentAppFilter(context, {id, data, filter, header}) {
+        updateCurrentAppFilter(context, {id, data, filter, header, noMutation}) {
 
             let url = updateUrl + id;
             if (Array.isArray && Array.isArray(data)) {
@@ -96,8 +105,9 @@ const currentAppFilter = {
 
             return api.update(url, data, filter, header)
                 .then(function(response) {
-
-                    context.commit("setCurrentAppFilter", response.Model);
+					if(! noMutation) {
+	                    context.commit("setCurrentAppFilter", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -105,12 +115,14 @@ const currentAppFilter = {
                     throw(err);
                 });
         },
-        findOrCreateCurrentAppFilter(context, {id, data, filter, header}) {
+        findOrCreateCurrentAppFilter(context, {id, data, filter, header, noMutation}) {
 
             return api.update(findOrCreateUrl, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setCurrentAppFilter", response.Model);
+					if(! noMutation) {
+	                    context.commit("setCurrentAppFilter", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -203,6 +215,7 @@ const currentAppFilter = {
             delete: deleteUrl,
             multiDelete: multiDeleteUrl,
             findOrCreate: findOrCreateUrl,
+            updateOrCreate: updateOrCreateUrl,
         },
     },
 };

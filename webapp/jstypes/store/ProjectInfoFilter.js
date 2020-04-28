@@ -8,14 +8,15 @@ let readUrl = "/api/v1/projectInfoFilter/"; // + id
 let createUrl = "/api/v1/projectInfoFilter";
 let multiCreateUrl = "/api/v1/projectInfoFilter/list";
 let updateUrl = "/api/v1/projectInfoFilter/"; // + id
-let multiUpdateUrl = "/api/v1/projectInfoFilter/list"; // + id
+let multiUpdateUrl = "/api/v1/projectInfoFilter/list";
 let deleteUrl = "/api/v1/projectInfoFilter/"; // + id
-let multiDeleteUrl = "/api/v1/projectInfoFilter/list"; // + id
-let findOrCreateUrl = "/api/v1/projectInfoFilter"; // + id
+let multiDeleteUrl = "/api/v1/projectInfoFilter/list";
+let findOrCreateUrl = "/api/v1/projectInfoFilter";
+let updateOrCreateUrl = "/api/v1/projectInfoFilter";
 
 const projectInfoFilter = {
     actions: {
-        createProjectInfoFilter(context, {data, filter, header}) {
+        createProjectInfoFilter(context, {data, filter, header, noMutation}) {
 
             let url = createUrl;
             if (Array.isArray && Array.isArray(data)) {
@@ -25,7 +26,9 @@ const projectInfoFilter = {
             return api.create(url, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setProjectInfoFilter", response.Model);
+					if(! noMutation) {
+	                    context.commit("setProjectInfoFilter", response.Model);
+					}
 
                     return response;
                 })
@@ -34,7 +37,7 @@ const projectInfoFilter = {
                     throw(err);
                 });
         },
-        deleteProjectInfoFilter(context, {id, header}) {
+        deleteProjectInfoFilter(context, {id, header, noMutation}) {
 
             let url;
             let dataOrNull = null;
@@ -48,7 +51,9 @@ const projectInfoFilter = {
 
             return api.remove(url, header, dataOrNull)
                 .then(function(response) {
-                    context.commit("clearProjectInfoFilter");
+					if(! noMutation) {
+	                    context.commit("clearProjectInfoFilter");
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -56,16 +61,18 @@ const projectInfoFilter = {
                     throw(err);
                 });
         },
-        findProjectInfoFilter(context, {filter, header, isAppend}) {
+        findProjectInfoFilter(context, {filter, header, isAppend, noMutation}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    if (isAppend) {
-                        context.commit("appendProjectInfoFilter__List", response.List);
-                    } else {
-                        context.commit("setProjectInfoFilter__List", response.List);
-                    }
+					if(! noMutation) {
+						if (isAppend) {
+							context.commit("appendProjectInfoFilter__List", response.List);
+						} else {
+							context.commit("setProjectInfoFilter__List", response.List);
+						}
+					}
 
                     return response;
                 })
@@ -74,12 +81,14 @@ const projectInfoFilter = {
                     throw(err);
                 });
         },
-        loadProjectInfoFilter(context, {id, filter, header}) {
+        loadProjectInfoFilter(context, {id, filter, header, noMutation}) {
 
             return api.find(readUrl + id, filter, header)
                 .then(function(response) {
 
-                    context.commit("setProjectInfoFilter", response.Model);
+					if(! noMutation) {
+	                    context.commit("setProjectInfoFilter", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -87,7 +96,7 @@ const projectInfoFilter = {
                     throw(err);
                 });
         },
-        updateProjectInfoFilter(context, {id, data, filter, header}) {
+        updateProjectInfoFilter(context, {id, data, filter, header, noMutation}) {
 
             let url = updateUrl + id;
             if (Array.isArray && Array.isArray(data)) {
@@ -96,8 +105,9 @@ const projectInfoFilter = {
 
             return api.update(url, data, filter, header)
                 .then(function(response) {
-
-                    context.commit("setProjectInfoFilter", response.Model);
+					if(! noMutation) {
+	                    context.commit("setProjectInfoFilter", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -105,12 +115,14 @@ const projectInfoFilter = {
                     throw(err);
                 });
         },
-        findOrCreateProjectInfoFilter(context, {id, data, filter, header}) {
+        findOrCreateProjectInfoFilter(context, {id, data, filter, header, noMutation}) {
 
             return api.update(findOrCreateUrl, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setProjectInfoFilter", response.Model);
+					if(! noMutation) {
+	                    context.commit("setProjectInfoFilter", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -203,6 +215,7 @@ const projectInfoFilter = {
             delete: deleteUrl,
             multiDelete: multiDeleteUrl,
             findOrCreate: findOrCreateUrl,
+            updateOrCreate: updateOrCreateUrl,
         },
     },
 };

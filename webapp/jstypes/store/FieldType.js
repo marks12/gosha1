@@ -8,14 +8,15 @@ let readUrl = "/api/v1/fieldType/"; // + id
 let createUrl = "/api/v1/fieldType";
 let multiCreateUrl = "/api/v1/fieldType/list";
 let updateUrl = "/api/v1/fieldType/"; // + id
-let multiUpdateUrl = "/api/v1/fieldType/list"; // + id
+let multiUpdateUrl = "/api/v1/fieldType/list";
 let deleteUrl = "/api/v1/fieldType/"; // + id
-let multiDeleteUrl = "/api/v1/fieldType/list"; // + id
-let findOrCreateUrl = "/api/v1/fieldType"; // + id
+let multiDeleteUrl = "/api/v1/fieldType/list";
+let findOrCreateUrl = "/api/v1/fieldType";
+let updateOrCreateUrl = "/api/v1/fieldType";
 
 const fieldType = {
     actions: {
-        createFieldType(context, {data, filter, header}) {
+        createFieldType(context, {data, filter, header, noMutation}) {
 
             let url = createUrl;
             if (Array.isArray && Array.isArray(data)) {
@@ -25,7 +26,9 @@ const fieldType = {
             return api.create(url, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setFieldType", response.Model);
+					if(! noMutation) {
+	                    context.commit("setFieldType", response.Model);
+					}
 
                     return response;
                 })
@@ -34,7 +37,7 @@ const fieldType = {
                     throw(err);
                 });
         },
-        deleteFieldType(context, {id, header}) {
+        deleteFieldType(context, {id, header, noMutation}) {
 
             let url;
             let dataOrNull = null;
@@ -48,7 +51,9 @@ const fieldType = {
 
             return api.remove(url, header, dataOrNull)
                 .then(function(response) {
-                    context.commit("clearFieldType");
+					if(! noMutation) {
+	                    context.commit("clearFieldType");
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -56,16 +61,18 @@ const fieldType = {
                     throw(err);
                 });
         },
-        findFieldType(context, {filter, header, isAppend}) {
+        findFieldType(context, {filter, header, isAppend, noMutation}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    if (isAppend) {
-                        context.commit("appendFieldType__List", response.List);
-                    } else {
-                        context.commit("setFieldType__List", response.List);
-                    }
+					if(! noMutation) {
+						if (isAppend) {
+							context.commit("appendFieldType__List", response.List);
+						} else {
+							context.commit("setFieldType__List", response.List);
+						}
+					}
 
                     return response;
                 })
@@ -74,12 +81,14 @@ const fieldType = {
                     throw(err);
                 });
         },
-        loadFieldType(context, {id, filter, header}) {
+        loadFieldType(context, {id, filter, header, noMutation}) {
 
             return api.find(readUrl + id, filter, header)
                 .then(function(response) {
 
-                    context.commit("setFieldType", response.Model);
+					if(! noMutation) {
+	                    context.commit("setFieldType", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -87,7 +96,7 @@ const fieldType = {
                     throw(err);
                 });
         },
-        updateFieldType(context, {id, data, filter, header}) {
+        updateFieldType(context, {id, data, filter, header, noMutation}) {
 
             let url = updateUrl + id;
             if (Array.isArray && Array.isArray(data)) {
@@ -96,8 +105,9 @@ const fieldType = {
 
             return api.update(url, data, filter, header)
                 .then(function(response) {
-
-                    context.commit("setFieldType", response.Model);
+					if(! noMutation) {
+	                    context.commit("setFieldType", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -105,12 +115,14 @@ const fieldType = {
                     throw(err);
                 });
         },
-        findOrCreateFieldType(context, {id, data, filter, header}) {
+        findOrCreateFieldType(context, {id, data, filter, header, noMutation}) {
 
             return api.update(findOrCreateUrl, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setFieldType", response.Model);
+					if(! noMutation) {
+	                    context.commit("setFieldType", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -203,6 +215,7 @@ const fieldType = {
             delete: deleteUrl,
             multiDelete: multiDeleteUrl,
             findOrCreate: findOrCreateUrl,
+            updateOrCreate: updateOrCreateUrl,
         },
     },
 };
