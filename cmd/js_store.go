@@ -25,7 +25,7 @@ let multiUpdateUrl = "` + MultiUpdateUrl + `";
 let deleteUrl = "` + DeleteUrl + `"; // + id
 let multiDeleteUrl = "` + MultiDeleteUrl + `";
 let findOrCreateUrl = "` + FindOrCreateUrl + `";
-let findOrCreateUrl = "` + UpdateOrCreateUrl + `";
+let updateOrCreateUrl = "` + UpdateOrCreateUrl + `";
 
 const {entity} = {
     actions: {

@@ -8,14 +8,15 @@ let readUrl = "/api/v1/pagination/"; // + id
 let createUrl = "/api/v1/pagination";
 let multiCreateUrl = "/api/v1/pagination/list";
 let updateUrl = "/api/v1/pagination/"; // + id
-let multiUpdateUrl = "/api/v1/pagination/list"; // + id
+let multiUpdateUrl = "/api/v1/pagination/list";
 let deleteUrl = "/api/v1/pagination/"; // + id
-let multiDeleteUrl = "/api/v1/pagination/list"; // + id
-let findOrCreateUrl = "/api/v1/pagination"; // + id
+let multiDeleteUrl = "/api/v1/pagination/list";
+let findOrCreateUrl = "/api/v1/pagination";
+let updateOrCreateUrl = "/api/v1/pagination";
 
 const pagination = {
     actions: {
-        createPagination(context, {data, filter, header}) {
+        createPagination(context, {data, filter, header, noMutation}) {
 
             let url = createUrl;
             if (Array.isArray && Array.isArray(data)) {
@@ -25,7 +26,9 @@ const pagination = {
             return api.create(url, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setPagination", response.Model);
+					if(! noMutation) {
+	                    context.commit("setPagination", response.Model);
+					}
 
                     return response;
                 })
@@ -34,7 +37,7 @@ const pagination = {
                     throw(err);
                 });
         },
-        deletePagination(context, {id, header}) {
+        deletePagination(context, {id, header, noMutation}) {
 
             let url;
             let dataOrNull = null;
@@ -48,7 +51,9 @@ const pagination = {
 
             return api.remove(url, header, dataOrNull)
                 .then(function(response) {
-                    context.commit("clearPagination");
+					if(! noMutation) {
+	                    context.commit("clearPagination");
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -56,16 +61,18 @@ const pagination = {
                     throw(err);
                 });
         },
-        findPagination(context, {filter, header, isAppend}) {
+        findPagination(context, {filter, header, isAppend, noMutation}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    if (isAppend) {
-                        context.commit("appendPagination__List", response.List);
-                    } else {
-                        context.commit("setPagination__List", response.List);
-                    }
+					if(! noMutation) {
+						if (isAppend) {
+							context.commit("appendPagination__List", response.List);
+						} else {
+							context.commit("setPagination__List", response.List);
+						}
+					}
 
                     return response;
                 })
@@ -74,12 +81,14 @@ const pagination = {
                     throw(err);
                 });
         },
-        loadPagination(context, {id, filter, header}) {
+        loadPagination(context, {id, filter, header, noMutation}) {
 
             return api.find(readUrl + id, filter, header)
                 .then(function(response) {
 
-                    context.commit("setPagination", response.Model);
+					if(! noMutation) {
+	                    context.commit("setPagination", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -87,7 +96,7 @@ const pagination = {
                     throw(err);
                 });
         },
-        updatePagination(context, {id, data, filter, header}) {
+        updatePagination(context, {id, data, filter, header, noMutation}) {
 
             let url = updateUrl + id;
             if (Array.isArray && Array.isArray(data)) {
@@ -96,8 +105,9 @@ const pagination = {
 
             return api.update(url, data, filter, header)
                 .then(function(response) {
-
-                    context.commit("setPagination", response.Model);
+					if(! noMutation) {
+	                    context.commit("setPagination", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -105,12 +115,14 @@ const pagination = {
                     throw(err);
                 });
         },
-        findOrCreatePagination(context, {id, data, filter, header}) {
+        findOrCreatePagination(context, {id, data, filter, header, noMutation}) {
 
             return api.update(findOrCreateUrl, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setPagination", response.Model);
+					if(! noMutation) {
+	                    context.commit("setPagination", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -203,6 +215,7 @@ const pagination = {
             delete: deleteUrl,
             multiDelete: multiDeleteUrl,
             findOrCreate: findOrCreateUrl,
+            updateOrCreate: updateOrCreateUrl,
         },
     },
 };

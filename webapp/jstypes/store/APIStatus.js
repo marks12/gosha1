@@ -8,14 +8,15 @@ let readUrl = "/api/v1/aPIStatus/"; // + id
 let createUrl = "/api/v1/aPIStatus";
 let multiCreateUrl = "/api/v1/aPIStatus/list";
 let updateUrl = "/api/v1/aPIStatus/"; // + id
-let multiUpdateUrl = "/api/v1/aPIStatus/list"; // + id
+let multiUpdateUrl = "/api/v1/aPIStatus/list";
 let deleteUrl = "/api/v1/aPIStatus/"; // + id
-let multiDeleteUrl = "/api/v1/aPIStatus/list"; // + id
-let findOrCreateUrl = "/api/v1/aPIStatus"; // + id
+let multiDeleteUrl = "/api/v1/aPIStatus/list";
+let findOrCreateUrl = "/api/v1/aPIStatus";
+let updateOrCreateUrl = "/api/v1/aPIStatus";
 
 const aPIStatus = {
     actions: {
-        createAPIStatus(context, {data, filter, header}) {
+        createAPIStatus(context, {data, filter, header, noMutation}) {
 
             let url = createUrl;
             if (Array.isArray && Array.isArray(data)) {
@@ -25,7 +26,9 @@ const aPIStatus = {
             return api.create(url, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAPIStatus", response.Model);
+					if(! noMutation) {
+	                    context.commit("setAPIStatus", response.Model);
+					}
 
                     return response;
                 })
@@ -34,7 +37,7 @@ const aPIStatus = {
                     throw(err);
                 });
         },
-        deleteAPIStatus(context, {id, header}) {
+        deleteAPIStatus(context, {id, header, noMutation}) {
 
             let url;
             let dataOrNull = null;
@@ -48,7 +51,9 @@ const aPIStatus = {
 
             return api.remove(url, header, dataOrNull)
                 .then(function(response) {
-                    context.commit("clearAPIStatus");
+					if(! noMutation) {
+	                    context.commit("clearAPIStatus");
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -56,16 +61,18 @@ const aPIStatus = {
                     throw(err);
                 });
         },
-        findAPIStatus(context, {filter, header, isAppend}) {
+        findAPIStatus(context, {filter, header, isAppend, noMutation}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    if (isAppend) {
-                        context.commit("appendAPIStatus__List", response.List);
-                    } else {
-                        context.commit("setAPIStatus__List", response.List);
-                    }
+					if(! noMutation) {
+						if (isAppend) {
+							context.commit("appendAPIStatus__List", response.List);
+						} else {
+							context.commit("setAPIStatus__List", response.List);
+						}
+					}
 
                     return response;
                 })
@@ -74,12 +81,14 @@ const aPIStatus = {
                     throw(err);
                 });
         },
-        loadAPIStatus(context, {id, filter, header}) {
+        loadAPIStatus(context, {id, filter, header, noMutation}) {
 
             return api.find(readUrl + id, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAPIStatus", response.Model);
+					if(! noMutation) {
+	                    context.commit("setAPIStatus", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -87,7 +96,7 @@ const aPIStatus = {
                     throw(err);
                 });
         },
-        updateAPIStatus(context, {id, data, filter, header}) {
+        updateAPIStatus(context, {id, data, filter, header, noMutation}) {
 
             let url = updateUrl + id;
             if (Array.isArray && Array.isArray(data)) {
@@ -96,8 +105,9 @@ const aPIStatus = {
 
             return api.update(url, data, filter, header)
                 .then(function(response) {
-
-                    context.commit("setAPIStatus", response.Model);
+					if(! noMutation) {
+	                    context.commit("setAPIStatus", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -105,12 +115,14 @@ const aPIStatus = {
                     throw(err);
                 });
         },
-        findOrCreateAPIStatus(context, {id, data, filter, header}) {
+        findOrCreateAPIStatus(context, {id, data, filter, header, noMutation}) {
 
             return api.update(findOrCreateUrl, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAPIStatus", response.Model);
+					if(! noMutation) {
+	                    context.commit("setAPIStatus", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
@@ -203,6 +215,7 @@ const aPIStatus = {
             delete: deleteUrl,
             multiDelete: multiDeleteUrl,
             findOrCreate: findOrCreateUrl,
+            updateOrCreate: updateOrCreateUrl,
         },
     },
 };
