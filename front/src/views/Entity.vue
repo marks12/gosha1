@@ -29,11 +29,8 @@
                 <VText class="loading"></VText>
             </template>
 
-            <template>
-                <VPanel
-                        v-if="panel.show"
-                        @close="closePanel"
-                >
+            <VPanel v-if="panel.show" @close="closePanel">
+
                     <VSet slot="header">
                         <VHead level="h3" width="fit">{{ panelHeader }} {{ currentEntityItem.Name }}</VHead>
                     </VSet>
@@ -131,7 +128,6 @@
 
                     </template>
                 </VPanel>
-            </template>
 
             <slot name="confirmationPanel">
                 <VPanel
@@ -178,6 +174,7 @@
 
     import EntityGen from "../../../webapp/jstypes/components/EntityGen";
     import VBadge from "swtui/src/components/VBadge";
+    import VSet from "swtui/src/components/VSet";
     import VSpoiler from "swtui/src/components/VSpoiler";
     import VGroup from "swtui/src/components/VGroup";
     import VSelect from "swtui/src/components/VSelect";
@@ -189,7 +186,7 @@
 
     export default {
         name: "Entity",
-        components: {EntityRequest, EntityItem, VSpoiler, VBadge, EntityGen, VGroup, VSelect, VSign},
+        components: {EntityRequest, EntityItem, VSpoiler, VBadge, EntityGen, VGroup, VSelect, VSign, VSet},
         mixins: [
             EntityGen,
         ],
@@ -500,6 +497,8 @@
     }
 </script>
 
-<style scoped>
-
+<style>
+    #second .sw-panel__inner {
+        left: -10px !important;
+    }
 </style>
