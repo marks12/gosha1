@@ -29,7 +29,7 @@
                 <VText class="loading"></VText>
             </template>
 
-            <VPanel v-if="panel.show" @close="closePanel">
+            <VPanel v-if="panel.show" @close="closePanel" :maxWidth="panelMaxWidth">
 
                     <VSet slot="header">
                         <VHead level="h3" width="fit">{{ panelHeader }} {{ currentEntityItem.Name }}</VHead>
@@ -183,6 +183,7 @@
     import { mapGetters, mapMutations, mapActions } from 'vuex';
     import {Entity, EntityField, EntityFilter, FieldTypeFilter} from "../../../webapp/jstypes/apiModel";
     import EntityRequest from "../components/EntityRequest";
+    import apiCSR from "../../../jstypes/apiCSR";
 
     export default {
         name: "Entity",
@@ -222,18 +223,68 @@
             }, 1000);
 
         },
+        computed: {
+            ...mapGetters('gosha', {
+                panelMaxWidth: "getPanelMaxWidth",
+            }),
+            isHttpMethods() {
+                return this.currentEntityItem && this.currentEntityItem.HttpMethods;
+            },
+
+            hasFields(entityItem) {
+                return (entityItem) => {
+                    return  entityItem &&
+                        entityItem.TypeFields &&
+                        entityItem.TypeFields.length;
+                }
+            },
+            getTypes() {
+                return this.getListFieldType().filter((item)=>{
+                    return (this.currentEntityItem.IsFilter && item.Type === "filter") ||
+                        (! this.currentEntityItem.IsFilter && item.Type !== "filter")
+                }).map( (item)=> {return item.Name});
+            },
+            entity() {
+                return this.getEntityById();
+            },
+            isPanelRequest() {
+                return this.panel.type === this.panel.request;
+            },
+            panelSubmitButtonText() {
+
+                if (this.isPanelCreate) {
+                    return this.panelSubmitButtonTextCreate;
+                }
+
+                if (this.isPanelEdit) {
+                    return this.panelSubmitButtonTextEdit;
+                }
+
+                if (this.isPanelRequest) {
+                    return 'Request';
+                }
+
+                return  '';
+            },
+        },
         methods: {
             ...mapActions('gosha', [
                 "findFieldType",
                 "createEntity",
+                "setResponse",
             ]),
             ...mapGetters('gosha', [
                 "getListFieldType",
                 "getEntityById",
+                "getPanelMaxWidth",
+                "getFilters",
+                "getHeaders",
+                "getBodyModel",
+                "getRequestUrl",
             ]),
 
             onRequest(item) {
-
+                console.log("request action", item);
             },
 
             getNewEntity() {
@@ -335,6 +386,26 @@
                 return this.errors.length === 0;
             },
             sendRequest() {
+                console.log('send request');
+                console.log(JSON.stringify(this.getFilters()));
+                console.log(JSON.stringify(this.getFilters()));
+                console.log(JSON.stringify(this.getBodyModel()));
+                console.log(this.currentEntityItem.Action);
+
+                let response = null;
+
+                switch (this.currentEntityItem.Action) {
+                    case "find":
+                        response = apiCSR.find(this.getRequestUrl(), this.getFilters(), this.getHeaders());
+                        break;
+                }
+
+                response.then((r)=>{
+                    this.setResponse(r);
+                }).catch((r)=>{
+                    this.setResponse(r);
+                });
+
 
             },
             saveChangesSubmit() {
@@ -440,48 +511,6 @@
                 this.showPanel(this.panel.create)
             },
 
-        },
-        computed: {
-
-            isHttpMethods() {
-                return this.currentEntityItem && this.currentEntityItem.HttpMethods;
-            },
-
-            hasFields(entityItem) {
-                return (entityItem) => {
-                    return  entityItem &&
-                            entityItem.TypeFields &&
-                            entityItem.TypeFields.length;
-                }
-            },
-            getTypes() {
-                return this.getListFieldType().filter((item)=>{
-                    return (this.currentEntityItem.IsFilter && item.Type === "filter") ||
-                        (! this.currentEntityItem.IsFilter && item.Type !== "filter")
-                }).map( (item)=> {return item.Name});
-            },
-            entity() {
-                return this.getEntityById();
-            },
-            isPanelRequest() {
-                return this.panel.type === this.panel.request;
-            },
-            panelSubmitButtonText() {
-
-                if (this.isPanelCreate) {
-                    return this.panelSubmitButtonTextCreate;
-                }
-
-                if (this.isPanelEdit) {
-                    return this.panelSubmitButtonTextEdit;
-                }
-
-                if (this.isPanelRequest) {
-                    return 'Request';
-                }
-
-                return  '';
-            },
         },
         watch: {
             'entityFilter.WithFilter': function (newFilter) {
