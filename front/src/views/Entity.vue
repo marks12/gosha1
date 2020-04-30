@@ -185,6 +185,46 @@
     import EntityRequest from "../components/EntityRequest";
     import apiCSR from "../../../jstypes/apiCSR";
 
+    function appendParams(u, params) {
+        let uparams = "";
+        switch (typeof params) {
+            case "object":
+                if (Object.keys(params).length < 1) {
+                    return u;
+                }
+                u = u + (u.includes("?") ? "" : "?");
+                for (const f of Object.keys(params)) {
+
+                    if (uparams !== "") {
+                        uparams += "&";
+                    }
+
+                    let list = "";
+
+                    switch (typeof params[f]) {
+                        case "object":
+
+                            if (params && params[f]) {
+                                for (let j = 0; j < params[f].length; j++) {
+                                    if (list.length) {
+                                        list += "&";
+                                    }
+                                    list += f + "[]=" + encodeURIComponent(params[f][j]);
+                                }
+
+                                uparams += list;
+                            }
+                            break;
+                        default:
+                            uparams += f + "=" + encodeURIComponent(params[f]);
+                            break;
+                    }
+                }
+                break;
+        }
+        return (u + uparams).replace(/[&]+/,'&');
+    }
+
     export default {
         name: "Entity",
         components: {EntityRequest, EntityItem, VSpoiler, VBadge, EntityGen, VGroup, VSelect, VSign, VSet},
@@ -272,6 +312,9 @@
                 "findFieldType",
                 "createEntity",
                 "setResponse",
+                "setResponseCode",
+                "setResponseStatusText",
+                "resetResponse",
             ]),
             ...mapGetters('gosha', [
                 "getListFieldType",
@@ -385,29 +428,51 @@
 
                 return this.errors.length === 0;
             },
-            sendRequest() {
+            async sendRequest() {
                 console.log('send request');
                 console.log(JSON.stringify(this.getFilters()));
                 console.log(JSON.stringify(this.getFilters()));
                 console.log(JSON.stringify(this.getBodyModel()));
                 console.log(this.currentEntityItem.Action);
 
-                let response = null;
+                this.resetResponse();
+
+                let result = null;
+                let t1 = this.microtime(true);
 
                 switch (this.currentEntityItem.Action) {
                     case "find":
-                        response = apiCSR.find(this.getRequestUrl(), this.getFilters(), this.getHeaders());
+
+                        result = fetch(appendParams(this.getRequestUrl(), this.getFilters()), {
+                            method: 'GET',
+                            headers: this.getHeaders(),
+                        });
+
                         break;
                 }
 
-                response.then((r)=>{
-                    this.setResponse(r);
-                }).catch((r)=>{
-                    this.setResponse(r);
-                });
 
+                result.then((response) => {
+                    console.log('!!!res', response);
+                    this.setResponseCode(response.status);
+                    this.setResponseStatusText(response.statusText);
 
+                    return response.text();
+                })
+                .then((r)=>{
+
+                    console.log('result', r);
+                    console.log('time', (this.microtime(true) - t1).toFixed(3));
+                    this.setResponse(r);
+                })
             },
+
+            microtime(get_as_float) {
+                let now = new Date().getTime() / 1000;
+                let s = parseInt(now);
+                return (get_as_float) ? now : (Math.round((now - s) * 1000) / 1000) + ' ' + s;
+            },
+
             saveChangesSubmit() {
 
                 if (this.isPanelRequest) {
