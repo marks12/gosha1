@@ -243,10 +243,7 @@ func {Entity}Update(filter types.{Entity}Filter, query *gorm.DB)  (data types.{E
     existsModel, err := {Entity}Read(filter)
 
     if existsModel.Id < 1 || err != nil {
-
-        if err != nil {
-            err = errors.New("{Entity} not found in db with id: " + strconv.Itoa(filter.GetCurrentId()))
-        }
+        err = errors.New("{Entity} not found in db with id: " + strconv.Itoa(filter.GetCurrentId()))
         return
     }
 
