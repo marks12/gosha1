@@ -6,7 +6,13 @@
                     <VLabel>Request</VLabel>
                     <VInput multiline rows="17" width="dyn" placeholder="request"></VInput>
                 </VSet>
-                <VLabel>Response</VLabel>
+                <VSet indent-size="XS">
+                    <VLabel>Response</VLabel>
+                    <VSet v-if="isValidCode" indent-size="XS">
+                        <VBadge :color="getResponseCode() > 299 ? 'attention' : 'action'">{{getResponseCode()}}</VBadge>
+                        <VLabel>{{getResponseStatusText()}}</VLabel>
+                    </VSet>
+                </VSet>
                 <VInput multiline rows="16" width="dyn" :value="response" placeholder="response"></VInput>
             </VSet>
         </VSet>
@@ -32,11 +38,9 @@
             </VSet>
             <VSet vertical>
                 <VSet wrap>
-                    <VSet vertical v-if="entityFilter.Fields && entityFilter.Fields.length" v-for="item in entityFilter.Fields" :key="'k-' + item.Name" width="fit" indent-size="XS">
+                    <VSet vertical v-if="entityFilter.Fields && entityFilter.Fields.length" v-for="item in entityFilter.Fields" :key="'k-' + item.Name" width="col6" indent-size="XS">
                         <VLabel>{{item.Name}}</VLabel>
-                        <VText>
-                            <VInput v-model="requestFilter[item.Name]"></VInput>
-                        </VText>
+                        <VInput v-model="requestFilter[item.Name]" width="dyn"></VInput>
                     </VSet>
                 </VSet>
             </VSet>
@@ -83,18 +87,32 @@
         created() {
 
             this.$nextTick(()=>{
+                this.resetResponse();
                 this.urlChanged();
             });
 
             this.fillServers();
             this.findFilter();
 
-            this.setPanelMaxWidth("col8");
+            this.setPanelMaxWidth("col12");
 
         },
         computed: {
             response() {
-                return JSON.stringify(this.getResponse(), null, 4);
+
+                let r = this.getResponse();
+
+                try {
+                    r = JSON.parse(r);
+                    r = JSON.stringify(r, null, 4)
+                } catch (e) {
+
+                }
+
+                return r;
+            },
+            isValidCode() {
+                return 1 * this.getResponseCode() >= 200;
             },
         },
         watch: {
@@ -121,10 +139,13 @@
 
             ...mapGetters('gosha', {
                 entityList: 'getListEntity',
-                getResponse: 'getResponse'
+                getResponse: 'getResponse',
+                getResponseCode: 'getResponseCode',
+                getResponseStatusText: 'getResponseStatusText',
             }),
 
             ...mapActions('gosha', {
+                resetResponse: 'resetResponse',
                 findEntity: 'findEntity',
                 setPanelMaxWidth: "setPanelMaxWidth",
                 setFilters: "setFilters",
@@ -180,6 +201,8 @@
     }
 </script>
 
-<style scoped>
-
+<style>
+    .sw-set_has-indent.sw-set_indent-M > .sw-width_col6 {
+        width: calc(((100% - 11 * 16px) * 6 / 12) + ((6 - 1) * 14px)) !important;
+    }
 </style>
