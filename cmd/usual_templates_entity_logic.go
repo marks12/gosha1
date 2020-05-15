@@ -67,7 +67,7 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
     q = criteria.Limit(limit).Offset(offset).Find(&dbmodelData)
 
     if q.Error != nil {
-       log.Println("FindProduct > Ошибка получения данных2:", q.Error)
+       log.Println("Find{Entity} > Ошибка получения данных2:", q.Error)
        return []types.{Entity}{}, 0, nil
     }
 
