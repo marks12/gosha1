@@ -16,13 +16,17 @@ function BackendApi() {
     create: (url, data, getParams, headerParams) => {
       return axios.post(this.getRouteUrl(url),data, {params: getParams, headers: headerParams }).then((response) => {
         return response.data;
+      }).catch( err => {
+          console.error(` + "`" + `Error in url request ${url}` + "`" + `, err)
       });
     },
     find: (url, getParams, headerParams) => {
       return axios.get(this.getRouteUrl(url), {params: getParams, headers: headerParams })
         .then((response) => {
           return response.data;
-        });
+      }).catch( err => {
+          console.error(` + "`" + `Error in url request ${url}` + "`" + `, err)
+      });
     },
     getServerUrl: () => {
       return this.serverUrl;
@@ -30,6 +34,8 @@ function BackendApi() {
     remove: (url, getParams, data, headerParams) => {
       return axios.delete(this.getRouteUrl(url), {data: data, params: getParams, headers: headerParams }).then((response) => {
         return response.data;
+      }).catch( err => {
+          console.error(` + "`" + `Error in url request ${url}` + "`" + `, err)
       });
     },
     setServerUrl: (url) => {
@@ -39,6 +45,8 @@ function BackendApi() {
     update: (url, data, getParams, headerParams) => {
       return axios.put(this.getRouteUrl(url), data, {params: getParams, headers: headerParams }).then((response) => {
         return response.data;
+      }).catch( err => {
+          console.error(` + "`" + `Error in url request ${url}` + "`" + `, err)
       });
     },
   };
