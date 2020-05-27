@@ -3,125 +3,160 @@ package cmd
 const apiCSRContent = `
 function request(method, url, getParams, data, headerParams) {
 
-  function appendParams(u, params) {
-    let uparams = "";
-    switch (typeof params) {
-      case "object":
-        if (Object.keys(params).length < 1) {
-          return u;
-        }
-        u = u + (u.includes("?") ? "" : "?");
-        for (const f of Object.keys(params)) {
-
-          if (uparams !== "") {
-            uparams += "&";
-          }
-
-          let list = "";
-
-          switch (typeof params[f]) {
+    function appendParams(u, params) {
+        let uparams = "";
+        switch (typeof params) {
             case "object":
+                if (Object.keys(params).length < 1) {
+                    return u;
+                }
+                u = u + (u.includes("?") ? "" : "?");
+                for (const f of Object.keys(params)) {
 
-              if (params && params[f]) {
-                  for (let j = 0; j < params[f].length; j++) {
-                      if (list.length) {
-                          list += "&";
-                      }
-                      list += f + "[]=" + encodeURIComponent(params[f][j]);
-                  }
+                    if (uparams !== "") {
+                        uparams += "&";
+                    }
 
-                  uparams += list;
-              }
-              break;
-            default:
-              uparams += f + "=" + encodeURIComponent(params[f]);
-              break;
-          }
+                    let list = "";
+
+                    switch (typeof params[f]) {
+                        case "object":
+
+                            if (params && params[f]) {
+                                for (let j = 0; j < params[f].length; j++) {
+                                    if (list.length) {
+                                        list += "&";
+                                    }
+                                    list += f + "[]=" + encodeURIComponent(params[f][j]);
+                                }
+
+                                uparams += list;
+                            }
+                            break;
+                        default:
+                            uparams += f + "=" + encodeURIComponent(params[f]);
+                            break;
+                    }
+                }
+                break;
         }
-        break;
+        return (u + uparams).replace(/[&]+/, '&');
     }
-    return (u + uparams).replace(/[&]+/,'&');
-  }
 
-  function setHeader(req) {
-    for (const f of Object.keys(headerParams)) {
-      req.setRequestHeader(f, headerParams[f]);
+    function setHeader(req) {
+        for (const f of Object.keys(headerParams)) {
+            req.setRequestHeader(f, headerParams[f]);
+        }
     }
-  }
 
-  return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
 
-    let xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
 
-    url = appendParams(url, getParams);
+        url = appendParams(url, getParams);
 
-    xhr.open(method, url);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.setRequestHeader("Token", localStorage.getItem("imToken"));
+        xhr.open(method, url);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Token", localStorage.getItem("imToken"));
 
-    xhr.onload = function() {
+        xhr.onload = function () {
 
-      if (this.status >= 200 && this.status < 300) {
+            if (this.status >= 200 && this.status < 300) {
 
-        resolve(JSON.parse(xhr.response));
+                resolve(JSON.parse(xhr.response));
 
-      } else {
-        reject({
-          status: this.status,
-          statusText: xhr.statusText,
-        });
-      }
-    };
-    xhr.onerror = function() {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText,
+                });
+            }
+        };
+        xhr.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText,
+            });
+        };
 
-    if (data) {
+        if (data) {
 
-      if (headerParams) {
-        setHeader(xhr);
-      }
+            if (headerParams) {
+                setHeader(xhr);
+            }
 
-      xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.send(JSON.stringify(data));
-    } else {
-      xhr.send();
-    }
-  });
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify(data));
+        } else {
+            xhr.send();
+        }
+    });
 }
 
 function BackendApi() {
 
-  this.serverUrl = "";
+    this.serverUrl = "";
 
-  this.getRouteUrl = (url) => {
-    return this.serverUrl + url;
-  };
+    this.defaultParameters = {};
 
-  return {
-    create: (url, data, getParams, headerParams) => {
-      return request("POST", this.getRouteUrl(url), getParams, data, headerParams);
-    },
-    find: (url, getParams, headerParams) => {
-      return request("GET", this.getRouteUrl(url), getParams, null, headerParams);
-    },
-    getServerUrl: () => {
-      return this.serverUrl;
-    },
-    remove: (url, getParams, data, headerParams) => {
-      return request("DELETE", this.getRouteUrl(url), getParams, data, headerParams);
-    },
-    setServerUrl: (url) => {
-      this.serverUrl = url;
-      return this;
-    },
-    update: (url, data, getParams, headerParams) => {
-      return request("PUT", this.getRouteUrl(url), getParams, data, headerParams);
-    },
-  };
+    this.getRouteUrl = (url) => {
+        return this.serverUrl + url;
+    };
+
+    let appendGlobalFilter = (filter) => {
+
+        for (let param in filter) {
+            if (filter.hasOwnProperty(param) && !filter[param] && this.defaultParameters.hasOwnProperty(param)) {
+                filter[param] = this.defaultParameters[param];
+            }
+        }
+
+        return filter;
+    }
+
+    return {
+        find: (url, getParams, headerParams) => {
+            getParams = appendGlobalFilter(getParams)
+            return request("GET", this.getRouteUrl(url), getParams, null, headerParams);
+        },
+        create: (url, data, getParams, headerParams) => {
+            getParams = appendGlobalFilter(getParams)
+            return request("POST", this.getRouteUrl(url), getParams, data, headerParams);
+        },
+        update: (url, data, getParams, headerParams) => {
+            getParams = appendGlobalFilter(getParams)
+            return request("PUT", this.getRouteUrl(url), getParams, data, headerParams);
+        },
+        remove: (url, getParams, data, headerParams) => {
+            getParams = appendGlobalFilter(getParams)
+            return request("DELETE", this.getRouteUrl(url), getParams, data, headerParams);
+        },
+        getServerUrl: () => {
+            return this.serverUrl;
+        },
+        setServerUrl: (url) => {
+            this.serverUrl = url;
+            return this;
+        },
+        clearGlobalFilters: () => {
+            this.defaultParameters = {};
+            return this;
+        },
+        clearGlobalFilter: (name) => {
+            delete this.defaultParameters[name];
+            return this;
+        },
+        setGlobalFilterValue: (parameter, value) => {
+            this.defaultParameters[parameter] = value;
+            return this;
+        },
+        getGlobalFilters: () => {
+            return this.defaultParameters;
+        },
+        getGlobalFilter: (name) => {
+            return this.defaultParameters[name];
+        },
+    };
 }
 
 let apiCSR = new BackendApi();
