@@ -40,6 +40,7 @@ var SupportedFilterDataTypes = []string{
 	DataTypeUuid,
     DataTypeArrayInt,
 	DataTypeArrayString,
+	DataTypeTime,
 }
 
 var UsualDefaultStructure = []string{

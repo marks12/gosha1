@@ -97,10 +97,20 @@ function BackendApi() {
 
     this.serverUrl = "";
 
+    this.token = "";
+
     this.defaultParameters = {};
 
     this.getRouteUrl = (url) => {
         return this.serverUrl + url;
+    };
+
+    this.appendToken = (params) => {
+        if (!params) {
+            params = {};
+        }
+        params.Token = this.token;
+        return params;
     };
 
     let appendGlobalFilter = (filter) => {
@@ -117,25 +127,32 @@ function BackendApi() {
     return {
         find: (url, getParams, headerParams) => {
             getParams = appendGlobalFilter(getParams)
-            return request("GET", this.getRouteUrl(url), getParams, null, headerParams);
+            return request("GET", this.getRouteUrl(url), getParams, null, this.appendToken(headerParams));
         },
         create: (url, data, getParams, headerParams) => {
             getParams = appendGlobalFilter(getParams)
-            return request("POST", this.getRouteUrl(url), getParams, data, headerParams);
+            return request("POST", this.getRouteUrl(url), getParams, data, this.appendToken(headerParams));
         },
         update: (url, data, getParams, headerParams) => {
             getParams = appendGlobalFilter(getParams)
-            return request("PUT", this.getRouteUrl(url), getParams, data, headerParams);
+            return request("PUT", this.getRouteUrl(url), getParams, data, this.appendToken(headerParams));
         },
         remove: (url, getParams, data, headerParams) => {
             getParams = appendGlobalFilter(getParams)
-            return request("DELETE", this.getRouteUrl(url), getParams, data, headerParams);
+            return request("DELETE", this.getRouteUrl(url), getParams, data, this.appendToken(headerParams));
         },
         getServerUrl: () => {
             return this.serverUrl;
         },
         setServerUrl: (url) => {
             this.serverUrl = url;
+            return this;
+        },
+        getToken: () => {
+            return this.token;
+        },
+        setToken: (token) => {
+            this.token = token;
             return this;
         },
         clearGlobalFilters: () => {
@@ -161,5 +178,4 @@ function BackendApi() {
 
 let apiCSR = new BackendApi();
 
-export default apiCSR;
-`
+export default apiCSR;`
