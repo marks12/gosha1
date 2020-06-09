@@ -1,7 +1,6 @@
 package cmd
 
 const apiSSRContent = `
-
 import axios from "axios";
 
 function BackendApi() {
