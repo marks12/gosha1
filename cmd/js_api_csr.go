@@ -1,6 +1,7 @@
 package cmd
 
 const apiCSRContent = `
+
 function request(method, url, getParams, data, headerParams) {
 
     function appendParams(u, params) {
@@ -57,7 +58,9 @@ function request(method, url, getParams, data, headerParams) {
 
         xhr.open(method, url);
         xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.setRequestHeader("Token", localStorage.getItem("imToken"));
+        if (headerParams) {
+            setHeader(xhr);
+        }
 
         xhr.onload = function () {
 
@@ -80,12 +83,6 @@ function request(method, url, getParams, data, headerParams) {
         };
 
         if (data) {
-
-            if (headerParams) {
-                setHeader(xhr);
-            }
-
-            xhr.setRequestHeader("Content-Type", "application/json");
             xhr.send(JSON.stringify(data));
         } else {
             xhr.send();
@@ -178,4 +175,5 @@ function BackendApi() {
 
 let apiCSR = new BackendApi();
 
-export default apiCSR;`
+export default apiCSR;
+`
