@@ -1,16 +1,27 @@
 package cmd
 
 const apiSSRContent = `
+
 import axios from "axios";
 
 function BackendApi() {
 
     this.serverUrl = "";
 
+    this.token = "";
+
     this.defaultParameters = {};
 
     this.getRouteUrl = (url) => {
         return this.serverUrl + url;
+    };
+
+    this.appendToken = (params) => {
+        if (!params) {
+            params = {};
+        }
+        params.Token = this.token;
+        return params;
     };
 
     let appendGlobalFilter = (filter) => {
@@ -27,33 +38,33 @@ function BackendApi() {
     return {
         find: (url, getParams, headerParams) => {
             getParams = appendGlobalFilter(getParams)
-            return axios.get(this.getRouteUrl(url), {params: getParams, headers: headerParams})
+            return axios.get(this.getRouteUrl(url), {params: getParams, headers: this.appendToken(headerParams)})
                 .then((response) => {
                     return response.data;
                 }).catch(err => {
-                    console.error(` + "`" + `Error in url request ${url}` + "`" + `, err)
+                    console.error("Error in url request " + url, err)
                 });
         },
         create: (url, data, getParams, headerParams) => {
             getParams = appendGlobalFilter(getParams)
             return axios.post(this.getRouteUrl(url), data, {
                 params: getParams,
-                headers: headerParams
+                headers: this.appendToken(headerParams)
             }).then((response) => {
                 return response.data;
             }).catch(err => {
-                console.error(` + "`" + `Error in url request ${url}` + "`" + `, err)
+                console.error("Error in url request " + url, err)
             });
         },
         update: (url, data, getParams, headerParams) => {
             getParams = appendGlobalFilter(getParams)
             return axios.put(this.getRouteUrl(url), data, {
                 params: getParams,
-                headers: headerParams
+                headers: this.appendToken(headerParams)
             }).then((response) => {
                 return response.data;
             }).catch(err => {
-                console.error(` + "`" + `Error in url request ${url}` + "`" + `, err)
+                console.error("Error in url request " + url, err)
             });
         },
         remove: (url, getParams, data, headerParams) => {
@@ -61,11 +72,11 @@ function BackendApi() {
             return axios.delete(this.getRouteUrl(url), {
                 data: data,
                 params: getParams,
-                headers: headerParams
+                headers: this.appendToken(headerParams)
             }).then((response) => {
                 return response.data;
             }).catch(err => {
-                console.error(` + "`" + `Error in url request ${url}` + "`" + `, err)
+                console.error("Error in url request " + url, err)
             });
         },
         getServerUrl: () => {
@@ -73,6 +84,13 @@ function BackendApi() {
         },
         setServerUrl: (url) => {
             this.serverUrl = url;
+            return this;
+        },
+        getToken: () => {
+            return this.token;
+        },
+        setToken: (token) => {
+            this.token = token;
             return this;
         },
         clearGlobalFilters: () => {
