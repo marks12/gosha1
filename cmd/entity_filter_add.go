@@ -159,6 +159,7 @@ func (mr *ModelRepository) addFilter(modelName string, fieldName string, dataTyp
         case settings.DataTypeArrayInt:
             addImportIfNeed(sourceFile, "net/url")
             addImportIfNeed(sourceFile, "strconv")
+            addImportIfNeed(sourceFile, "time")
             break
         case settings.DataTypeArrayString:
             addImportIfNeed(sourceFile, "net/url")
@@ -190,6 +191,10 @@ func getFilterGetter(field, dataType string) (res string) {
 
     case settings.DataTypeUuid:
         return fmt.Sprintf("filter.%s, _ = uuid.Parse(request.FormValue(\"%s\"))", field, field)
+        break
+
+    case settings.DataTypeTime:
+        return fmt.Sprintf("filter.%s, _ = time.Parse(time.RFC3339, request.FormValue(\"%s\"))", field, field)
         break
 
     case settings.DataTypeArrayInt:
