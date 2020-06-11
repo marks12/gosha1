@@ -2,7 +2,7 @@ package cmd
 
 var usualTemplateLogicAssignerEntity = template{
     Path:    "",
-    Content: GetUsualTemplateAssignContent(TypeConfig{true}),
+    Content: GetUsualTemplateAssignContent(TypeConfig{true, false}),
 }
 
 func GetUsualTemplateAssignContent(config TypeConfig) string {

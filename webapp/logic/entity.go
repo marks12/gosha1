@@ -226,17 +226,22 @@ func EntityCreate(filter types.EntityFilter) (data types.Entity, err error) {
     structuresCmd := ""
 
     if e.Structures.WithoutDbModel {
-        structuresCmd = structuresCmd + " --without-db-models=true"
+        structuresCmd = structuresCmd + cmd.WithoutDbModels.CliArgument("true")
+    }
+
+    if filter.IsUuidMode {
+        structuresCmd = structuresCmd + cmd.UuidAsPk.CliArgument("true")
     }
 
     args := []string{"",
-        "exit",
-        "setAppType",
-        "--type=Usual",
-        "usual:entity:add",
-        "--entity=" + e.Name,
-        "--crud="+fcrudax,
-        "--check-auth=fcrudax",
+        cmd.Exit.CliArgument(),
+        cmd.SetAppType.CliArgument(),
+        cmd.Type.CliArgument("Usual"),
+        cmd.USUAL_ENTITY_ADD,
+        cmd.Entity.CliArgument(e.Name),
+        cmd.CRUD.CliArgument(fcrudax),
+        cmd.CheckAuth.CliArgument("fcrudax"),
+        cmd.CheckAuth.CliArgument("fcrudax"),
         structuresCmd,
     }
 

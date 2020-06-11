@@ -48,6 +48,7 @@ type EntityFilter struct {
 	IsFindOrCreate bool
 	IsUpdateOrCreate bool
 	IsRegenerateJsTypes bool
+	IsUuidMode bool
 	//EntityFilter remove this line for disable generator functionality
 
 	AbstractFilter
@@ -80,6 +81,7 @@ func GetEntityFilter(request *http.Request, functionType string) EntityFilter {
 	filter.IsFindOrCreate = strings.ToLower(request.FormValue("IsFindOrCreate")) != "false" && len(request.FormValue("IsFindOrCreate")) > 0
 	filter.IsUpdateOrCreate = strings.ToLower(request.FormValue("IsUpdateOrCreate")) != "false" && len(request.FormValue("IsUpdateOrCreate")) > 0
 	filter.IsRegenerateJsTypes = strings.ToLower(request.FormValue("IsRegenerateJsTypes")) != "false" && len(request.FormValue("IsRegenerateJsTypes")) > 0
+	filter.IsUuidMode = strings.ToLower(request.FormValue("IsUuidMode")) != "false" && len(request.FormValue("IsUuidMode")) > 0
 	//GetEntityFilter remove this line for disable generator functionality
 
 	ReadJSON(request, &filter.model)
