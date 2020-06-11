@@ -2,16 +2,23 @@ package cmd
 
 var usualTemplateWebappEntityType = template{
     Path:    "",
-    Content: GetUsualTemplateTypeContent(TypeConfig{true}),
+    Content: GetUsualTemplateTypeContent(TypeConfig{true, false}),
 }
 
 func GetUsualTemplateTypeContent(cfg TypeConfig) string {
+
+    uuidImport := ""
+
+    if cfg.IsUuid {
+        uuidImport = `"github.com/google/uuid"`
+    }
 
     var usualWebappEntityType = `package types
 
 import (
     "net/http"
     "{ms-name}/settings"
+    ` + uuidImport + `
     "errors"
 )
 
@@ -92,6 +99,10 @@ func (filter *{Entity}Filter) Set{Entity}Model(typeModel {Entity}) {
 func getTypeId(config TypeConfig) string {
 
     if config.IsId {
+
+        if config.IsUuid {
+            return `Id uuid.UUID`
+        }
         return `Id   int`
     }
 

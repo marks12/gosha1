@@ -2,6 +2,7 @@ package cmd
 
 type TypeConfig struct {
     IsId bool
+    IsUuid bool
 }
 
 const usualTypesAuthenticator = `package types
