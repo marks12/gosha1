@@ -14,7 +14,8 @@ func usualEntityAdd(c *ishell.Context) {
 	yellow := color.New(color.FgYellow).SprintFunc()
 	c.Println(yellow("Start creating new entity and api"))
 
-	WoDbModel, _ := GetOsArgument("without-db-models")
+	WoDbModel, _ := GetOsArgument(WithoutDbModels.ToString())
+	Uuid, _ := GetOsArgument(UuidAsPk.ToString())
 
 	entity, err := getEntity(c)
 
@@ -111,8 +112,6 @@ func usualEntityAdd(c *ishell.Context) {
 		break
 	}
 
-
-
 	sourceFile = "./types/" + snakeCase + ".go"
 	destinationFile = "./types/" + snakeCase + ".go"
 
@@ -131,7 +130,7 @@ func usualEntityAdd(c *ishell.Context) {
 		sourceFile = "./dbmodels/" + snakeCase + ".go"
 		destinationFile = "./dbmodels/" + snakeCase + ".go"
 
-		CreateFile(sourceFile, usualTemplateWebappEntityDbModels.Content, c)
+		CreateFile(sourceFile, getDbModelContent(Uuid.BoolResult), c)
 
 		CopyFile(
 			sourceFile,
@@ -191,7 +190,7 @@ func getLogicContent() (c string) {
 	//crudArgs, _ := GetOsArgument("crud")
 	crudParams := Crud{}
 
-	WoDbModel, _ := GetOsArgument("without-db-models")
+	WoDbModel, _ := GetOsArgument(WithoutDbModels.ToString())
 
 	//if len(crudArgs.StringResult) > 0 {
 	//
@@ -228,6 +227,9 @@ func getTypeContent() (c string) {
 	hasId, _ := GetOsArgument("no-id")
 	cfg.IsId = !hasId.BoolResult
 
+	IsUuid, _ := GetOsArgument(UuidAsPk.ToString())
+	cfg.IsUuid = IsUuid.BoolResult
+
 	c = GetUsualTemplateTypeContent(cfg)
 	return
 }
@@ -236,7 +238,7 @@ func getWebAppContent() (webappContent string) {
 
 	webappContent = usualTemplateWebappEntity.Content
 
-	AuthcrudArgs, _ := GetOsArgument("check-auth")
+	AuthcrudArgs, _ := GetOsArgument(CheckAuth.ToString())
 	authParams := Crud{true, true, true, true, true, true, true}
 
 	if len(AuthcrudArgs.StringResult) > 0 {

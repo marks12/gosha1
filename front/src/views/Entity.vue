@@ -84,10 +84,20 @@
 
                             <VHead level="h3" style="margin: 20px 0;" v-if="currentEntityItem.IsFilter">Add new filter</VHead>
                             <VHead level="h3" style="margin: 20px 0;" v-else>Add new field</VHead>
-                            <VSet vertical>
-                                <VSet v-if="isPanelCreate" width="fit" :key="'newf-id'">
-                                    <VText><strong>Id</strong></VText>
-                                    <VSign>Integer</VSign>
+                            <VSet vertical width="dyn">
+                                <VSet v-if="isPanelCreate" width="dyn" :key="'newf-id'">
+                                    <VSet width="fit">
+                                        <VText><strong>Id</strong></VText>
+                                    </VSet>
+                                    <VSet width="dyn">
+                                        <VSign v-if="IsUuidMode">UUID</VSign>
+                                        <VSign v-else>Integer</VSign>
+
+                                        <VCheckbox v-model="IsUuidMode">
+                                            <VText>Uuid as primary key</VText>
+                                        </VCheckbox>
+                                    </VSet>
+
                                 </VSet>
                                 <VSet v-for="(f, index) in newFields" width="dyn" :key="'newf-' + index">
                                     <VInput v-model="f.Name" @input="updateNewFieldsList"></VInput>
@@ -243,6 +253,7 @@
                 errors: [],
                 isLoading: true,
                 IsRegenerateJsTypes: localStorage.getItem("IsRegenerateJsTypes") === 'true',
+                IsUuidMode: localStorage.getItem("IsUuidMode") === 'true',
             };
         },
         created: function () {
@@ -538,6 +549,7 @@
                 return this.createEntity({
                     filter: {
                         IsRegenerateJsTypes: this.IsRegenerateJsTypes,
+                        IsUuidMode: this.IsUuidMode,
                     },
                     data: this.currentEntityItem.item,
                 }).then((response) => {
@@ -586,6 +598,9 @@
             },
             IsRegenerateJsTypes(newVal) {
                 localStorage.setItem("IsRegenerateJsTypes", newVal);
+            },
+            IsUuidMode(newVal) {
+                localStorage.setItem("IsUuidMode", newVal);
             },
         },
     }
