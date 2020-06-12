@@ -16,24 +16,26 @@ import {{Entity}} from "../apiModel";
 import api from "../api";
 import {findItemIndex} from "../common";
 
-let findUrl = "` + FindUrl + `";
-let readUrl = "` + ReadUrl + `"; // + id
-let createUrl = "` + CreateUrl + `";
-let multiCreateUrl = "` + MultiCreateUrl + `";
-let updateUrl = "` + UpdateUrl + `"; // + id
-let multiUpdateUrl = "` + MultiUpdateUrl + `";
-let deleteUrl = "` + DeleteUrl + `"; // + id
-let multiDeleteUrl = "` + MultiDeleteUrl + `";
-let findOrCreateUrl = "` + FindOrCreateUrl + `";
-let updateOrCreateUrl = "` + UpdateOrCreateUrl + `";
+const routes = {
+    findUrl: "` + FindUrl + `",
+    readUrl: "` + ReadUrl + `", // + id
+    createUrl: "` + CreateUrl + `",
+    multiCreateUrl: "` + MultiCreateUrl + `",
+    updateUrl: "` + UpdateUrl + `", // + id
+    multiUpdateUrl: "` + MultiUpdateUrl + `",
+    deleteUrl: "` + DeleteUrl + `", // + id
+    multiDeleteUrl: "` + MultiDeleteUrl + `",
+    findOrCreateUrl: "` + FindOrCreateUrl + `",
+    updateOrCreateUrl: "` + UpdateOrCreateUrl + `"
+}
 
 const {entity} = {
     actions: {
         create{Entity}(context, {data, filter, header, noMutation}) {
 
-            let url = createUrl;
+            let url = routes.createUrl;
             if (Array.isArray && Array.isArray(data)) {
-                url = multiCreateUrl
+                url = routes.multiCreateUrl
             }
 
             return api.create(url, data, filter, header)
@@ -56,10 +58,10 @@ const {entity} = {
             let dataOrNull = null;
 
             if (Array.isArray && Array.isArray(id)) {
-                url = multiDeleteUrl;
+                url = routes.multiDeleteUrl;
                 dataOrNull = id.map(item => typeof item === "number" ? {Id: item} : item);
             } else {
-                url = deleteUrl + id;
+                url = routes.deleteUrl + id;
             }
 
             return api.remove(url, header, dataOrNull)
@@ -76,7 +78,7 @@ const {entity} = {
         },
         find{Entity}(context, {filter, header, isAppend, noMutation}) {
 
-            return api.find(findUrl, filter, header)
+            return api.find(routes.findUrl, filter, header)
                 .then(function(response) {
 
 					if(! noMutation) {
@@ -96,7 +98,7 @@ const {entity} = {
         },
         load{Entity}(context, {id, filter, header, noMutation}) {
 
-            return api.find(readUrl + id, filter, header)
+            return api.find(routes.readUrl + id, filter, header)
                 .then(function(response) {
 
 					if(! noMutation) {
@@ -111,9 +113,9 @@ const {entity} = {
         },
         update{Entity}(context, {id, data, filter, header, noMutation}) {
 
-            let url = updateUrl + id;
+            let url = routes.updateUrl + id;
             if (Array.isArray && Array.isArray(data)) {
-                url = multiUpdateUrl
+                url = routes.multiUpdateUrl
             }
 
             return api.update(url, data, filter, header)
@@ -130,7 +132,7 @@ const {entity} = {
         },
         findOrCreate{Entity}(context, {id, data, filter, header, noMutation}) {
 
-            return api.update(findOrCreateUrl, data, filter, header)
+            return api.update(routes.findOrCreateUrl, data, filter, header)
                 .then(function(response) {
 
 					if(! noMutation) {
@@ -218,20 +220,9 @@ const {entity} = {
     state: {
         {Entity}: new {Entity}(),
         {Entity}__List: [],
-        {Entity}__Routes: {
-            find: findUrl,
-            read: readUrl,
-            create: createUrl,
-            multiCreate: multiCreateUrl,
-            update: updateUrl,
-            multiUpdate: multiUpdateUrl,
-            delete: deleteUrl,
-            multiDelete: multiDeleteUrl,
-            findOrCreate: findOrCreateUrl,
-            updateOrCreate: updateOrCreateUrl,
-        },
     },
 };
 
+export { routes };
 export default {entity};
 `
