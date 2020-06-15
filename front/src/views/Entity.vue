@@ -268,11 +268,6 @@
             }).then(()=>{
                 this.isLoading = false;
             });
-
-            setTimeout(() => {
-                console.log('this.entity(1);', this.entity(1));
-            }, 1000);
-
         },
         computed: {
             ...mapGetters('gosha', {

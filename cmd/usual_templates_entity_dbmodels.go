@@ -31,7 +31,7 @@ func getDbModelContent(isUuid bool) string {
     idField := `ID        int       ` + "`" + `gorm:"primary_key"` + "`"
 
     if isUuid {
-        idImport = "github.com/google/uuid"
+        idImport = "\"github.com/google/uuid\""
         idField = `ID   uuid.UUID ` + "`" + `gorm:"primary_key, default: uuid()"` + "`"
     }
 
