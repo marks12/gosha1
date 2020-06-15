@@ -15,7 +15,7 @@
                         <VText width="fit">
                             Please create application in current folder
                         </VText>
-                        <VSet vertical width="fit">
+                        <VSet vertical width="fit" style="min-width: 360px;">
                             <VSet>
                                 <VText>Email</VText>
                                 <VInput v-model="adminMail" type="email"></VInput>
@@ -29,8 +29,18 @@
                                 <VInput v-model="adminRePass" type="password"></VInput>
                             </VSet>
                             <VSet>
-                                <VText>Database</VText>
+                                <VText width="dyn">Database</VText>
                                 <VRadioGroup :items="segmentControls" v-model="appDb"/>
+                            </VSet>
+                            <VSet>
+                                <VCheckbox v-model="IsUuidMode" width="dyn">
+                                    <VText>Uuid as primary key</VText>
+                                </VCheckbox>
+                            </VSet>
+                            <VSet>
+                                <VText>Primary key</VText>
+                                <VBadge  v-if="IsUuidMode" :color="IsUuidMode ? 'selection' : 'attention-secondary'">UUID</VBadge>
+                                <VBadge  v-else :color="IsUuidMode ? 'selection' : 'attention-secondary'">Integer</VBadge>
                             </VSet>
                         </VSet>
                         <VSet width="fit">
@@ -58,6 +68,8 @@
     import VText from "swtui/src/components/VText";
     import VInput from "swtui/src/components/VInput";
     import VRadioGroup from "swtui/src/components/VRadioGroup";
+    import VCheckbox from "swtui/src/components/VCheckbox";
+    import VBadge from "swtui/src/components/VBadge";
 
     export default {
         name: 'home',
@@ -70,6 +82,7 @@
                 adminRePass: "",
                 appDb: "postgres",
                 error: "",
+                IsUuidMode: localStorage.getItem("IsUuidMode") === 'true',
                 segmentControls: [
                     {
                         label: 'MySql',
@@ -82,7 +95,7 @@
                 ],
             }
         },
-        components: {VText, VSet, VHead, WorkSpace, VButton, VInput, VRadioGroup},
+        components: {VText, VSet, VHead, WorkSpace, VButton, VInput, VRadioGroup, VCheckbox, VBadge},
         created: function () {
             this.loadCurrentAppData();
         },
@@ -103,6 +116,7 @@
                 app.AdminEmail = this.adminMail;
                 app.AdminPassword = this.adminPass;
                 app.DbType = this.appDb;
+                app.IsUuidMode = this.IsUuidMode;
 
                 this.createCurrentApp({
                     data: app
@@ -137,6 +151,11 @@
             ...mapGetters('gosha', {
                 currentApp: "getCurrentApp"
             }),
+        },
+        watch: {
+            IsUuidMode(newVal) {
+                localStorage.setItem("IsUuidMode", newVal);
+            },
         },
     }
 </script>
