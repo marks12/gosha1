@@ -5,8 +5,8 @@ docker run --rm --name pg-{ms-name} -e POSTGRES_DB={ms-name} -e POSTGRES_USER={m
 `
 
 const usualDockerCallMy = `#!/bin/bash
-docker run --name my-{ms-name} -e MYSQL_DATABASE={ms-name} -e MYSQL_ROOT_PASSWORD={new-pass} mariadb/server:10.3 --log-bin --binlog-format=MIXED
-docker start my-{ms-name}
+docker run --name my-{ms-name} -e MYSQL_DATABASE={ms-name} -e MYSQL_ROOT_PASSWORD={new-pass} mariadb/server:10.4 --log-bin --binlog-format=MIXED
+docker start my-{ms-name} &
 `
 var usualDockerPs =
         assignMsName(

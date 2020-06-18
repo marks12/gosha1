@@ -1,6 +1,13 @@
 package cmd
 
-const msInsertDataToDb = `package bootstrap
+import (
+    "gosha/mode"
+)
+
+func GetMsTemplateInsertDataToDb() template {
+    return template{
+        Path:    "./bootstrap/insert_data_to_db.go",
+        Content: assignMsName(`package bootstrap
 
 import (
 	"{ms-name}/dbmodels"
@@ -20,7 +27,7 @@ func FillDBTestData()  {
 		fmt.Println("Error dabatabse connect", core.DbErr.Error())
 		os.Exit(0)
 	}
-
+    ` + GetInstallUuidForPostgres() + `
 	isDropTables := false
 
 	if (len(os.Args) > 1 && os.Args[1] == "drop") ||
@@ -51,7 +58,7 @@ func FillDBTestData()  {
 func addRouteType() {
 
 	resourceType := logic.AssignResourceTypeDbFromType(types.ResourceType{
-		Id: settings.HttpRouteResourceType,
+		Id: settings.HttpRouteResourceType` + GetConfigConverter(mode.GetUuidMode()) + `,
 		Name: "Route",
 	})
 	core.Db.Model(dbmodels.ResourceType{}).FirstOrCreate(&resourceType)
@@ -62,14 +69,14 @@ func addUser() {
 	var count int
 
 	adminRole := dbmodels.Role{
-		ID:			 settings.AdminRoleId,
+		ID:			 settings.AdminRoleId` + GetConfigConverter(mode.GetUuidMode()) + `,
 		Name:        "Admin",
 		Description: "Administrator",
 	}
 	core.Db.Where(adminRole).FirstOrCreate(&adminRole)
 
 	userRole := dbmodels.Role{
-		ID:			 settings.UserRoleId,
+		ID:			 settings.UserRoleId` + GetConfigConverter(mode.GetUuidMode()) + `,
 		Name:        "User",
 		Description: "Application user",
 	}
@@ -79,7 +86,7 @@ func addUser() {
 	if count < 1 {
 
 		user := logic.AssignUserDbFromType(types.User{
-			Id:          0,
+			Id:          ` + GetIdNil(mode.GetUuidMode()) + `,
 			Email:       "{email}",
 			FirstName:   "Superuser",
 			IsActive:    true,
@@ -89,16 +96,15 @@ func addUser() {
 		})
 		core.Db.Model(dbmodels.User{}).FirstOrCreate(&user)
 
-		setRole(user.ID, settings.AdminRoleId)
-		setRole(user.ID, settings.UserRoleId)
+		setRole(user.ID, settings.AdminRoleId` + GetConfigConverter(mode.GetUuidMode()) + `)
+		setRole(user.ID, settings.UserRoleId` + GetConfigConverter(mode.GetUuidMode()) + `)
 	}
 
     AddAdminResources(adminRole.ID)
 	AddUserResources(userRole.ID)
 }
 
-
-func setRole(userId int, roleId int) {
+func setRole(userId ` + GetPKType(mode.GetUuidMode()) + `, roleId ` + GetPKType(mode.GetUuidMode()) + `) {
 
 	userRole := dbmodels.UserRole{
 		UserId:    userId,
@@ -107,7 +113,7 @@ func setRole(userId int, roleId int) {
 	core.Db.Model(dbmodels.UserRole{}).FirstOrCreate(&userRole, "user_id = ? AND role_id = ?", userId, roleId)
 }
 
-func AddAdminResources(adminRoleId int) {
+func AddAdminResources(adminRoleId ` + GetPKType(mode.GetUuidMode()) + `) {
 
     // ADD SPECIAL ADMIN ROLES HERE. Otherwise admin roles will take full access to routes  
 
@@ -141,7 +147,7 @@ func AddAdminResources(adminRoleId int) {
     }
 }
 
-func AddUserResources(userRoleId int) {
+func AddUserResources(userRoleId ` + GetPKType(mode.GetUuidMode()) + `) {
 
 	// access user to me route
 	err := setRoleAccess(userRoleId, settings.CurrentUserRoute, types.Access{
@@ -153,7 +159,7 @@ func AddUserResources(userRoleId int) {
 	}
 }
 
-func setRoleAccess(roleId int, route string, access types.Access) error {
+func setRoleAccess(roleId ` + GetPKType(mode.GetUuidMode()) + `, route string, access types.Access) error {
 
 	strArr := strings.Split(route, "/")
 
@@ -184,10 +190,18 @@ func setRoleAccess(roleId int, route string, access types.Access) error {
 
 	return errors.New("Wrong route length. Cant set access for route: " + route)
 }
-`
-
-var msTemplateInsertDataToDb = template{
-    Path:    "./bootstrap/insert_data_to_db.go",
-    Content: assignMsName(msInsertDataToDb),
+`),
+    }
 }
 
+func GetInstallUuidForPostgres() string {
+
+    if ! IsPostgres() || ! mode.GetUuidMode() {
+        return ""
+    }
+
+    return `
+    core.Db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"")
+`
+
+}

@@ -44,7 +44,7 @@ const entity = {
 
             if (Array.isArray && Array.isArray(id)) {
                 url = multiDeleteUrl;
-                dataOrNull = id;
+                dataOrNull = id.map(item => typeof item === "number" ? {Id: item} : item);
             } else {
                 url = deleteUrl + id;
             }

@@ -10,7 +10,7 @@ type CurrentApp struct {
     AdminEmail string
 	AdminPassword string
 	DbType string
-    IsUuidMode string
+    IsUuidMode bool
 	//CurrentApp remove this line for disable generator functionality
 }
 
