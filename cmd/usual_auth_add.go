@@ -4,6 +4,7 @@ import (
 	"github.com/fatih/color"
 	"gopkg.in/abiosoft/ishell.v2"
 	"gosha/common"
+	"gosha/mode"
 	"os"
 )
 
@@ -19,24 +20,24 @@ func usualAuthAdd(c *ishell.Context) {
 	os.Args = os.Args[:len(os.Args)-2]
 	os.Args = append(os.Args, "--entity=Role")
 	usualEntityAdd(c)
-	os.Args = os.Args[:len(os.Args)-1]
 
+	os.Args = os.Args[:len(os.Args)-1]
 	os.Args = append(os.Args, "--entity=RoleResource")
 	usualEntityAdd(c)
-	os.Args = os.Args[:len(os.Args)-1]
 
+	os.Args = os.Args[:len(os.Args)-1]
 	os.Args = append(os.Args, "--entity=Resource")
 	usualEntityAdd(c)
-	os.Args = os.Args[:len(os.Args)-1]
 
+	os.Args = os.Args[:len(os.Args)-1]
 	os.Args = append(os.Args, "--entity=ResourceType")
 	usualEntityAdd(c)
-	os.Args = os.Args[:len(os.Args)-1]
 
+	os.Args = os.Args[:len(os.Args)-1]
 	os.Args = append(os.Args, "--entity=UserRole")
 	usualEntityAdd(c)
-	os.Args = os.Args[:len(os.Args)-1]
 
+	os.Args = os.Args[:len(os.Args)-1]
 	os.Args = append(os.Args,"--entity=Auth")
 	os.Args = append(os.Args,"--crud=cd")
 	os.Args = append(os.Args,"--check-auth=d")
@@ -61,9 +62,9 @@ func usualAuthAdd(c *ishell.Context) {
     os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=ResourceType", "--Field=Name", "--data-type=string"}
     entityFieldAdd(c)
 
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=UserRole", "--Field=UserId", "--data-type=int"}
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=UserRole", "--Field=UserId", "--data-type=" + GetPKType(mode.GetUuidMode())}
     entityFieldAdd(c)
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=UserRole", "--Field=RoleId", "--data-type=int"}
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=UserRole", "--Field=RoleId", "--data-type=" + GetPKType(mode.GetUuidMode())}
     entityFieldAdd(c)
 
 
@@ -79,9 +80,9 @@ func usualAuthAdd(c *ishell.Context) {
     os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Resource", "--Field=TypeId", "--data-type=int"}
     entityFieldAdd(c)
 
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=RoleId", "--data-type=int"}
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=RoleId", "--data-type=" + GetPKType(mode.GetUuidMode())}
     entityFieldAdd(c)
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=ResourceId", "--data-type=int"}
+    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=ResourceId", "--data-type=" + GetPKType(mode.GetUuidMode())}
     entityFieldAdd(c)
     os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=Find", "--data-type=bool"}
     entityFieldAdd(c)
@@ -103,7 +104,7 @@ func usualAuthAdd(c *ishell.Context) {
 	// fill fields
 	fillUser(c)
 	//fillRole(c)
-	fillUserRole(c)
+	//fillUserRole(c)
 	fillAuth(c)
 }
 
@@ -113,8 +114,8 @@ func fillUserRole(c *ishell.Context) {
 		"types/user_role.go",
 		[]string{getRemoveLine("UserRole")},
 		[]string{
-			`RoleID int
-	UserID int
+			`RoleID ` + GetPKType(mode.GetUuidMode()) +`
+	UserID ` + GetPKType(mode.GetUuidMode()) +`
     ` + getRemoveLine("UserRole")},
 		c)
 }
@@ -136,8 +137,8 @@ func fillUser(c *ishell.Context) {
 	CreateFile("settings/user.go", `package settings
 	const PASSWORD_SALT = "` + common.RandomString(10) + `"
 
-	const AdminRoleId = 1
-	const UserRoleId = 2
+	const AdminRoleId ConfigId = 1
+	const UserRoleId ConfigId = 2
 `, c)
 
 	CopyFile(
@@ -216,16 +217,6 @@ func fillUser(c *ishell.Context) {
     ` + getRemoveLine("User")},
 		c)
 
-	//CopyFile(
-		//"dbmodels/role.go",
-		//"dbmodels/role.go",
-		//[]string{getRemoveLine("Role")},
-		//[]string{
-		//	`Name       string
-    //Description   string	`+"`"+`gorm:"type:text"`+"`"+`
-    //` + getRemoveLine("Role")},
-		//c)
-
 	CopyFile(
 		"dbmodels/user.go",
 		"dbmodels/user.go",
@@ -255,9 +246,11 @@ func fillUser(c *ishell.Context) {
 
 func fillAuth(c *ishell.Context) {
 
+	isUuidAsPk := mode.GetUuidMode()
+
 	CreateFile(
 		"logic/auth.go",
-		usualTemplateAuthLogic.Content,
+		GetUsualTemplateAuthLogic().Content,
 		c)
 
 	CopyFile(
@@ -268,8 +261,8 @@ func fillAuth(c *ishell.Context) {
 			`Email     string
     Password  string
     Token     string
-    UserId   int
-    Id   int
+    UserId   ` + GetPKType(isUuidAsPk) + `
+    Id   ` + GetPKType(isUuidAsPk) + `
     `+ getRemoveLine("Auth")},
 		c)
 
@@ -282,7 +275,7 @@ func fillAuth(c *ishell.Context) {
     Password  string
     Token     string
     IsActive bool
-    UserId   int
+    UserId   ` + GetPKType(isUuidAsPk) + `
     ` + getRemoveLine("Auth")},
 		c)
 

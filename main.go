@@ -2,9 +2,9 @@ package main
 
 import (
     "gosha/cmd"
-    "os"
-    "gosha/webapp"
     "gosha/mode"
+    "gosha/webapp"
+    "os"
 )
 
 func main() {

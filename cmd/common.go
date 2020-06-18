@@ -404,7 +404,7 @@ func getName(c *ishell.Context, IsExistsStruct bool, targetName string) (string,
             "Yes",
             "No",
             "Cancel",
-        }, "Correct name " + green(selectedName) + " ?")
+        }, "Correct " + targetName + " " + green(selectedName) + " ?")
 
         if choice == 0 {
 
@@ -432,4 +432,60 @@ func getName(c *ishell.Context, IsExistsStruct bool, targetName string) (string,
     fmt.Println(TargetName + " name is empty. Please type CTRL + C for cancel operation!")
 
     return getName(c, IsExistsStruct, targetName)
+}
+
+func GetPKType(isUuidAsPk bool) string {
+    if isUuidAsPk {
+        return "uuid.UUID"
+    }
+
+    return "int"
+}
+
+func GetConfigConverter(isUuidAsPk bool) string {
+    if isUuidAsPk {
+        return ".Uuid()"
+    }
+
+    return ".Int()"
+}
+
+func GetPkAsString(varExp string, isUuidAsPk bool) string {
+    if isUuidAsPk {
+        return varExp + ".String()"
+    }
+
+    return "strconv.Itoa("+varExp+")"
+}
+
+func GetStrToIdFuncName(isUuidAsPk bool) string {
+    if isUuidAsPk {
+        return "uuid.Parse"
+    }
+
+    return "strconv.Atoi"
+}
+
+func GetIdIsValidExp(isUuidAsPk bool) string {
+    if isUuidAsPk {
+        return "!= uuid.Nil"
+    }
+
+    return "> 0"
+}
+
+func GetIdNil(isUuidAsPk bool) string {
+    if isUuidAsPk {
+        return "uuid.Nil"
+    }
+
+    return "0"
+}
+
+func GetIdIsNotValidExp(isUuidAsPk bool) string {
+    if isUuidAsPk {
+        return "== uuid.Nil"
+    }
+
+    return "< 1"
 }
