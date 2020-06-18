@@ -1,17 +1,11 @@
 package cmd
 
-import "gosha/mode"
-
 var usualTemplateLogicAssignerEntity = template{
     Path:    "",
-    Content: GetUsualTemplateAssignContent(TypeConfig{true, false}),
+    Content: GetUsualTemplateAssignContent(TypeConfig{true}),
 }
 
 func GetUsualTemplateAssignContent(config TypeConfig) string {
-
-    if config.IsUuid == false {
-        config.IsUuid = mode.GetUuidMode()
-    }
 
     var usualWebappEntityAssigner = `
 // add all assign functions
