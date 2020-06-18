@@ -132,8 +132,12 @@ func GetUsualTemplateAuthLogic() template {
 		assignMsName(usualAuthLogic),
 		"{GetIdIsNotValidExp}", GetIdIsNotValidExp(mode.GetUuidMode()))
 
-	content = AssignVar(content, "{UuidImport}", `
+	if mode.GetUuidMode() {
+		content = AssignVar(content, "{UuidImport}", `
 	"github.com/google/uuid"`)
+	} else {
+		content = AssignVar(content, "{UuidImport}", "")
+	}
 
 	return template{
 		Path:    "./logic/auth.go",

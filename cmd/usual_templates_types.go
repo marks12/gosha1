@@ -4,7 +4,6 @@ import "gosha/mode"
 
 type TypeConfig struct {
     IsId bool
-    IsUuid bool
 }
 
 var usualTypesAuthenticator = `package types
