@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/fatih/color"
 	"gopkg.in/abiosoft/ishell.v2"
+	"gosha/mode"
 	"strings"
 )
 
@@ -16,6 +17,12 @@ func usualEntityAdd(c *ishell.Context) {
 
 	WoDbModel, _ := GetOsArgument(WithoutDbModels.ToString())
 	Uuid, _ := GetOsArgument(UuidAsPk.ToString())
+
+	if Uuid.BoolResult {
+		mode.SetUuidMode()
+	} else {
+		mode.SetNonUuidMode()
+	}
 
 	entity, err := getEntity(c)
 
@@ -138,7 +145,7 @@ func usualEntityAdd(c *ishell.Context) {
 			[]string{CamelCase, CamelCase, firstLowerCase},
 			c)
 
-		if ! IsPostgres() && Uuid.BoolResult {
+		if ! IsPostgres() && mode.GetUuidMode() {
 			addImportIfNeed(destinationFile, "github.com/jinzhu/gorm")
 		}
 	}
@@ -219,10 +226,6 @@ func getAssignContent() (c string) {
 	hasId, _ := GetOsArgument("no-id")
 	cfg.IsId = !hasId.BoolResult
 
-	arguments, _ := GetOsArgument(UuidAsPk.ToString())
-	isUuid := arguments.BoolResult
-	cfg.IsUuid = isUuid
-
 	c = GetUsualTemplateAssignContent(cfg)
 	return
 }
@@ -233,9 +236,6 @@ func getTypeContent() (c string) {
 
 	hasId, _ := GetOsArgument("no-id")
 	cfg.IsId = !hasId.BoolResult
-
-	IsUuid, _ := GetOsArgument(UuidAsPk.ToString())
-	cfg.IsUuid = IsUuid.BoolResult
 
 	c = GetUsualTemplateTypeContent(cfg)
 	return
