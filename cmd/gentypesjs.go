@@ -224,6 +224,10 @@ func getFiledJsVal(s string, typeNames []string) (val string) {
 		val = "false"
 		break
 
+	case "uuid.uuid":
+		val = "\"\""
+		break
+
 	default:
 
 		isExists, index := InArray(s, typeNames)

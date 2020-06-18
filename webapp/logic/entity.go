@@ -1,6 +1,7 @@
 package logic
 
 import (
+    "fmt"
     "github.com/jinzhu/gorm"
     "github.com/pkg/errors"
     "gosha/cmd"
@@ -244,6 +245,8 @@ func EntityCreate(filter types.EntityFilter) (data types.Entity, err error) {
         cmd.CheckAuth.CliArgument("fcrudax"),
         structuresCmd,
     }
+
+    fmt.Printf("args: %+v\n", args)
 
     os.Args = args
     cmd.RunShell()

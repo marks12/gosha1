@@ -1,15 +1,12 @@
 package cmd
 
-var usualTemplateWebappEntityType = template{
-    Path:    "",
-    Content: GetUsualTemplateTypeContent(TypeConfig{true, false}),
-}
+import "gosha/mode"
 
 func GetUsualTemplateTypeContent(cfg TypeConfig) string {
 
     uuidImport := ""
 
-    if cfg.IsUuid {
+    if mode.GetUuidMode() {
         uuidImport = `
     "github.com/google/uuid"
 `
@@ -101,7 +98,7 @@ func getTypeId(config TypeConfig) string {
 
     if config.IsId {
 
-        if config.IsUuid {
+        if mode.GetUuidMode() {
             return `Id uuid.UUID`
         }
         return `Id   int`
