@@ -1,5 +1,7 @@
 package cmd
 
+import "gosha/mode"
+
 const usualEntityLogicFindWoDb = `
 func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalRecords int, err error) {
 
@@ -10,7 +12,7 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
 const usualEntityLogicFind = `
 func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalRecords int, err error) {
 
-    foundIds 	:= []int{}
+    foundIds 	:= []{PkType}{}
     dbmodelData	:= []dbmodels.{Entity}{}
     limit       := filter.PerPage
     offset      := filter.GetOffset()
@@ -138,7 +140,7 @@ func {Entity}Create(filter types.{Entity}Filter, query *gorm.DB)  (data types.{E
 
     typeModel := filter.Get{Entity}Model()
     dbModel := Assign{Entity}DbFromType(typeModel)
-    dbModel.ID = 0
+    dbModel.ID = {PkNil}
 
     dbModel.Validate()
 
@@ -197,7 +199,8 @@ func {Entity}Update(filter types.{Entity}Filter, query *gorm.DB)  (data types.{E
 
 `
 
-var usualEntityLogicUpdate = `
+func GetUsualEntityLogicUpdate() string {
+    return `
 
 func {Entity}MultiUpdate(filter types.{Entity}Filter)  (data []types.{Entity}, err error) {
 
@@ -242,8 +245,8 @@ func {Entity}Update(filter types.{Entity}Filter, query *gorm.DB)  (data types.{E
 
     existsModel, err := {Entity}Read(filter)
 
-    if existsModel.Id < 1 || err != nil {
-        err = errors.New("{Entity} not found in db with id: " + strconv.Itoa(filter.GetCurrentId()))
+    if existsModel.Id ` + GetIdIsNotValidExp(mode.GetUuidMode()) + ` || err != nil {
+        err = errors.New("{Entity} not found in db with id: " + ` + GetPkAsString("filter.GetCurrentId()", mode.GetUuidMode()) + `)
         return
     }
 
@@ -275,6 +278,8 @@ func {Entity}Update(filter types.{Entity}Filter, query *gorm.DB)  (data types.{E
 }
 
 `
+}
+
 const usualEntityLogicDeleteWoDb = `
 
 func {Entity}MultiDelete(filter types.{Entity}Filter)  (isOk bool, err error) {
@@ -289,7 +294,9 @@ func {Entity}Delete(filter types.{Entity}Filter, query *gorm.DB)  (isOk bool, er
 
 `
 
-const usualEntityLogicDelete = `
+func GetUsualEntityLogicDelete() string {
+
+    return `
 func {Entity}MultiDelete(filter types.{Entity}Filter)  (isOk bool, err error) {
 
     typeModelList, err := filter.Get{Entity}ModelList()
@@ -333,10 +340,10 @@ func {Entity}Delete(filter types.{Entity}Filter, query *gorm.DB)  (isOk bool, er
 
     existsModel, err := {Entity}Read(filter)
 
-    if existsModel.Id < 1 || err != nil {
+    if existsModel.Id {GetIdIsNotValidExp} || err != nil {
 
         if err != nil {
-            err = errors.New("{Entity} not found in db with id: " + strconv.Itoa(filter.GetCurrentId()))
+            err = errors.New("{Entity} not found in db with id: " + ` + GetPkAsString("filter.GetCurrentId()", mode.GetUuidMode()) + `)
         }
         return
     }
@@ -353,6 +360,7 @@ func {Entity}Delete(filter types.{Entity}Filter, query *gorm.DB)  (isOk bool, er
     return
 }
 `
+}
 
 const usualEntityLogicFindOrCreateWoDb = `
 
@@ -437,6 +445,14 @@ func getUsualEntityLogicHeader(isWoModels bool) (header string) {
         "{ms-name}/types"
 `
 
+    if mode.GetUuidMode() {
+        top += `        "github.com/google/uuid"
+`
+    } else {
+        top += `        "strconv"
+`
+    }
+
     footer := `
         "github.com/jinzhu/gorm"
     )
@@ -449,7 +465,6 @@ func getUsualEntityLogicHeader(isWoModels bool) (header string) {
         "fmt"
         "{ms-name}/core"
         "errors"
-        "strconv"
          "{ms-name}/dbmodels"` + "\n"
     }
 
@@ -463,6 +478,8 @@ func getUsualEntityLogicHeader(isWoModels bool) (header string) {
 //}
 
 func GetUsualTemplateLogicContent(crud Crud, isWoDbModel bool) (content string) {
+
+    isUuidAsPk := mode.GetUuidMode()
 
     content = getUsualEntityLogicHeader(isWoDbModel)
 
@@ -495,7 +512,7 @@ func GetUsualTemplateLogicContent(crud Crud, isWoDbModel bool) (content string) 
         if isWoDbModel {
             content += usualEntityLogicUpdateWoDb
         } else {
-            content += usualEntityLogicUpdate
+            content += GetUsualEntityLogicUpdate()
         }
     }
 
@@ -503,7 +520,7 @@ func GetUsualTemplateLogicContent(crud Crud, isWoDbModel bool) (content string) 
         if isWoDbModel {
             content += usualEntityLogicDeleteWoDb
         } else {
-            content += usualEntityLogicDelete
+            content += GetUsualEntityLogicDelete()
         }
     }
 
@@ -524,6 +541,9 @@ func GetUsualTemplateLogicContent(crud Crud, isWoDbModel bool) (content string) 
     }
 
     content = assignMsName(content)
+    content = AssignVar(content, "{GetIdIsNotValidExp}", GetIdIsNotValidExp(isUuidAsPk))
+    content = AssignVar(content, "{PkNil}", GetIdNil(isUuidAsPk))
+    content = AssignVar(content, "{PkType}", GetPKType(isUuidAsPk))
 
     return
 }

@@ -1,11 +1,13 @@
 package cmd
 
+import "gosha/mode"
+
 type TypeConfig struct {
     IsId bool
     IsUuid bool
 }
 
-const usualTypesAuthenticator = `package types
+var usualTypesAuthenticator = `package types
 
 import (
     "{ms-name}/core"
@@ -31,20 +33,20 @@ type Authenticator struct {
     Token        string
     functionType string
     urlPath      string
-    userId       int
-    roleIds      []int
+    userId       {ID}
+    roleIds      []{ID}
     validator
 }
 
-func (auth *Authenticator) GetCurrentUserId() int {
+func (auth *Authenticator) GetCurrentUserId() {ID} {
     return auth.userId
 }
 
-func (auth *Authenticator) SetCurrentUserId(id int) {
+func (auth *Authenticator) SetCurrentUserId(id {ID}) {
     auth.userId = id
 }
 
-func (auth *Authenticator) GetCurrentUserRoleIds() []int {
+func (auth *Authenticator) GetCurrentUserRoleIds() []{ID} {
     return auth.roleIds
 }
 
@@ -67,7 +69,7 @@ func (auth *Authenticator) IsAuthorized() bool {
 
     if dbAuth.IsActive {
 
-        if dbAuth.UserId < 1 {
+        if dbAuth.UserId {GetIdIsNotValidExp} {
             return false
         }
 
@@ -84,14 +86,14 @@ func (auth *Authenticator) IsAuthorized() bool {
 
         core.Db.Where(dbmodels.Resource{
             Code:   clearPath(auth.urlPath),
-            TypeId: settings.HttpRouteResourceType,
+            TypeId: settings.HttpRouteResourceType` + GetConfigConverter(mode.GetUuidMode()) + `,
         }).Find(&usedResources)
 
         if len(usedResources) < 1 {
             return false
         }
 
-        ids := []int{}
+        ids := []{ID}{}
 
         for _, r := range usedResources {
             ids = append(ids, r.ID)
@@ -242,39 +244,39 @@ import (
 )
 
 type FilterIds struct {
-    Ids []int
-    CurrentId int
+    Ids []{ID}
+    CurrentId {ID}
 
     validator
 }
 
-func (filter *FilterIds) GetFirstId() (int, error) {
+func (filter *FilterIds) GetFirstId() ({ID}, error) {
     for _, id := range filter.Ids {
         return id, nil
     }
-    return 0, errors.New("Empty array")
+    return {PkNil}, errors.New("Empty array")
 }
 
-func (filter *FilterIds) GetIds() []int {
+func (filter *FilterIds) GetIds() []{ID} {
     return filter.Ids
 }
 
-func (filter *FilterIds) GetCurrentId() int {
+func (filter *FilterIds) GetCurrentId() {ID} {
     return filter.CurrentId
 }
 
-func (filter *FilterIds) SetCurrentId(id int) int {
+func (filter *FilterIds) SetCurrentId(id {ID}) {ID} {
     filter.CurrentId = id
 	return filter.CurrentId
 }
 
 
-func (filter *FilterIds) AddId(id int) *FilterIds {
+func (filter *FilterIds) AddId(id {ID}) *FilterIds {
     filter.Ids = append(filter.Ids, id)
     return filter
 }
 
-func (filter *FilterIds) AddIds(ids []int) *FilterIds {
+func (filter *FilterIds) AddIds(ids []{ID}) *FilterIds {
     for _, id := range ids {
         filter.AddId(id)
     }
@@ -283,7 +285,7 @@ func (filter *FilterIds) AddIds(ids []int) *FilterIds {
 
 func (filter *FilterIds) ClearIds() *FilterIds {
 
-    filter.Ids = []int{}
+    filter.Ids = []{ID}{}
     return filter
 }
 
@@ -384,7 +386,7 @@ func GetAbstractFilter(request *http.Request, functionType string) AbstractFilte
         filter.SearchBy = append(filter.SearchBy, gorm.ToColumnName(field))
     }
     for _, s := range arr["Ids[]"] {
-        id, _ := strconv.Atoi(s)
+        id, _ := {STRTOID}(s)
         filter.AddId(id)
     }
 
@@ -393,9 +395,9 @@ func GetAbstractFilter(request *http.Request, functionType string) AbstractFilte
     ReadJSON(filter.request, &filter.validator)
 
     vars := mux.Vars(request)
-    id, _ := strconv.Atoi(vars["id"])
+    id, _ := {STRTOID}(vars["id"])
 
-    if id > 0 {
+    if id {GetIdIsValidExp} {
         filter.SetCurrentId(id)
     }
 
@@ -569,9 +571,25 @@ func (pagination *Pagination) Validate(functionType string) {
 }
 `
 
-var usualTemplateTypesAuthenticator = template{
-    Path:    "./types/authenticator.go",
-    Content: assignMsName(usualTypesAuthenticator),
+func getUsualTemplateTypesAuthenticator(isUuidAsPk bool) template {
+
+    cont := AssignVar(
+        assignMsName(usualTypesAuthenticator),
+        "{ID}",
+        GetPKType(isUuidAsPk),
+    )
+
+    cont = AssignVar(
+        cont,
+        "{GetIdIsNotValidExp}",
+        GetIdIsNotValidExp(isUuidAsPk),
+    )
+
+    usualTemplateTypesAuthenticator := template{
+        Path:    "./types/authenticator.go",
+        Content: cont,
+    }
+    return usualTemplateTypesAuthenticator
 }
 
 var usualTemplateTypesEntity = template{
@@ -579,9 +597,38 @@ var usualTemplateTypesEntity = template{
     Content: usualTypesEntity,
 }
 
-var usualTemplateTypesFilter = template{
-    Path:    "./types/filter.go",
-    Content: assignMsName(usualTypesFilter),
+func getUsualTemplateTypesFilter(isUuidAsPk bool) template {
+
+    tpl := AssignVar(
+        assignMsName(usualTypesFilter),
+        "{ID}",
+        GetPKType(isUuidAsPk),
+    )
+
+    tpl = AssignVar(
+        tpl,
+        "{STRTOID}",
+        GetStrToIdFuncName(isUuidAsPk),
+    )
+
+    tpl = AssignVar(
+        tpl,
+        "{PkNil}",
+        GetIdNil(isUuidAsPk),
+    )
+
+    tpl = AssignVar(
+        tpl,
+        "{GetIdIsValidExp}",
+        GetIdIsValidExp(isUuidAsPk),
+    )
+
+    usualTemplateTypesFilter := template{
+        Path:    "./types/filter.go",
+        Content: tpl,
+    }
+
+    return usualTemplateTypesFilter
 }
 
 var usualTemplateTypesRequest = template{

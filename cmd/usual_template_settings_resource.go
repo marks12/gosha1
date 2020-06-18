@@ -6,7 +6,7 @@ var ExtResources = []string{
     "ws",
 }
 
-const HttpResource = 1
+const HttpResource ConfigId = 1
 `
 
 var usualTemplateSettingsResource = template{

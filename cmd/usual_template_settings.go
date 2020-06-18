@@ -23,9 +23,9 @@ const usualSettingsRoutes = `package settings
 const HomePageRoute = "/api"
 
 // routes as app resource
-const HttpRouteResourceType = 1
+const HttpRouteResourceType ConfigId = 1
 // wev socket resource type
-const WsResourceType = 2
+const WsResourceType ConfigId = 2
 
 // route-constant-generator here dont touch this line
 

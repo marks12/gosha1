@@ -27,6 +27,7 @@ export function CurrentApp() {
     this.AdminEmail = "";
     this.AdminPassword = "";
     this.DbType = "";
+    this.IsUuidMode = false;
 
     return this;
 }
@@ -81,6 +82,7 @@ export function EntityFilter() {
     this.IsFindOrCreate = false;
     this.IsUpdateOrCreate = false;
     this.IsRegenerateJsTypes = false;
+    this.IsUuidMode = false;
     this.Search = "";
     this.SearchBy = [];
     this.Order = [];

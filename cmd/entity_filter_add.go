@@ -153,7 +153,7 @@ func (mr *ModelRepository) addFilter(modelName string, fieldName string, dataTyp
             break
 
         case settings.DataTypeUuid:
-            addImportIfNeed(sourceFile, "uuid")
+            addImportIfNeed(sourceFile, "github.com/google/uuid")
             break
 
         case settings.DataTypeArrayInt:

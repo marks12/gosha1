@@ -6,6 +6,7 @@ import (
 
 type mode struct {
 	isInteractive bool
+	isUuidMode bool
 }
 
 func (m *mode) setInteractive() {
@@ -22,6 +23,18 @@ func (m *mode) isInteractiveMode() bool {
 
 func (m *mode) isNonInteractiveMode() bool {
 	return m.isInteractive == false
+}
+
+func (m *mode) setNonUuidMode() {
+	m.isUuidMode = false
+}
+
+func (m *mode) setUuidMode() {
+	m.isUuidMode = true
+}
+
+func (m *mode) getUuidMode() bool {
+	return m.isUuidMode
 }
 
 var instance *mode
@@ -54,4 +67,16 @@ func IsInteractive() bool {
 
 func IsNonInteractive() bool {
 	return GetMode().isNonInteractiveMode()
+}
+
+func SetUuidMode() {
+	GetMode().setUuidMode()
+}
+
+func SetNonUuidMode() {
+	GetMode().setNonUuidMode()
+}
+
+func GetUuidMode() bool {
+	return GetMode().getUuidMode()
 }

@@ -5,6 +5,7 @@ import (
     "gosha/cmd"
     "gosha/webapp/types"
     "os"
+    "strconv"
 )
 
 func CurrentAppFind(filter types.CurrentAppFilter)  (result []types.CurrentApp, totalRecords int, err error) {
@@ -25,7 +26,17 @@ func CurrentAppCreate(filter types.CurrentAppFilter)  (data types.CurrentApp, er
 
     model := filter.GetCurrentAppModel()
 
-    args := []string{"", "exit", "setAppType", "--type=Usual", cmd.USUAL_APP_CREATE, "--adminMail=" + model.AdminEmail, "--adminPassword=" + model.AdminPassword, "--dbType=" + model.DbType}
+    args := []string{
+        "",
+        "exit",
+        "setAppType",
+        "--type=Usual",
+        cmd.USUAL_APP_CREATE,
+        "--adminMail=" + model.AdminEmail,
+        "--adminPassword=" + model.AdminPassword,
+        "--dbType=" + model.DbType,
+        cmd.UuidAsPk.CliArgument(strconv.FormatBool(model.IsUuidMode)),
+    }
 
     os.Args = args
     cmd.RunShell()
