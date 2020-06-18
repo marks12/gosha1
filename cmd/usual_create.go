@@ -50,6 +50,13 @@ func UsualAppInit(c *ishell.Context) {
 	email, _ = getEmail(c)
 	password, _ = getPassword(c)
 	database, err := getDatabaseType(c)
+	isUuidMode, err := getUuidMode(c)
+
+	if isUuidMode {
+		mode.SetUuidMode()
+	} else {
+		mode.SetNonUuidMode()
+	}
 
 	if err != nil {
 		fmt.Println("Creating app error: " + err.Error())
@@ -64,7 +71,7 @@ func UsualAppInit(c *ishell.Context) {
 			c.Println(green("Creating app structure"))
 		}
 
-		usualCreate(c, email, password, database)
+		usualCreate(c, email, password, database, isUuidMode)
 		usualAuthAdd(c)
 
 		break
@@ -96,6 +103,27 @@ func getPassword(c *ishell.Context) (password string, err error) {
 	return
 }
 
+func getUuidMode(c *ishell.Context) (isUuid bool, err error) {
+
+	arguments, err := GetOsArgument(UuidAsPk.ToString())
+	if err != nil {
+
+		choice := c.MultiChoice([]string{
+			"Yes",
+			"No",
+		}, "Would you like to use UUID as primary key? Choose `No` for use integer")
+
+		if choice == 0 {
+			isUuid = true
+		}
+
+	} else {
+		isUuid = arguments.BoolResult
+	}
+
+	return
+}
+
 func getDatabaseType(c *ishell.Context) (dbtype DatabaseType, err error) {
 
 	var arguments RegularFind
@@ -122,7 +150,7 @@ func getDatabaseType(c *ishell.Context) (dbtype DatabaseType, err error) {
 	return dbtype, nil
 }
 
-func usualCreate(c *ishell.Context, email, password string, databaseType DatabaseType) {
+func usualCreate(c *ishell.Context, email, password string, databaseType DatabaseType, isUuidAsPk bool) {
 
 	green := color.New(color.FgCyan).SprintFunc()
 	red := color.New(color.FgRed).SprintFunc()
@@ -131,16 +159,21 @@ func usualCreate(c *ishell.Context, email, password string, databaseType Databas
 
 	usualCreateMain(c)
 
+	//core
+	msTemplateCoreDb := getTemplateCoreDb(databaseType)
+	CreateFile(msTemplateCoreDb.Path, msTemplateCoreDb.Content, c)
+
 	//bootstrap
+	msTemplateInsertDataToDb := GetMsTemplateInsertDataToDb()
 	CreateFile(msTemplateInsertDataToDb.Path, msTemplateInsertDataToDb.Content, c)
 	CopyFile(msTemplateInsertDataToDb.Path, msTemplateInsertDataToDb.Path,
 		[]string{"{email}", "{password}"},
 		[]string{email, password},
 		c)
 
-	//core
-	msTemplateCoreDb := getTemplateCoreDb(databaseType)
-	CreateFile(msTemplateCoreDb.Path, msTemplateCoreDb.Content, c)
+	if mode.GetUuidMode() {
+		addImportIfNeed(msTemplateInsertDataToDb.Path, "github.com/google/uuid")
+	}
 
 	//dbmodels
 	//CreateFile(usualTemplateDbmodelsEntity.Path, usualTemplateDbmodelsEntity.Content, c)
@@ -177,13 +210,26 @@ func usualCreate(c *ishell.Context, email, password string, databaseType Databas
 	CreateFile(msTemplateSettingsWss.Path, msTemplateSettingsWss.Content, c)
 	CreateFile(usualTemplateSettingsResource.Path, usualTemplateSettingsResource.Content, c)
 
+	CreateFile(usualTemplateSettingsType.Path, usualTemplateSettingsType.Content, c)
+
 	//generator
 	CreateFile(usualTemplateGen.Path, usualTemplateGen.Content, c)
 
 	//types
+	usualTemplateTypesAuthenticator := getUsualTemplateTypesAuthenticator(isUuidAsPk)
 	CreateFile(usualTemplateTypesAuthenticator.Path, usualTemplateTypesAuthenticator.Content, c)
+	if isUuidAsPk {
+		addImportIfNeed(usualTemplateTypesAuthenticator.Path, "github.com/google/uuid")
+	}
+
+
 	//CreateFile(usualTemplateTypesEntity.Path, usualTemplateTypesEntity.Content, c)
+	usualTemplateTypesFilter := getUsualTemplateTypesFilter(isUuidAsPk)
 	CreateFile(usualTemplateTypesFilter.Path, usualTemplateTypesFilter.Content, c)
+	if isUuidAsPk {
+		addImportIfNeed(usualTemplateTypesFilter.Path, "github.com/google/uuid")
+	}
+
 	CreateFile(usualTemplateTypesRequest.Path, usualTemplateTypesRequest.Content, c)
 	CreateFile(usualTemplateTypesValidator.Path, usualTemplateTypesValidator.Content, c)
 	CreateFile(usualTemplateTypesResponse.Path, usualTemplateTypesResponse.Content, c)
@@ -208,11 +254,13 @@ func usualCreate(c *ishell.Context, email, password string, databaseType Databas
 
 	CreateFile("./.gitignore", "./\\.idea\n", c)
 
-	//docker
-	CreateFile(usualTemplateDockerPs.Path, usualTemplateDockerPs.Content, c)
-
-	//docker
-	CreateFile(usualTemplateDockerMy.Path, usualTemplateDockerMy.Content, c)
+	if IsPostgres() {
+		//docker
+		CreateFile(usualTemplateDockerPs.Path, usualTemplateDockerPs.Content, c)
+	} else {
+		//docker
+		CreateFile(usualTemplateDockerMy.Path, usualTemplateDockerMy.Content, c)
+	}
 
 	c.Println(red("New app with usual structure created"))
 }

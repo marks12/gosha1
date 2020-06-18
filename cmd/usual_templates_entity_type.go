@@ -10,15 +10,16 @@ func GetUsualTemplateTypeContent(cfg TypeConfig) string {
     uuidImport := ""
 
     if cfg.IsUuid {
-        uuidImport = `"github.com/google/uuid"`
+        uuidImport = `
+    "github.com/google/uuid"
+`
     }
 
     var usualWebappEntityType = `package types
 
 import (
     "net/http"
-    "{ms-name}/settings"
-    ` + uuidImport + `
+    "{ms-name}/settings"` + uuidImport + `
     "errors"
 )
 

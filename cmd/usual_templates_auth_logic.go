@@ -1,5 +1,7 @@
 package cmd
 
+import "gosha/mode"
+
 const usualAuthLogic = `package logic
 
 import (
@@ -11,7 +13,7 @@ import (
     "{ms-name}/common"
     "errors"
     "fmt"
-    "golang.org/x/crypto/bcrypt"
+    "golang.org/x/crypto/bcrypt"{UuidImport}
     "log"
 )
 
@@ -31,7 +33,7 @@ func AuthCreate(filter types.AuthFilter, query *gorm.DB) (data types.Auth, err e
 
         query = query.Where(dbmodels.User{Email: dbAuth.Email}).Find(&dbUser)
 
-        if dbUser.ID < 1 {
+        if dbUser.ID {GetIdIsNotValidExp} {
             return types.Auth{}, errors.New("cant create Auth")
         }
         hashErr := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(typeModel.Password+settings.PASSWORD_SALT))
@@ -122,9 +124,19 @@ func AuthFindOrCreate(filter types.AuthFilter)  (data types.Auth, err error) {
 func AuthUpdateOrCreate(filter types.AuthFilter)  (data types.Auth, err error) {
 	return 
 }
-
 `
-var usualTemplateAuthLogic = template{
-	Path:    "./logic/auth.go",
-	Content: assignMsName(usualAuthLogic),
+
+func GetUsualTemplateAuthLogic() template {
+
+	content := AssignVar(
+		assignMsName(usualAuthLogic),
+		"{GetIdIsNotValidExp}", GetIdIsNotValidExp(mode.GetUuidMode()))
+
+	content = AssignVar(content, "{UuidImport}", `
+	"github.com/google/uuid"`)
+
+	return template{
+		Path:    "./logic/auth.go",
+		Content: content,
+	}
 }

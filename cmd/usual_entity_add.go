@@ -57,7 +57,6 @@ func usualEntityAdd(c *ishell.Context) {
 		[]string{getRouteContent(), CamelCase, firstLowerCase},
 		c)
 
-
 	if ! WoDbModel.BoolResult {
 
 		sourceFile = "./logic/assigner.go"
@@ -138,6 +137,10 @@ func usualEntityAdd(c *ishell.Context) {
 			[]string{"{entity-name}", "{Entity}", "{entity}"},
 			[]string{CamelCase, CamelCase, firstLowerCase},
 			c)
+
+		if ! IsPostgres() && Uuid.BoolResult {
+			addImportIfNeed(destinationFile, "github.com/jinzhu/gorm")
+		}
 	}
 
 	sourceFile = "./logic/" + snakeCase + ".go"
@@ -215,6 +218,10 @@ func getAssignContent() (c string) {
 
 	hasId, _ := GetOsArgument("no-id")
 	cfg.IsId = !hasId.BoolResult
+
+	arguments, _ := GetOsArgument(UuidAsPk.ToString())
+	isUuid := arguments.BoolResult
+	cfg.IsUuid = isUuid
 
 	c = GetUsualTemplateAssignContent(cfg)
 	return

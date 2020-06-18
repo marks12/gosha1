@@ -3,6 +3,7 @@ package cmd
 import (
     "gopkg.in/abiosoft/ishell.v2"
     "github.com/fatih/color"
+    "gosha/mode"
     "os"
 )
 
@@ -17,8 +18,12 @@ func msInit(c *ishell.Context) {
 
     dbtype := DatabaseType{DbTypeName:dbTypeMysql, IsMysql:true, IsPostgres:false}
 
+    msTemplateInsertDataToDb := GetMsTemplateInsertDataToDb()
     //bootstrap
     CreateFile(msTemplateInsertDataToDb.Path, msTemplateInsertDataToDb.Content, c)
+    if mode.GetUuidMode() {
+        addImportIfNeed(msTemplateInsertDataToDb.Path, "github.com/google/uuid")
+    }
 
     //core
     msTemplateCoreDb := getTemplateCoreDb(dbtype)
