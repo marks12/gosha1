@@ -225,7 +225,7 @@ func getFiledJsVal(s string, typeNames []string) (val string) {
 		break
 
 	case "uuid.uuid":
-		val = "\"\""
+		val = "null"
 		break
 
 	default:
