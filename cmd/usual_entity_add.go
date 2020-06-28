@@ -64,19 +64,6 @@ func usualEntityAdd(c *ishell.Context) {
 		[]string{getRouteContent(), CamelCase, firstLowerCase},
 		c)
 
-	if ! WoDbModel.BoolResult {
-
-		sourceFile = "./logic/assigner.go"
-		destinationFile = "./logic/assigner.go"
-
-		CopyFile(
-			sourceFile,
-			destinationFile,
-			[]string{"// add all assign functions", "{Entity}", "{entity}"},
-			[]string{getAssignContent(), CamelCase, firstLowerCase},
-			c)
-	}
-
 	CreateFileIfNotExists(usualTemplateGen.Path, usualTemplateGen.Content, c)
 
 	sourceFile = "./generator/" + snakeCase + ".go"
@@ -152,15 +139,23 @@ func usualEntityAdd(c *ishell.Context) {
 
 	sourceFile = "./logic/" + snakeCase + ".go"
 	destinationFile = "./logic/" + snakeCase + ".go"
-
 	CreateFile(sourceFile, getLogicContent(), c)
-
 	CopyFile(
 		sourceFile,
 		destinationFile,
 		[]string{"{entity-name}", "{Entity}", "{entity}"},
 		[]string{CamelCase, CamelCase, firstLowerCase},
 		c)
+
+	if ! WoDbModel.BoolResult {
+
+		CopyFile(
+			sourceFile,
+			destinationFile,
+			[]string{"// add all assign functions", "{Entity}", "{entity}"},
+			[]string{getAssignContent(), CamelCase, firstLowerCase},
+			c)
+	}
 
 	if ! WoDbModel.BoolResult {
 
