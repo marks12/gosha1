@@ -17,7 +17,7 @@
 
         <template slot="content">
             <template>
-                <VSet v-if="entityList && entityList.length" wrap>
+                <VSet v-if="entityList && entityList.length" wrap class="pt14">
                     <template v-for="entityItem in entityList">
                         <EntityItem
                                 :entityItem="entityItem"
@@ -605,4 +605,9 @@
     #second .sw-panel__inner {
         left: -10px !important;
     }
+
+    .pt14 {
+        padding-top: 14px !important;
+    }
+
 </style>

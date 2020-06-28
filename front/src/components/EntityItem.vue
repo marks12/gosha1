@@ -17,7 +17,7 @@
             </VSet>
             <VSet vertical hasNoIndent>
                 <template v-for="(field, i) in entityItem.Fields">
-                    <VSet>
+                    <VSet class="field-row">
                         <VText>
                             {{ field.Name }}
                         </VText>
@@ -114,4 +114,10 @@
         padding: 0 12px;
         margin: 0 5px;
     }
+
+    .field-row {
+        margin-bottom: 0 !important;
+        margin-top: 0 !important;
+    }
+
 </style>
