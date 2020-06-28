@@ -376,6 +376,8 @@ func {Entity}UpdateOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, 
     
     return
 }
+
+// add all assign functions
 `
 
 const usualEntityLogicFindOrCreate = `
@@ -435,6 +437,7 @@ func {Entity}UpdateOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, 
     return
 }
 
+// add all assign functions
 `
 
 func getUsualEntityLogicHeader(isWoModels bool) (header string) {

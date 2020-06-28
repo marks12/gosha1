@@ -137,6 +137,16 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 		[]string{"updateModel." + fieldName + " = newModel." + fieldName + "\n\t" + getRemoveLine("updateModel.Field")},
 		nil)
 
+	CopyFile(
+		sourceFile,
+		sourceFile,
+		[]string{getRemoveLine("Assign" + CamelCase + "TypeFromDb.Field"), getRemoveLine("Assign" + CamelCase + "DbFromType.Field")},
+		[]string{
+			fieldName + ": db" + CamelCase + "." + fieldName + ",\n\t\t" + getRemoveLine("Assign"+CamelCase+"TypeFromDb.Field"),
+			fieldName + ": typeModel." + fieldName + ",\n\t\t" + getRemoveLine("Assign"+CamelCase+"DbFromType.Field"),
+		},
+		nil)
+
 	CreateFileIfNotExists(usualTemplateGen.Path, usualTemplateGen.Content, nil)
 	sourceFile = "./generator/" + snakeCase + ".go"
 
