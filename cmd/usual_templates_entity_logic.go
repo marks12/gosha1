@@ -1,6 +1,8 @@
 package cmd
 
-import "gosha/mode"
+import (
+    "gosha/mode"
+)
 
 const usualEntityLogicFindWoDb = `
 func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalRecords int, err error) {

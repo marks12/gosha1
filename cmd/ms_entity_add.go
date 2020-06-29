@@ -36,7 +36,8 @@ func msEntityAdd(c *ishell.Context) {
 
     CreateFile("./logic/" + snakeCase + ".go", assignMsName(assignEntityName(tpl, CamelCase)), c)
 
-    AppendFile(msTemplateLogicAssignEntity.Path, assignEntityName(msTemplateLogicAssignEntity.Content, CamelCase))
+    //AppendFile(msTemplateLogicAssignEntity.Path, assignEntityName(msTemplateLogicAssignEntity.Content, CamelCase))
+    AppendFile("./logic/" + snakeCase + ".go", assignEntityName(msLogicAssignEntity, CamelCase))
 
     CopyFile("./main.go", "./main.go", []string{"RabbitServer.Run()"}, []string{msTemplateMainEntity.Content}, c)
     CopyFile("./main.go", "./main.go", []string{"{entity-name}"}, []string{CamelCase}, c)
