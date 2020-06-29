@@ -180,7 +180,7 @@ func usualCreate(c *ishell.Context, email, password string, databaseType Databas
 	CreateFile(usualTemplateDbmodelsValidator.Path, usualTemplateDbmodelsValidator.Content, c)
 
 	//logic
-	CreateFile(msTemplateLogicAssigner.Path, msTemplateLogicAssigner.Content, c)
+	//CreateFile(msTemplateLogicAssigner.Path, msTemplateLogicAssigner.Content, c)
 
 	//router
 	CreateFile(usualTemplateRouter.Path, usualTemplateRouter.Content, c)

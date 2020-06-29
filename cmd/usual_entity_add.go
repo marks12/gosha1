@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/fatih/color"
 	"gopkg.in/abiosoft/ishell.v2"
 	"gosha/mode"
@@ -196,6 +197,8 @@ func getLogicContent() (c string) {
 	crudParams := Crud{}
 
 	WoDbModel, _ := GetOsArgument(WithoutDbModels.ToString())
+
+	fmt.Println(GetOsArgument(WithoutDbModels.ToString()))
 
 	//if len(crudArgs.StringResult) > 0 {
 	//
