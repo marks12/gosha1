@@ -1,7 +1,6 @@
 package logic
 
 import (
-    "fmt"
     "github.com/jinzhu/gorm"
     "github.com/pkg/errors"
     "gosha/cmd"
@@ -224,16 +223,6 @@ func EntityCreate(filter types.EntityFilter) (data types.Entity, err error) {
     if e.HttpMethods.IsFindOrCreate { fcrudax += "a"}
     if e.HttpMethods.IsUpdateOrCreate { fcrudax += "x"}
 
-    structuresCmd := ""
-
-    if e.Structures.WithoutDbModel {
-        structuresCmd = structuresCmd + cmd.WithoutDbModels.CliArgument("true")
-    }
-
-    if filter.IsUuidMode {
-        structuresCmd = structuresCmd + cmd.UuidAsPk.CliArgument("true")
-    }
-
     args := []string{"",
         cmd.Exit.CliArgument(),
         cmd.SetAppType.CliArgument(),
@@ -243,10 +232,15 @@ func EntityCreate(filter types.EntityFilter) (data types.Entity, err error) {
         cmd.CRUD.CliArgument(fcrudax),
         cmd.CheckAuth.CliArgument("fcrudax"),
         cmd.CheckAuth.CliArgument("fcrudax"),
-        structuresCmd,
     }
 
-    fmt.Printf("args: %+v\n", args)
+    if e.Structures.WithoutDbModel {
+        args = append(args, cmd.WithoutDbModels.CliArgument("true"))
+    }
+
+    if filter.IsUuidMode {
+        args = append(args, cmd.UuidAsPk.CliArgument("true"))
+    }
 
     os.Args = args
     cmd.RunShell()

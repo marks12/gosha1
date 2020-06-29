@@ -43,7 +43,7 @@ func msInit(c *ishell.Context) {
     CreateFile(msTemplateRpcappErrors.Path, msTemplateRpcappErrors.Content, c)
 
     //logic
-    CreateFile(msTemplateLogicAssigner.Path, msTemplateLogicAssigner.Content, c)
+    //CreateFile(msTemplateLogicAssigner.Path, msTemplateLogicAssigner.Content, c)
 
     //ms forlder
     CreateFile(msTemplateMsTicket.Path, msTemplateMsTicket.Content, c)
