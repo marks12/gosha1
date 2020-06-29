@@ -166,8 +166,8 @@ func fillUser(c *ishell.Context) {
     	q := criteria.Model(dbmodels.User{}).Count(&count)`}, c)
 
 	CopyFile(
-		"logic/assigner.go",
-		"logic/assigner.go",
+		"logic/auth.go",
+		"logic/auth.go",
 		[]string{getRemoveLine("AssignUserDbFromType predefine")},
 		[]string{
 			`password := []byte(typeModel.Password + settings.PASSWORD_SALT)
@@ -176,8 +176,8 @@ func fillUser(c *ishell.Context) {
 		c)
 
 	CopyFile(
-		"logic/assigner.go",
-		"logic/assigner.go",
+		"logic/auth.go",
+		"logic/auth.go",
 		[]string{getRemoveLine("AssignUserDbFromType.Field")},
 		[]string{
 			`FirstName:   typeModel.FirstName,
@@ -190,8 +190,8 @@ func fillUser(c *ishell.Context) {
 		c)
 
 	CopyFile(
-		"logic/assigner.go",
-		"logic/assigner.go",
+		"logic/auth.go",
+		"logic/auth.go",
 		[]string{getRemoveLine("AssignUserTypeFromDb.Field")},
 		[]string{
 			`FirstName:   dbUser.FirstName,
@@ -313,8 +313,8 @@ func fillAuth(c *ishell.Context) {
 
 
 	CopyFile(
-		"logic/assigner.go",
-		"logic/assigner.go",
+		"logic/auth.go",
+		"logic/auth.go",
 		[]string{getRemoveLine("AssignAuthDbFromType.Field")},
 		[]string{`Email: typeModel.Email,
         Password: typeModel.Password,
