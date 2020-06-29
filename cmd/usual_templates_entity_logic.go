@@ -451,11 +451,15 @@ func getUsualEntityLogicHeader(isWoModels bool) (header string) {
 `
 
     if mode.GetUuidMode() {
-        top += `        "github.com/google/uuid"
+        if ! isWoModels {
+            top += `        "github.com/google/uuid"
 `
+        }
     } else {
-        top += `        "strconv"
+        if ! isWoModels {
+            top += `        "strconv"
 `
+        }
     }
 
     footer := `
