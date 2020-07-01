@@ -19,6 +19,7 @@ const DataTypeBool = "bool"
 const DataTypeUuid = "uuid.UUID"
 const DataTypeString = "string"
 const DataTypeArrayString = "[]string"
+const DataTypeArrayBytes = "[]byte"
 
 var SupportedModelFieldDataTypes = []string{
     DataTypeString,
@@ -30,6 +31,7 @@ var SupportedModelFieldDataTypes = []string{
     DataTypeBool,
     DataTypeUuid,
     DataTypeIntLink,
+	DataTypeArrayBytes,
 }
 
 var SupportedFilterDataTypes = []string{

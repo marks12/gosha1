@@ -186,6 +186,8 @@ func getGeneratorByDataType(dataType string) string {
 		return "randDuration(),"
 	case settings.DataTypeIntLink:
 		return "new(int),"
+	case settings.DataTypeArrayBytes:
+		return "[]byte,"
 	default:
 		return "nil,"
 	}
