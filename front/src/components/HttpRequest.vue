@@ -2,7 +2,7 @@
     <VSet vertical-align="top">
         <VSet>
             <VSet vertical width="dyn">
-                <VSet vertical>
+                <VSet vertical v-if="action !== 'find'">
                     <VLabel>Request</VLabel>
                     <VInput multiline rows="17" width="dyn" placeholder="request"></VInput>
                 </VSet>
@@ -13,7 +13,7 @@
                         <VLabel>{{getResponseStatusText()}}</VLabel>
                     </VSet>
                 </VSet>
-                <VInput multiline rows="16" width="dyn" :value="response" placeholder="response"></VInput>
+                <VInput multiline :rows="action !== 'find' ? '16' : '34'" width="dyn" :value="response" placeholder="response"></VInput>
             </VSet>
         </VSet>
         <VSet vertical divider v-if="! error">

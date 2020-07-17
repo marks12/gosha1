@@ -434,6 +434,23 @@
 
                 return this.errors.length === 0;
             },
+
+            getClearFilters() {
+
+                let f = JSON.parse(JSON.stringify(this.getFilters()));
+
+                if (f.Ids.length > 0) {
+
+                    let idsStr = f.Ids.replace("[", "").replace("]", "");
+                    let items = idsStr.split(",", );
+
+                    f.Ids = items;
+                    console.log('items', items);
+                }
+
+                return f;
+            },
+
             async sendRequest() {
                 console.log('send request');
                 console.log(JSON.stringify(this.getFilters()));
@@ -446,10 +463,12 @@
                 let result = null;
                 let t1 = this.microtime(true);
 
+                let filters = this.getClearFilters();
+
                 switch (this.currentEntityItem.Action) {
                     case "find":
 
-                        result = fetch(appendParams(this.getRequestUrl(), this.getFilters()), {
+                        result = fetch(appendParams(this.getRequestUrl(), filters), {
                             method: 'GET',
                             headers: this.getHeaders(),
                         });
