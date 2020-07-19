@@ -31,8 +31,9 @@
                 <VSet vertical indent-size="XS">
                     <VLabel>Token</VLabel>
                     <VSet>
-                        <VInput width="dyn"></VInput>
-                        <VButton text="Auth"></VButton>
+                        <VInput width="dyn" v-model="authToken"></VInput>
+                        <VButton text="Auth" @click="tryAuth"></VButton>
+                        <AuthSettings ref="auth" @setToken="setToken"></AuthSettings>
                     </VSet>
                 </VSet>
             </VSet>
@@ -57,12 +58,14 @@
     import VInput from "swtui/src/components/VInput";
     import VLabel from "swtui/src/components/VLabel";
     import VText from "swtui/src/components/VText";
+    import VIcon from "swtui/src/components/VIcon";
     import VInputAutocomplete from "swtui/src/components/VInputAutocomplete";
     import {mapGetters, mapActions} from "vuex";
     import {EntityFilter} from "../../../webapp/jstypes/apiModel";
+    import AuthSettings from "./AuthSettings";
 
     export default {
-        components: {VButton, VSet, VBadge, VInput, VInputAutocomplete, VText, VLabel, VGroup},
+        components: {AuthSettings, VButton, VSet, VBadge, VInput, VInputAutocomplete, VText, VLabel, VGroup, VIcon},
         name: "HttpRequest",
         props: {
             action: {
@@ -76,6 +79,7 @@
             return {
                 routeUrl: this.route,
                 serverUrl: localStorage.getItem("serverUrl") || "",
+                authToken: localStorage.getItem("authToken") || "",
                 servers: [],
                 url: "",
                 entityFilter: {},
@@ -152,7 +156,16 @@
                 setRequestUrl: "setRequestUrl",
             }),
 
+            tryAuth() {
+                this.$refs.auth.tryAuth();
+            },
+
+            setToken(token) {
+                this.authToken = token;
+            },
+
             findFilter() {
+
                 let f = new EntityFilter();
                 f.PerPage = 1000;
                 f.CurrentPage = 1;
