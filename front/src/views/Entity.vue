@@ -439,7 +439,7 @@
 
                 let f = JSON.parse(JSON.stringify(this.getFilters()));
 
-                if (f.Ids.length > 0) {
+                if (f.Ids && f.Ids.length > 0) {
 
                     let idsStr = f.Ids.replace("[", "").replace("]", "");
                     let items = idsStr.split(",", );
@@ -470,7 +470,7 @@
 
                         result = fetch(appendParams(this.getRequestUrl(), filters), {
                             method: 'GET',
-                            headers: this.getHeaders(),
+                            headers: {Token: localStorage.getItem("authToken")},
                         });
 
                         break;
