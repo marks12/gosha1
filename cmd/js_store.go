@@ -32,6 +32,7 @@ const {entity} = {
 		create{Entity}(context, {data, filter, header, noMutation}) {
 			
 			let url = createUrl;
+
             if (Array.isArray && Array.isArray(data)) {
                 url = multiCreateUrl
             }
@@ -111,23 +112,13 @@ const {entity} = {
                 });
         },
         update{Entity}(context, {id, data, filter, header, noMutation}) {
+
             let url = updateUrl + id;
-			let entity = new {Entity}();
-			for (let key in data){
-				if (entity.hasOwnProperty(key) && Number.isInteger(entity[key])){
-					data[key] = Number(data[key])
-				}
-			}
+			
             if (Array.isArray && Array.isArray(data)) {
-				data.forEach(item=>{
-					for (let key in item){
-						if (entity.hasOwnProperty(key) && Number.isInteger(entity[key])){
-							item[key] = Number(item[key])
-						}
-					}
-				});
                 url = multiUpdateUrl
             }
+			transformType(data,new {Entity}());
 
             return api.update(url, data, filter, header)
                 .then(function(response) {
