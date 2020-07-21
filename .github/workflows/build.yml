@@ -23,7 +23,7 @@ jobs:
         uses: 1466587594/get-current-time@v1
         id: current-time
         with:
-          format: DD.MM.YYYY/HH-mm-ss
+          format: DD.MM.YYYY-HH.mm.ss
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
