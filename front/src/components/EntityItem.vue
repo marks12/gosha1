@@ -1,12 +1,17 @@
 <template>
     <WorkSpace width="fit" height="fit" :class="{'bg-filter' : entityItem.IsFilter}">
         <VSet divider vertical height="fit">
-            <VSet>
+            <VSet v-if="!entityItem.IsFilter" class="head-row">
                 <VText :title="entityItem.Name">{{entityItem.Name}}</VText>
                 <VSign width="M">Db</VSign>
                 <VSign width="M">Types</VSign>
             </VSet>
-            <VSet>
+            <VSet v-else class="head-row">
+                <VText :title="entityItem.Name">{{entityItem.Name}}</VText>
+                <VSign width="M">Type</VSign>
+            </VSet>
+
+            <VSet v-if="!entityItem.IsFilter">
                 <VButton @click="reqFind" :disabled="! entityItem.HttpMethods.IsFind"
                          small :title="'Send Find Request'" :class="entityItem.HttpMethods.IsFind ? 'small-button find' : 'small-button weak'" text="F"></VButton>
 
@@ -31,7 +36,7 @@
                          :class="entityItem.HttpMethods.IsUpdateOrCreate ? 'small-button uoc' : 'small-button weak'" text="UoC" title="Update or create">UoC</VButton>
 
             </VSet>
-            <VSet vertical hasNoIndent>
+            <VSet vertical v-if="!entityItem.IsFilter">
                 <template v-for="(field, i) in entityItem.Fields">
                     <VSet class="field-row">
                         <VText>
@@ -45,6 +50,18 @@
                             <VIcon name="check" v-if="field.IsType"></VIcon>
                             <VIcon name="minus" v-else></VIcon>
                         </VText>
+                    </VSet>
+                </template>
+            </VSet>
+            <VSet vertical v-else>
+                <template v-for="(field, i) in entityItem.Fields">
+                    <VSet class="field-row">
+                        <VText>
+                            {{ field.Name }}
+                        </VText>
+                        <VSign width="M">
+                            {{field.Type}}
+                        </VSign>
                     </VSet>
                 </template>
             </VSet>
@@ -134,6 +151,10 @@
     .field-row {
         margin-bottom: 0 !important;
         margin-top: 0 !important;
+        padding-right: 30px;
+    }
+    .head-row {
+        padding-right: 30px;
     }
 
 </style>
