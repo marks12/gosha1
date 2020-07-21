@@ -182,6 +182,7 @@
 
 <script>
 
+    import EntityGen from "../../../webapp/jstypes/components/EntityGen";
     import VBadge from "swtui/src/components/VBadge";
     import VSet from "swtui/src/components/VSet";
     import VSpoiler from "swtui/src/components/VSpoiler";
@@ -189,9 +190,10 @@
     import VSelect from "swtui/src/components/VSelect";
     import VSign from "swtui/src/components/VSign";
     import EntityItem from "../components/EntityItem";
-    import { mapGetters, mapActions } from 'vuex';
+    import { mapGetters, mapMutations, mapActions } from 'vuex';
     import {Entity, EntityField, EntityFilter, FieldTypeFilter} from "../../../webapp/jstypes/apiModel";
     import EntityRequest from "../components/EntityRequest";
+    import apiCSR from "../../../jstypes/apiCSR";
 
     function appendParams(u, params) {
         let uparams = "";
@@ -235,7 +237,10 @@
 
     export default {
         name: "Entity",
-        components: {EntityRequest, EntityItem, VSpoiler, VBadge, VGroup, VSelect, VSign, VSet},
+        components: {EntityRequest, EntityItem, VSpoiler, VBadge, EntityGen, VGroup, VSelect, VSign, VSet},
+        mixins: [
+            EntityGen,
+        ],
         data() {
             return {
                 searchModel: "",
