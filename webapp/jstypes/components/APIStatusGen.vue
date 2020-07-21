@@ -143,15 +143,15 @@
     import aPIStatusData from "../data/APIStatusData";
     import { APIStatus } from '../apiModel';
     import { mapGetters, mapMutations, mapActions } from 'vuex';
-    import WorkSpace from "swui/src/components/WorkSpace";
-    import VHead from "swui/src/components/VHead";
-    import VSet from "swui/src/components/VSet";
-    import VLabel from "swui/src/components/VLabel";
-    import VInput from "swui/src/components/VInput";
-    import VCheckbox from "swui/src/components/VCheckbox";
-    import VText from "swui/src/components/VText";
-    import VPanel from "swui/src/components/VPanel";
-    import VButton from "swui/src/components/VButton";
+    import WorkSpace from "swtui/src/components/WorkSpace";
+    import VHead from "swtui/src/components/VHead";
+    import VSet from "swtui/src/components/VSet";
+    import VLabel from "swtui/src/components/VLabel";
+    import VInput from "swtui/src/components/VInput";
+    import VCheckbox from "swtui/src/components/VCheckbox";
+    import VText from "swtui/src/components/VText";
+    import VPanel from "swtui/src/components/VPanel";
+    import VButton from "swtui/src/components/VButton";
 
     export default {
         name: 'APIStatusGen',
