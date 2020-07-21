@@ -29,7 +29,6 @@ func genTypesJs(c *ishell.Context) {
 
 	folder := "./jstypes"
 	folderStore := folder + "/store"
-	folderComponent := folder + "/components"
 	folderData := folder + "/data"
 	file := folder + "/apiModel.js"
 	apiFile := folder + "/api.js"
@@ -40,10 +39,9 @@ func genTypesJs(c *ishell.Context) {
 	os.RemoveAll(folder)
 	os.MkdirAll(folder, 0755)
 	os.MkdirAll(folderStore, 0755)
-	os.MkdirAll(folderComponent, 0755)
 	os.MkdirAll(folderData, 0755)
 
-	modelContent, stores, tpls, data := getTypesJs(storeNamespace.StringResult)
+	modelContent, stores, _, data := getTypesJs(storeNamespace.StringResult)
 
 	cb := []byte(modelContent)
 	ioutil.WriteFile(file, cb, 0644)
@@ -62,10 +60,6 @@ func genTypesJs(c *ishell.Context) {
 
 	for _, store := range stores {
 		ioutil.WriteFile(folderStore+"/"+store.name+".js", []byte(store.jscode), 0644)
-	}
-
-	for _, tpl := range tpls {
-		ioutil.WriteFile(folderComponent+"/"+tpl.name+"Gen.vue", []byte(tpl.jscode), 0644)
 	}
 
 	for _, d := range data {
@@ -158,11 +152,10 @@ func getStoreJsCode(entity string) string {
 
 func getTemplateJsCode(entity string, storeNameSpace string) string {
 
-
 	template := ""
 
 	if len(storeNameSpace) > 0 {
-		template = AssignVar(usualEntityVueComponent, "{namespace}", "'" + storeNameSpace +"', ")
+		template = AssignVar(usualEntityVueComponent, "{namespace}", "'"+storeNameSpace+"', ")
 	} else {
 		template = AssignVar(usualEntityVueComponent, "{namespace}", "")
 	}
