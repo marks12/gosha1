@@ -13,31 +13,34 @@ import (
 )
 
 func main() {
-	isRestart, err := updater.MakeUpdate()
-	if err != nil {
-		fmt.Println("Error in AutoUpdate:", err.Error())
-		return
-	}
-	fmt.Println("Current version:", settings.CurrentReleaseTag, isRestart)
-
-	if isRestart {
-		binPath, _ := os.Executable()
-		os.Args = append(os.Args, "childProcess")
-		cmd := exec.Command(binPath, os.Args...)
-		cmd.SysProcAttr = &syscall.SysProcAttr{
-			Pdeathsig: syscall.SIGKILL,
-		}
-		cmd.Start()
-
-		select {}
-
-	} else {
-		if len(os.Args) > 1 {
-			cmd.Run()
+	fmt.Println("Current version:", settings.CurrentReleaseTag)
+	if settings.CurrentReleaseTag != settings.TegPlaceholderName {
+		isRestart, err := updater.MakeUpdate()
+		if err != nil {
+			fmt.Println("Error in AutoUpdate:", err.Error())
 			return
 		}
-		mode.SetNonInteractiveMode()
-		fmt.Println("Run server")
-		webapp.Run()
+
+		if isRestart {
+			binPath, _ := os.Executable()
+			c := exec.Command(binPath, os.Args[1:]...)
+			c.SysProcAttr = &syscall.SysProcAttr{
+				Pdeathsig: syscall.SIGKILL,
+			}
+			c.Stdout = os.Stdout
+			c.Stderr = os.Stderr
+			c.Start()
+
+			select {}
+
+		}
 	}
+	if len(os.Args) > 1 {
+		cmd.Run()
+		return
+	}
+	mode.SetNonInteractiveMode()
+	fmt.Println("Run server")
+	webapp.Run()
+
 }
