@@ -36,6 +36,9 @@ jobs:
               dep ensure
           fi
 
+      -name: Set current release tag
+        run: sed -i -- 's/current_release_tag_placeholder/${{ steps.current-time.outputs.formattedTime }}/g' settings/updater.go
+
       - name: Build
         run: ./build.sh
 
