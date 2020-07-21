@@ -18,7 +18,7 @@ func main() {
 		if arg == "childProcess" {
 			parent := syscall.Getppid()
 			log.Printf("main: Killing parent pid: %v", parent)
-			syscall.Kill(parent, syscall.SIGTERM)
+			syscall.Kill(parent, syscall.SIGKILL)
 		} else {
 			args = append(args, arg)
 		}
