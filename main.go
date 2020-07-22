@@ -18,7 +18,6 @@ func main() {
 		isRestart, err := updater.MakeUpdate()
 		if err != nil {
 			fmt.Println("Error in AutoUpdate:", err.Error())
-			return
 		}
 
 		if isRestart {
