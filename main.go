@@ -40,7 +40,6 @@ func main() {
 		return
 	}
 	mode.SetNonInteractiveMode()
-	fmt.Println("Run server")
 	webapp.Run()
 
 }
