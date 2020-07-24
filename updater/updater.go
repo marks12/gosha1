@@ -8,6 +8,7 @@ import (
 	"gosha/settings"
 	"net/http"
 	"runtime"
+	"time"
 )
 
 const LastReleaseUrl = "https://api.github.com/repos/%s/releases/latest"
@@ -55,7 +56,10 @@ func MakeUpdate() (isRestart bool, err error) {
 }
 
 func upgrade(url string) (err error) {
-	resp, err := http.Get(url)
+	client := http.Client{
+		Timeout: 15 * time.Second,
+	}
+	resp, err := client.Get(url)
 	if err != nil {
 		return err
 	}
