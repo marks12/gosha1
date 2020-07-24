@@ -1,353 +1,360 @@
 package logic
 
 import (
-    "github.com/jinzhu/gorm"
-    "github.com/pkg/errors"
-    "gosha/cmd"
-    "gosha/webapp/types"
-    "os"
-    "regexp"
-    "strings"
+	"github.com/jinzhu/gorm"
+	"github.com/pkg/errors"
+	"gosha/cmd"
+	"gosha/webapp/types"
+	"os"
+	"regexp"
+	"strings"
 )
 
 func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords int, err error) {
+	existsTypes := cmd.GetExistsTypes()
+	typeNames := cmd.GetModelsList(existsTypes)
+	existsModels := cmd.GetExistsModels()
+	modelsNames := cmd.GetModelsList(existsModels)
+	modelsMethods := cmd.GetModelsMethods(existsTypes)
 
-    existsTypes := cmd.GetExistsTypes()
-    typeNames := cmd.GetModelsList(existsTypes)
+	resModels := []types.Entity{}
+	res := []types.Entity{}
 
-    existsModels := cmd.GetExistsModels()
-    modelsNames := cmd.GetModelsList(existsModels)
-    modelsMethods := cmd.GetModelsMethods(existsTypes)
+	id := 1
+	for _, t := range typeNames {
 
-    resModels := []types.Entity{}
-    res := []types.Entity{}
+		if t != strings.Title(t) {
+			continue
+		}
 
-    id := 1
-    for _, t := range typeNames {
+		fields := []types.Field{}
 
-        if t != strings.Title(t) {
-            continue
-        }
+		for _, field := range existsTypes.GetFields(t, []cmd.Field{}) {
 
-        fields := []types.Field{}
+			if !filter.WithHiddenFields && field.Name != strings.Title(field.Name) {
+				continue
+			}
 
-        for _, field := range existsTypes.GetFields(t, []cmd.Field{}) {
+			fields = append(fields, types.Field{
+				Name:   field.Name,
+				Type:   field.Type,
+				IsType: true,
+			})
+		}
 
-           if ! filter.WithHiddenFields && field.Name != strings.Title(field.Name) {
-               continue
-           }
+		isFilter, _ := regexp.Match("Filter", []byte(t))
 
-           fields = append(fields, types.Field{
-               Name: field.Name,
-               Type: field.Type,
-               IsType: true,
-           })
-        }
+		res = append(res, types.Entity{
+			Id:       id,
+			Name:     t,
+			Fields:   fields,
+			IsFilter: isFilter,
+		})
+		id++
+	}
 
-        isFilter, _ := regexp.Match("Filter", []byte(t))
+	id = 1
+	for _, t := range modelsNames {
 
-        res = append(res, types.Entity{
-            Id: id,
-            Name: t,
-            Fields: fields,
-            IsFilter: isFilter,
-        })
-        id++
-    }
+		if t != strings.Title(t) {
+			continue
+		}
 
-    id = 1
-    for _, t := range modelsNames {
+		modelFields := []cmd.Field{}
 
-        if t != strings.Title(t) {
-            continue
-        }
+		for _, field := range existsModels.GetFields(t, []cmd.Field{}) {
 
-        modelFields := []cmd.Field{}
+			if field.Name == strings.Title(field.Name) {
+				modelFields = append(modelFields, field)
+			}
+		}
 
-        for _, field := range existsModels.GetFields(t, []cmd.Field{}) {
+		resModels = append(resModels, types.Entity{
+			Id:          id,
+			Name:        t,
+			ModelFields: modelFields,
+		})
+		id++
+	}
 
-            if field.Name == strings.Title(field.Name) {
-                modelFields = append(modelFields, field)
-            }
-        }
+	for _, em := range resModels {
 
-        resModels = append(resModels, types.Entity{
-            Id: id,
-            Name: t,
-            ModelFields: modelFields,
-        })
-        id++
-    }
+		eres, index := getExistsModel(em.Name, res)
 
-    for _, em := range resModels {
+		if len(eres.Name) > 0 {
 
-        eres, index := getExistsModel(em.Name, res)
+			for _, emf := range em.ModelFields {
 
-        if len(eres.Name) > 0 {
+				etf, i := getExistsFieldIndex(emf.Name, eres.Fields)
 
-            for _, emf := range  em.ModelFields {
+				if len(etf.Name) < 1 {
+					res[index].Fields = append(res[index].Fields, types.Field{
+						Name: emf.Name,
+						Type: emf.Type,
+						IsDb: true,
+					})
+				} else {
+					res[index].Fields[i].IsDb = true
+				}
+			}
 
-                etf, i := getExistsFieldIndex(emf.Name, eres.Fields)
+		} else {
 
-                if len(etf.Name) < 1 {
-                    res[index].Fields = append(res[index].Fields, types.Field{
-                        Name: emf.Name,
-                        Type: emf.Type,
-                        IsDb: true,
-                    })
-                } else {
-                    res[index].Fields[i].IsDb = true
-                }
-            }
+			for _, mf := range em.ModelFields {
 
-        } else {
+				em.Fields = append(em.Fields, types.Field{
+					Name: mf.Name,
+					Type: mf.Type,
+					IsDb: true,
+				})
+			}
 
-            for _, mf := range em.ModelFields {
+			res = append(res, em)
+		}
+	}
 
-                em.Fields = append(em.Fields, types.Field{
-                    Name: mf.Name,
-                    Type: mf.Type,
-                    IsDb: true,
-                })
-            }
+	if len(filter.Search) > 0 {
 
-            res = append(res, em)
-        }
-    }
+		filtered := []types.Entity{}
 
-    if len(filter.Search) > 0 {
+		for _, entity := range res {
+			if strings.Contains(strings.ToUpper(entity.Name), strings.ToUpper(filter.Search)) {
+				filtered = append(filtered, entity)
+			}
+		}
+		result = filtered
+	} else {
+		result = res
+	}
 
-        filtered := []types.Entity{}
+	if !filter.WithFilter {
 
-        for _, entity := range res {
+		filtered := []types.Entity{}
 
-            matched, _ := regexp.Match(`[a-zA-Z0-9]*` + filter.Search + `[a-zA-Z0-9]*`, []byte(entity.Name))
+		for _, entity := range result {
 
-            if matched {
-                filtered = append(filtered, entity)
-            }
-        }
+			matched, _ := regexp.Match(`Filter`, []byte(entity.Name))
 
-        result = filtered
-    } else {
-        result = res
-    }
+			if !matched {
+				filtered = append(filtered, entity)
+			}
+		}
 
-    if ! filter.WithFilter {
+		result = filtered
+	}
 
-        filtered := []types.Entity{}
+	totalRecords = len(result)
 
-        for _, entity := range result {
+	for k, model := range result {
+		result[k].HttpMethods.IsFind = modelsMethods[model.Name].IsFind
+		result[k].HttpMethods.IsCreate = modelsMethods[model.Name].IsCreate
+		result[k].HttpMethods.IsRead = modelsMethods[model.Name].IsRead
+		result[k].HttpMethods.IsUpdate = modelsMethods[model.Name].IsUpdate
+		result[k].HttpMethods.IsDelete = modelsMethods[model.Name].IsDelete
+		result[k].HttpMethods.IsFindOrCreate = modelsMethods[model.Name].IsFindOrCreate
+		result[k].HttpMethods.IsUpdateOrCreate = modelsMethods[model.Name].IsUpdateOrCreate
 
-            matched, _ := regexp.Match(`Filter`, []byte(entity.Name))
-
-            if ! matched {
-                filtered = append(filtered, entity)
-            }
-        }
-
-        result = filtered
-    }
-
-    totalRecords = len(result)
-
-    for k, model := range result {
-        result[k].HttpMethods.IsFind = modelsMethods[model.Name].IsFind
-        result[k].HttpMethods.IsCreate = modelsMethods[model.Name].IsCreate
-        result[k].HttpMethods.IsRead = modelsMethods[model.Name].IsRead
-        result[k].HttpMethods.IsUpdate = modelsMethods[model.Name].IsUpdate
-        result[k].HttpMethods.IsDelete = modelsMethods[model.Name].IsDelete
-        result[k].HttpMethods.IsFindOrCreate = modelsMethods[model.Name].IsFindOrCreate
-        result[k].HttpMethods.IsUpdateOrCreate = modelsMethods[model.Name].IsUpdateOrCreate
-
-        result[k].HttpRoutes.Find = cmd.AssignVar(cmd.FindUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
-        result[k].HttpRoutes.Create = cmd.AssignVar(cmd.CreateUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
-        result[k].HttpRoutes.Read = cmd.AssignVar(cmd.ReadUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
-        result[k].HttpRoutes.Update = cmd.AssignVar(cmd.UpdateUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
-        result[k].HttpRoutes.Delete = cmd.AssignVar(cmd.DeleteUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
-        result[k].HttpRoutes.FindOrCreate = cmd.AssignVar(cmd.FindOrCreateUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
-        result[k].HttpRoutes.UpdateOrCreate = cmd.AssignVar(cmd.UpdateOrCreateUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
-    }
-
-    return
+		result[k].HttpRoutes.Find = cmd.AssignVar(cmd.FindUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
+		result[k].HttpRoutes.Create = cmd.AssignVar(cmd.CreateUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
+		result[k].HttpRoutes.Read = cmd.AssignVar(cmd.ReadUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
+		result[k].HttpRoutes.Update = cmd.AssignVar(cmd.UpdateUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
+		result[k].HttpRoutes.Delete = cmd.AssignVar(cmd.DeleteUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
+		result[k].HttpRoutes.FindOrCreate = cmd.AssignVar(cmd.FindOrCreateUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
+		result[k].HttpRoutes.UpdateOrCreate = cmd.AssignVar(cmd.UpdateOrCreateUrl, "{entity}", cmd.GetFirstLowerCase(model.Name))
+	}
+	return
 }
 
 func getExistsFieldIndex(name string, fields []types.Field) (types.Field, int) {
 
-    for i, f := range fields {
-        if gorm.ToColumnName(f.Name) == gorm.ToColumnName(name) {
-            return f, i
-        }
-    }
+	for i, f := range fields {
+		if gorm.ToColumnName(f.Name) == gorm.ToColumnName(name) {
+			return f, i
+		}
+	}
 
-    return types.Field{}, -1
+	return types.Field{}, -1
 }
 
 func getExistsModel(s string, entities []types.Entity) (types.Entity, int) {
 
-    for i, ent := range entities {
-        if ent.Name == s {
-            return ent, i
-        }
-    }
+	for i, ent := range entities {
+		if ent.Name == s {
+			return ent, i
+		}
+	}
 
-    return types.Entity{}, 0
+	return types.Entity{}, 0
 }
 
-func EntityRead(filter types.EntityFilter) (data types.Entity, err error) {
+func EntityRead(_ types.EntityFilter) (data types.Entity, err error) {
 
-    return
+	return
 }
 
 func EntityCreate(filter types.EntityFilter) (data types.Entity, err error) {
 
-    argsBak := os.Args
-    defer func(){
-        if filter.IsRegenerateJsTypes {
-            args := []string{"", "exit", "gen:types:js"}
-            os.Args = args
-            cmd.RunShell()
-            os.Args = argsBak
-        }
-    }()
+	argsBak := os.Args
+	defer func() {
+		if filter.IsRegenerateJsTypes {
+			args := []string{"", "exit", "gen:types:js"}
+			os.Args = args
+			cmd.RunShell()
+			os.Args = argsBak
+		}
+	}()
 
-    e := filter.GetEntityModel()
+	e := filter.GetEntityModel()
 
-    fcrudax := ""
+	fcrudax := ""
 
-    if e.HttpMethods.IsFind { fcrudax += "f"}
-    if e.HttpMethods.IsCreate { fcrudax += "c"}
-    if e.HttpMethods.IsRead { fcrudax += "r"}
-    if e.HttpMethods.IsUpdate { fcrudax += "u"}
-    if e.HttpMethods.IsDelete { fcrudax += "d"}
-    if e.HttpMethods.IsFindOrCreate { fcrudax += "a"}
-    if e.HttpMethods.IsUpdateOrCreate { fcrudax += "x"}
+	if e.HttpMethods.IsFind {
+		fcrudax += "f"
+	}
+	if e.HttpMethods.IsCreate {
+		fcrudax += "c"
+	}
+	if e.HttpMethods.IsRead {
+		fcrudax += "r"
+	}
+	if e.HttpMethods.IsUpdate {
+		fcrudax += "u"
+	}
+	if e.HttpMethods.IsDelete {
+		fcrudax += "d"
+	}
+	if e.HttpMethods.IsFindOrCreate {
+		fcrudax += "a"
+	}
+	if e.HttpMethods.IsUpdateOrCreate {
+		fcrudax += "x"
+	}
 
-    args := []string{"",
-        cmd.Exit.CliArgument(),
-        cmd.SetAppType.CliArgument(),
-        cmd.Type.CliArgument("Usual"),
-        cmd.USUAL_ENTITY_ADD,
-        cmd.Entity.CliArgument(e.Name),
-        cmd.CRUD.CliArgument(fcrudax),
-        cmd.CheckAuth.CliArgument("fcrudax"),
-        cmd.CheckAuth.CliArgument("fcrudax"),
-    }
+	args := []string{"",
+		cmd.Exit.CliArgument(),
+		cmd.SetAppType.CliArgument(),
+		cmd.Type.CliArgument("Usual"),
+		cmd.USUAL_ENTITY_ADD,
+		cmd.Entity.CliArgument(e.Name),
+		cmd.CRUD.CliArgument(fcrudax),
+		cmd.CheckAuth.CliArgument("fcrudax"),
+		cmd.CheckAuth.CliArgument("fcrudax"),
+	}
 
-    if e.Structures.WithoutDbModel {
-        args = append(args, cmd.WithoutDbModels.CliArgument("true"))
-    }
+	if e.Structures.WithoutDbModel {
+		args = append(args, cmd.WithoutDbModels.CliArgument("true"))
+	}
 
-    if filter.IsUuidMode {
-        args = append(args, cmd.UuidAsPk.CliArgument("true"))
-    }
+	if filter.IsUuidMode {
+		args = append(args, cmd.UuidAsPk.CliArgument("true"))
+	}
 
-    os.Args = args
-    cmd.RunShell()
+	os.Args = args
+	cmd.RunShell()
 
-    addFields(e.Name, e.Fields)
+	addFields(e.Name, e.Fields)
 
-    defer func(){
-        shell := cmd.GetShell()
-        shell.Close()
-    }()
+	defer func() {
+		shell := cmd.GetShell()
+		shell.Close()
+	}()
 
-    findFilter := types.EntityFilter{}
-    findFilter.Search = e.Name
-    findFilter.WithFilter = false
+	findFilter := types.EntityFilter{}
+	findFilter.Search = e.Name
+	findFilter.WithFilter = false
 
-    res, records, err := EntityFind(findFilter)
+	res, records, err := EntityFind(findFilter)
 
-    if records < 0 {
-        err = errors.New("Creating entity error")
-        return
-    }
+	if records < 0 {
+		err = errors.New("Creating entity error")
+		return
+	}
 
-    for _, fe := range res {
-        if fe.Name == e.Name {
-            data = fe
-            return
-        }
-    }
+	for _, fe := range res {
+		if fe.Name == e.Name {
+			data = fe
+			return
+		}
+	}
 
-    err = errors.New("Creating entity error")
+	err = errors.New("Creating entity error")
 
-    return
+	return
 }
 
 func addFields(entityName string, fields []types.Field) {
 
-    var args []string
+	var args []string
 
-    for _, f := range fields {
-        args = []string{"", "exit", "setAppType", "--type=Usual", cmd.ENTITY_ADD_FIELD, "--entity=" + entityName, "--Field="+f.Name, "--data-type=" + f.Type}
-        os.Args = args
-        cmd.RunShell()
-    }
+	for _, f := range fields {
+		args = []string{"", "exit", "setAppType", "--type=Usual", cmd.ENTITY_ADD_FIELD, "--entity=" + entityName, "--Field=" + f.Name, "--data-type=" + f.Type}
+		os.Args = args
+		cmd.RunShell()
+	}
 }
 
 func addFilters(entityName string, fields []types.Field) {
 
-    var args []string
+	var args []string
 
-    for _, f := range fields {
-        args = []string{"", "exit", "setAppType", "--type=Usual", cmd.ENTITY_ADD_FILTER, "--entity=" + entityName, "--filter="+f.Name, "--data-type=" + f.Type}
-        os.Args = args
-        cmd.RunShell()
-    }
+	for _, f := range fields {
+		args = []string{"", "exit", "setAppType", "--type=Usual", cmd.ENTITY_ADD_FILTER, "--entity=" + entityName, "--filter=" + f.Name, "--data-type=" + f.Type}
+		os.Args = args
+		cmd.RunShell()
+	}
 }
 
 func EntityUpdate(filter types.EntityFilter) (data types.Entity, err error) {
 
-    argsBak := os.Args
-    defer func(){
-        if filter.IsRegenerateJsTypes {
-            args := []string{"", "exit", "gen:types:js"}
-            os.Args = args
-            cmd.RunShell()
-            os.Args = argsBak
-        }
-    }()
+	argsBak := os.Args
+	defer func() {
+		if filter.IsRegenerateJsTypes {
+			args := []string{"", "exit", "gen:types:js"}
+			os.Args = args
+			cmd.RunShell()
+			os.Args = argsBak
+		}
+	}()
 
-    e := filter.GetEntityModel()
+	e := filter.GetEntityModel()
 
-    isFilter, _ := regexp.Match("Filter", []byte(e.Name))
+	isFilter, _ := regexp.Match("Filter", []byte(e.Name))
 
-    if isFilter {
-        addFilters(e.Name, e.Fields)
-    } else {
-        addFields(e.Name, e.Fields)
-    }
+	if isFilter {
+		addFilters(e.Name, e.Fields)
+	} else {
+		addFields(e.Name, e.Fields)
+	}
 
-    defer func(){
-        shell := cmd.GetShell()
-        shell.Close()
-    }()
+	defer func() {
+		shell := cmd.GetShell()
+		shell.Close()
+	}()
 
-    findFilter := types.EntityFilter{}
-    findFilter.Search = e.Name
-    findFilter.WithFilter = isFilter
+	findFilter := types.EntityFilter{}
+	findFilter.Search = e.Name
+	findFilter.WithFilter = isFilter
 
-    res, records, err := EntityFind(findFilter)
+	res, records, err := EntityFind(findFilter)
 
-    if records < 0 {
-        err = errors.New("Updating entity error")
-        return
-    }
+	if records < 0 {
+		err = errors.New("Updating entity error")
+		return
+	}
 
-    for _, fe := range res {
-        if fe.Name == e.Name {
-            data = fe
-            return
-        }
-    }
+	for _, fe := range res {
+		if fe.Name == e.Name {
+			data = fe
+			return
+		}
+	}
 
-    err = errors.New("Update entity error")
+	err = errors.New("Update entity error")
 
-    return
+	return
 }
 
-func EntityDelete(filter types.EntityFilter) (isOk bool, err error) {
+func EntityDelete(_ types.EntityFilter) (isOk bool, err error) {
 
-    return
+	return
 }
