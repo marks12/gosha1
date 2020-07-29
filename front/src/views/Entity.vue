@@ -1,12 +1,12 @@
 <template>
 
-    <WorkSpace footerPosition="bottom" noBg>
+    <WorkSpace footerPosition="bottom" noBg v-on:scrolled-bottom="onScrolledBottom" ref="workspace">
         <template #header>
             <VSet>
-                <VSet vertical  indent-size="XS">
+                <VSet vertical indent-size="XS">
                     <VHead level="h1">Entity</VHead>
                     <VSet>
-                        <VInput  placeholder="Поиск" v-model="searchModel" @input="search"></VInput>
+                        <VInput placeholder="Поиск" v-model="searchModel" @input="search"></VInput>
                         <VCheckbox v-model="entityFilter.WithFilter">
                             <VText font-size="txs">Show filters</VText>
                         </VCheckbox>
@@ -18,8 +18,9 @@
         <template slot="content">
             <template>
                 <VSet v-if="entityList && entityList.length" wrap class="pt14">
-                    <template v-for="entityItem in entityList">
+                    <template v-for="entityItem in partialList">
                         <EntityItem
+                                :key="entityItem.Id"
                                 :entityItem="entityItem"
                                 :onEdit="editItem"
                                 @onRequest="requestItem"
@@ -31,48 +32,77 @@
 
             <VPanel v-if="panel.show" @close="closePanel" :maxWidth="panelMaxWidth">
 
-                    <VSet slot="header">
-                        <VHead level="h3" width="fit">{{ panelHeader }} {{ currentEntityItem.Name }}</VHead>
-                    </VSet>
+                <VSet slot="header">
+                    <VHead level="h3" width="fit">{{ panelHeader }} {{ currentEntityItem.Name }}</VHead>
+                </VSet>
 
-                    <template slot="content">
+                <template slot="content">
 
-                        <EntityRequest v-if="panel.type === panel.request" :entity="currentEntityItem"></EntityRequest>
+                    <EntityRequest v-if="panel.type === panel.request" :entity="currentEntityItem"></EntityRequest>
 
-                        <template v-else>
-                            <VSet vertical @submit.prevent="saveChangesSubmit">
+                    <template v-else>
+                        <VSet vertical @submit.prevent="saveChangesSubmit">
 
                             <VSet vertical indent-size="XS">
                                 <VSign v-if="currentEntityItem.IsFilter">Filter name</VSign>
                                 <VSign v-else>Entity name</VSign>
-                                <VInput v-model="currentEntityItem.Name" :disabled="currentEntityItem.Id > 0" width="dyn"></VInput>
+                                <VInput v-model="currentEntityItem.Name" :disabled="currentEntityItem.Id > 0"
+                                        width="dyn"></VInput>
 
                                 <template v-if="! currentEntityItem.IsFilter">
                                     <VSign>Http methods</VSign>
                                     <VSet>
-                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsFind" :disabled="currentEntityItem.Id > 0"><VText>Find</VText></VCheckbox>
-                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsCreate" :disabled="currentEntityItem.Id > 0"><VText>Create</VText></VCheckbox>
-                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsRead" :disabled="currentEntityItem.Id > 0"><VText>Read</VText></VCheckbox>
-                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsUpdate" :disabled="currentEntityItem.Id > 0"><VText>Update</VText></VCheckbox>
-                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsDelete" :disabled="currentEntityItem.Id > 0"><VText>Delete</VText></VCheckbox>
+                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsFind"
+                                                   :disabled="currentEntityItem.Id > 0">
+                                            <VText>Find</VText>
+                                        </VCheckbox>
+                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsCreate"
+                                                   :disabled="currentEntityItem.Id > 0">
+                                            <VText>Create</VText>
+                                        </VCheckbox>
+                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsRead"
+                                                   :disabled="currentEntityItem.Id > 0">
+                                            <VText>Read</VText>
+                                        </VCheckbox>
+                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsUpdate"
+                                                   :disabled="currentEntityItem.Id > 0">
+                                            <VText>Update</VText>
+                                        </VCheckbox>
+                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsDelete"
+                                                   :disabled="currentEntityItem.Id > 0">
+                                            <VText>Delete</VText>
+                                        </VCheckbox>
                                     </VSet>
                                     <VSet>
-                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsFindOrCreate" :disabled="currentEntityItem.Id > 0"><VText>FindOrCreate</VText></VCheckbox>
-                                        <VCheckbox v-if="isHttpMethods" v-model="currentEntityItem.HttpMethods.IsUpdateOrCreate" :disabled="currentEntityItem.Id > 0"><VText>IsUpdateOrCreate</VText></VCheckbox>
+                                        <VCheckbox v-if="isHttpMethods"
+                                                   v-model="currentEntityItem.HttpMethods.IsFindOrCreate"
+                                                   :disabled="currentEntityItem.Id > 0">
+                                            <VText>FindOrCreate</VText>
+                                        </VCheckbox>
+                                        <VCheckbox v-if="isHttpMethods"
+                                                   v-model="currentEntityItem.HttpMethods.IsUpdateOrCreate"
+                                                   :disabled="currentEntityItem.Id > 0">
+                                            <VText>IsUpdateOrCreate</VText>
+                                        </VCheckbox>
                                     </VSet>
                                 </template>
 
                                 <template v-if="! currentEntityItem.IsFilter">
                                     <VSign>Backend structures</VSign>
                                     <VSet>
-                                        <VCheckbox v-if="currentEntityItem && currentEntityItem.Structures" v-model="currentEntityItem.Structures.WithoutDbModel" :disabled="currentEntityItem.Id > 0"><VText>Without Db Model</VText></VCheckbox>
+                                        <VCheckbox v-if="currentEntityItem && currentEntityItem.Structures"
+                                                   v-model="currentEntityItem.Structures.WithoutDbModel"
+                                                   :disabled="currentEntityItem.Id > 0">
+                                            <VText>Without Db Model</VText>
+                                        </VCheckbox>
                                     </VSet>
                                 </template>
 
                             </VSet>
 
                             <VSet vertical indent-size="XS">
-                                <VSet  indent-size="XS" direction="vertical" v-for="field in currentEntityItem.Fields" :key="'id-'+field.Name">
+                                <VSet indent-size="XS" direction="vertical" v-for="field in currentEntityItem.Fields"
+                                      :key="'id-'+field.Name">
                                     <VSet>
                                         <template>
                                             <VSign width="col3">{{field.Type}}</VSign>
@@ -82,7 +112,8 @@
                                 </VSet>
                             </VSet>
 
-                            <VHead level="h3" style="margin: 20px 0;" v-if="currentEntityItem.IsFilter">Add new filter</VHead>
+                            <VHead level="h3" style="margin: 20px 0;" v-if="currentEntityItem.IsFilter">Add new filter
+                            </VHead>
                             <VHead level="h3" style="margin: 20px 0;" v-else>Add new field</VHead>
                             <VSet vertical width="dyn">
                                 <VSet v-if="isPanelCreate" width="dyn" :key="'newf-id'">
@@ -106,38 +137,40 @@
                             </VSet>
 
                         </VSet>
-                        </template>
-
                     </template>
 
-                    <template #footer>
+                </template>
 
+                <template #footer>
+
+                    <VSet vertical>
                         <VSet vertical>
-                            <VSet vertical>
-                                <VGroup v-for="(e, index) in errors" color="attention-light" :key="'err-' + index" width="dyn">{{e}}</VGroup>
-                            </VSet>
-
-                            <VSet v-if="panel.type !== panel.request">
-                                <VCheckbox v-model="IsRegenerateJsTypes">
-                                    <VText>Regenerate jstypes</VText>
-                                </VCheckbox>
-                            </VSet>
-
-                            <VSet>
-                                <VButton
-                                        @click="saveChangesSubmit"
-                                        accent
-                                        :text="panelSubmitButtonText"
-                                />
-                                <VButton
-                                        @click="cancelChanges"
-                                        text="Cancel"
-                                />
-                            </VSet>
+                            <VGroup v-for="(e, index) in errors" color="attention-light" :key="'err-' + index"
+                                    width="dyn">{{e}}
+                            </VGroup>
                         </VSet>
 
-                    </template>
-                </VPanel>
+                        <VSet v-if="panel.type !== panel.request">
+                            <VCheckbox v-model="IsRegenerateJsTypes">
+                                <VText>Regenerate jstypes</VText>
+                            </VCheckbox>
+                        </VSet>
+
+                        <VSet>
+                            <VButton
+                                    @click="saveChangesSubmit"
+                                    accent
+                                    :text="panelSubmitButtonText"
+                            />
+                            <VButton
+                                    @click="cancelChanges"
+                                    text="Cancel"
+                            />
+                        </VSet>
+                    </VSet>
+
+                </template>
+            </VPanel>
 
             <slot name="confirmationPanel">
                 <VPanel
@@ -190,10 +223,9 @@
     import VSelect from "swtui/src/components/VSelect";
     import VSign from "swtui/src/components/VSign";
     import EntityItem from "../components/EntityItem";
-    import { mapGetters, mapMutations, mapActions } from 'vuex';
+    import {mapGetters, mapActions} from 'vuex';
     import {Entity, EntityField, EntityFilter, FieldTypeFilter} from "../../../webapp/jstypes/apiModel";
     import EntityRequest from "../components/EntityRequest";
-    import apiCSR from "../../../jstypes/apiCSR";
 
     function appendParams(u, params) {
         let uparams = "";
@@ -232,7 +264,7 @@
                 }
                 break;
         }
-        return (u + uparams).replace(/[&]+/,'&');
+        return (u + uparams).replace(/[&]+/, '&');
     }
 
     export default {
@@ -254,6 +286,7 @@
                 isLoading: true,
                 IsRegenerateJsTypes: localStorage.getItem("IsRegenerateJsTypes") === 'true',
                 IsUuidMode: localStorage.getItem("IsUuidMode") === 'true',
+                parts: 1,
             };
         },
         created: function () {
@@ -265,30 +298,40 @@
 
             this.findFieldType({
                 filter: this.fieldTypeFilter,
-            }).then(()=>{
+            }).then(() => {
                 this.isLoading = false;
             });
+
         },
         computed: {
             ...mapGetters('gosha', {
                 panelMaxWidth: "getPanelMaxWidth",
             }),
+
+            partialList() {
+                if (this.entityList && this.entityList.length > 15 * this.parts) {
+                    return this.entityList.slice(0, 15 * this.parts)
+                }
+                return this.entityList
+            },
             isHttpMethods() {
                 return this.currentEntityItem && this.currentEntityItem.HttpMethods;
             },
 
             hasFields(entityItem) {
                 return (entityItem) => {
-                    return  entityItem &&
+                    return entityItem &&
                         entityItem.TypeFields &&
                         entityItem.TypeFields.length;
                 }
             },
             getTypes() {
-                return this.getListFieldType().filter((item)=>{
+                return this.getListFieldType().filter((item) => {
                     return (this.currentEntityItem.IsFilter && item.Type === "filter") ||
-                        (! this.currentEntityItem.IsFilter && item.Type !== "filter")
-                }).map( (item)=> {return item.Name});
+                        (!this.currentEntityItem.IsFilter && item.Type !== "filter")
+                }).map((item) => {
+                    return item.Name
+                });
             },
             entity() {
                 return this.getEntityById();
@@ -310,7 +353,7 @@
                     return 'Request';
                 }
 
-                return  '';
+                return '';
             },
         },
         methods: {
@@ -332,6 +375,10 @@
                 "getRequestUrl",
             ]),
 
+            onScrolledBottom(){
+                this.parts = this.parts + 1
+            },
+
             onRequest(item) {
                 console.log("request action", item);
             },
@@ -349,7 +396,7 @@
                 ne.IsUpdateOrCreate = false;
                 ne.Action = "find";
 
-                ne.HttpMethods =  {
+                ne.HttpMethods = {
                     IsFind: true,
                     IsCreate: true,
                     IsRead: true,
@@ -372,6 +419,8 @@
                 this.findEntity({
                     filter: this.entityFilter
                 });
+                this.parts = 1
+
             },
             editItem(item) {
 
@@ -380,13 +429,13 @@
             },
             requestItem(item) {
                 this.currentEntityItem = {};
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
                     this.currentEntityItem = item;
                     this.showPanel(this.panel.request)
                 })
             },
             clearNewFields() {
-                this.newFields  = [
+                this.newFields = [
                     new EntityField(),
                 ];
             },
@@ -394,7 +443,7 @@
 
                 for (let i = this.newFields.length - 1; i >= 0; i--) {
                     if (this.newFields[i].Name.trim().length < 1 && this.newFields.length > 1) {
-                        this.newFields.splice(i , 1);
+                        this.newFields.splice(i, 1);
                     }
                 }
 
@@ -442,7 +491,7 @@
                 if (f.Ids && f.Ids.length > 0) {
 
                     let idsStr = f.Ids.replace("[", "").replace("]", "");
-                    let items = idsStr.split(",", );
+                    let items = idsStr.split(",",);
 
                     f.Ids = items;
                     console.log('items', items);
@@ -484,12 +533,12 @@
 
                     return response.text();
                 })
-                .then((r)=>{
+                    .then((r) => {
 
-                    console.log('result', r);
-                    console.log('time', (this.microtime(true) - t1).toFixed(3));
-                    this.setResponse(r);
-                })
+                        console.log('result', r);
+                        console.log('time', (this.microtime(true) - t1).toFixed(3));
+                        this.setResponse(r);
+                    })
             },
 
             microtime(get_as_float) {
@@ -505,18 +554,18 @@
                     return;
                 }
 
-                if (! this.IsValidEntity()) {
+                if (!this.IsValidEntity()) {
                     return;
                 }
 
                 if (this.isPanelCreate) {
                     this.currentEntityItem.item.Name = this.currentEntityItem.Name;
                     this.currentEntityItem.item.Fields = this.newFields.slice(0, -1);
-                    this.currentEntityItem.item.Structures =  {
+                    this.currentEntityItem.item.Structures = {
                         WithoutDbModel: this.currentEntityItem.Structures.WithoutDbModel || false,
                     };
 
-                    this.currentEntityItem.item.HttpMethods =  {
+                    this.currentEntityItem.item.HttpMethods = {
                         IsFind: this.currentEntityItem.HttpMethods.IsFind || false,
                         IsCreate: this.currentEntityItem.HttpMethods.IsCreate || false,
                         IsRead: this.currentEntityItem.HttpMethods.IsRead || false,
@@ -526,7 +575,7 @@
                         IsUpdateOrCreate: this.currentEntityItem.HttpMethods.IsUpdateOrCreate || false,
                     };
 
-                    this.createEntityItemSend().then(()=>{
+                    this.createEntityItemSend().then(() => {
                         this.fetchEntityData();
                         this.closePanel();
                         this.clearNewFields();
@@ -605,10 +654,11 @@
         },
         watch: {
             'entityFilter.WithFilter': function (newFilter) {
-
                 this.findEntity({
                     filter: this.entityFilter
                 })
+                this.parts = 1
+
             },
             IsRegenerateJsTypes(newVal) {
                 localStorage.setItem("IsRegenerateJsTypes", newVal);
