@@ -1,7 +1,7 @@
 package cmd
 
 import (
-    "gosha/mode"
+	"gosha/mode"
 )
 
 const usualEntityLogicFindWoDb = `
@@ -60,7 +60,7 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
     if len(filter.Order) > 0  {
         for index, Field := range filter.Order {
              if core.Db.NewScope(&dbmodels.{Entity}{}).HasColumn(Field) {
-                criteria = criteria.Order(` + `"` + "`" + `"` + ` + Field + ` + `"` + "`" + `"` + ` + " " + filter.OrderDirection[index])
+                criteria = criteria.Order("\"" + strings.ToLower(Field) + "\"" + " " + filter.OrderDirection[index])
             } else {
                 err = errors.New("Ordering by unknown Field " + Field)
                 return
@@ -202,7 +202,7 @@ func {Entity}Update(filter types.{Entity}Filter, query *gorm.DB)  (data types.{E
 `
 
 func GetUsualEntityLogicUpdate() string {
-    return `
+	return `
 
 func {Entity}MultiUpdate(filter types.{Entity}Filter)  (data []types.{Entity}, err error) {
 
@@ -298,7 +298,7 @@ func {Entity}Delete(filter types.{Entity}Filter, query *gorm.DB)  (isOk bool, er
 
 func GetUsualEntityLogicDelete() string {
 
-    return `
+	return `
 func {Entity}MultiDelete(filter types.{Entity}Filter)  (isOk bool, err error) {
 
     typeModelList, err := filter.Get{Entity}ModelList()
@@ -444,40 +444,40 @@ func {Entity}UpdateOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, 
 
 func getUsualEntityLogicHeader(isWoModels bool) (header string) {
 
-    top := `package logic
+	top := `package logic
 
     import (
         "{ms-name}/types"
 `
 
-    if mode.GetUuidMode() {
-        if ! isWoModels {
-            top += `        "github.com/google/uuid"
+	if mode.GetUuidMode() {
+		if !isWoModels {
+			top += `        "github.com/google/uuid"
 `
-        }
-    } else {
-        if ! isWoModels {
-            top += `        "strconv"
+		}
+	} else {
+		if !isWoModels {
+			top += `        "strconv"
 `
-        }
-    }
+		}
+	}
 
-    footer := `
+	footer := `
         "github.com/jinzhu/gorm"
     )
 `
-    middle := ""
+	middle := ""
 
-    if ! isWoModels {
-        middle = `
+	if !isWoModels {
+		middle = `
         "log"
         "fmt"
         "{ms-name}/core"
         "errors"
          "{ms-name}/dbmodels"` + "\n"
-    }
+	}
 
-    return top + middle + footer
+	return top + middle + footer
 
 }
 
@@ -488,71 +488,71 @@ func getUsualEntityLogicHeader(isWoModels bool) (header string) {
 
 func GetUsualTemplateLogicContent(crud Crud, isWoDbModel bool) (content string) {
 
-    isUuidAsPk := mode.GetUuidMode()
+	isUuidAsPk := mode.GetUuidMode()
 
-    content = getUsualEntityLogicHeader(isWoDbModel)
+	content = getUsualEntityLogicHeader(isWoDbModel)
 
-    if crud.IsFind {
-        if isWoDbModel {
-            content += usualEntityLogicFindWoDb
-        } else {
-            content += usualEntityLogicFind
-        }
+	if crud.IsFind {
+		if isWoDbModel {
+			content += usualEntityLogicFindWoDb
+		} else {
+			content += usualEntityLogicFind
+		}
 
-    }
+	}
 
-    if crud.IsCreate {
-        if isWoDbModel {
-            content += usualEntityLogicCreateWoDb
-        } else {
-            content += usualEntityLogicCreate
-        }
-    }
+	if crud.IsCreate {
+		if isWoDbModel {
+			content += usualEntityLogicCreateWoDb
+		} else {
+			content += usualEntityLogicCreate
+		}
+	}
 
-    if crud.IsRead {
-        if isWoDbModel {
-            content += usualEntityLogicReadWoDb
-        } else {
-            content += usualEntityLogicRead
-        }
-    }
+	if crud.IsRead {
+		if isWoDbModel {
+			content += usualEntityLogicReadWoDb
+		} else {
+			content += usualEntityLogicRead
+		}
+	}
 
-    if crud.IsUpdate {
-        if isWoDbModel {
-            content += usualEntityLogicUpdateWoDb
-        } else {
-            content += GetUsualEntityLogicUpdate()
-        }
-    }
+	if crud.IsUpdate {
+		if isWoDbModel {
+			content += usualEntityLogicUpdateWoDb
+		} else {
+			content += GetUsualEntityLogicUpdate()
+		}
+	}
 
-    if crud.IsDelete {
-        if isWoDbModel {
-            content += usualEntityLogicDeleteWoDb
-        } else {
-            content += GetUsualEntityLogicDelete()
-        }
-    }
+	if crud.IsDelete {
+		if isWoDbModel {
+			content += usualEntityLogicDeleteWoDb
+		} else {
+			content += GetUsualEntityLogicDelete()
+		}
+	}
 
-    if crud.IsFindOrCreate {
-        if isWoDbModel {
-            content += usualEntityLogicFindOrCreateWoDb
-        } else {
-            content += usualEntityLogicFindOrCreate
-        }
-    }
+	if crud.IsFindOrCreate {
+		if isWoDbModel {
+			content += usualEntityLogicFindOrCreateWoDb
+		} else {
+			content += usualEntityLogicFindOrCreate
+		}
+	}
 
-    if crud.IsUpdateOrCreate {
-        if isWoDbModel {
-            content += usualEntityLogicUpdateOrCreateWoDb
-        } else {
-            content += usualEntityLogicUpdateOrCreate
-        }
-    }
+	if crud.IsUpdateOrCreate {
+		if isWoDbModel {
+			content += usualEntityLogicUpdateOrCreateWoDb
+		} else {
+			content += usualEntityLogicUpdateOrCreate
+		}
+	}
 
-    content = assignMsName(content)
-    content = AssignVar(content, "{GetIdIsNotValidExp}", GetIdIsNotValidExp(isUuidAsPk))
-    content = AssignVar(content, "{PkNil}", GetIdNil(isUuidAsPk))
-    content = AssignVar(content, "{PkType}", GetPKType(isUuidAsPk))
+	content = assignMsName(content)
+	content = AssignVar(content, "{GetIdIsNotValidExp}", GetIdIsNotValidExp(isUuidAsPk))
+	content = AssignVar(content, "{PkNil}", GetIdNil(isUuidAsPk))
+	content = AssignVar(content, "{PkType}", GetPKType(isUuidAsPk))
 
-    return
+	return
 }
