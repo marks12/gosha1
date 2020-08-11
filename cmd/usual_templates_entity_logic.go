@@ -474,7 +474,8 @@ func getUsualEntityLogicHeader(isWoModels bool) (header string) {
         "fmt"
         "{ms-name}/core"
         "errors"
-         "{ms-name}/dbmodels"` + "\n"
+        "{ms-name}/dbmodels"
+		"strings"` + "\n"
 	}
 
 	return top + middle + footer
