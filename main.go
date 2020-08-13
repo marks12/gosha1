@@ -9,11 +9,12 @@ import (
 	"gosha/webapp"
 	"os"
 	"os/exec"
+	"runtime"
 	"syscall"
 )
 
 func main() {
-	fmt.Println("Current version:", settings.CurrentReleaseTag)
+	fmt.Println("Current version:", settings.CurrentReleaseTag, "OS:", runtime.GOOS)
 	if settings.CurrentReleaseTag != settings.TegPlaceholderName {
 		isRestart, err := updater.MakeUpdate()
 		if err != nil {
@@ -23,9 +24,13 @@ func main() {
 		if isRestart {
 			binPath, _ := os.Executable()
 			c := exec.Command(binPath, os.Args[1:]...)
-			c.SysProcAttr = &syscall.SysProcAttr{
-				Pdeathsig: syscall.SIGKILL,
+
+			if runtime.GOOS == "linux" {
+				c.SysProcAttr = &syscall.SysProcAttr{
+					Pdeathsig: syscall.SIGKILL,
+				}
 			}
+
 			c.Stdout = os.Stdout
 			c.Stderr = os.Stderr
 			c.Start()
