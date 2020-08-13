@@ -10,7 +10,6 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
-	"syscall"
 )
 
 func main() {
@@ -24,12 +23,6 @@ func main() {
 		if isRestart {
 			binPath, _ := os.Executable()
 			c := exec.Command(binPath, os.Args[1:]...)
-
-			if runtime.GOOS == "linux" {
-				c.SysProcAttr = &syscall.SysProcAttr{
-					Pdeathsig: syscall.SIGKILL,
-				}
-			}
 
 			c.Stdout = os.Stdout
 			c.Stderr = os.Stderr
