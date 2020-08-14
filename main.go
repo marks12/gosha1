@@ -31,7 +31,6 @@ func main() {
 			c.Start()
 
 			select {}
-
 		}
 	}
 	if len(os.Args) > 1 {
