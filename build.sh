@@ -64,7 +64,7 @@ cat >> ./webapp/webapp/html.go <<EOL
 }
 EOL
 
-go build -v
+go build -o ./gosha -v ./main.go
 
 env GOOS=darwin GOARCH=amd64 go build -o ./gosha-mac -v ./main-mac.go
 
