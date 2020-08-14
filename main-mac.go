@@ -10,7 +10,6 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
-	"syscall"
 )
 
 func main() {
@@ -25,17 +24,12 @@ func main() {
 			binPath, _ := os.Executable()
 			c := exec.Command(binPath, os.Args[1:]...)
 
-			if runtime.GOOS == "linux" {
-				c.SysProcAttr = &syscall.SysProcAttr{
-					Pdeathsig: syscall.SIGKILL,
-				}
-			}
-
 			c.Stdout = os.Stdout
 			c.Stderr = os.Stderr
 			c.Start()
 
 			select {}
+
 		}
 	}
 	if len(os.Args) > 1 {
