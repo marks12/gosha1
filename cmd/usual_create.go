@@ -289,6 +289,8 @@ func usualCreateMain(c *ishell.Context) {
 		"mdl",
 		"common",
 		"wsserver",
+		"view",
+		"view/form",
 	} {
 		if _, err := os.Stat(folder); os.IsNotExist(err) {
 			os.Mkdir(folder, 0755)

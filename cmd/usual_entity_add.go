@@ -88,6 +88,25 @@ func usualEntityAdd(c *ishell.Context) {
 		[]string{CamelCase, CamelCase, firstLowerCase},
 		c)
 
+
+	CreateFile(usualTemplateBs4ViewFields.Path, usualTemplateBs4ViewFields.Content, c)
+	CopyFile(
+		usualTemplateBs4ViewFields.Path,
+		usualTemplateBs4ViewFields.Path,
+		[]string{"{entity-name}", "{Entity}", "{entity}"},
+		[]string{CamelCase, CamelCase, firstLowerCase},
+		c)
+
+	sourceFile = "./view/form/" + snakeCase + ".go"
+	destinationFile = "./view/form/" + snakeCase + ".go"
+	CreateFile(sourceFile, getEntityBs4vView(), c)
+	CopyFile(
+		sourceFile,
+		destinationFile,
+		[]string{"{entity-name}", "{Entity}", "{entity}"},
+		[]string{CamelCase, CamelCase, firstLowerCase},
+		c)
+
 	switch CamelCase {
 	case "Auth", "User":
 		break
@@ -286,6 +305,14 @@ func getEntityGenContent() (genContent string) {
 
 	return
 }
+
+func getEntityBs4vView() (bs4Content string) {
+
+	bs4Content = usualTemplateBs4EntityForms.Content
+
+	return
+}
+
 
 func getWebAppTestContent() (webappTestContent string) {
 
