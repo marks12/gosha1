@@ -141,26 +141,30 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 		nil)
 
 
-	sourceFile = "./view/form/" + snakeCase + ".go"
-	destinationFile := "./view/form/" + snakeCase + ".go"
+	if _, err := os.Stat("./view"); os.IsNotExist(err) {
+		fmt.Println("view folder not exists cant create bs4 template")
+	} else {
 
-	CreateFileIfNotExists(sourceFile, getEntityBs4vView(), nil)
+		sourceFile = "./view/form/" + snakeCase + ".go"
+		destinationFile := "./view/form/" + snakeCase + ".go"
 
-	CopyFile(
-		sourceFile,
-		destinationFile,
-		[]string{"{entity-name}", "{Entity}", "{entity}"},
-		[]string{CamelCase, CamelCase, firstLowerCase},
-		nil)
+		CreateFileIfNotExists(sourceFile, getEntityBs4vView(), nil)
+
+		CopyFile(
+			sourceFile,
+			destinationFile,
+			[]string{"{entity-name}", "{Entity}", "{entity}"},
+			[]string{CamelCase, CamelCase, firstLowerCase},
+			nil)
 
 
-	CopyFile(
-		sourceFile,
-		sourceFile,
-		[]string{getRemoveLine(CamelCase)},
-		[]string{GetFormTemplateField(modelName, fieldName, dataType) + "\n            " + getRemoveLine(CamelCase)},
-		nil)
-
+		CopyFile(
+			sourceFile,
+			sourceFile,
+			[]string{getRemoveLine(CamelCase)},
+			[]string{GetFormTemplateField(modelName, fieldName, dataType) + "\n            " + getRemoveLine(CamelCase)},
+			nil)
+	}
 
 	//
 	//CopyFile(

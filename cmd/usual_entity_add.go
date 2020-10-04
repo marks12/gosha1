@@ -6,6 +6,7 @@ import (
 	"gopkg.in/abiosoft/ishell.v2"
 	"gosha/mode"
 	"strings"
+	"os"
 )
 
 const replaceCommentLink = `//generator insert entity`
@@ -89,23 +90,27 @@ func usualEntityAdd(c *ishell.Context) {
 		c)
 
 
-	CreateFile(usualTemplateBs4ViewFields.Path, usualTemplateBs4ViewFields.Content, c)
-	CopyFile(
-		usualTemplateBs4ViewFields.Path,
-		usualTemplateBs4ViewFields.Path,
-		[]string{"{entity-name}", "{Entity}", "{entity}"},
-		[]string{CamelCase, CamelCase, firstLowerCase},
-		c)
+	if _, err := os.Stat("./view"); os.IsNotExist(err) {
+		fmt.Println("view folder not exists cant create bs4 template")
+	} else {
+		CreateFile(usualTemplateBs4ViewFields.Path, usualTemplateBs4ViewFields.Content, c)
+		CopyFile(
+			usualTemplateBs4ViewFields.Path,
+			usualTemplateBs4ViewFields.Path,
+			[]string{"{entity-name}", "{Entity}", "{entity}"},
+			[]string{CamelCase, CamelCase, firstLowerCase},
+			c)
 
-	sourceFile = "./view/form/" + snakeCase + ".go"
-	destinationFile = "./view/form/" + snakeCase + ".go"
-	CreateFile(sourceFile, getEntityBs4vView(), c)
-	CopyFile(
-		sourceFile,
-		destinationFile,
-		[]string{"{entity-name}", "{Entity}", "{entity}"},
-		[]string{CamelCase, CamelCase, firstLowerCase},
-		c)
+		sourceFile = "./view/form/" + snakeCase + ".go"
+		destinationFile = "./view/form/" + snakeCase + ".go"
+		CreateFile(sourceFile, getEntityBs4vView(), c)
+		CopyFile(
+			sourceFile,
+			destinationFile,
+			[]string{"{entity-name}", "{Entity}", "{entity}"},
+			[]string{CamelCase, CamelCase, firstLowerCase},
+			c)
+	}
 
 	switch CamelCase {
 	case "Auth", "User":
