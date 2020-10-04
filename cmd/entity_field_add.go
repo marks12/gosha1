@@ -93,6 +93,8 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 
 	CamelCase := strings.Title(modelName)
 	snakeCase := getLowerCase(modelName)
+	firstLowerCase := GetFirstLowerCase(modelName)
+
 
 	sourceFile := "./types/" + snakeCase + ".go"
 
@@ -137,6 +139,29 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 		[]string{getRemoveLine("updateModel.Field")},
 		[]string{"updateModel." + fieldName + " = newModel." + fieldName + "\n\t" + getRemoveLine("updateModel.Field")},
 		nil)
+
+
+	sourceFile = "./view/form/" + snakeCase + ".go"
+	destinationFile := "./view/form/" + snakeCase + ".go"
+
+	CreateFileIfNotExists(sourceFile, getEntityBs4vView(), nil)
+
+	CopyFile(
+		sourceFile,
+		destinationFile,
+		[]string{"{entity-name}", "{Entity}", "{entity}"},
+		[]string{CamelCase, CamelCase, firstLowerCase},
+		nil)
+
+
+	CopyFile(
+		sourceFile,
+		sourceFile,
+		[]string{getRemoveLine(CamelCase)},
+		[]string{GetFormTemplateField(modelName, fieldName, dataType) + "\n            " + getRemoveLine(CamelCase)},
+		nil)
+
+
 	//
 	//CopyFile(
 	//	sourceFile,
@@ -163,6 +188,27 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 		nil)
 
 	return
+}
+
+func GetFormTemplateField(modelName string, fieldName string, dataType string) string {
+
+	firstLowerCase := GetFirstLowerCase(modelName)
+
+	switch dataType {
+
+	case settings.DataTypeString, settings.DataTypeInt, settings.DataTypeFloat64, settings.DataTypeUuid:
+		return GetStringFormField(firstLowerCase, fieldName)
+	}
+
+	return fmt.Sprintf("//unsupported data type %s for field %s", dataType, fieldName)
+}
+
+func GetStringFormField(modelName string, fieldName string) string {
+
+	return fmt.Sprintf(`view.GetStringFieldTemplate(view.FieldConfig{
+				Id: common.GetFieldName(&%s, &%s.%s),
+			}),`, modelName, modelName, fieldName)
+
 }
 
 func getGeneratorByDataType(dataType string) string {
