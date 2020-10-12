@@ -169,7 +169,7 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 			sourceFile,
 			sourceFile,
 			[]string{getRemoveLine(CamelCase + "-collector")},
-			[]string{GetFormFieldCollector(modelName, fieldName, dataType) + "\n            " + getRemoveLine(CamelCase + "-collector")},
+			[]string{GetFormFieldCollector(modelName, fieldName, dataType) + "\n                  " + getRemoveLine(CamelCase + "-collector")},
 			nil)
 	}
 
@@ -235,7 +235,8 @@ func GetStringFormField(modelName string, fieldName string) string {
 
 	return fmt.Sprintf(`view.GetStringFieldTemplate(view.FieldConfig{
 				Id: common.GetFieldName(&%s, &%s.%s),
-			}),`, modelName, modelName, fieldName)
+				Title: common.GetFieldName(&%s, &%s.%s),
+			}),`, modelName, modelName, fieldName, modelName, modelName, fieldName)
 
 }
 
@@ -243,7 +244,8 @@ func GetBoolFormField(modelName string, fieldName string) string {
 
 	return fmt.Sprintf(`view.GetBoolFieldTemplate(view.FieldConfig{
 				Id: common.GetFieldName(&%s, &%s.%s),
-			}),`, modelName, modelName, fieldName)
+				Title: common.GetFieldName(&%s, &%s.%s),
+			}),`, modelName, modelName, fieldName, modelName, modelName, fieldName)
 
 }
 
