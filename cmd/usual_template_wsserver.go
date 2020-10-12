@@ -303,6 +303,99 @@ func EventHandler(msg UserMessage, userConn *UserConnection) (answer UserRespons
     return
 }
 
+package wsserver
+
+import "biz/view"
+
+type BuildMode string
+
+type BuildModeInterface interface {
+	GetBuildMode() BuildMode
+}
+
+func (mode BuildMode) GetBuildMode() BuildMode {
+	return mode
+}
+
+const ModeReplace BuildMode = "replace"
+const ModeAppend BuildMode = "append"
+
+func (BuildMode BuildMode) ToString() string {
+	return string(BuildMode)
+}
+
+type Instruction struct {
+	EventName       string            ` + "`" + `json:"EventName,omitempty"` + "`" + `
+	CollectFields   []FormFields      ` + "`" + `json:"CollectFields,omitempty"` + "`" + `
+	SetLocalStorage []KeyVal          ` + "`" + `json:"SetLocalStorage,omitempty"` + "`" + `
+	SetCookie       []KeyVal          ` + "`" + `json:"SetCookie,omitempty"` + "`" + `
+	StoreVar        []KeyVal          ` + "`" + `json:"StoreVar,omitempty"` + "`" + `
+	SetInnerHtml    []KeyVal          ` + "`" + `json:"SetInnerHtml,omitempty"` + "`" + `
+	AddClass        []KeyVal          ` + "`" + `json:"AddClass,omitempty"` + "`" + `
+	ReplaceClasses  []KeyVal          ` + "`" + `json:"ReplaceClasses,omitempty"` + "`" + `
+	RemoveClass     []KeyVal          ` + "`" + `json:"RemoveClass,omitempty"` + "`" + `
+	Redirect        string            ` + "`" + `json:"Redirect,omitempty"` + "`" + `
+	RestApiRequests []ApiRequest      ` + "`" + `json:"RestApiRequests,omitempty"` + "`" + `
+	ConsoleLog      []KeyVal          ` + "`" + `json:"ConsoleLog,omitempty"` + "`" + `
+	BuildHtmlBlock  []HtmlBuildConfig ` + "`" + `json:"BuildHtmlBlock,omitempty"` + "`" + `
+	ClearHtmlBlock  ClearHtmlBlock    ` + "`" + `json:"ClearHtmlBlock,omitempty"` + "`" + `
+}
+
+type KeyVal struct {
+	Key string ` + "`" + `json:"Key,omitempty"` + "`" + `
+	Val string ` + "`" + `json:"Val,omitempty"` + "`" + `
+}
+
+type HtmlBuildConfig struct {
+	TemplateStoreKey string                  ` + "`" + `json:"TemplateStoreKey,omitempty"` + "`" + `
+	DataStoreKey     string                  ` + "`" + `json:"DataStoreKey,omitempty"` + "`" + `
+	Mode             BuildModeInterface      ` + "`" + `json:"Mode,omitempty"` + "`" + `
+	ContentSlot      view.NamespaceInterface ` + "`" + `json:"ContentSlot,omitempty"` + "`" + `
+}
+
+type ClearHtmlBlock struct {
+	ContentSlot view.NamespaceInterface ` + "`" + `json:"ContentSlot,omitempty"` + "`" + `
+}
+
+type ApiRequest struct {
+	DataVar             string        ` + "`" + `json:"DataVar,omitempty"` + "`" + `
+	FailInstructions    []Instruction ` + "`" + `json:"FailInstructions,omitempty"` + "`" + `
+	SuccessRespStatus   int           ` + "`" + `json:"SuccessRespStatus,omitempty"` + "`" + `
+	SuccessInstructions []Instruction ` + "`" + `json:"SuccessInstructions,omitempty"` + "`" + `
+	Type                string        ` + "`" + `json:"Type,omitempty"` + "`" + `
+	Url                 string        ` + "`" + `json:"Url,omitempty"` + "`" + `
+}
+
+type FormFields struct {
+	CollectorKey string ` + "`" + `json:"CollectorKey,omitempty"` + "`" + `
+	Id string ` + "`" + `json:"Id,omitempty"` + "`" + `
+	Validators []FieldValidator ` + "`" + `json:"Validators,omitempty"` + "`" + `
+}
+
+type FieldValidator struct {
+	Error      FieldValidatorError ` + "`" + `json:"Error,omitempty"` + "`" + `
+	Equal      []string            ` + "`" + `json:"Equal,omitempty"` + "`" + `
+	NotEqual   []string            ` + "`" + `json:"NotEqual,omitempty"` + "`" + `
+	MaxLen     int                 ` + "`" + `json:"MaxLen,omitempty"` + "`" + `
+	MinLen     int                 ` + "`" + `json:"MinLen,omitempty"` + "`" + `
+	Regular    string              ` + "`" + `json:"Regular,omitempty"` + "`" + `
+	NotRegular string              ` + "`" + `json:"NotRegular,omitempty"` + "`" + `
+	Min        float64             ` + "`" + `json:"Min,omitempty"` + "`" + `
+	Max        float64             ` + "`" + `json:"Max,omitempty"` + "`" + `
+}
+
+type FieldValidatorError struct {
+	MinLen     string   ` + "`" + `json:"MinLen,omitempty"` + "`" + `
+	MaxLen     string   ` + "`" + `json:"MaxLen,omitempty"` + "`" + `
+	Regular    string   ` + "`" + `json:"Regular,omitempty"` + "`" + `
+	NotRegular string   ` + "`" + `json:"NotRegular,omitempty"` + "`" + `
+	Equal      []string ` + "`" + `json:"Equal,omitempty"` + "`" + `
+	NotEqual   []string ` + "`" + `json:"NotEqual,omitempty"` + "`" + `
+	Min        string   ` + "`" + `json:"Min,omitempty"` + "`" + `
+	Max        string   ` + "`" + `json:"Max,omitempty"` + "`" + `
+}
+
+
 `
 
 var usualTemplateWsserver = template{

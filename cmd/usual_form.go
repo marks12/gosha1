@@ -62,6 +62,13 @@ func createViewForms(c *ishell.Context) {
 				[]string{getRemoveLine(CamelCase)},
 				[]string{GetFormTemplateField(ent.Name, field.Name, strings.ToLower(field.Type)) + "\n            " + getRemoveLine(CamelCase)},
 				nil)
+
+			CopyFile(
+				file,
+				file,
+				[]string{getRemoveLine(CamelCase + "-collector")},
+				[]string{GetFormFieldCollector(ent.Name, field.Name, strings.ToLower(field.Type)) + "\n            " + getRemoveLine(CamelCase + "-collector")},
+				nil)
 		}
 	}
 }

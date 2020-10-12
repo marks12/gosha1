@@ -7,6 +7,8 @@ import (
 const usualEntityLogicFindWoDb = `
 func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalRecords int, err error) {
 
+	//{Entity} Find logic code
+
     return
 }
 `
@@ -94,11 +96,14 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
 const usualEntityLogicCreateWoDb = `
 func {Entity}MultiCreate(filter types.{Entity}Filter)  (data []types.{Entity}, err error) {
 
+	//{Entity} MultiCreate logic code
+
     return
 }
 
 func {Entity}Create(filter types.{Entity}Filter, query *gorm.DB)  (data types.{Entity}, err error) {
     
+	//{Entity} Create logic code
     return
 }
 `
@@ -165,6 +170,7 @@ func {Entity}Create(filter types.{Entity}Filter, query *gorm.DB)  (data types.{E
 const usualEntityLogicReadWoDb = `
 func {Entity}Read(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
 
+	//{Entity} Read logic code
     return
 }
 `
@@ -191,11 +197,13 @@ const usualEntityLogicUpdateWoDb = `
 
 func {Entity}MultiUpdate(filter types.{Entity}Filter)  (data []types.{Entity}, err error) {
 
+	//{Entity} MultiUpdate logic code
     return
 }
 
 func {Entity}Update(filter types.{Entity}Filter, query *gorm.DB)  (data types.{Entity}, err error) {
 
+	//{Entity} Update logic code
     return
 }
 
@@ -286,11 +294,13 @@ const usualEntityLogicDeleteWoDb = `
 
 func {Entity}MultiDelete(filter types.{Entity}Filter)  (isOk bool, err error) {
 
+	//{Entity} MultiDelete logic code
     return
 }
 
 func {Entity}Delete(filter types.{Entity}Filter, query *gorm.DB)  (isOk bool, err error) {
 
+	//{Entity} Delete logic code
     return
 }
 
@@ -368,6 +378,7 @@ const usualEntityLogicFindOrCreateWoDb = `
 
 func {Entity}FindOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
     
+	//{Entity} FindOrCreate logic code
     return
 }
 `
@@ -376,6 +387,7 @@ const usualEntityLogicUpdateOrCreateWoDb = `
 
 func {Entity}UpdateOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
     
+	//{Entity} UpdateOrCreate logic code
     return
 }
 

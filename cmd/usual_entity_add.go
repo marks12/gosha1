@@ -93,6 +93,7 @@ func usualEntityAdd(c *ishell.Context) {
 	if _, err := os.Stat("./view"); os.IsNotExist(err) {
 		fmt.Println("view folder not exists cant create bs4 template")
 	} else {
+
 		CreateFile(usualTemplateBs4ViewFields.Path, usualTemplateBs4ViewFields.Content, c)
 		CopyFile(
 			usualTemplateBs4ViewFields.Path,
@@ -100,6 +101,22 @@ func usualEntityAdd(c *ishell.Context) {
 			[]string{"{entity-name}", "{Entity}", "{entity}"},
 			[]string{CamelCase, CamelCase, firstLowerCase},
 			c)
+
+		CreateFileIfNotExists(usualTemplateViewStore.Path, usualTemplateViewStore.Content, c)
+		CopyFile(
+			usualTemplateViewStore.Path,
+			usualTemplateViewStore.Path,
+			[]string{"{entity-name}", "{Entity}", "{entity}"},
+			[]string{CamelCase, CamelCase, firstLowerCase},
+			c)
+
+		sourceFile := "./view/store.go"
+		CopyFile(
+			sourceFile,
+			sourceFile,
+			[]string{getRemoveLine("Namespace")},
+			[]string{"common.GetTypeName(types." + CamelCase + "{}),\n\t" + getRemoveLine("Namespace")},
+			nil)
 
 		sourceFile = "./view/form/" + snakeCase + ".go"
 		destinationFile = "./view/form/" + snakeCase + ".go"

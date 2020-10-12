@@ -73,6 +73,7 @@ func UsualAppInit(c *ishell.Context) {
 
 		usualCreate(c, email, password, database, isUuidMode)
 		usualAuthAdd(c)
+		usualCreateHtmlTemplate(c)
 
 		break
 

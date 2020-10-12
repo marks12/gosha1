@@ -32,6 +32,10 @@ func EnableSqlLog() {
 func DisableSqlLog() {
 	Db.LogMode(false)
 }
+
+func GetTableName(dbmodel interface{}) string {
+	return Db.NewScope(dbmodel).TableName()
+}
 `
 
 func getTemplateCoreDb(dbtype DatabaseType) template {

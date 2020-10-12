@@ -164,6 +164,13 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 			[]string{getRemoveLine(CamelCase)},
 			[]string{GetFormTemplateField(modelName, fieldName, dataType) + "\n            " + getRemoveLine(CamelCase)},
 			nil)
+
+		CopyFile(
+			sourceFile,
+			sourceFile,
+			[]string{getRemoveLine(CamelCase + "-collector")},
+			[]string{GetFormFieldCollector(modelName, fieldName, dataType) + "\n            " + getRemoveLine(CamelCase + "-collector")},
+			nil)
 	}
 
 	//
@@ -202,9 +209,26 @@ func GetFormTemplateField(modelName string, fieldName string, dataType string) s
 
 	case settings.DataTypeString, settings.DataTypeInt, settings.DataTypeFloat64, settings.DataTypeUuid:
 		return GetStringFormField(firstLowerCase, fieldName)
+	case settings.DataTypeBool:
+		return GetBoolFormField(firstLowerCase, fieldName)
 	}
 
 	return fmt.Sprintf("//unsupported data type %s for field %s", dataType, fieldName)
+}
+
+func GetFormFieldCollector(modelName string, fieldName string, dataType string) string {
+
+	firstLowerCase := GetFirstLowerCase(modelName)
+
+	switch dataType {
+
+	case settings.DataTypeString, settings.DataTypeInt, settings.DataTypeFloat64, settings.DataTypeUuid:
+		return GetStringFormFieldCollector(firstLowerCase, fieldName)
+	case settings.DataTypeBool:
+		return GetBoolFormFieldCollector(firstLowerCase, fieldName)
+	}
+
+	return fmt.Sprintf("//unsupported data type %s for fieldCollector %s", dataType, fieldName)
 }
 
 func GetStringFormField(modelName string, fieldName string) string {
@@ -212,6 +236,32 @@ func GetStringFormField(modelName string, fieldName string) string {
 	return fmt.Sprintf(`view.GetStringFieldTemplate(view.FieldConfig{
 				Id: common.GetFieldName(&%s, &%s.%s),
 			}),`, modelName, modelName, fieldName)
+
+}
+
+func GetBoolFormField(modelName string, fieldName string) string {
+
+	return fmt.Sprintf(`view.GetBoolFieldTemplate(view.FieldConfig{
+				Id: common.GetFieldName(&%s, &%s.%s),
+			}),`, modelName, modelName, fieldName)
+
+}
+
+func GetStringFormFieldCollector(modelName string, fieldName string) string {
+
+	return fmt.Sprintf(`{
+					Id: common.GetFieldName(&%s, &%s.%s),
+					CollectorKey: dataKey,
+				},`, modelName, modelName, fieldName)
+
+}
+
+func GetBoolFormFieldCollector(modelName string, fieldName string) string {
+
+	return fmt.Sprintf(`{
+					Id: common.GetFieldName(&%s, &%s.%s),
+					CollectorKey: dataKey,
+				},`, modelName, modelName, fieldName)
 
 }
 
