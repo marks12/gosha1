@@ -225,10 +225,12 @@ import (
 	"{ms-name}/types"
 	"{ms-name}/view"
     "{ms-name}/view/bs4"
+	"{ms-name}/view/bs4/css"
     "{ms-name}/common"
     "{ms-name}/wsserver"
     "{ms-name}/settings"
     "net/http"
+    "strconv"
 )
 
 var Template{Entity}CreateForm = view.TemplateKey{
@@ -237,7 +239,7 @@ var Template{Entity}CreateForm = view.TemplateKey{
 }
 
 func Store{Entity}CreateForm() {
-	view.Save(Template{Entity}CreateForm, Get{Entity}CreateFormTemplate())
+	view.Save(Template{Entity}CreateForm, Get{Entity}FormTemplate(types.{Entity}{}))
 }
 
 func Get{Entity}CreateInstructions() (inst []wsserver.Instruction) {
@@ -270,16 +272,51 @@ func Get{Entity}CreateInstructions() (inst []wsserver.Instruction) {
 	}
 }
 
-func Get{Entity}CreateFormTemplate() (createForm bs4.HtmlInterface) {
+func Get{Entity}FormTemplate(defaultValue types.{Entity}) (createForm bs4.HtmlInterface) {
 
 	{entity} := types.{Entity}{}
 
 	createForm = &bs4.Form{
 		Children: []bs4.HtmlInterface{
-			view.GetStringFieldTemplate(view.FieldConfig{
-				Id: common.GetFieldName(&{entity}, &{entity}.Id),
-			}),
+			//view.GetStringFieldTemplate(view.FieldConfig{
+			//	Id: common.GetFieldName(&{entity}, &{entity}.Id),
+			//	Title: common.GetFieldName(&{entity}, &{entity}.Id),
+			//	DefaultValueInt: defaultValue.Id,
+			//}),
 			//{Entity} remove this line for disable generator functionality
+		},
+	}
+
+	return
+}
+
+
+func Store{Entity}RowTemplate() {
+	view.Save(view.TemplateKey{
+		Namespace: view.EntityRows.ToString(),
+		Value: common.GetTypeName(types.{Entity}{}),
+	}, Get{Entity}RowTemplate(types.{Entity}{}))
+}
+
+
+func Get{Entity}RowTemplate({entity} types.{Entity}) (row bs4.HtmlInterface) {
+
+	col := []css.Class{
+		css.Col,
+		css.Py3,
+	}
+
+	col1 := []css.Class{
+		css.Col1,
+		css.Py3,
+	}
+
+	row = &bs4.Row{
+		Id: strconv.Itoa({entity}.Id),
+		Classes: []css.Class{css.BgHighlightLightHover},
+		Children:[]bs4.HtmlInterface{
+			&bs4.Div{Text: strconv.Itoa({entity}.Id), Classes: col1, DataField: common.GetFieldName(&{entity}, &{entity}.Id)},
+			//{Entity}-row-field remove this line for disable generator functionality
 		},
 	}
 
@@ -295,21 +332,30 @@ import (
 )
 
 type FieldConfig struct {
-	Id string
-	Placeholder string
-	DefaultValue string
-	IsDisabled bool
+	Id                  string
+	Placeholder         string
+	DefaultValueStr     string
+	DefaultValueInt     int
+	DefaultValueFloat64 float64
+	IsDisabled          bool
+	IsChecked           bool
+	Title               string
 }
 
 func GetStringFieldTemplate(config FieldConfig) (field bs4.HtmlInterface) {
 
-	field = &bs4.Block{
+	field = &bs4.Div{
+		Classes: []css.Class{css.FormGroup},
 		Children: []bs4.HtmlInterface{
+			&bs4.Label{
+				Text: config.Title,
+				For: config.Id,
+			},
 			&bs4.InputText{
 				Id: config.Id,
-				Value: config.DefaultValue,
+				Value: config.DefaultValueStr,
 				Placeholder: config.Placeholder,
-				IsDisabled: true,
+				IsDisabled: config.IsDisabled,
 			},
 		},
 	}
@@ -319,25 +365,27 @@ func GetStringFieldTemplate(config FieldConfig) (field bs4.HtmlInterface) {
 
 func GetBoolFieldTemplate(config FieldConfig) (field bs4.HtmlInterface) {
 
-	field = &bs4.Block{
-		Children: []bs4.HtmlInterface{
-			&bs4.Div{
-				Classes: []css.Class{css.FormGroup, css.FormCheck, css.Mt3},
-				Children: []bs4.HtmlInterface{
-					&bs4.Input{
-						Id: config.Id,
-						Type:"checkbox",
-						IsDisabled: config.IsDisabled,
-						Classes: []css.Class{css.FormCheckInput},
-					},
-					&bs4.Label{Text: config.Placeholder, Classes: []css.Class{css.FormCheckLabel}},
+	field = &bs4.Div{
+			Classes: []css.Class{css.FormCheck, css.Mb3},
+			Children: []bs4.HtmlInterface{
+				&bs4.Input{
+					Id: config.Id,
+					Type:"checkbox",
+					IsDisabled: config.IsDisabled,
+					Classes: []css.Class{css.FormCheckInput},
+					IsChecked: config.IsChecked,
+				},
+				&bs4.Label{
+					Text: config.Title,
+					Classes: []css.Class{css.FormCheckLabel},
+					For: config.Id,
 				},
 			},
-		},
-	}
+		}
 
 	return
 }
+
 
 `
 

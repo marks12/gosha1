@@ -171,6 +171,13 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 			[]string{getRemoveLine(CamelCase + "-collector")},
 			[]string{GetFormFieldCollector(modelName, fieldName, dataType) + "\n                  " + getRemoveLine(CamelCase + "-collector")},
 			nil)
+
+		CopyFile(
+			sourceFile,
+			sourceFile,
+			[]string{getRemoveLine(CamelCase + "-row-field")},
+			[]string{GetRowFieldLine(modelName, fieldName, dataType) + "\n                  " + getRemoveLine(CamelCase + "-row-field")},
+			nil)
 	}
 
 	//
@@ -207,8 +214,12 @@ func GetFormTemplateField(modelName string, fieldName string, dataType string) s
 
 	switch dataType {
 
-	case settings.DataTypeString, settings.DataTypeInt, settings.DataTypeFloat64, settings.DataTypeUuid:
+	case settings.DataTypeString, settings.DataTypeUuid:
 		return GetStringFormField(firstLowerCase, fieldName)
+	case settings.DataTypeInt:
+		return GetIntFormField(firstLowerCase, fieldName)
+	case settings.DataTypeFloat64:
+		return GetFloat64FormField(firstLowerCase, fieldName)
 	case settings.DataTypeBool:
 		return GetBoolFormField(firstLowerCase, fieldName)
 	}
@@ -231,12 +242,53 @@ func GetFormFieldCollector(modelName string, fieldName string, dataType string) 
 	return fmt.Sprintf("//unsupported data type %s for fieldCollector %s", dataType, fieldName)
 }
 
+func GetRowFieldLine(modelName string, fieldName string, dataType string) string {
+
+	firstLowerCase := GetFirstLowerCase(modelName)
+
+	switch dataType {
+
+	//case settings.DataTypeString, settings.DataTypeInt, settings.DataTypeFloat64, settings.DataTypeUuid:
+	//	return fmt.Sprintf(
+	//		"&bs4.Div{Text: %s.%s, Classes: col, DataField: common.GetFieldName(&%s, &%s.%s)},", firstLowerCase, fieldName, firstLowerCase, firstLowerCase, fieldName)
+	case settings.DataTypeString, settings.DataTypeUuid:
+		return fmt.Sprintf(
+			"&bs4.Div{Text: %s.%s, Classes: col, DataField: common.GetFieldName(&%s, &%s.%s)},", firstLowerCase, fieldName, firstLowerCase, firstLowerCase, fieldName)
+	case settings.DataTypeBool:
+		return fmt.Sprintf(
+			"&bs4.Div{Text: strconv.FormatBool(%s.%s), Classes: col, DataField: common.GetFieldName(&%s, &%s.%s)},", firstLowerCase, fieldName, firstLowerCase, firstLowerCase, fieldName)
+	}
+
+	return fmt.Sprintf("//unsupported datatype %s,", dataType)
+}
+
 func GetStringFormField(modelName string, fieldName string) string {
 
 	return fmt.Sprintf(`view.GetStringFieldTemplate(view.FieldConfig{
 				Id: common.GetFieldName(&%s, &%s.%s),
 				Title: common.GetFieldName(&%s, &%s.%s),
-			}),`, modelName, modelName, fieldName, modelName, modelName, fieldName)
+				DefaultValueStr: defaultValue.%s,
+			}),`, modelName, modelName, fieldName, modelName, modelName, fieldName, fieldName)
+
+}
+
+func GetIntFormField(modelName string, fieldName string) string {
+
+	return fmt.Sprintf(`view.GetStringFieldTemplate(view.FieldConfig{
+				Id: common.GetFieldName(&%s, &%s.%s),
+				Title: common.GetFieldName(&%s, &%s.%s),
+				DefaultValueInt: defaultValue.%s,
+			}),`, modelName, modelName, fieldName, modelName, modelName, fieldName, fieldName)
+
+}
+
+func GetFloat64FormField(modelName string, fieldName string) string {
+
+	return fmt.Sprintf(`view.GetStringFieldTemplate(view.FieldConfig{
+				Id: common.GetFieldName(&%s, &%s.%s),
+				Title: common.GetFieldName(&%s, &%s.%s),
+				DefaultValueFloat64: defaultValue.%s,
+			}),`, modelName, modelName, fieldName, modelName, modelName, fieldName, fieldName)
 
 }
 
@@ -245,7 +297,8 @@ func GetBoolFormField(modelName string, fieldName string) string {
 	return fmt.Sprintf(`view.GetBoolFieldTemplate(view.FieldConfig{
 				Id: common.GetFieldName(&%s, &%s.%s),
 				Title: common.GetFieldName(&%s, &%s.%s),
-			}),`, modelName, modelName, fieldName, modelName, modelName, fieldName)
+				IsChecked: defaultValue.%s,
+			}),`, modelName, modelName, fieldName, modelName, modelName, fieldName, fieldName)
 
 }
 
