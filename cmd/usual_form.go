@@ -26,6 +26,9 @@ func createViewForms(c *ishell.Context) {
 
 	entities, _, _ := GetEntities()
 
+	CreateFileIfNotExists(usualTemplateModelsInit.Path, getEntityInit(), nil)
+	CreateFileIfNotExists(usualTemplateModelsStore.Path, usualTemplateModelsStore.Content, nil)
+
 	for _, ent := range entities {
 
 		CamelCase := strings.Title(ent.Name)
@@ -33,6 +36,23 @@ func createViewForms(c *ishell.Context) {
 		firstLowerCase := GetFirstLowerCase(ent.Name)
 
 		file := fmt.Sprintf("./view/form/%s.go",snakeCase)
+
+		modelFile := strings.Replace(usualTemplateModelsEntity.Path, "{entity}", snakeCase, -1)
+		CreateFileIfNotExists(modelFile, getEntityModel(), nil)
+
+		CopyFile(
+			modelFile,
+			modelFile,
+			[]string{"{entity-name}", "{Entity}", "{entity}"},
+			[]string{CamelCase, CamelCase, firstLowerCase},
+			nil)
+
+		CopyFile(
+			usualTemplateModelsInit.Path,
+			usualTemplateModelsInit.Path,
+			[]string{getRemoveLine("initEntity")},
+			[]string{fmt.Sprintf("init%s()\n    %s", CamelCase, getRemoveLine("initEntity"))},
+			nil)
 
 		if _, err := os.Stat(file); ! os.IsNotExist(err) {
 			fmt.Println("file allready exists", file)
@@ -42,12 +62,15 @@ func createViewForms(c *ishell.Context) {
 
 		CreateFileIfNotExists(file, getEntityBs4vView(), c)
 
+
 		CopyFile(
 			file,
 			file,
 			[]string{"{entity-name}", "{Entity}", "{entity}"},
 			[]string{CamelCase, CamelCase, firstLowerCase},
 			nil)
+
+
 
 		for _, field := range ent.Fields {
 

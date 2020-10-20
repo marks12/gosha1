@@ -231,6 +231,7 @@ import (
     "{ms-name}/settings"
     "net/http"
     "strconv"
+    "fmt"
 )
 
 var Template{Entity}CreateForm = view.TemplateKey{
@@ -272,7 +273,14 @@ func Get{Entity}CreateInstructions() (inst []wsserver.Instruction) {
 	}
 }
 
-func Get{Entity}FormTemplate(defaultValue types.{Entity}) (createForm bs4.HtmlInterface) {
+func Get{Entity}FormTemplate(defaultModel interface{}) (createForm bs4.HtmlInterface) {
+
+	if _, ok := defaultModel.(types.{Entity}); ok != true {
+		fmt.Printf("Cant assign interface to types.{Entity} in Get{Entity}FormTemplate")
+		return
+	}
+
+	defaultValue := defaultModel.(types.{Entity})
 
 	{entity} := types.{Entity}{}
 

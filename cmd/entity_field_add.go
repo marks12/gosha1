@@ -157,6 +157,14 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 			[]string{CamelCase, CamelCase, firstLowerCase},
 			nil)
 
+		sourceFile = "./view/form/" + snakeCase + ".go"
+		CopyFile(
+			sourceFile,
+			sourceFile,
+			[]string{"{entity-name}", "{Entity}", "{entity}"},
+			[]string{CamelCase, CamelCase, firstLowerCase},
+			nil)
+
 
 		CopyFile(
 			sourceFile,

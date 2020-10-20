@@ -127,6 +127,27 @@ func usualEntityAdd(c *ishell.Context) {
 			[]string{"{entity-name}", "{Entity}", "{entity}"},
 			[]string{CamelCase, CamelCase, firstLowerCase},
 			c)
+
+		CreateFileIfNotExists(usualTemplateModelsInit.Path, getEntityInit(), nil)
+		CreateFileIfNotExists(usualTemplateModelsStore.Path, usualTemplateModelsStore.Content, nil)
+
+		modelFile := strings.Replace(usualTemplateModelsEntity.Path, "{entity}", snakeCase, -1)
+		CreateFileIfNotExists(modelFile, getEntityModel(), nil)
+
+		CopyFile(
+			modelFile,
+			modelFile,
+			[]string{"{entity-name}", "{Entity}", "{entity}"},
+			[]string{CamelCase, CamelCase, firstLowerCase},
+			nil)
+
+		CopyFile(
+			usualTemplateModelsInit.Path,
+			usualTemplateModelsInit.Path,
+			[]string{getRemoveLine("initEntity")},
+			[]string{fmt.Sprintf("init%s()\n    %s", CamelCase, getRemoveLine("initEntity"))},
+			nil)
+
 	}
 
 	switch CamelCase {
@@ -331,6 +352,20 @@ func getEntityGenContent() (genContent string) {
 func getEntityBs4vView() (bs4Content string) {
 
 	bs4Content = usualTemplateBs4EntityForms.Content
+
+	return
+}
+
+func getEntityInit() (content string) {
+
+	content = usualTemplateModelsInit.Content
+
+	return
+}
+
+func getEntityModel() (content string) {
+
+	content = usualTemplateModelsEntity.Content
 
 	return
 }
