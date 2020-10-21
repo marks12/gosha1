@@ -20,11 +20,12 @@ import (
 )
 
 type Entity struct {
-	EntityName  string
-	DbModel interface{}
-	TypeModel interface{}
+	EntityName         string
+	DbModel            interface{}
+	TypeModel          interface{}
 	CreateInstructions func() []wsserver.Instruction
-	FormTemplate func(interface{}) bs4.HtmlInterface
+	FormTemplate       func(interface{}) bs4.HtmlInterface
+	Route              string
 }
 
 var instance *sync.Map
@@ -84,18 +85,24 @@ import (
 	"{ms-name}/models"
 	"{ms-name}/dbmodels"
 	"{ms-name}/types"
+	"{ms-name}/common"
 	"{ms-name}/view/form"
+	"{ms-name}/settings"
 )
 
 func init{Entity}() {
 
 	models.Save(models.Entity{
-		EntityName:         "{Entity}",
+		EntityName:         common.GetTypeName(types.{Entity}{}),
 		DbModel:            dbmodels.{Entity}{},
 		TypeModel:          types.{Entity}{},
 		CreateInstructions: form.Get{Entity}CreateInstructions,
 		FormTemplate:       form.Get{Entity}FormTemplate,
+		Route:				settings.{Entity}Route,
 	})
+
+	form.Store{Entity}CreateForm()
+	form.Store{Entity}RowTemplate()
 }
 `
 

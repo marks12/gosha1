@@ -97,7 +97,7 @@ func createViewForms(c *ishell.Context) {
 				file,
 				file,
 				[]string{getRemoveLine(CamelCase + "-row-field")},
-				[]string{GetRowFieldLine(ent.Name, field.Name, strings.ToLower(field.Type)) + "\n                " + getRemoveLine(CamelCase + "-row-field")},
+				[]string{GetRowFieldLine(ent.Name, field.Name, strings.ToLower(field.Type)) + "\n            " + getRemoveLine(CamelCase + "-row-field")},
 				nil)
 		}
 	}

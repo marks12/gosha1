@@ -256,9 +256,12 @@ func GetRowFieldLine(modelName string, fieldName string, dataType string) string
 
 	switch dataType {
 
-	//case settings.DataTypeString, settings.DataTypeInt, settings.DataTypeFloat64, settings.DataTypeUuid:
-	//	return fmt.Sprintf(
-	//		"&bs4.Div{Text: %s.%s, Classes: col, DataField: common.GetFieldName(&%s, &%s.%s)},", firstLowerCase, fieldName, firstLowerCase, firstLowerCase, fieldName)
+	case settings.DataTypeInt:
+		return fmt.Sprintf(
+			"&bs4.Div{Text: strconv.Itoa(%s.%s), Classes: col, DataField: common.GetFieldName(&%s, &%s.%s)},", firstLowerCase, fieldName, firstLowerCase, firstLowerCase, fieldName)
+	case settings.DataTypeFloat64:
+		return fmt.Sprintf(
+			"&bs4.Div{Text: fmt.Sprintf(\"%v\", %s.%s), Classes: col, DataField: common.GetFieldName(&%s, &%s.%s)},", firstLowerCase, fieldName, firstLowerCase, firstLowerCase, fieldName)
 	case settings.DataTypeString, settings.DataTypeUuid:
 		return fmt.Sprintf(
 			"&bs4.Div{Text: %s.%s, Classes: col, DataField: common.GetFieldName(&%s, &%s.%s)},", firstLowerCase, fieldName, firstLowerCase, firstLowerCase, fieldName)
