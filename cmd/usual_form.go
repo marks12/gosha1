@@ -62,7 +62,6 @@ func createViewForms(c *ishell.Context) {
 
 		CreateFileIfNotExists(file, getEntityBs4vView(), c)
 
-
 		CopyFile(
 			file,
 			file,
@@ -70,21 +69,22 @@ func createViewForms(c *ishell.Context) {
 			[]string{CamelCase, CamelCase, firstLowerCase},
 			nil)
 
-
-
 		for _, field := range ent.Fields {
 
 			//exclude private fields
-			if field.Name == GetFirstLowerCase(field.Name) || field.Name == "Id" || field.Name == "CreatedAt" || field.Name == "UpdatedAt" || field.Name == "DeletedAt" {
+			if field.Name == GetFirstLowerCase(field.Name) || field.Name == "CreatedAt" || field.Name == "UpdatedAt" || field.Name == "DeletedAt" {
 				continue
 			}
 
-			CopyFile(
-				file,
-				file,
-				[]string{getRemoveLine(CamelCase)},
-				[]string{GetFormTemplateField(ent.Name, field.Name, strings.ToLower(field.Type)) + "\n            " + getRemoveLine(CamelCase)},
-				nil)
+			if field.Name != "Id" {
+
+				CopyFile(
+					file,
+					file,
+					[]string{getRemoveLine(CamelCase)},
+					[]string{GetFormTemplateField(ent.Name, field.Name, strings.ToLower(field.Type)) + "\n            " + getRemoveLine(CamelCase)},
+					nil)
+			}
 
 			CopyFile(
 				file,

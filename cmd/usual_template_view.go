@@ -79,10 +79,17 @@ func (namespace Namespace) GetNamespace() Namespace {
 }
 
 const Empty Namespace = ""
+const Admin Namespace = "Admin"
+const AdminDashboard Namespace = "AdminDashboard"
+const AdminSite Namespace = "AdminSite"
+const EntityRows Namespace = "EntityRows"
+const EntityForm Namespace = "EntityForm"
+const CreateFormSite Namespace = "CreateFormSite"
 const StringField Namespace = "StringField"
 const BoolField Namespace = "BoolField"
 const Panel Namespace = "Panel"
 const RightPanelContainer Namespace = "RightPanelContainer"
+const RightPanelFooter Namespace = "RightPanelFooter"
 
 // need to check on search template. Always add new Namespace to arr
 var Namespaces = []string{
@@ -246,7 +253,7 @@ func Store{Entity}CreateForm() {
 func Get{Entity}CreateInstructions() (inst []wsserver.Instruction) {
 
 	{entity} := types.{Entity}{}
-	dataKey := "types.{Entity}-fields"
+	dataKey := common.GetTypeName(&{entity}) + "-fields"
 
 	return []wsserver.Instruction{
 		{
@@ -317,6 +324,9 @@ func Get{Entity}RowTemplate({entity} types.{Entity}) (row bs4.HtmlInterface) {
 	col1 := []css.Class{
 		css.Col1,
 		css.Py3,
+		css.Py3,
+		css.Small,
+		css.TextSecondary,
 	}
 
 	row = &bs4.Row{
