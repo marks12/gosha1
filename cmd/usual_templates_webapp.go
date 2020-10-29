@@ -40,21 +40,21 @@ func ValidResponse (w http.ResponseWriter, data interface{}) {
 }`
 
 var usualTemplateWebappErrors = template{
-    Path:    "./webapp/errors.go",
-    Content: assignMsName(usualWebappErrors),
+	Path:    "./webapp/errors.go",
+	Content: assignMsName(usualWebappErrors),
 }
 
 var usualTemplateWebappEntity = template{
-    Path:    "./webapp/{entity-name}.go",
-    Content: assignMsName(GetUsualTemplateWebAppContent(
-        Crud{true, true, true, true, true, true, true},
-        Crud{true, true, true, true, true, true, true},
-    )),
+	Path: "./webapp/{entity-name}.go",
+	Content: assignMsName(GetUsualTemplateWebAppContent(
+		Crud{true, true, true, true, true, true, true},
+		Crud{true, true, true, true, true, true, true},
+	)),
 }
 
 func GetUsualTemplateWebAppContent(authCrud Crud, methodsCrud Crud) string {
 
-    var usualWebappEntity = `package webapp
+	var usualWebappEntity = `package webapp
 
 import (
     "{ms-name}/core"
@@ -80,17 +80,21 @@ import (
     ` + getWebappUpdateOrCreate(methodsCrud, authCrud) + `
 
 `
-    return usualWebappEntity
+	return usualWebappEntity
 }
 
 func getWebappFind(methodCrud Crud, authCrud Crud) (c string) {
 
-    if methodCrud.IsFind {
-        c = `
+	if methodCrud.IsFind {
+		c = `
 
 func {entity-name}Find(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeFind)
+	if err != nil {
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
     ` + getAuth("Find", authCrud) + `
 
@@ -115,18 +119,22 @@ func {entity-name}Find(w http.ResponseWriter, httpRequest *http.Request) {
 
     return
 }`
-    }
+	}
 
-    return
+	return
 }
 
 func getWebappCreate(methodCrud Crud, authCrud Crud) (c string) {
 
-    if methodCrud.IsCreate {
-        c = `
+	if methodCrud.IsCreate {
+		c = `
 func {entity-name}MultiCreate(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeMultiCreate)
+	if err != nil {
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
     if !requestDto.IsAuthorized() {
         ErrResponse(w, "Invalid authorize in {entity-name}MultiCreate", http.StatusForbidden)
@@ -157,6 +165,10 @@ func {entity-name}MultiCreate(w http.ResponseWriter, httpRequest *http.Request) 
 func {entity-name}Create(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeCreate)
+	if err != nil {
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
     ` + getAuth("Create", authCrud) + `
 
@@ -180,19 +192,23 @@ func {entity-name}Create(w http.ResponseWriter, httpRequest *http.Request) {
 
     return
 }`
-    }
+	}
 
-    return
+	return
 }
 
 func getWebappRead(methodCrud Crud, authCrud Crud) (c string) {
 
-    if methodCrud.IsRead {
-        c = `
+	if methodCrud.IsRead {
+		c = `
 
 func {entity-name}Read(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeRead)
+	if err != nil {
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
     ` + getAuth("Read", authCrud) + `
 
@@ -223,20 +239,24 @@ func {entity-name}Read(w http.ResponseWriter, httpRequest *http.Request) {
 
     return
 }`
-    }
+	}
 
-    return
+	return
 }
 
 func getWebappUpdate(methodCrud Crud, authCrud Crud) (c string) {
 
-    if methodCrud.IsUpdate {
-        c = `
+	if methodCrud.IsUpdate {
+		c = `
 
 
 func {entity-name}MultiUpdate(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeMultiUpdate)
+	if err != nil {
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
     if !requestDto.IsAuthorized() {
         ErrResponse(w, "Invalid authorize in {entity-name}Update", http.StatusForbidden)
@@ -267,6 +287,10 @@ func {entity-name}MultiUpdate(w http.ResponseWriter, httpRequest *http.Request) 
 func {entity-name}Update(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeUpdate)
+	if err != nil {
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
     ` + getAuth("Update", authCrud) + `
 
@@ -290,19 +314,23 @@ func {entity-name}Update(w http.ResponseWriter, httpRequest *http.Request) {
 
     return
 }`
-    }
+	}
 
-    return
+	return
 }
 
 func getWebappDelete(methodCrud Crud, authCrud Crud) (c string) {
 
-    if methodCrud.IsDelete {
-        c = `
+	if methodCrud.IsDelete {
+		c = `
 
 func {entity-name}MultiDelete(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeMultiDelete)
+	if err != nil {
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
     if !requestDto.IsAuthorized() {
         ErrResponse(w, "Invalid authorize in {entity-name}Delete", http.StatusForbidden)
@@ -333,6 +361,10 @@ func {entity-name}MultiDelete(w http.ResponseWriter, httpRequest *http.Request) 
 func {entity-name}Delete(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeDelete)
+	if err != nil {
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
     ` + getAuth("Delete", authCrud) + `
 
@@ -356,20 +388,23 @@ func {entity-name}Delete(w http.ResponseWriter, httpRequest *http.Request) {
 
     return
 }`
-    }
+	}
 
-    return
+	return
 }
-
 
 func getWebappFindOrCreate(methodCrud Crud, authCrud Crud) (c string) {
 
-    if methodCrud.IsFindOrCreate {
-        c = `
+	if methodCrud.IsFindOrCreate {
+		c = `
 
 func {entity-name}FindOrCreate(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeDelete)
+	if err != nil {
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
     ` + getAuth("FindOrCreate", authCrud) + `
 
@@ -393,19 +428,23 @@ func {entity-name}FindOrCreate(w http.ResponseWriter, httpRequest *http.Request)
 
     return
 }`
-    }
+	}
 
-    return
+	return
 }
 
 func getWebappUpdateOrCreate(methodCrud Crud, authCrud Crud) (c string) {
 
-    if methodCrud.IsUpdateOrCreate {
-        c = `
+	if methodCrud.IsUpdateOrCreate {
+		c = `
 
 func {entity-name}UpdateOrCreate(w http.ResponseWriter, httpRequest *http.Request) {
 
     requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeDelete)
+	if err != nil {
+		ErrResponse(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
     ` + getAuth("UpdateOrCreate", authCrud) + `
 
@@ -429,60 +468,60 @@ func {entity-name}UpdateOrCreate(w http.ResponseWriter, httpRequest *http.Reques
 
     return
 }`
-    }
+	}
 
-    return
+	return
 }
 
 func getAuth(method string, crud Crud) (auth string) {
 
-    switch method {
+	switch method {
 
-        case "Find":
-            if ! crud.IsFind {
-                return
-            }
-            break
+	case "Find":
+		if !crud.IsFind {
+			return
+		}
+		break
 
-        case "Create":
-            if ! crud.IsCreate {
-                return
-            }
-            break
+	case "Create":
+		if !crud.IsCreate {
+			return
+		}
+		break
 
-        case "Read":
-            if ! crud.IsRead {
-                return
-            }
-            break
+	case "Read":
+		if !crud.IsRead {
+			return
+		}
+		break
 
-        case "Update":
-            if ! crud.IsUpdate {
-                return
-            }
-            break
+	case "Update":
+		if !crud.IsUpdate {
+			return
+		}
+		break
 
-        case "Delete":
-            if ! crud.IsDelete {
-                return
-            }
-            break
+	case "Delete":
+		if !crud.IsDelete {
+			return
+		}
+		break
 
-        case "FindOrCreate":
-            if ! crud.IsFindOrCreate {
-                return
-            }
-            break
+	case "FindOrCreate":
+		if !crud.IsFindOrCreate {
+			return
+		}
+		break
 
-        case "UpdateOrCreate":
-            if ! crud.IsUpdateOrCreate {
-                return
-            }
-            break
-    }
+	case "UpdateOrCreate":
+		if !crud.IsUpdateOrCreate {
+			return
+		}
+		break
+	}
 
-    return `if !requestDto.IsAuthorized() {
-        ErrResponse(w, "Invalid authorize in {entity-name}` + method +`", http.StatusForbidden)
+	return `if !requestDto.IsAuthorized() {
+        ErrResponse(w, "Invalid authorize in {entity-name}` + method + `", http.StatusForbidden)
         return
     }`
 }

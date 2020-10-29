@@ -468,10 +468,13 @@ import (
 )
 
 // ReadJSON -
-func ReadJSON(r *http.Request, entity interface{}) {
+func ReadJSON(r *http.Request, entity interface{}) (err error) {
 
     decoder := json.NewDecoder(r.Body)
-    decoder.Decode(entity)
+    err = decoder.Decode(entity)
+	if err == io.EOF {
+		err = nil
+	}
 
     defer r.Body.Close()
 }
