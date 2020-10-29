@@ -90,7 +90,7 @@ func getWebappFind(methodCrud Crud, authCrud Crud) (c string) {
 
 func {entity-name}Find(w http.ResponseWriter, httpRequest *http.Request) {
 
-    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeFind)
+    requestDto, err := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeFind)
 	if err != nil {
 		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
@@ -130,7 +130,7 @@ func getWebappCreate(methodCrud Crud, authCrud Crud) (c string) {
 		c = `
 func {entity-name}MultiCreate(w http.ResponseWriter, httpRequest *http.Request) {
 
-    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeMultiCreate)
+    requestDto, err := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeMultiCreate)
 	if err != nil {
 		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
@@ -164,7 +164,7 @@ func {entity-name}MultiCreate(w http.ResponseWriter, httpRequest *http.Request) 
 
 func {entity-name}Create(w http.ResponseWriter, httpRequest *http.Request) {
 
-    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeCreate)
+    requestDto, err := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeCreate)
 	if err != nil {
 		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
@@ -204,7 +204,7 @@ func getWebappRead(methodCrud Crud, authCrud Crud) (c string) {
 
 func {entity-name}Read(w http.ResponseWriter, httpRequest *http.Request) {
 
-    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeRead)
+    requestDto, err := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeRead)
 	if err != nil {
 		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
@@ -252,7 +252,7 @@ func getWebappUpdate(methodCrud Crud, authCrud Crud) (c string) {
 
 func {entity-name}MultiUpdate(w http.ResponseWriter, httpRequest *http.Request) {
 
-    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeMultiUpdate)
+    requestDto, err := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeMultiUpdate)
 	if err != nil {
 		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
@@ -286,7 +286,7 @@ func {entity-name}MultiUpdate(w http.ResponseWriter, httpRequest *http.Request) 
 
 func {entity-name}Update(w http.ResponseWriter, httpRequest *http.Request) {
 
-    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeUpdate)
+    requestDto, err := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeUpdate)
 	if err != nil {
 		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
@@ -326,7 +326,7 @@ func getWebappDelete(methodCrud Crud, authCrud Crud) (c string) {
 
 func {entity-name}MultiDelete(w http.ResponseWriter, httpRequest *http.Request) {
 
-    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeMultiDelete)
+    requestDto, err := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeMultiDelete)
 	if err != nil {
 		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
@@ -360,7 +360,7 @@ func {entity-name}MultiDelete(w http.ResponseWriter, httpRequest *http.Request) 
 
 func {entity-name}Delete(w http.ResponseWriter, httpRequest *http.Request) {
 
-    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeDelete)
+    requestDto, err := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeDelete)
 	if err != nil {
 		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
@@ -400,7 +400,7 @@ func getWebappFindOrCreate(methodCrud Crud, authCrud Crud) (c string) {
 
 func {entity-name}FindOrCreate(w http.ResponseWriter, httpRequest *http.Request) {
 
-    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeDelete)
+    requestDto, err := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeDelete)
 	if err != nil {
 		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
@@ -440,7 +440,7 @@ func getWebappUpdateOrCreate(methodCrud Crud, authCrud Crud) (c string) {
 
 func {entity-name}UpdateOrCreate(w http.ResponseWriter, httpRequest *http.Request) {
 
-    requestDto := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeDelete)
+    requestDto, err := types.Get{entity-name}Filter(httpRequest, settings.FunctionTypeDelete)
 	if err != nil {
 		ErrResponse(w, err.Error(), http.StatusBadRequest)
 		return
