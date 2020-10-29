@@ -6,6 +6,7 @@ import (
 	"gopkg.in/abiosoft/ishell.v2"
 	"gosha/mode"
 	"strings"
+	"os"
 )
 
 const replaceCommentLink = `//generator insert entity`
@@ -51,7 +52,7 @@ func usualEntityAdd(c *ishell.Context) {
 	CopyFile(
 		sourceFile,
 		destinationFile,
-		[]string{"\n    // router-list-generator here dont touch this line", "{Entity}", "{entity}"},
+		[]string{"	// router-list-generator here dont touch this line", "{Entity}", "{entity}"},
 		[]string{usualTemplateSettingsRoutesListEntity.Content, CamelCase, firstLowerCase},
 		c)
 
@@ -87,6 +88,67 @@ func usualEntityAdd(c *ishell.Context) {
 		[]string{"{entity-name}", "{Entity}", "{entity}"},
 		[]string{CamelCase, CamelCase, firstLowerCase},
 		c)
+
+
+	if _, err := os.Stat("./view"); os.IsNotExist(err) {
+		fmt.Println("view folder not exists cant create bs4 template")
+	} else {
+
+		CreateFile(usualTemplateBs4ViewFields.Path, usualTemplateBs4ViewFields.Content, c)
+		CopyFile(
+			usualTemplateBs4ViewFields.Path,
+			usualTemplateBs4ViewFields.Path,
+			[]string{"{entity-name}", "{Entity}", "{entity}"},
+			[]string{CamelCase, CamelCase, firstLowerCase},
+			c)
+
+		CreateFileIfNotExists(usualTemplateViewStore.Path, usualTemplateViewStore.Content, c)
+		CopyFile(
+			usualTemplateViewStore.Path,
+			usualTemplateViewStore.Path,
+			[]string{"{entity-name}", "{Entity}", "{entity}"},
+			[]string{CamelCase, CamelCase, firstLowerCase},
+			c)
+
+		sourceFile := "./view/store.go"
+		CopyFile(
+			sourceFile,
+			sourceFile,
+			[]string{getRemoveLine("Namespace")},
+			[]string{"common.GetTypeName(types." + CamelCase + "{}),\n\t" + getRemoveLine("Namespace")},
+			nil)
+
+		sourceFile = "./view/form/" + snakeCase + ".go"
+		destinationFile = "./view/form/" + snakeCase + ".go"
+		CreateFile(sourceFile, getEntityBs4vView(), c)
+		CopyFile(
+			sourceFile,
+			destinationFile,
+			[]string{"{entity-name}", "{Entity}", "{entity}"},
+			[]string{CamelCase, CamelCase, firstLowerCase},
+			c)
+
+		CreateFileIfNotExists(usualTemplateModelsInit.Path, getEntityInit(), nil)
+		CreateFileIfNotExists(usualTemplateModelsStore.Path, usualTemplateModelsStore.Content, nil)
+
+		modelFile := strings.Replace(usualTemplateModelsEntity.Path, "{entity}", snakeCase, -1)
+		CreateFileIfNotExists(modelFile, getEntityModel(), nil)
+
+		CopyFile(
+			modelFile,
+			modelFile,
+			[]string{"{entity-name}", "{Entity}", "{entity}"},
+			[]string{CamelCase, CamelCase, firstLowerCase},
+			nil)
+
+		CopyFile(
+			usualTemplateModelsInit.Path,
+			usualTemplateModelsInit.Path,
+			[]string{getRemoveLine("initEntity")},
+			[]string{fmt.Sprintf("init%s()\n    %s", CamelCase, getRemoveLine("initEntity"))},
+			nil)
+
+	}
 
 	switch CamelCase {
 	case "Auth", "User":
@@ -286,6 +348,28 @@ func getEntityGenContent() (genContent string) {
 
 	return
 }
+
+func getEntityBs4vView() (bs4Content string) {
+
+	bs4Content = usualTemplateBs4EntityForms.Content
+
+	return
+}
+
+func getEntityInit() (content string) {
+
+	content = usualTemplateModelsInit.Content
+
+	return
+}
+
+func getEntityModel() (content string) {
+
+	content = usualTemplateModelsEntity.Content
+
+	return
+}
+
 
 func getWebAppTestContent() (webappTestContent string) {
 

@@ -3,7 +3,7 @@ package cmd
 import "gosha/mode"
 
 type TypeConfig struct {
-    IsId bool
+	IsId bool
 }
 
 var usualTypesAuthenticator = `package types
@@ -244,6 +244,7 @@ import (
 
 type FilterIds struct {
     Ids []{ID}
+    ExceptIds []{ID}
     CurrentId {ID}
 
     validator
@@ -258,6 +259,10 @@ func (filter *FilterIds) GetFirstId() ({ID}, error) {
 
 func (filter *FilterIds) GetIds() []{ID} {
     return filter.Ids
+}
+
+func (filter *FilterIds) GetExceptIds() []{ID} {
+    return filter.ExceptIds
 }
 
 func (filter *FilterIds) GetCurrentId() {ID} {
@@ -275,6 +280,11 @@ func (filter *FilterIds) AddId(id {ID}) *FilterIds {
     return filter
 }
 
+func (filter *FilterIds) AddExceptId(id {ID}) *FilterIds {
+    filter.ExceptIds = append(filter.ExceptIds, id)
+    return filter
+}
+
 func (filter *FilterIds) AddIds(ids []{ID}) *FilterIds {
     for _, id := range ids {
         filter.AddId(id)
@@ -282,9 +292,22 @@ func (filter *FilterIds) AddIds(ids []{ID}) *FilterIds {
     return filter
 }
 
+func (filter *FilterIds) AddExceptIds(ids []{ID}) *FilterIds {
+    for _, id := range ids {
+        filter.AddExceptId(id)
+    }
+    return filter
+}
+
 func (filter *FilterIds) ClearIds() *FilterIds {
 
     filter.Ids = []{ID}{}
+    return filter
+}
+
+func (filter *FilterIds) ClearExceptIds() *FilterIds {
+
+    filter.ExceptIds = []{ID}{}
     return filter
 }
 
@@ -389,6 +412,11 @@ func GetAbstractFilter(request *http.Request, functionType string) AbstractFilte
         filter.AddId(id)
     }
 
+    for _, s := range arr["ExceptIds[]"] {
+        id, _ := {STRTOID}(s)
+        filter.AddExceptId(id)
+    }
+
     filter.SetToken(request)
 
     ReadJSON(filter.request, &filter.validator)
@@ -432,7 +460,7 @@ func (filter *AbstractFilter) GetValidationErrors() string  {
 }
 `
 
-const usualTypesRequest= `package types
+const usualTypesRequest = `package types
 
 import (
     "encoding/json"
@@ -572,76 +600,75 @@ func (pagination *Pagination) Validate(functionType string) {
 
 func getUsualTemplateTypesAuthenticator(isUuidAsPk bool) template {
 
-    cont := AssignVar(
-        assignMsName(usualTypesAuthenticator),
-        "{ID}",
-        GetPKType(isUuidAsPk),
-    )
+	cont := AssignVar(
+		assignMsName(usualTypesAuthenticator),
+		"{ID}",
+		GetPKType(isUuidAsPk),
+	)
 
-    cont = AssignVar(
-        cont,
-        "{GetIdIsNotValidExp}",
-        GetIdIsNotValidExp(isUuidAsPk),
-    )
+	cont = AssignVar(
+		cont,
+		"{GetIdIsNotValidExp}",
+		GetIdIsNotValidExp(isUuidAsPk),
+	)
 
-    usualTemplateTypesAuthenticator := template{
-        Path:    "./types/authenticator.go",
-        Content: cont,
-    }
-    return usualTemplateTypesAuthenticator
+	usualTemplateTypesAuthenticator := template{
+		Path:    "./types/authenticator.go",
+		Content: cont,
+	}
+	return usualTemplateTypesAuthenticator
 }
 
 var usualTemplateTypesEntity = template{
-    Path:    "./types/entity.go",
-    Content: usualTypesEntity,
+	Path:    "./types/entity.go",
+	Content: usualTypesEntity,
 }
 
 func getUsualTemplateTypesFilter(isUuidAsPk bool) template {
 
-    tpl := AssignVar(
-        assignMsName(usualTypesFilter),
-        "{ID}",
-        GetPKType(isUuidAsPk),
-    )
+	tpl := AssignVar(
+		assignMsName(usualTypesFilter),
+		"{ID}",
+		GetPKType(isUuidAsPk),
+	)
 
-    tpl = AssignVar(
-        tpl,
-        "{STRTOID}",
-        GetStrToIdFuncName(isUuidAsPk),
-    )
+	tpl = AssignVar(
+		tpl,
+		"{STRTOID}",
+		GetStrToIdFuncName(isUuidAsPk),
+	)
 
-    tpl = AssignVar(
-        tpl,
-        "{PkNil}",
-        GetIdNil(isUuidAsPk),
-    )
+	tpl = AssignVar(
+		tpl,
+		"{PkNil}",
+		GetIdNil(isUuidAsPk),
+	)
 
-    tpl = AssignVar(
-        tpl,
-        "{GetIdIsValidExp}",
-        GetIdIsValidExp(isUuidAsPk),
-    )
+	tpl = AssignVar(
+		tpl,
+		"{GetIdIsValidExp}",
+		GetIdIsValidExp(isUuidAsPk),
+	)
 
-    usualTemplateTypesFilter := template{
-        Path:    "./types/filter.go",
-        Content: tpl,
-    }
+	usualTemplateTypesFilter := template{
+		Path:    "./types/filter.go",
+		Content: tpl,
+	}
 
-    return usualTemplateTypesFilter
+	return usualTemplateTypesFilter
 }
 
 var usualTemplateTypesRequest = template{
-    Path:    "./types/request.go",
-    Content: usualTypesRequest,
+	Path:    "./types/request.go",
+	Content: usualTypesRequest,
 }
 
 var usualTemplateTypesResponse = template{
-    Path:    "./types/response.go",
-    Content: assignMsName(usualTypesResponse),
+	Path:    "./types/response.go",
+	Content: assignMsName(usualTypesResponse),
 }
 
 var usualTemplateTypesValidator = template{
-    Path:    "./types/validator.go",
-    Content: assignMsName(usualTypesValidator),
+	Path:    "./types/validator.go",
+	Content: assignMsName(usualTypesValidator),
 }
-

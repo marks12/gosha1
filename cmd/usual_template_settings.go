@@ -24,8 +24,10 @@ const HomePageRoute = "/api"
 
 // routes as app resource
 const HttpRouteResourceType ConfigId = 1
-// wev socket resource type
+// web socket resource type
 const WsResourceType ConfigId = 2
+// html template resource type
+const HtmlResourceType ConfigId = 3
 
 // route-constant-generator here dont touch this line
 

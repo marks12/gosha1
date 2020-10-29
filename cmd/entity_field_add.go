@@ -93,6 +93,8 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 
 	CamelCase := strings.Title(modelName)
 	snakeCase := getLowerCase(modelName)
+	firstLowerCase := GetFirstLowerCase(modelName)
+
 
 	sourceFile := "./types/" + snakeCase + ".go"
 
@@ -137,6 +139,55 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 		[]string{getRemoveLine("updateModel.Field")},
 		[]string{"updateModel." + fieldName + " = newModel." + fieldName + "\n\t" + getRemoveLine("updateModel.Field")},
 		nil)
+
+
+	if _, err := os.Stat("./view"); os.IsNotExist(err) {
+		fmt.Println("view folder not exists cant create bs4 template")
+	} else {
+
+		sourceFile = "./view/form/" + snakeCase + ".go"
+		destinationFile := "./view/form/" + snakeCase + ".go"
+
+		CreateFileIfNotExists(sourceFile, getEntityBs4vView(), nil)
+
+		CopyFile(
+			sourceFile,
+			destinationFile,
+			[]string{"{entity-name}", "{Entity}", "{entity}"},
+			[]string{CamelCase, CamelCase, firstLowerCase},
+			nil)
+
+		sourceFile = "./view/form/" + snakeCase + ".go"
+		CopyFile(
+			sourceFile,
+			sourceFile,
+			[]string{"{entity-name}", "{Entity}", "{entity}"},
+			[]string{CamelCase, CamelCase, firstLowerCase},
+			nil)
+
+
+		CopyFile(
+			sourceFile,
+			sourceFile,
+			[]string{getRemoveLine(CamelCase)},
+			[]string{GetFormTemplateField(modelName, fieldName, dataType) + "\n            " + getRemoveLine(CamelCase)},
+			nil)
+
+		CopyFile(
+			sourceFile,
+			sourceFile,
+			[]string{getRemoveLine(CamelCase + "-collector")},
+			[]string{GetFormFieldCollector(modelName, fieldName, dataType) + "\n                  " + getRemoveLine(CamelCase + "-collector")},
+			nil)
+
+		CopyFile(
+			sourceFile,
+			sourceFile,
+			[]string{getRemoveLine(CamelCase + "-row-field")},
+			[]string{GetRowFieldLine(modelName, fieldName, dataType) + "\n                  " + getRemoveLine(CamelCase + "-row-field")},
+			nil)
+	}
+
 	//
 	//CopyFile(
 	//	sourceFile,
@@ -163,6 +214,121 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 		nil)
 
 	return
+}
+
+func GetFormTemplateField(modelName string, fieldName string, dataType string) string {
+
+	firstLowerCase := GetFirstLowerCase(modelName)
+
+	switch dataType {
+
+	case settings.DataTypeString, settings.DataTypeUuid:
+		return GetStringFormField(firstLowerCase, fieldName)
+	case settings.DataTypeInt:
+		return GetIntFormField(firstLowerCase, fieldName)
+	case settings.DataTypeFloat64:
+		return GetFloat64FormField(firstLowerCase, fieldName)
+	case settings.DataTypeBool:
+		return GetBoolFormField(firstLowerCase, fieldName)
+	}
+
+	return fmt.Sprintf("//unsupported data type %s for field %s", dataType, fieldName)
+}
+
+func GetFormFieldCollector(modelName string, fieldName string, dataType string) string {
+
+	firstLowerCase := GetFirstLowerCase(modelName)
+
+	switch dataType {
+
+	case settings.DataTypeString, settings.DataTypeInt, settings.DataTypeFloat64, settings.DataTypeUuid:
+		return GetStringFormFieldCollector(firstLowerCase, fieldName)
+	case settings.DataTypeBool:
+		return GetBoolFormFieldCollector(firstLowerCase, fieldName)
+	}
+
+	return fmt.Sprintf("//unsupported data type %s for fieldCollector %s", dataType, fieldName)
+}
+
+func GetRowFieldLine(modelName string, fieldName string, dataType string) string {
+
+	firstLowerCase := GetFirstLowerCase(modelName)
+
+	switch dataType {
+
+	case settings.DataTypeInt:
+		return fmt.Sprintf(
+			"&bs4.Div{Text: strconv.Itoa(%s.%s), Classes: col, DataField: common.GetFieldName(&%s, &%s.%s)},", firstLowerCase, fieldName, firstLowerCase, firstLowerCase, fieldName)
+	case settings.DataTypeFloat64:
+		return fmt.Sprintf(
+			"&bs4.Div{Text: fmt.Sprintf(\"%v\", %s.%s), Classes: col, DataField: common.GetFieldName(&%s, &%s.%s)},", firstLowerCase, fieldName, firstLowerCase, firstLowerCase, fieldName)
+	case settings.DataTypeString, settings.DataTypeUuid:
+		return fmt.Sprintf(
+			"&bs4.Div{Text: %s.%s, Classes: col, DataField: common.GetFieldName(&%s, &%s.%s)},", firstLowerCase, fieldName, firstLowerCase, firstLowerCase, fieldName)
+	case settings.DataTypeBool:
+		return fmt.Sprintf(
+			"&bs4.Div{Text: strconv.FormatBool(%s.%s), Classes: col, DataField: common.GetFieldName(&%s, &%s.%s)},", firstLowerCase, fieldName, firstLowerCase, firstLowerCase, fieldName)
+	}
+
+	return fmt.Sprintf("//unsupported datatype %s,", dataType)
+}
+
+func GetStringFormField(modelName string, fieldName string) string {
+
+	return fmt.Sprintf(`view.GetStringFieldTemplate(view.FieldConfig{
+				Id: common.GetFieldName(&%s, &%s.%s),
+				Title: common.GetFieldName(&%s, &%s.%s),
+				DefaultValueStr: defaultValue.%s,
+			}),`, modelName, modelName, fieldName, modelName, modelName, fieldName, fieldName)
+
+}
+
+func GetIntFormField(modelName string, fieldName string) string {
+
+	return fmt.Sprintf(`view.GetStringFieldTemplate(view.FieldConfig{
+				Id: common.GetFieldName(&%s, &%s.%s),
+				Title: common.GetFieldName(&%s, &%s.%s),
+				DefaultValueInt: defaultValue.%s,
+			}),`, modelName, modelName, fieldName, modelName, modelName, fieldName, fieldName)
+
+}
+
+func GetFloat64FormField(modelName string, fieldName string) string {
+
+	return fmt.Sprintf(`view.GetStringFieldTemplate(view.FieldConfig{
+				Id: common.GetFieldName(&%s, &%s.%s),
+				Title: common.GetFieldName(&%s, &%s.%s),
+				DefaultValueFloat64: defaultValue.%s,
+			}),`, modelName, modelName, fieldName, modelName, modelName, fieldName, fieldName)
+
+}
+
+func GetBoolFormField(modelName string, fieldName string) string {
+
+	return fmt.Sprintf(`view.GetBoolFieldTemplate(view.FieldConfig{
+				Id: common.GetFieldName(&%s, &%s.%s),
+				Title: common.GetFieldName(&%s, &%s.%s),
+				IsChecked: defaultValue.%s,
+			}),`, modelName, modelName, fieldName, modelName, modelName, fieldName, fieldName)
+
+}
+
+func GetStringFormFieldCollector(modelName string, fieldName string) string {
+
+	return fmt.Sprintf(`{
+					Id: common.GetFieldName(&%s, &%s.%s),
+					CollectorKey: dataKey,
+				},`, modelName, modelName, fieldName)
+
+}
+
+func GetBoolFormFieldCollector(modelName string, fieldName string) string {
+
+	return fmt.Sprintf(`{
+					Id: common.GetFieldName(&%s, &%s.%s),
+					CollectorKey: dataKey,
+				},`, modelName, modelName, fieldName)
+
 }
 
 func getGeneratorByDataType(dataType string) string {

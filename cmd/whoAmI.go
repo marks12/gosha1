@@ -30,6 +30,8 @@ const ENTITY_ADD_FIELD = "entity:field:add"
 
 const ENTITY_ADD_FILTER = "entity:filter:add"
 
+const CREATE_VIEW_FORMS  = "usual:forms:create"
+
 func setAppType(c *ishell.Context) {
 
     var choice int
@@ -185,6 +187,8 @@ func setAppCommands(choice int, c *ishell.Context) {
 
         setModelFilterAdd()
 
+        setCreateViewForms()
+
         break
 
     default:
@@ -254,6 +258,15 @@ func setUsualEntityAdd() {
             "\n\t\t\t\t--crud=fcrudax - add follow methods to route" +
             "\n\t\t\t\t--check-auth=fcrudax - add auth, where a=findOrCreate x=updateOrCreate",
         Func: usualEntityAdd,
+    })
+}
+
+func setCreateViewForms() {
+
+    shell.AddCmd(&ishell.Cmd{
+        Name: CREATE_VIEW_FORMS,
+        Help: "Command create all non exists forms in ./view/form",
+        Func: createViewForms,
     })
 }
 

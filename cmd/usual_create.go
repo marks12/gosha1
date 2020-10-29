@@ -73,6 +73,7 @@ func UsualAppInit(c *ishell.Context) {
 
 		usualCreate(c, email, password, database, isUuidMode)
 		usualAuthAdd(c)
+		usualCreateHtmlTemplate(c)
 
 		break
 
@@ -289,6 +290,8 @@ func usualCreateMain(c *ishell.Context) {
 		"mdl",
 		"common",
 		"wsserver",
+		"view",
+		"view/form",
 	} {
 		if _, err := os.Stat(folder); os.IsNotExist(err) {
 			os.Mkdir(folder, 0755)
