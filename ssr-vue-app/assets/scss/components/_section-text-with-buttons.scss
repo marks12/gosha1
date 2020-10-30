@@ -1,0 +1,12 @@
+.section-text-with-buttons {
+    padding: 32px 0;
+
+    &__inner {
+        display: flex;
+        align-items: center;
+    }
+
+    &__action {
+        margin-left: 20px;
+    }
+}

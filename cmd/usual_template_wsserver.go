@@ -175,12 +175,14 @@ func closeConnection(code uuid.UUID) {
 
 `
 
+// TODO: add biz/view in generator OR change path to github url
 const usualWssHandlers = `package wsserver
 
 import (
     "{ms-name}/google"
     "{ms-name}/types"
     "encoding/json"
+	"biz/view"
 )
 
 type WsHandler func(msg UserMessage, userConn *UserConnection) (answer UserResponse)
@@ -302,10 +304,6 @@ func EventHandler(msg UserMessage, userConn *UserConnection) (answer UserRespons
     }
     return
 }
-
-package wsserver
-
-import "biz/view"
 
 type BuildMode string
 

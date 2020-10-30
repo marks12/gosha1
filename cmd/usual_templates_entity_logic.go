@@ -22,6 +22,7 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
     offset      := filter.GetOffset()
 
     filterIds 	:= filter.GetIds()
+    filterExceptIds 	:= filter.GetExceptIds()
 
     var count int
 
@@ -29,6 +30,10 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
 
     if len(filterIds) > 0 {
         criteria = criteria.Where("id in (?)", filterIds)
+    }
+
+    if len(filterExceptIds) > 0 {
+        criteria = criteria.Where("id not in (?)", filterExceptIds)
     }
 
     //if len(filter.Search) > 0 {

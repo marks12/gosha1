@@ -1,0 +1,78 @@
+@mixin clearfix() {
+
+    &:before,
+    &:after {
+        content: '';
+        display: block;
+        height: 0;
+        overflow: hidden;
+    }
+
+    &:after {
+        clear: both;
+    }
+}
+
+@mixin unstyled__list() {
+    margin: 0;
+    padding: 0;
+}
+
+@mixin unstyled__item() {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    &:before,
+    &:after {
+        content: none;
+    }
+}
+
+@mixin unstyled__list_inline-block() {
+    @include unstyled__list();
+    font-size: 0;
+}
+
+@mixin unstyled__item_inline-block() {
+    display: inline-block;
+    vertical-align: top;
+    @include unstyled__item();
+    font-size: $font-size-base;
+}
+
+@mixin unstyled__list_table() {
+    display: table;
+    @include unstyled__list();
+}
+
+@mixin unstyled__item_table() {
+    display: table-cell;
+    @include unstyled__item();
+    list-style: none;
+}
+
+@mixin styled-ordered__list($listName) {
+    counter-reset: $listName;
+    @include unstyled__list();
+}
+
+@mixin styled-ordered__item($listName, $prefix: '', $postfix: '') {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    &::before {
+        counter-increment: $listName;
+        content: $prefix counter($listName) $postfix;
+    }
+}
+
+@mixin styled-select() {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 0.01px;
+    text-overflow: '';
+    -ms-appearance: none;
+    appearance: none!important;
+}
