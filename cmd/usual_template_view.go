@@ -342,7 +342,7 @@ func Get{Entity}RowTemplate({entity} types.{Entity}) (row bs4.HtmlInterface) {
 				DataField: common.GetFieldName(&{entity}, &{entity}.Id),
 				Events: []on.Event{
 					{
-						Click: window.GenClickEvent(page.AdminEditEntity, "{Id: parseInt(this.innerHTML), Entity: '" + common.GetTypeName(&{entity}) + "'}"),
+						Click: window.GenClickEditEntityEvent(page.AdminEditEntity, common.GetTypeName(&{entity})),
 					},
 				},
 			},
