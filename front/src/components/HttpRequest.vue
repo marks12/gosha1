@@ -39,7 +39,7 @@
             </VSet>
             <VSet vertical>
                 <VSet wrap>
-                    <VSet vertical v-if="entityFilter.Fields && entityFilter.Fields.length" v-for="item in entityFilter.Fields" :key="'k-' + item.Name" width="col6" indent-size="XS">
+                    <VSet vertical v-if="entityFilter.Fields && entityFilter.Fields.length" v-for="(item, index) in entityFilter.Fields" :key="'k-' + item.Name + '-0' + index" width="col6" indent-size="XS">
                         <VLabel>{{item.Name}}</VLabel>
                         <VInput v-model="requestFilter[item.Name]" width="dyn"></VInput>
                     </VSet>
@@ -99,6 +99,14 @@
             this.findFilter();
 
             this.setPanelMaxWidth("col12");
+
+            if (this.requestFilter && !(this.requestFilter.CurrentPage)) {
+              this.requestFilter.CurrentPage = 1;
+            }
+
+            if (this.requestFilter && !(this.requestFilter.PerPage)) {
+              this.requestFilter.PerPage = 10;
+            }
 
         },
         computed: {

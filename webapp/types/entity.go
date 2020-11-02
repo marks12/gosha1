@@ -49,6 +49,7 @@ type EntityFilter struct {
 	IsUpdateOrCreate bool
 	IsRegenerateJsTypes bool
 	IsUuidMode bool
+	IsViewMode bool
 	//EntityFilter remove this line for disable generator functionality
 
 	AbstractFilter

@@ -42,6 +42,7 @@
                     create:'attention-secondary',
                     find: 'action',
                     read: 'weak',
+                    // read: 'we',
                     findorcreate:'bg-light',
                     updateorcreate:'bg-light'
                 },

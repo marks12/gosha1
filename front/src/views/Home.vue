@@ -42,6 +42,16 @@
                                 <VBadge  v-if="IsUuidMode" :color="IsUuidMode ? 'selection' : 'attention-secondary'">UUID</VBadge>
                                 <VBadge  v-else :color="IsUuidMode ? 'selection' : 'attention-secondary'">Integer</VBadge>
                             </VSet>
+                            <VSet>
+                                <VCheckbox v-model="IsViewMode" width="dyn">
+                                    <VText>Enable view mode</VText>
+                                </VCheckbox>
+                            </VSet>
+                            <VSet>
+                                <VText>View mode</VText>
+                                <VBadge  v-if="IsViewMode" :color="IsViewMode ? 'selection' : 'attention-secondary'">Enabled</VBadge>
+                                <VBadge  v-else :color="IsViewMode ? 'selection' : 'attention-secondary'">Disabled</VBadge>
+                            </VSet>
                         </VSet>
                         <VSet width="fit">
                             <VText color="attention">{{ error }}</VText>
@@ -83,6 +93,7 @@
                 appDb: "postgres",
                 error: "",
                 IsUuidMode: localStorage.getItem("IsUuidMode") === 'true',
+                IsViewMode: localStorage.getItem("IsViewMode") === 'true',
                 segmentControls: [
                     {
                         label: 'MySql',
@@ -117,6 +128,7 @@
                 app.AdminPassword = this.adminPass;
                 app.DbType = this.appDb;
                 app.IsUuidMode = this.IsUuidMode;
+                app.IsViewMode = this.IsViewMode;
 
                 this.createCurrentApp({
                     data: app
@@ -155,6 +167,9 @@
         watch: {
             IsUuidMode(newVal) {
                 localStorage.setItem("IsUuidMode", newVal);
+            },
+            IsViewMode(newVal) {
+                localStorage.setItem("IsViewMode", newVal);
             },
         },
     }

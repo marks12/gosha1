@@ -19,11 +19,18 @@ func usualEntityAdd(c *ishell.Context) {
 
 	WoDbModel, _ := GetOsArgument(WithoutDbModels.ToString())
 	Uuid, _ := GetOsArgument(UuidAsPk.ToString())
+	isView, _ := GetOsArgument(ViewMode.ToString())
 
 	if Uuid.BoolResult {
 		mode.SetUuidMode()
 	} else {
 		mode.SetNonUuidMode()
+	}
+
+	if isView.BoolResult {
+		mode.SetViewMode()
+	} else {
+		mode.SetNonViewMode()
 	}
 
 	entity, err := getEntity(c)

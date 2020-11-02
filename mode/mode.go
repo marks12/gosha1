@@ -7,6 +7,7 @@ import (
 type mode struct {
 	isInteractive bool
 	isUuidMode bool
+	isViewMode bool
 }
 
 func (m *mode) setInteractive() {
@@ -29,8 +30,16 @@ func (m *mode) setNonUuidMode() {
 	m.isUuidMode = false
 }
 
+func (m *mode) setNoneViewMode() {
+	m.isViewMode = false
+}
+
 func (m *mode) setUuidMode() {
 	m.isUuidMode = true
+}
+
+func (m *mode) setViewMode() {
+	m.isViewMode = true
 }
 
 func (m *mode) getUuidMode() bool {
@@ -75,6 +84,14 @@ func SetUuidMode() {
 
 func SetNonUuidMode() {
 	GetMode().setNonUuidMode()
+}
+
+func SetViewMode() {
+	GetMode().setViewMode()
+}
+
+func SetNonViewMode() {
+	GetMode().setNoneViewMode()
 }
 
 func GetUuidMode() bool {

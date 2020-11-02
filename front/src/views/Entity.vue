@@ -129,6 +129,16 @@
                                         </VCheckbox>
                                     </VSet>
 
+                                    <VSet width="dyn">
+
+                                      <VSign v-if="IsViewMode">With view mode</VSign>
+                                      <VSign v-else>Without view</VSign>
+
+                                        <VCheckbox v-model="IsViewMode">
+                                            <VText>ViewMode</VText>
+                                        </VCheckbox>
+                                    </VSet>
+
                                 </VSet>
                                 <VSet v-for="(f, index) in newFields" width="dyn" :key="'newf-' + index">
                                     <VInput v-model="f.Name" @input="updateNewFieldsList"></VInput>
@@ -286,6 +296,7 @@
                 isLoading: true,
                 IsRegenerateJsTypes: localStorage.getItem("IsRegenerateJsTypes") === 'true',
                 IsUuidMode: localStorage.getItem("IsUuidMode") === 'true',
+                IsViewMode: localStorage.getItem("IsViewMode") === 'true',
                 parts: 1,
             };
         },
@@ -502,7 +513,7 @@
 
             async sendRequest() {
                 console.log('send request');
-                console.log(JSON.stringify(this.getFilters()));
+                console.log("this.getFilters", JSON.stringify(this.getFilters()));
                 console.log(JSON.stringify(this.getFilters()));
                 console.log(JSON.stringify(this.getBodyModel()));
                 console.log(this.currentEntityItem.Action);
@@ -613,6 +624,7 @@
                     filter: {
                         IsRegenerateJsTypes: this.IsRegenerateJsTypes,
                         IsUuidMode: this.IsUuidMode,
+                        IsViewMode: this.IsViewMode,
                     },
                     data: this.currentEntityItem.item,
                 }).then((response) => {
@@ -665,6 +677,9 @@
             },
             IsUuidMode(newVal) {
                 localStorage.setItem("IsUuidMode", newVal);
+            },
+            IsViewMode(newVal) {
+                localStorage.setItem("IsViewMode", newVal);
             },
         },
     }

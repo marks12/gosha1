@@ -11,6 +11,7 @@ type CurrentApp struct {
 	AdminPassword string
 	DbType string
     IsUuidMode bool
+    IsViewMode bool
 	//CurrentApp remove this line for disable generator functionality
 }
 

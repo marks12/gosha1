@@ -249,6 +249,10 @@ func EntityCreate(filter types.EntityFilter) (data types.Entity, err error) {
 		args = append(args, cmd.UuidAsPk.CliArgument("true"))
 	}
 
+	if filter.IsViewMode {
+		args = append(args, cmd.ViewMode.CliArgument("true"))
+	}
+
 	os.Args = args
 	cmd.RunShell()
 

@@ -51,11 +51,18 @@ func UsualAppInit(c *ishell.Context) {
 	password, _ = getPassword(c)
 	database, err := getDatabaseType(c)
 	isUuidMode, err := getUuidMode(c)
+	isViewMode, err := getViewMode(c)
 
 	if isUuidMode {
 		mode.SetUuidMode()
 	} else {
 		mode.SetNonUuidMode()
+	}
+
+	if isViewMode {
+		mode.SetViewMode()
+	} else {
+		mode.SetNonViewMode()
 	}
 
 	if err != nil {
@@ -71,7 +78,7 @@ func UsualAppInit(c *ishell.Context) {
 			c.Println(green("Creating app structure"))
 		}
 
-		usualCreate(c, email, password, database, isUuidMode)
+		usualCreate(c, email, password, database, isUuidMode, isViewMode)
 		usualAuthAdd(c)
 		usualCreateHtmlTemplate(c)
 
@@ -125,6 +132,27 @@ func getUuidMode(c *ishell.Context) (isUuid bool, err error) {
 	return
 }
 
+func getViewMode(c *ishell.Context) (isViewMode bool, err error) {
+
+	arguments, err := GetOsArgument(ViewMode.ToString())
+	if err != nil {
+
+		choice := c.MultiChoice([]string{
+			"Yes",
+			"No",
+		}, "Would you like to use ViewMode for build html on backend? Choose `No` for disable views")
+
+		if choice == 0 {
+			isViewMode = true
+		}
+
+	} else {
+		isViewMode = arguments.BoolResult
+	}
+
+	return
+}
+
 func getDatabaseType(c *ishell.Context) (dbtype DatabaseType, err error) {
 
 	var arguments RegularFind
@@ -151,7 +179,7 @@ func getDatabaseType(c *ishell.Context) (dbtype DatabaseType, err error) {
 	return dbtype, nil
 }
 
-func usualCreate(c *ishell.Context, email, password string, databaseType DatabaseType, isUuidAsPk bool) {
+func usualCreate(c *ishell.Context, email, password string, databaseType DatabaseType, isUuidAsPk bool, isViewMode bool) {
 
 	green := color.New(color.FgCyan).SprintFunc()
 	red := color.New(color.FgRed).SprintFunc()

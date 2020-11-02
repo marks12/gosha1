@@ -36,6 +36,7 @@ func CurrentAppCreate(filter types.CurrentAppFilter)  (data types.CurrentApp, er
         "--adminPassword=" + model.AdminPassword,
         "--dbType=" + model.DbType,
         cmd.UuidAsPk.CliArgument(strconv.FormatBool(model.IsUuidMode)),
+        cmd.ViewMode.CliArgument(strconv.FormatBool(model.IsViewMode)),
     }
 
     os.Args = args

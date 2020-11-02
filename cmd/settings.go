@@ -13,6 +13,7 @@ const (
 	CRUD osArgumentVal = "crud"
 	CheckAuth osArgumentVal = "check-auth"
 	UuidAsPk osArgumentVal = "uuidaspk"
+	ViewMode osArgumentVal = "viewmode"
 
 	WithoutDbModels osArgumentVal = "without-db-models"
 )
