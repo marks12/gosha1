@@ -81,10 +81,10 @@ func (namespace Namespace) GetNamespace() Namespace {
 const Empty Namespace = ""
 const Admin Namespace = "Admin"
 const AdminDashboard Namespace = "AdminDashboard"
-const AdminSite Namespace = "AdminSite"
+const Admin{entity} Namespace = "Admin{entity}"
 const EntityRows Namespace = "EntityRows"
 const EntityForm Namespace = "EntityForm"
-const CreateFormSite Namespace = "CreateFormSite"
+const CreateForm{entity} Namespace = "CreateForm{entity}"
 const StringField Namespace = "StringField"
 const BoolField Namespace = "BoolField"
 const Panel Namespace = "Panel"
@@ -236,6 +236,9 @@ import (
     "{ms-name}/common"
     "{ms-name}/wsserver"
     "{ms-name}/settings"
+	"{ms-name}/view/bs4/on"
+	"{ms-name}/view/page"
+	"{ms-name}/view/page/js/window"
     "net/http"
     "strconv"
     "fmt"
@@ -333,6 +336,17 @@ func Get{Entity}RowTemplate({entity} types.{Entity}) (row bs4.HtmlInterface) {
 		Id: strconv.Itoa({entity}.Id),
 		Classes: []css.Class{css.BgHighlightLightHover},
 		Children:[]bs4.HtmlInterface{
+			&bs4.Div{
+				Text: strconv.Itoa({entity}.Id),
+				Classes: []css.Class{css.Btn, css.Col1,css.Py1,css.Small, css.TextSecondary},
+				DataField: common.GetFieldName(&{entity}, &{entity}.Id),
+				Events: []on.Event{
+					{
+						Click: window.GenClickEditEntityEvent(page.AdminEditEntity, common.GetTypeName(&{entity})),
+					},
+				},
+			},
+
 			&bs4.Div{Text: strconv.Itoa({entity}.Id), Classes: col1, DataField: common.GetFieldName(&{entity}, &{entity}.Id)},
 			//{Entity}-row-field remove this line for disable generator functionality
 		},

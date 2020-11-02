@@ -21,7 +21,5 @@ require (
 	github.com/mattn/go-isatty v0.0.10 // indirect
 	github.com/pkg/errors v0.8.1
 	github.com/rs/cors v1.7.0
-	golang.org/x/crypto v0.0.0-20190325154230-a5d413f7728c
-	golang.org/x/net v0.0.0-20190311183353-d8887717615a
 	gopkg.in/abiosoft/ishell.v2 v2.0.0
 )
