@@ -13,7 +13,7 @@
                         <VLabel>{{getResponseStatusText()}}</VLabel>
                     </VSet>
                 </VSet>
-                <VInput multiline :rows="action !== 'find' ? '16' : '34'" width="dyn" :value="response" placeholder="response"></VInput>
+                <VInput multiline  wrap="off" :rows="action !== 'find' ? '16' : '34'" width="dyn" :value="response" placeholder="response"></VInput>
             </VSet>
         </VSet>
         <VSet vertical divider v-if="! error">
@@ -99,15 +99,6 @@
             this.findFilter();
 
             this.setPanelMaxWidth("col12");
-
-            if (this.requestFilter && !(this.requestFilter.CurrentPage)) {
-              this.requestFilter.CurrentPage = 1;
-            }
-
-            if (this.requestFilter && !(this.requestFilter.PerPage)) {
-              this.requestFilter.PerPage = 10;
-            }
-
         },
         computed: {
             response() {
@@ -136,7 +127,7 @@
                 this.urlChanged();
             },
             routeUrl(newval) {
-                localStorage.setItem("serverUrl", newval);
+                localStorage.setItem("routeUrl", newval);
                 this.urlChanged();
             },
             requestFilter: {
@@ -146,6 +137,9 @@
                     this.setFilters(newVal);
                 }
             },
+          authToken(newVal) {
+            localStorage.setItem("authToken", newVal);
+          }
         },
         methods: {
 
@@ -192,6 +186,16 @@
                             if (res.List[k].Name === this.entity.Name + "Filter" && res.List[k].IsFilter === true) {
                                 this.entityFilter = res.List[k];
                             }
+                        }
+
+                        if (this.requestFilter && !(this.requestFilter.CurrentPage)) {
+                            this.requestFilter.CurrentPage = 1;
+                            this.setFilters(this.requestFilter);
+                        }
+
+                        if (this.requestFilter && !(this.requestFilter.PerPage)) {
+                            this.requestFilter.PerPage = 10;
+                            this.setFilters(this.requestFilter);
                         }
 
                         return;

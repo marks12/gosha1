@@ -12,26 +12,29 @@
             </VSet>
 
             <VSet v-if="!entityItem.IsFilter">
-                <VButton @click="reqFind" :disabled="! entityItem.HttpMethods.IsFind"
+<!--                <VButton @click="reqFind" -->
+<!--                         :disabled="! entityItem.HttpMethods.IsFind"-->
+<!--                         small :title="'Send Find Request'" :class="entityItem.HttpMethods.IsFind ? 'small-button find' : 'small-button weak'" text="F"></VButton>-->
+                <VButton @click="reqFind"
                          small :title="'Send Find Request'" :class="entityItem.HttpMethods.IsFind ? 'small-button find' : 'small-button weak'" text="F"></VButton>
 
-                <VButton @click="reqCreate" :disabled="! entityItem.HttpMethods.IsCreate"
+                <VButton @click="reqCreate"
                          small :title="'Send Create Request'" :class="entityItem.HttpMethods.IsCreate ? 'small-button create' : 'small-button weak'" text="C">C</VButton>
 
-                <VButton @click="reqRead" :disabled="! entityItem.HttpMethods.IsRead"
+                <VButton @click="reqRead"
                          small :title="'Send Read Request'" :class="entityItem.HttpMethods.IsRead ? 'small-button read' : 'small-button weak'" text="R">R</VButton>
 
-                <VButton @click="reqUpdate" :disabled="! entityItem.HttpMethods.IsUpdate"
+                <VButton @click="reqUpdate"
                          small :title="'Send Update Request'" :class="entityItem.HttpMethods.IsUpdate ? 'small-button update' : 'small-button weak'" text="U">U</VButton>
 
-                <VButton @click="reqDelete" :disabled="! entityItem.HttpMethods.IsDelete"
+                <VButton @click="reqDelete"
                          small :title="'Send Delete Request'" :class="entityItem.HttpMethods.IsDelete ? 'small-button delete' : 'small-button weak'" text="D">D</VButton>
 
-                <VButton @click="reqFoC" :disabled="! entityItem.HttpMethods.IsFindOrCreate"
+                <VButton @click="reqFoC"
                          small :title="'Send Find or create Request'"
                          :class="entityItem.HttpMethods.IsFindOrCreate ? 'small-button foc' : 'small-button weak'" text="FoC" title="Find or create">FindOrCreate</VButton>
 
-                <VButton @click="reqUoC" :disabled="! entityItem.HttpMethods.IsUpdateOrCreate"
+                <VButton @click="reqUoC"
                          small :title="'Send Update or create Request'"
                          :class="entityItem.HttpMethods.IsUpdateOrCreate ? 'small-button uoc' : 'small-button weak'" text="UoC" title="Update or create">UoC</VButton>
 

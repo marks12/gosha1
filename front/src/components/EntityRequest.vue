@@ -51,25 +51,25 @@
         },
         computed: {
             IsFind() {
-                return this.action === "find" && this.entity.HttpMethods.IsFind;
+                return this.action === "find";
             },
             IsCreate() {
-                return this.action === "create" && this.entity.HttpMethods.IsCreate;
+                return this.action === "create";
             },
             IsRead() {
-                return this.action === "read" && this.entity.HttpMethods.IsRead;
+                return this.action === "read";
             },
             IsUpdate() {
-                return this.action === "update" && this.entity.HttpMethods.IsUpdate;
+                return this.action === "update";
             },
             IsDelete() {
-                return this.action === "delete" && this.entity.HttpMethods.IsDelete;
+                return this.action === "delete";
             },
             IsFindOrCreate() {
-                return this.action === "findorcreate" && this.entity.HttpMethods.IsFindOrCreate;
+                return this.action === "findorcreate";
             },
             IsUpdateOrCreate() {
-                return this.action === "updateorcreate" && this.entity.HttpMethods.IsUpdateOrCreate;
+                return this.action === "updateorcreate";
             },
             /**
              * @return {string}

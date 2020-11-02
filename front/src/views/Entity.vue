@@ -512,6 +512,7 @@
             },
 
             async sendRequest() {
+
                 console.log('send request');
                 console.log("this.getFilters", JSON.stringify(this.getFilters()));
                 console.log(JSON.stringify(this.getFilters()));
@@ -527,6 +528,14 @@
 
                 switch (this.currentEntityItem.Action) {
                     case "find":
+
+                        result = fetch(appendParams(this.getRequestUrl(), filters), {
+                            method: 'GET',
+                            headers: {Token: localStorage.getItem("authToken")},
+                        });
+
+                        break;
+                    case "read":
 
                         result = fetch(appendParams(this.getRequestUrl(), filters), {
                             method: 'GET',
