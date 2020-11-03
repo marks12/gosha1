@@ -516,7 +516,7 @@
                 console.log('send request');
                 console.log("this.getFilters", JSON.stringify(this.getFilters()));
                 console.log(JSON.stringify(this.getFilters()));
-                console.log(JSON.stringify(this.getBodyModel()));
+                console.log("body model", JSON.stringify(this.getBodyModel()));
                 console.log(this.currentEntityItem.Action);
 
                 this.resetResponse();
@@ -543,6 +543,15 @@
                         });
 
                         break;
+                    // case "post":
+                    //
+                    //     result = fetch(appendParams(this.getRequestUrl(), filters), {
+                    //         method: 'POST',
+                    //         headers: {Token: localStorage.getItem("authToken")},
+                    //         body: JSON.stringify(data),
+                    //     });
+                    //
+                    //     break;
                 }
 
 

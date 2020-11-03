@@ -6,6 +6,9 @@ const request = {
         setHeaders(context, val) {
             context.commit("setHeaders", val);
         },
+        setBodyModel(context, val) {
+            context.commit("setBodyModel", val);
+        },
         addHeader(context, {Name, Value}) {
             context.commit("addHeader", {Name: Name, Value: Value});
         },

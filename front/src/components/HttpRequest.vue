@@ -3,8 +3,12 @@
         <VSet>
             <VSet vertical width="dyn">
                 <VSet vertical v-if="action !== 'find'">
-                    <VLabel>Request</VLabel>
-                    <VInput multiline rows="17" width="dyn" placeholder="request"></VInput>
+                    <VSet>
+                      <VLabel>Request</VLabel>
+                      <VButton :disabled="! isValidJson" @click="beautifyRequest" small text="Beatify (CTRL+b)"></VButton>
+                      <VBadge color="attention" v-if="! isValidJson">Invalid json</VBadge>
+                    </VSet>
+                    <VInput multiline rows="17" width="dyn" placeholder="request" v-model="requestModel" @keydown.native="beatifyOnKey"></VInput>
                 </VSet>
                 <VSet indent-size="XS">
                     <VLabel>Response</VLabel>
@@ -86,6 +90,8 @@
                 requestFilter: {},
                 error: "",
                 responseData: null,
+                requestModel: "",
+                isValidJson: true,
             };
         },
         created() {
@@ -137,9 +143,13 @@
                     this.setFilters(newVal);
                 }
             },
-          authToken(newVal) {
-            localStorage.setItem("authToken", newVal);
-          }
+            authToken(newVal) {
+              localStorage.setItem("authToken", newVal);
+            },
+            requestModel(newVal) {
+              this.isValidJson = this.isValidJsonString(newVal);
+              this.setBodyModel(newVal);
+            },
         },
         methods: {
 
@@ -155,15 +165,48 @@
                 findEntity: 'findEntity',
                 setPanelMaxWidth: "setPanelMaxWidth",
                 setFilters: "setFilters",
+                setBodyModel: "setBodyModel",
                 setRequestUrl: "setRequestUrl",
             }),
 
+          isValidJsonString(jsonString){
+            if (!(jsonString && typeof jsonString === "string")) {
+                return false;
+              }
+              try {
+                JSON.parse(jsonString);
+                return true;
+              } catch (error) {
+                return false;
+              }
+            },
             tryAuth() {
                 this.$refs.auth.tryAuth();
             },
 
             setToken(token) {
                 this.authToken = token;
+            },
+
+            beautifyRequest() {
+              if (this.isValidJson) {
+                let r = JSON.parse(this.requestModel);
+                this.requestModel = JSON.stringify(r, null, 4);
+              }
+            },
+            beatifyOnKey(event) {
+              if (event) {
+                if (event.ctrlKey && event.key === "b") {
+                  this.beautifyRequest();
+                }
+                  if (event.key === "Tab") {
+                    event.preventDefault();
+                    let start = event.target.selectionStart;
+                    let val = event.target.value;
+                    event.target.value = val.substr(0, start) + "    " + val.substr(event.target.selectionEnd);
+                    event.target.selectionStart = event.target.selectionEnd = start + 4;
+                  }
+              }
             },
 
             findFilter() {
