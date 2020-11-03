@@ -543,15 +543,15 @@
                         });
 
                         break;
-                    // case "post":
-                    //
-                    //     result = fetch(appendParams(this.getRequestUrl(), filters), {
-                    //         method: 'POST',
-                    //         headers: {Token: localStorage.getItem("authToken")},
-                    //         body: JSON.stringify(data),
-                    //     });
-                    //
-                    //     break;
+                    case "post":
+
+                        result = fetch(appendParams(this.getRequestUrl(), filters), {
+                            method: 'POST',
+                            headers: {Token: localStorage.getItem("authToken")},
+                            body: JSON.stringify(data),
+                        });
+
+                        break;
                 }
 
 
