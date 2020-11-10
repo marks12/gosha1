@@ -543,12 +543,12 @@
                         });
 
                         break;
-                    case "post":
+                    case "create":
 
                         result = fetch(appendParams(this.getRequestUrl(), filters), {
                             method: 'POST',
                             headers: {Token: localStorage.getItem("authToken")},
-                            body: JSON.stringify(data),
+                            body: JSON.stringify(JSON.parse(this.getBodyModel())),
                         });
 
                         break;

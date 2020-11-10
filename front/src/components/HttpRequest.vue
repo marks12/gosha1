@@ -2,16 +2,23 @@
   <VSet vertical-align="top">
     <VSet>
       <VSet vertical width="dyn">
-        <VSet vertical v-if="action !== 'find'">
+        <VSet vertical v-if="action === 'create' || action === 'update'">
           <VSet>
             <VLabel>Request</VLabel>
             <VButton :disabled="! isValidJson" @click="beautifyRequest" small text="Beatify (CTRL+B)"></VButton>
-            <VButton @click="loadModel" small text="Get model (CTRL+L)"></VButton>
+            <VButton @click="loadModel" :disabled="isLoadingModel" small text="Get model (CTRL+L)"></VButton>
             <VBadge color="attention" v-if="! isValidJson">Invalid json</VBadge>
           </VSet>
-          <VInput multiline rows="17" width="dyn" ref="requestModelField" placeholder="request" v-model="requestModel"
+          <VInput multiline rows="17" width="dyn" ref="requestModelField" placeholder="request"
+                  v-model="requestModel"
+                  style="white-space:  nowrap !important;"
                   @keydown.native="handleReqHotKey"></VInput>
-        </VSet>
+          <VSet>
+            <div><VBadge>CTRL+X</VBadge> - cut line</div>
+            <div><VBadge>CTRL+D</VBadge> - duplicate line</div>
+          </VSet>
+
+          </VSet>
         <VSet indent-size="XS">
           <VLabel>Response</VLabel>
           <VSet v-if="isValidCode" indent-size="XS">
@@ -97,6 +104,7 @@ export default {
       responseData: null,
       requestModel: "",
       isValidJson: true,
+      isLoadingModel: false,
     };
   },
   created() {
@@ -110,6 +118,20 @@ export default {
     this.findFilter();
 
     this.setPanelMaxWidth("col12");
+
+    this.requestModel = "";
+
+    if (["create", "update"].indexOf(this.action) !== -1) {
+
+      this.requestModel = localStorage.getItem(this.action + "-" + this.entity.Name) || "";
+
+      if (! this.requestModel) {
+        this.findEntityModel();
+      } else {
+        this.beautifyRequest();
+      }
+    }
+
   },
   computed: {
     response() {
@@ -154,6 +176,7 @@ export default {
     requestModel(newVal) {
       this.isValidJson = this.isValidJsonString(newVal);
       this.setBodyModel(newVal);
+      localStorage.setItem(this.action + "-" + this.entity.Name, newVal)
     },
   },
   methods: {
@@ -163,6 +186,7 @@ export default {
       getResponse: 'getResponse',
       getResponseCode: 'getResponseCode',
       getResponseStatusText: 'getResponseStatusText',
+      getRequestUrl: 'getRequestUrl',
     }),
 
     ...mapActions('gosha', {
@@ -201,7 +225,6 @@ export default {
     },
     loadModel() {
       this.findEntityModel();
-      console.log("try load model",);
     },
     handleReqHotKey(event) {
       if (event) {
@@ -215,6 +238,12 @@ export default {
         }
         if (event.ctrlKey && event.key && (event.key.toLowerCase() === "x" || event.key.toLowerCase() === "ч")) {
           let start = event.target.selectionStart;
+          let end = event.target.selectionEnd;
+
+          if (start !== end) {
+            return ;
+          }
+
           let lines = this.requestModel.replace(/\r\n/g,"\n").split("\n").filter(line => line);
 
           let len = 0;
@@ -223,10 +252,28 @@ export default {
             if (len>start) {
               setTimeout(()=>{
                   let pos = lines.slice(0, i+1).join("\n").length
-                  console.log("new pos", pos);
                   event.target.selectionStart = event.target.selectionEnd = pos;
               })
               lines.splice(i, 1);
+              this.requestModel = lines.join("\n");
+              break;
+            }
+          }
+          event.preventDefault();
+        }
+        if (event.ctrlKey && event.key && (event.key.toLowerCase() === "d" || event.key.toLowerCase() === "в")) {
+          let start = event.target.selectionStart;
+          let lines = this.requestModel.replace(/\r\n/g,"\n").split("\n").filter(line => line);
+
+          let len = 0;
+          for (let i=0;i<lines.length;i++){
+            len += lines[i].length + 1;
+            if (len>start) {
+              lines[i] = lines[i] + "\n" + lines[i];
+              setTimeout(()=>{
+                let pos = lines.slice(0, i+1).join("\n").length
+                event.target.selectionStart = event.target.selectionEnd = pos;
+              })
               this.requestModel = lines.join("\n");
               break;
             }
@@ -284,7 +331,10 @@ export default {
       });
 
     },
-    findEntityModel(entityName) {
+
+    findEmptyEntityModel(entityName){
+
+      this.isLoadingModel = true;
 
       let f = new EntityFilter();
       f.PerPage = 1000;
@@ -296,10 +346,12 @@ export default {
         f.Search = this.entity.Name;
       }
 
-      this.findEntity({
+      return this.findEntity({
         filter: f,
         noMutation: true,
       }).then((res) => {
+
+        this.isLoadingModel = false;
 
         if (res && res.List && res.List.length) {
 
@@ -310,7 +362,6 @@ export default {
               return true;
             }
           }
-
           return;
         }
 
@@ -318,7 +369,43 @@ export default {
 
         return false;
       });
+    },
 
+    findEntityModel(entityName) {
+
+      let url = this.getRequestUrl();
+      if (url.match("/[0-9]+$")) {
+        return this.readEntityModel(entityName);
+      } else {
+        return this.findEmptyEntityModel(entityName);
+      }
+    },
+
+    readEntityModel(entityName) {
+
+      this.isLoadingModel = true;
+
+      return fetch(this.getRequestUrl())
+      .then((res)=>{
+        return res.json();
+      }).catch((error)=>{
+        console.error('Cant get model from url:', this.getRequestUrl(), error);
+        return this.findEmptyEntityModel(entityName);
+      }).
+      then((res) => {
+
+        this.isLoadingModel = false;
+
+        if (res && res.Model) {
+            this.requestModel = JSON.stringify(res.Model);
+            this.beautifyRequest();
+            return true;
+        }
+
+        this.error = "Model not found";
+
+        return false;
+      });
     },
 
     genModel(fieldsList) {
@@ -328,8 +415,12 @@ export default {
           continue;
         }
 
-        if (["*Int", "Int"].indexOf(fieldsList[item].Type) !== -1) {
+        if (["Int"].indexOf(fieldsList[item].Type) !== -1) {
           reqObject[fieldsList[item].Name] = 0;
+          continue;
+        }
+        if (["*Int"].indexOf(fieldsList[item].Type) !== -1) {
+          reqObject[fieldsList[item].Name] = null;
           continue;
         }
 
