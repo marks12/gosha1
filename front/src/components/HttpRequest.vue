@@ -30,7 +30,7 @@
                 placeholder="response"></VInput>
       </VSet>
     </VSet>
-    <VSet vertical divider v-if="! error">
+    <VSet vertical divider>
       <VSet>
         <VInputAutocomplete
             v-model="serverUrl"
