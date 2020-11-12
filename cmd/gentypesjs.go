@@ -1,10 +1,11 @@
 package cmd
 
 import (
-	"gopkg.in/abiosoft/ishell.v2"
 	"io/ioutil"
 	"os"
 	"strings"
+
+	"gopkg.in/abiosoft/ishell.v2"
 )
 
 type store struct {

@@ -38,22 +38,22 @@ type Relation struct {
 }
 
 type HttpMethods struct {
-	IsFind bool
-	IsCreate bool
-	IsRead bool
-	IsUpdate bool
-	IsDelete bool
-	IsFindOrCreate bool
+	IsFind           bool
+	IsCreate         bool
+	IsRead           bool
+	IsUpdate         bool
+	IsDelete         bool
+	IsFindOrCreate   bool
 	IsUpdateOrCreate bool
 }
 
 type HttpRoutes struct {
-	Find string
-	Create string
-	Read string
-	Update string
-	Delete string
-	FindOrCreate string
+	Find           string
+	Create         string
+	Read           string
+	Update         string
+	Delete         string
+	FindOrCreate   string
 	UpdateOrCreate string
 }
 
@@ -94,7 +94,6 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 	CamelCase := strings.Title(modelName)
 	snakeCase := getLowerCase(modelName)
 	firstLowerCase := GetFirstLowerCase(modelName)
-
 
 	sourceFile := "./types/" + snakeCase + ".go"
 
@@ -140,7 +139,6 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 		[]string{"updateModel." + fieldName + " = newModel." + fieldName + "\n\t" + getRemoveLine("updateModel.Field")},
 		nil)
 
-
 	if _, err := os.Stat("./view"); os.IsNotExist(err) {
 		fmt.Println("view folder not exists cant create bs4 template")
 	} else {
@@ -165,7 +163,6 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 			[]string{CamelCase, CamelCase, firstLowerCase},
 			nil)
 
-
 		CopyFile(
 			sourceFile,
 			sourceFile,
@@ -177,14 +174,14 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 			sourceFile,
 			sourceFile,
 			[]string{getRemoveLine(CamelCase + "-collector")},
-			[]string{GetFormFieldCollector(modelName, fieldName, dataType) + "\n                  " + getRemoveLine(CamelCase + "-collector")},
+			[]string{GetFormFieldCollector(modelName, fieldName, dataType) + "\n                  " + getRemoveLine(CamelCase+"-collector")},
 			nil)
 
 		CopyFile(
 			sourceFile,
 			sourceFile,
 			[]string{getRemoveLine(CamelCase + "-row-field")},
-			[]string{GetRowFieldLine(modelName, fieldName, dataType) + "\n                  " + getRemoveLine(CamelCase + "-row-field")},
+			[]string{GetRowFieldLine(modelName, fieldName, dataType) + "\n                  " + getRemoveLine(CamelCase+"-row-field")},
 			nil)
 	}
 
@@ -386,7 +383,7 @@ func addImportIfNeed(file string, module string) {
 		return
 	}
 
-	imports := []string{};
+	imports := []string{}
 
 	for _, s := range f.Imports {
 
@@ -394,10 +391,10 @@ func addImportIfNeed(file string, module string) {
 			return
 		}
 
-		imports = append(imports, "    " + s.Path.Value)
+		imports = append(imports, "    "+s.Path.Value)
 	}
 
-	imports = append(imports, "    " + module)
+	imports = append(imports, "    "+module)
 	newImports := strings.Join(imports, "\n")
 
 	newFileContent := "package " + p.Name.Name + "\n\nimport (\n" + string(input[1:f.Pos()]) + newImports + "\n)\n" + string(input[f.End():])
@@ -528,6 +525,15 @@ func (mr *ModelRepository) GetFields(modelName string, fields []Field) []Field {
 										//typeString = x.Star
 										if ident, ok := x.X.(*ast.Ident); ok { // allow subsequent panic to provide a more descriptive error
 											typeString = "*" + ident.Name
+										} else {
+											// Обработка указателей на сложные типы
+											x, ok := x.X.(*ast.SelectorExpr)
+											if !ok {
+												continue
+											}
+											if ident, ok := x.X.(*ast.Ident); ok { // allow subsequent panic to provide a more descriptive error
+												typeString = ident.Name + "." + x.Sel.Name
+											}
 										}
 									}
 								case *ast.SelectorExpr:
@@ -720,7 +726,7 @@ func getDataType(c *ishell.Context, dataTypes []string) (dataType string, err er
 	return "", errors.New("cancel")
 }
 
-func GetModelsMethods(repo ModelRepository) (map[string]HttpMethods) {
+func GetModelsMethods(repo ModelRepository) map[string]HttpMethods {
 
 	list := make(map[string]HttpMethods)
 
