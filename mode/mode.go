@@ -42,6 +42,10 @@ func (m *mode) setViewMode() {
 	m.isViewMode = true
 }
 
+func (m *mode) getViewMode() bool {
+	return m.isViewMode
+}
+
 func (m *mode) getUuidMode() bool {
 	return m.isUuidMode
 }
@@ -88,6 +92,10 @@ func SetNonUuidMode() {
 
 func SetViewMode() {
 	GetMode().setViewMode()
+}
+
+func GetViewMode() bool {
+	return GetMode().getViewMode()
 }
 
 func SetNonViewMode() {

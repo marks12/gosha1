@@ -80,7 +80,10 @@ func UsualAppInit(c *ishell.Context) {
 
 		usualCreate(c, email, password, database, isUuidMode, isViewMode)
 		usualAuthAdd(c)
-		usualCreateHtmlTemplate(c)
+
+		if mode.GetViewMode() {
+			usualCreateHtmlTemplate(c)
+		}
 
 		break
 
@@ -217,7 +220,11 @@ func usualCreate(c *ishell.Context, email, password string, databaseType Databas
 
 	//wss
 	CreateFile(usualTemplateWsserver.Path, usualTemplateWsserver.Content, c)
-	CreateFile(usualTemplateWssHandlers.Path, usualTemplateWssHandlers.Content, c)
+	if mode.GetViewMode() {
+		CreateFile(usualTemplateWssHandlersView.Path, usualTemplateWssHandlersView.Content, c)
+	} else {
+		CreateFile(usualTemplateWssHandlersNonView.Path, usualTemplateWssHandlersNonView.Content, c)
+	}
 
 	//google
 	CreateFile(usualTemplateGoogleAnalytics.Path, usualTemplateGoogleAnalytics.Content, c)
@@ -298,7 +305,7 @@ func usualCreateMain(c *ishell.Context) {
 
 	CreateFile(usualTemplateMain.Path, usualTemplateMain.Content, c)
 
-	for _, folder := range []string{
+	folders := []string{
 		"postgres",
 		"bootstrap",
 		"core",
@@ -318,9 +325,13 @@ func usualCreateMain(c *ishell.Context) {
 		"mdl",
 		"common",
 		"wsserver",
-		"view",
-		"view/form",
-	} {
+	}
+
+	if mode.GetViewMode() {
+		folders = append(folders, "view", "view/form")
+	}
+
+	for _, folder := range folders {
 		if _, err := os.Stat(folder); os.IsNotExist(err) {
 			os.Mkdir(folder, 0755)
 		}

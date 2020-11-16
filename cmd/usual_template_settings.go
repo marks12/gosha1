@@ -16,6 +16,8 @@ const FunctionTypeFindOrCreate	= "00000000-0000-0000-0000-000000000006"
 const FunctionTypeUpdateOrCreate	= "00000000-0000-0000-0000-000000000007"
 const FunctionTypeMultiFindOrCreate	= "00000000-0000-0000-0000-000000000026"
 
+const OrderDirectionDesc = "desc"
+const OrderDirectionAsc  = "asc"
 `
 
 const usualSettingsRoutes = `package settings

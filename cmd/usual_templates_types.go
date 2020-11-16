@@ -32,13 +32,32 @@ type Authenticator struct {
     Token        string
     functionType string
     urlPath      string
-    userId       {ID}
+	ip           string
+	maxPerPage   int
+	user         dbmodels.User
+	auth         dbmodels.Auth
+	userId       {ID}
     roleIds      []{ID}
     validator
 }
 
 func (auth *Authenticator) GetCurrentUserId() {ID} {
     return auth.userId
+}
+
+func (auth *Authenticator) SetIp(r *http.Request) {
+	auth.ip = r.Header.Get("X-Forwarded-For")
+}
+
+func (auth *Authenticator) GetIp() string {
+	return auth.ip
+}
+
+func (auth *Authenticator) SetMaxPerPage(i int) {
+	auth.maxPerPage = i
+}
+func (auth *Authenticator) GetMaxPerPage() int {
+	return auth.maxPerPage
 }
 
 func (auth *Authenticator) SetCurrentUserId(id {ID}) {
@@ -232,231 +251,261 @@ func (entity *Entity) Validate()  {
 const usualTypesFilter = `package types
 
 import (
-    "errors"
     "{ms-name}/settings"
-    "net/http"
-    "strings"
-    "strconv"
-    "github.com/gorilla/mux"
-    "github.com/jinzhu/gorm"
-    "net/url"
+	"errors"
+	"net/http"
+	"net/url"
+	"strconv"
+	"strings"
+	"github.com/gorilla/mux"
+	"github.com/jinzhu/gorm"
 )
 
-type FilterIds struct {
-    Ids []{ID}
-    ExceptIds []{ID}
-    CurrentId {ID}
+type GoshaFilterIds struct {
+	Ids       []int
+	ExceptIds []int
+	currentId int
 
-    validator
+	validator
 }
 
-func (filter *FilterIds) GetFirstId() ({ID}, error) {
-    for _, id := range filter.Ids {
-        return id, nil
-    }
-    return {PkNil}, errors.New("Empty array")
+func (filter *GoshaFilterIds) GetFirstId() (int, error) {
+	for _, id := range filter.Ids {
+		return id, nil
+	}
+	return 0, errors.New("Empty array")
 }
 
-func (filter *FilterIds) GetIds() []{ID} {
-    return filter.Ids
+func (filter *GoshaFilterIds) GetCurrentId() int {
+	return filter.currentId
 }
 
-func (filter *FilterIds) GetExceptIds() []{ID} {
-    return filter.ExceptIds
+func (filter *GoshaFilterIds) SetCurrentId(id int) int {
+	filter.currentId = id
+	return filter.currentId
 }
 
-func (filter *FilterIds) GetCurrentId() {ID} {
-    return filter.CurrentId
+func (filter *GoshaFilterIds) GetIds() []int {
+	return filter.Ids
 }
 
-func (filter *FilterIds) SetCurrentId(id {ID}) {ID} {
-    filter.CurrentId = id
-	return filter.CurrentId
+func (filter *GoshaFilterIds) GetExceptIds() []int {
+	return filter.ExceptIds
 }
 
-
-func (filter *FilterIds) AddId(id {ID}) *FilterIds {
-    filter.Ids = append(filter.Ids, id)
-    return filter
+func (filter *GoshaFilterIds) AddId(id int) *GoshaFilterIds {
+	filter.Ids = append(filter.Ids, id)
+	return filter
 }
 
-func (filter *FilterIds) AddExceptId(id {ID}) *FilterIds {
-    filter.ExceptIds = append(filter.ExceptIds, id)
-    return filter
+func (filter *GoshaFilterIds) AddExceptIds(id int) *GoshaFilterIds {
+	filter.ExceptIds = append(filter.ExceptIds, id)
+	return filter
 }
 
-func (filter *FilterIds) AddIds(ids []{ID}) *FilterIds {
-    for _, id := range ids {
-        filter.AddId(id)
-    }
-    return filter
+func (filter *GoshaFilterIds) AddIds(ids []int) *GoshaFilterIds {
+	for _, id := range ids {
+		filter.AddId(id)
+	}
+	return filter
 }
 
-func (filter *FilterIds) AddExceptIds(ids []{ID}) *FilterIds {
-    for _, id := range ids {
-        filter.AddExceptId(id)
-    }
-    return filter
+func (filter *GoshaFilterIds) Clear() *GoshaFilterIds {
+	filter.Ids = []int{}
+	return filter
 }
 
-func (filter *FilterIds) ClearIds() *FilterIds {
-
-    filter.Ids = []{ID}{}
-    return filter
+func (filter *GoshaFilterIds) ClearIds() *GoshaFilterIds {
+	filter.Ids = []int{}
+	return filter
 }
 
-func (filter *FilterIds) ClearExceptIds() *FilterIds {
-
-    filter.ExceptIds = []{ID}{}
-    return filter
+func (filter *GoshaFilterIds) ClearExceptId() *GoshaFilterIds {
+	filter.ExceptIds = []int{}
+	return filter
 }
 
 // method find read create update delete
-func (filter *FilterIds) Validate(functionType string) {
+func (filter *GoshaFilterIds) Validate(functionType string) {
 
-    switch functionType {
-        case settings.FunctionTypeFind:
-            break;
-        case settings.FunctionTypeCreate:
-            break;
-        case settings.FunctionTypeRead:
-            break;
-        case settings.FunctionTypeUpdate:
-            break;
-        case settings.FunctionTypeDelete:
-            break;
-        case settings.FunctionTypeFindOrCreate:
-            break;
-        case settings.FunctionTypeUpdateOrCreate:
-            break;
-        case settings.FunctionTypeMultiCreate:
-            break;
-        case settings.FunctionTypeMultiUpdate:
-            break;
-        case settings.FunctionTypeMultiDelete:
-            break;
-        default:
-            filter.validator.validationErrors = append(filter.validator.validationErrors, "Usupported method")
-            break;
-    }
+	switch functionType {
+	case settings.FunctionTypeFind:
+
+		break
+	case settings.FunctionTypeCreate:
+
+		break
+	case settings.FunctionTypeRead:
+		if len(filter.GetIds()) != 1 || filter.GetIds()[0] < 1 {
+			filter.validator.validationErrors = append(filter.validator.validationErrors, "Error parse Id")
+		}
+
+		break
+	case settings.FunctionTypeUpdate:
+		if len(filter.GetIds()) != 1 || filter.GetIds()[0] < 1 {
+			filter.validator.validationErrors = append(filter.validator.validationErrors, "Error parse Id")
+		}
+
+		break
+	case settings.FunctionTypeDelete:
+		if len(filter.GetIds()) != 1 || filter.GetIds()[0] < 1 {
+			filter.validator.validationErrors = append(filter.validator.validationErrors, "Error parse Id")
+		}
+		break
+	case settings.FunctionTypeMultiDelete:
+		break
+	case settings.FunctionTypeFindOrCreate:
+		break
+	case settings.FunctionTypeMultiCreate:
+		break
+	case settings.FunctionTypeMultiUpdate:
+		break
+	case settings.FunctionTypeUpdateOrCreate:
+		break
+	default:
+		filter.validator.validationErrors = append(filter.validator.validationErrors, "Usupported method")
+		break
+	}
 }
 
-
 type GoshaSearchFilter struct {
-
-    Search string
-    SearchBy []string
+	Search   string
+	SearchBy []string
 }
 
 type GoshaOrderFilter struct {
-
-    Order []string
-    OrderDirection []string
+	Order          []string
+	OrderDirection []string
 }
 
 type AbstractFilter struct {
+	request *http.Request
 
-    request *http.Request
-    GoshaSearchFilter
-    GoshaOrderFilter
-    FilterIds
-    Pagination
-    validator
-    Authenticator
+	GoshaSearchFilter
+	GoshaOrderFilter
+	GoshaFilterIds
+	Pagination
+	validator
+	Authenticator
 }
 
-func GetAbstractFilter(request *http.Request, functionType string) AbstractFilter {
+func GetAbstractFilter(request *http.Request, functionType string) (filter AbstractFilter, err error) {
 
-    var filter AbstractFilter
+	filter.request = request
+	filter.functionType = functionType
+	filter.urlPath = request.URL.Path
 
-    filter.request = request
-    filter.functionType = functionType
-    filter.urlPath = request.URL.Path
+	ReadJSON(filter.request, &filter)
+	ReadJSON(filter.request, &filter.GoshaFilterIds)
 
-    ReadJSON(filter.request, &filter)
-    ReadJSON(filter.request, &filter.FilterIds)
+	filter.Pagination.CurrentPage, _ = strconv.Atoi(request.FormValue("CurrentPage"))
+	filter.Pagination.PerPage, _ = strconv.Atoi(request.FormValue("PerPage"))
+	filter.Search = request.FormValue("Search")
 
-    filter.Pagination.CurrentPage, _ = strconv.Atoi(request.FormValue("CurrentPage"))
-    filter.Pagination.PerPage, _ = strconv.Atoi(request.FormValue("PerPage"))
-    filter.Search = request.FormValue("Search")
+	arr, _ := url.ParseQuery(request.URL.RawQuery)
 
-    arr, _ := url.ParseQuery(request.URL.RawQuery)
+	dirs := []string{}
 
-    dirs := []string{}
+	for _, dir := range arr["OrderDirection[]"] {
 
-    for _, dir := range arr["OrderDirection[]"] {
+		if strings.ToLower(dir) == settings.OrderDirectionDesc {
+			dirs = append(dirs, settings.OrderDirectionDesc)
+		} else {
+			dirs = append(dirs, settings.OrderDirectionAsc)
+		}
+	}
 
-        if strings.ToLower(dir) == "desc" {
-            dirs = append(dirs, "desc")
-        } else {
-            dirs = append(dirs, "asc")
-        }
-    }
+	for index, field := range arr["Order[]"] {
 
-    for index, field := range arr["Order[]"] {
+		filter.Order = append(filter.Order, gorm.ToColumnName(field))
 
-        filter.Order = append(filter.Order, gorm.ToColumnName(field))
+		if len(dirs) > index && dirs[index] == "desc" {
+			filter.OrderDirection = append(filter.OrderDirection, "desc")
+		} else {
+			filter.OrderDirection = append(filter.OrderDirection, "asc")
+		}
+	}
 
-        if len(dirs) > index && dirs[index] == "desc" {
-            filter.OrderDirection = append(filter.OrderDirection, "desc")
-        } else {
-            filter.OrderDirection = append(filter.OrderDirection, "asc")
-        }
-    }
+	if len(filter.Order) < 1 && len(filter.OrderDirection) < 1 {
+		filter.Order = append(filter.Order, "id")
+		filter.OrderDirection = append(filter.OrderDirection, "asc")
+	}
 
-    for _, field := range arr["SearchBy[]"] {
-        filter.SearchBy = append(filter.SearchBy, gorm.ToColumnName(field))
-    }
-    for _, s := range arr["Ids[]"] {
-        id, _ := {STRTOID}(s)
-        filter.AddId(id)
-    }
+	for _, field := range arr["SearchBy[]"] {
+		filter.SearchBy = append(filter.SearchBy, gorm.ToColumnName(field))
+	}
 
-    for _, s := range arr["ExceptIds[]"] {
-        id, _ := {STRTOID}(s)
-        filter.AddExceptId(id)
-    }
+	filter.SetToken(request)
+	filter.SetIp(request)
 
-    filter.SetToken(request)
+	ReadJSON(filter.request, &filter.validator)
 
-    ReadJSON(filter.request, &filter.validator)
+	vars := mux.Vars(request)
+	id, _ := strconv.Atoi(vars["id"])
 
-    vars := mux.Vars(request)
-    id, _ := {STRTOID}(vars["id"])
+	if id > 0 {
+		filter.AddId(id)
+		filter.SetCurrentId(id)
+	}
 
-    if id {GetIdIsValidExp} {
-        filter.SetCurrentId(id)
-    }
+	for _, field := range arr["Ids[]"] {
+		id, _ := strconv.Atoi(field)
+		filter.AddId(id)
+	}
+	for _, field := range arr["ExceptIds[]"] {
+		id, _ := strconv.Atoi(field)
+		filter.AddExceptIds(id)
+	}
 
-    filter.Validate(functionType)
+	filter.Validate(functionType)
 
-    return filter
+	return filter, err
 }
 
-func (filter *AbstractFilter) IsValid() bool  {
+func (filter *AbstractFilter) IsValid() bool {
 
-    return  filter.FilterIds.IsValid() &&
-        filter.Pagination.IsValid() &&
-        filter.validator.IsValid() &&
-        filter.Authenticator.IsValid()
+	return filter.GoshaFilterIds.IsValid() &&
+		filter.Pagination.IsValid() &&
+		filter.validator.IsValid() &&
+		filter.Authenticator.IsValid()
 }
 
-func (filter *AbstractFilter) Validate(functionType string)  {
+func (filter *AbstractFilter) Validate(functionType string) {
 
-    filter.FilterIds.Validate(functionType)
-    filter.Pagination.Validate(functionType)
-    filter.validator.Validate(functionType)
-    filter.Authenticator.Validate(functionType)
+	filter.GoshaFilterIds.Validate(functionType)
+	filter.Pagination.Validate(functionType)
+	filter.validator.Validate(functionType)
+	filter.Authenticator.Validate(functionType)
 }
 
-func (filter *AbstractFilter) GetValidationErrors() string  {
+func (filter *AbstractFilter) ValidatePerPage() {
+	if filter.PerPage > filter.GetMaxPerPage() {
+		filter.validationErrors = append(filter.validationErrors, "PerPage more than maximum")
+	}
+}
 
-    return strings.Join([]string{
-        filter.FilterIds.GetValidationErrors(),
-        filter.Pagination.GetValidationErrors(),
-        filter.validator.GetValidationErrors(),
-        filter.Authenticator.GetValidationErrors(),
-    }, ". ")
+func (filter *AbstractFilter) GetValidationErrors() string {
+
+	return strings.Join([]string{
+		filter.GoshaFilterIds.GetValidationErrors(),
+		filter.Pagination.GetValidationErrors(),
+		filter.validator.GetValidationErrors(),
+		filter.Authenticator.GetValidationErrors(),
+	}, ". ")
+}
+
+func (filter *AbstractFilter) GetHost() string {
+	return filter.request.Host
+}
+
+func (filter *AbstractFilter) GetCurrentIp() string {
+
+	ip := filter.request.Header.Get("X-Forwarded-For")
+	return ip
+}
+
+func (filter *AbstractFilter) GetCurrentUserAgent() string {
+	return filter.request.UserAgent()
 }
 `
 
@@ -465,6 +514,7 @@ const usualTypesRequest = `package types
 import (
     "encoding/json"
     "net/http"
+    "io"
 )
 
 // ReadJSON -
@@ -477,6 +527,8 @@ func ReadJSON(r *http.Request, entity interface{}) (err error) {
 	}
 
     defer r.Body.Close()
+
+	return
 }
 `
 
