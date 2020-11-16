@@ -554,7 +554,6 @@
                         break;
                 }
 
-
                 result.then((response) => {
                     console.log('!!!res', response);
                     this.setResponseCode(response.status);
