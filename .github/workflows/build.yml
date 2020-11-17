@@ -32,8 +32,8 @@ jobs:
         run: |
           go get -v -t -d ./...
           if [ -f Gopkg.toml ]; then
-              curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-              dep ensure
+            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            dep ensure
           fi
 
       - name: Set current release tag
@@ -63,16 +63,6 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./gosha
           asset_name: gosha
-          asset_content_type: application/octet-stream
-
-      - name: Upload Release Asset Windows
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./gosha.exe
-          asset_name: gosha.exe
           asset_content_type: application/octet-stream
 
       - name: Upload Release Asset Mac
