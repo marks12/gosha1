@@ -3,10 +3,11 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"github.com/fatih/color"
-	"gopkg.in/abiosoft/ishell.v2"
 	"gosha/mode"
 	"os"
+
+	"github.com/fatih/color"
+	"gopkg.in/abiosoft/ishell.v2"
 )
 
 const dbTypeMysql = "mysql"
@@ -80,7 +81,7 @@ func UsualAppInit(c *ishell.Context) {
 
 		usualCreate(c, email, password, database, isUuidMode, isViewMode)
 		usualAuthAdd(c)
-
+		initGoModules(c)
 		if mode.GetViewMode() {
 			usualCreateHtmlTemplate(c)
 		}
@@ -90,6 +91,11 @@ func UsualAppInit(c *ishell.Context) {
 	}
 
 	return
+}
+
+func initGoModules(c *ishell.Context) {
+	content := GetGoModContent()
+	CreateFile("./go.mod", content, c)
 }
 
 func getEmail(c *ishell.Context) (email string, err error) {
@@ -187,7 +193,7 @@ func usualCreate(c *ishell.Context, email, password string, databaseType Databas
 	green := color.New(color.FgCyan).SprintFunc()
 	red := color.New(color.FgRed).SprintFunc()
 
-	c.Println("Hello new app", green(getCurrentDirName()))
+	c.Println("Hello new app", green(GetCurrentAppName()))
 
 	usualCreateMain(c)
 

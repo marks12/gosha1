@@ -12,7 +12,7 @@ func msInit(c *ishell.Context) {
     green := color.New(color.FgCyan).SprintFunc()
     red := color.New(color.FgRed).SprintFunc()
 
-    c.Println("Hello new microservice", green(getCurrentDirName()))
+    c.Println("Hello new microservice", green(GetCurrentAppName()))
 
     msCreateMain(c)
 

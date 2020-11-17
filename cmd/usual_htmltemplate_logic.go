@@ -51,6 +51,6 @@ func usualCreateHtmlTemplate(c *ishell.Context) {
 		c)
 
 	addImportIfNeed(usualTemplateHtmlTemplateRead.Path, "fmt")
-	addImportIfNeed(usualTemplateHtmlTemplateRead.Path, getCurrentDirName() + "/view")
+	addImportIfNeed(usualTemplateHtmlTemplateRead.Path, GetCurrentAppName() + "/view")
 
 }
