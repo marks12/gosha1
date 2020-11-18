@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"github.com/google/uuid"
 	"fmt"
-	"country-api/lg"
 )
 
 var instance *sync.Map
@@ -39,7 +38,6 @@ func Run(host, port string, connTimeout, tickerTimeout time.Duration) (err error
 		if err != nil {
 			// handle error
 			fmt.Println("Error upgrade HTTP")
-			lg.Error("Error upgrade HTTP in WebSocketServer")
 			return
 		}
 

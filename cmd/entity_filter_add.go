@@ -159,7 +159,6 @@ func (mr *ModelRepository) addFilter(modelName string, fieldName string, dataTyp
         case settings.DataTypeArrayInt:
             addImportIfNeed(sourceFile, "net/url")
             addImportIfNeed(sourceFile, "strconv")
-            addImportIfNeed(sourceFile, "time")
             break
         case settings.DataTypeArrayString:
             addImportIfNeed(sourceFile, "net/url")
