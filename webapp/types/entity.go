@@ -9,23 +9,26 @@ import (
 
 
 type Field struct {
-	Name string
-	Type string
-	IsDb bool
-	IsType bool
+    Name    string
+    Type    string
+    IsDb    bool
+    IsType  bool
+    Comment string
 }
 
 type Entity struct {
-	Id int
-	Name     string
-	TypeFields	 []cmd.Field
-	ModelFields	 []cmd.Field
-	Fields	 []Field
-	IsFilter bool
+	Id          int
+	Name        string
+	TypeFields  []cmd.Field
+	ModelFields []cmd.Field
+	Fields      []Field
+	IsFilter    bool
+	Comment     string
 
-	Structures cmd.Structures
+	Structures  cmd.Structures
 	HttpMethods cmd.HttpMethods
-	HttpRoutes cmd.HttpRoutes
+	HttpRoutes  cmd.HttpRoutes
+
 	//Entity remove this line for disable generator functionality
 }
 

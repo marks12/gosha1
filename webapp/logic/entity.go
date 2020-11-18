@@ -1,13 +1,14 @@
 package logic
 
 import (
-	"github.com/jinzhu/gorm"
-	"github.com/pkg/errors"
 	"gosha/cmd"
 	"gosha/webapp/types"
 	"os"
 	"regexp"
 	"strings"
+
+	"github.com/jinzhu/gorm"
+	"github.com/pkg/errors"
 )
 
 func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords int, err error) {
@@ -39,6 +40,7 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 				Name:   field.Name,
 				Type:   field.Type,
 				IsType: true,
+				Comment: field.Comment,
 			})
 		}
 
@@ -49,6 +51,7 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 			Name:     t,
 			Fields:   fields,
 			IsFilter: isFilter,
+			Comment: existsTypes.GetModelComment(t),
 		})
 		id++
 	}
