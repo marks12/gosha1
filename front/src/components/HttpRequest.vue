@@ -385,7 +385,12 @@ export default {
 
       this.isLoadingModel = true;
 
-      return fetch(this.getRequestUrl())
+      return fetch(this.getRequestUrl(), {
+        headers: {
+          'Content-Type': 'application/json',
+          'Token': this.authToken,
+        },
+      })
       .then((res)=>{
         return res.json();
       }).catch((error)=>{
