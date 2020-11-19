@@ -109,6 +109,9 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
     if dataType == settings.DataTypeTimeLink || dataType == settings.DataTypeTime {
         addImportIfNeed(sourceFile, "time")
     }
+    if dataType == settings.DataTypeUuid {
+        addImportIfNeed(sourceFile, "github.com/google/uuid")
+    }
 
     sourceFile = "./dbmodels/" + snakeCase + ".go"
 
@@ -118,6 +121,13 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
         []string{getRemoveLine(CamelCase)},
         []string{fieldName + " " + dataType + "\n\t" + getRemoveLine(CamelCase)},
         nil)
+
+    if dataType == settings.DataTypeTimeLink || dataType == settings.DataTypeTime {
+        addImportIfNeed(sourceFile, "time")
+    }
+    if dataType == settings.DataTypeUuid {
+        addImportIfNeed(sourceFile, "github.com/google/uuid")
+    }
 
     //sourceFile = "./logic/assigner.go"
     sourceFile = "./logic/" + snakeCase + ".go"
