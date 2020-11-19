@@ -553,7 +553,7 @@ func (mr *ModelRepository) GetFields(modelName string, fields []Field) []Field {
                                 Type:     strings.Title(typeString),
                                 Name:     ft.Names[0].Name,
                                 Relation: mr.GetFieldRelation(ft),
-                                Comment:  strings.TrimSpace(ft.Comment.Text()),
+                                Comment:  strings.TrimSpace(ft.Doc.Text()),
                             })
                         } else {
 
