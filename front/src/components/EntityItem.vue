@@ -36,11 +36,8 @@
         <VSign width="M">Types</VSign>
       </VSet>
       <VSet v-else vertical>
-        <VSet class="head-row">
-          <VText :title="entityItem.Name">{{ entityItem.Name }}</VText>
-          <VSign width="M">Type</VSign>
-        </VSet>
         <VSpoiler
+            v-if="entityItem.CommentType"
             :opened="spoilerStateOpened"
             @change-spoiler-state="spoilerStateOpened = !spoilerStateOpened"
         >
@@ -64,6 +61,11 @@
             </VText>
           </template>
         </VSpoiler>
+        <VSet v-else class="head-row">
+          <VText :title="entityItem.Name">{{ entityItem.Name }}</VText>
+          <VSign width="M">Type</VSign>
+        </VSet>
+
       </VSet>
 
       <VSet v-if="!entityItem.IsFilter">
@@ -104,6 +106,8 @@
         </VButton>
 
       </VSet>
+
+
       <VSet vertical v-if="!entityItem.IsFilter">
         <template v-for="(field, i) in entityItem.Fields">
           <VSpoiler v-if="field.CommentType || field.CommentDb" style="margin-top: 0; margin-bottom: 3px;" content-indent="XS">
