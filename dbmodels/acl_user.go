@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// User entity example
 type AclUser struct {
 	ID		int	`gorm:"AUTO_INCREMENT"`
 	FirstName	string

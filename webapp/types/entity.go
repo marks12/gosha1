@@ -7,13 +7,13 @@ import (
 	"strings"
 )
 
-
 type Field struct {
-    Name    string
-    Type    string
-    IsDb    bool
-    IsType  bool
-    Comment string
+	Name    string
+	Type    string
+	IsDb    bool
+	IsType  bool
+	CommentType string
+	CommentDb string
 }
 
 type Entity struct {
@@ -23,7 +23,8 @@ type Entity struct {
 	ModelFields []cmd.Field
 	Fields      []Field
 	IsFilter    bool
-	Comment     string
+	CommentType string
+	CommentDb   string
 
 	Structures  cmd.Structures
 	HttpMethods cmd.HttpMethods
@@ -32,27 +33,26 @@ type Entity struct {
 	//Entity remove this line for disable generator functionality
 }
 
-
 func (unit *Entity) Validate() {
 
 	//Validate remove this line for disable generator functionality
 }
 
 type EntityFilter struct {
-	Cats  []int
-	model Entity
-	WithFilter bool
-	WithHiddenFields bool
-	IsFind bool
-	IsCreate bool
-	IsRead bool
-	IsUpdate bool
-	IsDelete bool
-	IsFindOrCreate bool
-	IsUpdateOrCreate bool
+	Cats                []int
+	model               Entity
+	WithFilter          bool
+	WithHiddenFields    bool
+	IsFind              bool
+	IsCreate            bool
+	IsRead              bool
+	IsUpdate            bool
+	IsDelete            bool
+	IsFindOrCreate      bool
+	IsUpdateOrCreate    bool
 	IsRegenerateJsTypes bool
-	IsUuidMode bool
-	IsViewMode bool
+	IsUuidMode          bool
+	IsViewMode          bool
 	//EntityFilter remove this line for disable generator functionality
 
 	AbstractFilter

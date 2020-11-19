@@ -6,7 +6,7 @@
                 <VSet vertical indent-size="XS">
                     <VHead level="h1">Entity</VHead>
                     <VSet>
-                        <VInput placeholder="Поиск" v-model="searchModel" @input="search"></VInput>
+                        <VInput placeholder="Search" v-model="searchModel" @input="search"></VInput>
                         <VCheckbox v-model="entityFilter.WithFilter">
                             <VText font-size="txs">Show filters</VText>
                         </VCheckbox>

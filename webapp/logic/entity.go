@@ -6,7 +6,6 @@ import (
 	"os"
 	"regexp"
 	"strings"
-
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 )
@@ -40,7 +39,7 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 				Name:   field.Name,
 				Type:   field.Type,
 				IsType: true,
-				Comment: field.Comment,
+				CommentType: field.Comment,
 			})
 		}
 
@@ -51,7 +50,7 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 			Name:     t,
 			Fields:   fields,
 			IsFilter: isFilter,
-			Comment: existsTypes.GetModelComment(t),
+			CommentType: existsTypes.GetModelComment(t),
 		})
 		id++
 	}
@@ -76,6 +75,7 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 			Id:          id,
 			Name:        t,
 			ModelFields: modelFields,
+			CommentDb: existsModels.GetModelComment(t),
 		})
 		id++
 	}
@@ -95,11 +95,17 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 						Name: emf.Name,
 						Type: emf.Type,
 						IsDb: true,
+						CommentDb: emf.Comment,
 					})
+
 				} else {
 					res[index].Fields[i].IsDb = true
+					res[index].Fields[i].CommentDb = emf.Comment
 				}
 			}
+
+			mres, _ := getExistsModel(em.Name, resModels)
+			res[index].CommentDb = mres.CommentDb
 
 		} else {
 
@@ -109,6 +115,7 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 					Name: mf.Name,
 					Type: mf.Type,
 					IsDb: true,
+					CommentDb:  mf.Comment,
 				})
 			}
 

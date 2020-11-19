@@ -15,3 +15,10 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app');
+
+Vue.filter('substring', function (value, limit) {
+  if (value.length > limit) {
+    value = value.substring(0, (limit - 3)) + '...';
+  }
+  return value
+})
