@@ -196,6 +196,7 @@ export default {
       setFilters: "setFilters",
       setBodyModel: "setBodyModel",
       setRequestUrl: "setRequestUrl",
+      setRouteUrl: "setRouteUrl",
     }),
 
     isValidJsonString(jsonString) {
@@ -441,6 +442,7 @@ export default {
     urlChanged() {
       this.$emit("changeUrl", this.serverUrl + "" + this.routeUrl);
       this.setRequestUrl(this.serverUrl + "" + this.routeUrl);
+      this.setRouteUrl(this.routeUrl);
     },
     fillServers() {
       let stored = localStorage.getItem("servers");

@@ -3,6 +3,9 @@ const request = {
         setRequestUrl(context, val) {
             context.commit("setRequestUrl", val);
         },
+        setRouteUrl(context, val) {
+            context.commit("setRouteUrl", val);
+        },
         setHeaders(context, val) {
             context.commit("setHeaders", val);
         },
@@ -29,6 +32,9 @@ const request = {
         getRequestUrl(state) {
             return state.requestUrl;
         },
+        getRouteUrl(state) {
+            return state.routeUrl;
+        },
         getHeaders: (state) => {
             return state.headers;
         },
@@ -45,6 +51,9 @@ const request = {
         },
         setRequestUrl(state, data) {
             state.requestUrl = data;
+        },
+        setRouteUrl(state, data) {
+            state.routeUrl = data;
         },
         addHeader(state, {Name, Value}) {
             state.headers[Name] = Value;
@@ -64,6 +73,7 @@ const request = {
         filters: {},
         bodyModel: {},
         requestUrl: "",
+        routeUrl: "",
     },
 };
 
