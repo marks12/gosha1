@@ -232,6 +232,7 @@ import VSpoiler from "swtui/src/components/VSpoiler";
 import VGroup from "swtui/src/components/VGroup";
 import VSelect from "swtui/src/components/VSelect";
 import VSign from "swtui/src/components/VSign";
+import VHead from "swtui/src/components/VHead";
 import EntityItem from "../components/EntityItem";
 import {mapGetters, mapActions} from 'vuex';
 import {Entity, EntityField, EntityFilter, FieldTypeFilter} from "../../../webapp/jstypes/apiModel";
@@ -279,7 +280,7 @@ function appendParams(u, params) {
 
 export default {
   name: "Entity",
-  components: {EntityRequest, EntityItem, VSpoiler, VBadge, EntityGen, VGroup, VSelect, VSign, VSet},
+  components: {EntityRequest, EntityItem, VSpoiler, VBadge, EntityGen, VGroup, VSelect, VSign, VSet, VHead},
   mixins: [
     EntityGen,
   ],
@@ -564,7 +565,7 @@ export default {
           }
 
           result = fetch(appendParams(this.getRequestUrl(), filters), {
-            method: 'POST',
+            method: 'PUT',
             headers: {Token: localStorage.getItem("authToken")},
             body: JSON.stringify(JSON.parse(this.getBodyModel())),
           });

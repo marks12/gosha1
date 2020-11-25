@@ -209,13 +209,14 @@ import VSpoiler from "swtui/src/components/VSpoiler";
 import VGroup from "swtui/src/components/VGroup";
 import VSet from "swtui/src/components/VSet";
 import VText from "swtui/src/components/VText";
+import VHead from "swtui/src/components/VHead";
 import VIcon from "swtui/src/components/VIcon";
 import VSign from "swtui/src/components/VSign";
 import WorkSpace from "swtui/src/components/WorkSpace";
 
 export default {
   name: "EntityItem",
-  components: {WorkSpace, VSpoiler, VBadge, VGroup, VSet, VText, VIcon, VSign, VButton},
+  components: {WorkSpace, VSpoiler, VBadge, VGroup, VSet, VText, VIcon, VSign, VButton, VHead},
   props: {
     entityItem: Object,
     onEdit: Function,
