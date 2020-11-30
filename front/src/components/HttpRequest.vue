@@ -425,6 +425,12 @@ export default {
           reqObject[fieldsList[item].Name] = 0;
           continue;
         }
+
+        if (["Bool"].indexOf(fieldsList[item].Type) !== -1) {
+          reqObject[fieldsList[item].Name] = false;
+          continue;
+        }
+
         if (["*Int"].indexOf(fieldsList[item].Type) !== -1) {
           reqObject[fieldsList[item].Name] = null;
           continue;
