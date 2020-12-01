@@ -42,7 +42,10 @@ type {Entity}Filter struct {
 func Get{Entity}Filter(request *http.Request, functionType string) (filter {Entity}Filter, err error) {
 
     filter.request = request
-	filter.rawRequestBody = GetRawBodyContent(request)
+	filter.rawRequestBody, err = GetRawBodyContent(request)
+    if err != nil {
+        return filter, err
+    }
     //filter.TestFilter, _ = strconv.Atoi(request.FormValue("TestFilter"))
 
     ` + getRemoveLine("Get{Entity}Filter") + `
