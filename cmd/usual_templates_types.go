@@ -3,7 +3,7 @@ package cmd
 import "gosha/mode"
 
 type TypeConfig struct {
-	IsId bool
+    IsId bool
 }
 
 var usualTypesAuthenticator = `package types
@@ -389,14 +389,19 @@ type AbstractFilter struct {
 	Authenticator
 }
 
-func GetAbstractFilter(request *http.Request, functionType string) (filter AbstractFilter, err error) {
+func GetAbstractFilter(request *http.Request, requestBody []byte, functionType string) (filter AbstractFilter, err error) {
 
 	filter.request = request
+    filter.rawRequestBody = requestBody
 	filter.functionType = functionType
 	filter.urlPath = request.URL.Path
 
-	ReadJSON(filter.request, &filter)
-	ReadJSON(filter.request, &filter.GoshaFilterIds)
+	if !isGroupFunctionType(functionType) {
+        err = ReadJSON(filter.rawRequestBody, &filter.GoshaFilterIds)
+        if err != nil {
+            return
+        }
+    }
 
 	filter.Pagination.CurrentPage, _ = strconv.Atoi(request.FormValue("CurrentPage"))
 	filter.Pagination.PerPage, _ = strconv.Atoi(request.FormValue("PerPage"))
@@ -437,8 +442,6 @@ func GetAbstractFilter(request *http.Request, functionType string) (filter Abstr
 
 	filter.SetToken(request)
 	filter.SetIp(request)
-
-	ReadJSON(filter.request, &filter.validator)
 
 	vars := mux.Vars(request)
 	id, _ := strconv.Atoi(vars["id"])
@@ -507,28 +510,41 @@ func (filter *AbstractFilter) GetCurrentIp() string {
 func (filter *AbstractFilter) GetCurrentUserAgent() string {
 	return filter.request.UserAgent()
 }
+
+func isGroupFunctionType(functionType string) bool {
+    switch functionType {
+    case settings.FunctionTypeMultiCreate, settings.FunctionTypeMultiUpdate, settings.FunctionTypeMultiDelete, settings.FunctionTypeMultiFindOrCreate:
+        return true
+    default:
+        return false
+    }
+}
 `
 
 const usualTypesRequest = `package types
 
 import (
     "encoding/json"
+    "io/ioutil"
     "net/http"
-    "io"
 )
 
-// ReadJSON -
-func ReadJSON(r *http.Request, entity interface{}) (err error) {
-
-    decoder := json.NewDecoder(r.Body)
-    err = decoder.Decode(entity)
-	if err == io.EOF {
-		err = nil
-	}
-
-    defer r.Body.Close()
-
-	return
+func GetRawBodyContent(request *http.Request) (data []byte, err error) {
+    defer request.Body.Close()
+    data, err = ioutil.ReadAll(request.Body)
+    if err == http.ErrBodyReadAfterClose {
+        err = nil
+    }
+    return
+}
+func ReadJSON(body []byte, entity interface{}) (err error) {
+    if len(body) > 0 {
+        err = json.Unmarshal(body, entity)
+    }
+    if err != nil && err.Error() == "invalid character '-' in numeric literal" {
+        err = nil
+    }
+    return
 }
 `
 
@@ -655,75 +671,75 @@ func (pagination *Pagination) Validate(functionType string) {
 
 func getUsualTemplateTypesAuthenticator(isUuidAsPk bool) template {
 
-	cont := AssignVar(
-		assignMsName(usualTypesAuthenticator),
-		"{ID}",
-		GetPKType(isUuidAsPk),
-	)
+    cont := AssignVar(
+        assignMsName(usualTypesAuthenticator),
+        "{ID}",
+        GetPKType(isUuidAsPk),
+    )
 
-	cont = AssignVar(
-		cont,
-		"{GetIdIsNotValidExp}",
-		GetIdIsNotValidExp(isUuidAsPk),
-	)
+    cont = AssignVar(
+        cont,
+        "{GetIdIsNotValidExp}",
+        GetIdIsNotValidExp(isUuidAsPk),
+    )
 
-	usualTemplateTypesAuthenticator := template{
-		Path:    "./types/authenticator.go",
-		Content: cont,
-	}
-	return usualTemplateTypesAuthenticator
+    usualTemplateTypesAuthenticator := template{
+        Path:    "./types/authenticator.go",
+        Content: cont,
+    }
+    return usualTemplateTypesAuthenticator
 }
 
 var usualTemplateTypesEntity = template{
-	Path:    "./types/entity.go",
-	Content: usualTypesEntity,
+    Path:    "./types/entity.go",
+    Content: usualTypesEntity,
 }
 
 func getUsualTemplateTypesFilter(isUuidAsPk bool) template {
 
-	tpl := AssignVar(
-		assignMsName(usualTypesFilter),
-		"{ID}",
-		GetPKType(isUuidAsPk),
-	)
+    tpl := AssignVar(
+        assignMsName(usualTypesFilter),
+        "{ID}",
+        GetPKType(isUuidAsPk),
+    )
 
-	tpl = AssignVar(
-		tpl,
-		"{STRTOID}",
-		GetStrToIdFuncName(isUuidAsPk),
-	)
+    tpl = AssignVar(
+        tpl,
+        "{STRTOID}",
+        GetStrToIdFuncName(isUuidAsPk),
+    )
 
-	tpl = AssignVar(
-		tpl,
-		"{PkNil}",
-		GetIdNil(isUuidAsPk),
-	)
+    tpl = AssignVar(
+        tpl,
+        "{PkNil}",
+        GetIdNil(isUuidAsPk),
+    )
 
-	tpl = AssignVar(
-		tpl,
-		"{GetIdIsValidExp}",
-		GetIdIsValidExp(isUuidAsPk),
-	)
+    tpl = AssignVar(
+        tpl,
+        "{GetIdIsValidExp}",
+        GetIdIsValidExp(isUuidAsPk),
+    )
 
-	usualTemplateTypesFilter := template{
-		Path:    "./types/filter.go",
-		Content: tpl,
-	}
+    usualTemplateTypesFilter := template{
+        Path:    "./types/filter.go",
+        Content: tpl,
+    }
 
-	return usualTemplateTypesFilter
+    return usualTemplateTypesFilter
 }
 
 var usualTemplateTypesRequest = template{
-	Path:    "./types/request.go",
-	Content: usualTypesRequest,
+    Path:    "./types/request.go",
+    Content: usualTypesRequest,
 }
 
 var usualTemplateTypesResponse = template{
-	Path:    "./types/response.go",
-	Content: assignMsName(usualTypesResponse),
+    Path:    "./types/response.go",
+    Content: assignMsName(usualTypesResponse),
 }
 
 var usualTemplateTypesValidator = template{
-	Path:    "./types/validator.go",
-	Content: assignMsName(usualTypesValidator),
+    Path:    "./types/validator.go",
+    Content: assignMsName(usualTypesValidator),
 }

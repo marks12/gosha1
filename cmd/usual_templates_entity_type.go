@@ -4,15 +4,15 @@ import "gosha/mode"
 
 func GetUsualTemplateTypeContent(cfg TypeConfig) string {
 
-	uuidImport := ""
+    uuidImport := ""
 
-	if mode.GetUuidMode() {
-		uuidImport = `
+    if mode.GetUuidMode() {
+        uuidImport = `
     "github.com/google/uuid"
 `
-	}
+    }
 
-	var usualWebappEntityType = `package types
+    var usualWebappEntityType = `package types
 
 import (
     "net/http"
@@ -42,26 +42,27 @@ type {Entity}Filter struct {
 func Get{Entity}Filter(request *http.Request, functionType string) (filter {Entity}Filter, err error) {
 
     filter.request = request
+	filter.rawRequestBody = GetRawBodyContent(request)
     //filter.TestFilter, _ = strconv.Atoi(request.FormValue("TestFilter"))
 
     ` + getRemoveLine("Get{Entity}Filter") + `
 
     switch functionType {
     case settings.FunctionTypeMultiCreate, settings.FunctionTypeMultiUpdate, settings.FunctionTypeMultiDelete, settings.FunctionTypeMultiFindOrCreate:
-        err = ReadJSON(request, &filter.list)
+        err = ReadJSON(filter.rawRequestBody, &filter.list)
 		if err != nil {
 			return
 		}
         break
     default:
-        err = ReadJSON(request, &filter.model)
+        err = ReadJSON(filter.rawRequestBody, &filter.model)
 		if err != nil {
 			return
 		}
         break
     }
 
-    filter.AbstractFilter, err = GetAbstractFilter(request, functionType)
+    filter.AbstractFilter, err = GetAbstractFilter(request, filter.rawRequestBody, functionType)
 
     return  filter, err
 }
@@ -94,18 +95,18 @@ func (filter *{Entity}Filter) Set{Entity}Model(typeModel {Entity}) {
 }
 `
 
-	return assignMsName(usualWebappEntityType)
+    return assignMsName(usualWebappEntityType)
 }
 
 func getTypeId(config TypeConfig) string {
 
-	if config.IsId {
+    if config.IsId {
 
-		if mode.GetUuidMode() {
-			return `Id uuid.UUID`
-		}
-		return `Id   int`
-	}
+        if mode.GetUuidMode() {
+            return `Id uuid.UUID`
+        }
+        return `Id   int`
+    }
 
-	return ""
+    return ""
 }
