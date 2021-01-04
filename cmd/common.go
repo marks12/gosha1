@@ -230,6 +230,8 @@ func CreateFile(file, content string, c *ishell.Context) (err error) {
         os.MkdirAll(dir, 0755)
     }
 
+    content = assignMsName(content)
+
     err = ioutil.WriteFile(file, []byte(content), fmode)
 
     if err != nil {
