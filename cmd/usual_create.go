@@ -291,6 +291,10 @@ func usualCreate(c *ishell.Context, email, password string, databaseType Databas
 	//flags
 	CreateFile(usualTemplateFlags.Path, usualTemplateFlags.Content, c)
 
+	//errors
+	CreateFile(usualTemplateErrorCodes.Path, usualTemplateErrorCodes.Content, c)
+	CreateFile(usualTemplateError.Path, usualTemplateError.Content, c)
+
 	////ms folder
 	//CreateFile(msTemplateMsTicket.Path, msTemplateMsTicket.Content, c)
 

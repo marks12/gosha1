@@ -14,6 +14,7 @@ import (
     "{ms-name}/flags"
     "{ms-name}/settings"
     "{ms-name}/common"
+    "{ms-name}/errors"
     "net/http"
     "strings"
 )
@@ -220,7 +221,7 @@ func (authenticator *Authenticator) Validate(functionType string) {
     case settings.FunctionTypeMultiDelete:
         break
     default:
-        authenticator.validator.validationErrors = append(authenticator.validator.validationErrors, "Unsupported function type: "+functionType)
+        authenticator.validator.AddValidationError("Unsupported function type: " + functionType, errors.ErrorCodeUnsupportedFunctionType, "")
         break;
     }
 }
@@ -252,7 +253,7 @@ const usualTypesFilter = `package types
 
 import (
     "{ms-name}/settings"
-	"errors"
+    "{ms-name}/errors"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -337,19 +338,17 @@ func (filter *GoshaFilterIds) Validate(functionType string) {
 		break
 	case settings.FunctionTypeRead:
 		if len(filter.GetIds()) != 1 || filter.GetIds()[0] < 1 {
-			filter.validator.validationErrors = append(filter.validator.validationErrors, "Error parse Id")
+			filter.AddValidationError("Error parse Id", errors.ErrorCodeParseId, "Id")
 		}
-
 		break
 	case settings.FunctionTypeUpdate:
 		if len(filter.GetIds()) != 1 || filter.GetIds()[0] < 1 {
-			filter.validator.validationErrors = append(filter.validator.validationErrors, "Error parse Id")
+			filter.AddValidationError("Error parse Id", errors.ErrorCodeParseId, "Id")
 		}
-
 		break
 	case settings.FunctionTypeDelete:
 		if len(filter.GetIds()) != 1 || filter.GetIds()[0] < 1 {
-			filter.validator.validationErrors = append(filter.validator.validationErrors, "Error parse Id")
+			filter.AddValidationError("Error parse Id", errors.ErrorCodeParseId, "Id")
 		}
 		break
 	case settings.FunctionTypeMultiDelete:
@@ -363,7 +362,7 @@ func (filter *GoshaFilterIds) Validate(functionType string) {
 	case settings.FunctionTypeUpdateOrCreate:
 		break
 	default:
-		filter.validator.validationErrors = append(filter.validator.validationErrors, "Usupported method")
+		filter.AddValidationError("Unsupported function type: "+functionType, errors.ErrorCodeUnsupportedFunctionType, "")
 		break
 	}
 }
@@ -378,8 +377,21 @@ type GoshaOrderFilter struct {
 	OrderDirection []string
 }
 
+type GoshaDebugFilter struct {
+	isDebug bool
+}
+
+func (filter *GoshaDebugFilter) SetDebug(isDebug bool) {
+	filter.isDebug = isDebug
+}
+
+func (filter GoshaDebugFilter) IsDebug() bool {
+	return filter.isDebug
+}
+
 type AbstractFilter struct {
 	request *http.Request
+	rawRequestBody []byte
 
 	GoshaSearchFilter
 	GoshaOrderFilter
@@ -387,6 +399,7 @@ type AbstractFilter struct {
 	Pagination
 	validator
 	Authenticator
+	GoshaDebugFilter
 }
 
 func GetAbstractFilter(request *http.Request, requestBody []byte, functionType string) (filter AbstractFilter, err error) {
@@ -406,6 +419,9 @@ func GetAbstractFilter(request *http.Request, requestBody []byte, functionType s
 	filter.Pagination.CurrentPage, _ = strconv.Atoi(request.FormValue("CurrentPage"))
 	filter.Pagination.PerPage, _ = strconv.Atoi(request.FormValue("PerPage"))
 	filter.Search = request.FormValue("Search")
+
+	isDebug, _ := strconv.ParseBool(request.FormValue("IsDebug"))
+	filter.GoshaDebugFilter.SetDebug(isDebug)
 
 	arr, _ := url.ParseQuery(request.URL.RawQuery)
 
@@ -481,20 +497,17 @@ func (filter *AbstractFilter) Validate(functionType string) {
 	filter.Authenticator.Validate(functionType)
 }
 
-func (filter *AbstractFilter) ValidatePerPage() {
-	if filter.PerPage > filter.GetMaxPerPage() {
-		filter.validationErrors = append(filter.validationErrors, "PerPage more than maximum")
-	}
+func (filter *AbstractFilter) GetValidationError() error {
+	return errors.JoinValidatorError(filter.GoshaFilterIds.GetValidationError(),
+		filter.Pagination.GetValidationError(),
+		filter.validator.GetValidationError(),
+		filter.Authenticator.GetValidationError())
 }
 
-func (filter *AbstractFilter) GetValidationErrors() string {
-
-	return strings.Join([]string{
-		filter.GoshaFilterIds.GetValidationErrors(),
-		filter.Pagination.GetValidationErrors(),
-		filter.validator.GetValidationErrors(),
-		filter.Authenticator.GetValidationErrors(),
-	}, ". ")
+func (filter *AbstractFilter) ValidatePerPage() {
+	if filter.PerPage > filter.GetMaxPerPage() {
+		filter.AddValidationError("PerPage more than maximum", errors.ErrorCodeInvalidPerPage, "PerPage")
+	}
 }
 
 func (filter *AbstractFilter) GetHost() string {
@@ -519,6 +532,7 @@ func isGroupFunctionType(functionType string) bool {
         return false
     }
 }
+
 `
 
 const usualTypesRequest = `package types
@@ -551,22 +565,25 @@ func ReadJSON(body []byte, entity interface{}) (err error) {
 const usualTypesValidator = `package types
 
 import (
-    "strings"
     "{ms-name}/settings"
+    "{ms-name}/errors"
 )
 
 type validator struct {
-    validationErrors	[]string
+    validationError errors.ValidatorError
 }
 
 func (val *validator) IsValid() bool {
 
-    return len(val.validationErrors) < 1
+    return val.validationError.IsEmpty()
 }
 
-func (val *validator) GetValidationErrors() string {
+func (val *validator) GetValidationError() errors.ValidatorErrorInterface {
+    return &val.validationError
+}
 
-    return strings.Join(val.validationErrors, ". ")
+func (val *validator) AddValidationError(err string, code errors.ErrorCode, field string) {
+    val.validationError.AddError(errors.NewErrorWithCode(err, code, field))
 }
 
 func (val *validator) Validate(functionType string) {
@@ -598,17 +615,17 @@ func (val *validator) Validate(functionType string) {
         break
 
     default:
-        val.validationErrors = append(val.validationErrors, "Usupported function type: " + functionType)
+        val.AddValidationError("Unsupported function type: "+functionType, errors.ErrorCodeUnsupportedFunctionType, "")
         break
     }
 }
-
 `
 
 const usualTypesResponse = `package types
 
 import (
 	"{ms-name}/settings"
+	"{ms-name}/errors"
 )
 
 type APIStatus struct {
@@ -616,17 +633,24 @@ type APIStatus struct {
 }
 
 type APIError struct {
-	Error bool
+	Error  bool
+	Errors []Error
+}
+
+type Error struct {
 	ErrorMessage string
+	ErrorCode    int
+	Field        string `+"`" + `json:"Field,omitempty"`+"`" + `
+	ErrorDebug   string `+"`" + `json:"ErrorDebug,omitempty"`+"`" + `
 }
 
 type Pagination struct {
-
-	CurrentPage		int
-	PerPage			int
+	CurrentPage int
+	PerPage     int
 
 	validator
 }
+
 
 func (pagination *Pagination) GetOffset() int {
 	return (pagination.CurrentPage - 1) * pagination.PerPage
@@ -639,11 +663,11 @@ func (pagination *Pagination) Validate(functionType string) {
 	case settings.FunctionTypeFind:
 
 		if pagination.CurrentPage < 1 {
-			pagination.validator.validationErrors = append(pagination.validator.validationErrors, "CurrentPage parameter is not set")
+			pagination.AddValidationError("CurrentPage parameter is not set", errors.ErrorCodeInvalidCurrentPage,"CurrentPage")
 		}
 
 		if pagination.PerPage < 1 {
-			pagination.validator.validationErrors = append(pagination.validator.validationErrors, "PerPage parameter is not set")
+			pagination.AddValidationError("PerPage parameter is not set", errors.ErrorCodeInvalidPerPage,"PerPage")
 		}
 
 		break
@@ -663,7 +687,7 @@ func (pagination *Pagination) Validate(functionType string) {
 		break
 
 	default:
-		pagination.validator.validationErrors = append(pagination.validator.validationErrors, "Usupported function type: " + functionType)
+		pagination.validator.AddValidationError("Usupported function type: " + functionType, errors.ErrorCodeUnsupportedFunctionType, "")
 		break
 	}
 }

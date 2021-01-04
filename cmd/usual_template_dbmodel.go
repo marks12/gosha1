@@ -29,19 +29,25 @@ func (entity *Entity) FillFromRequest(request types.Entity) {
 
 const usualDbmodelValidator = `package dbmodels
 
-import "strings"
+import (
+	"{ms-name}/errors"
+)
 
 type validator struct {
-    validationErrors	[]string
+	validationError errors.ValidatorError
 }
 
 func (val *validator) IsValid() bool {
-    return len(val.validationErrors) < 1
+
+	return val.validationError.IsEmpty()
 }
 
-func (val *validator) GetValidationErrors() string {
+func (val *validator) GetValidationError() errors.ValidatorErrorInterface {
+	return &val.validationError
+}
 
-    return strings.Join(val.validationErrors, ". ")
+func (val *validator) AddValidationError(err string, code errors.ErrorCode, field string) {
+	val.validationError.AddError(errors.NewErrorWithCode(err, code, field))
 }
 `
 

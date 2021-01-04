@@ -217,31 +217,34 @@ func fillUser(c *ishell.Context) {
     ` + getRemoveLine("User")},
 		c)
 
+	path := "dbmodels/user.go"
 	CopyFile(
-		"dbmodels/user.go",
-		"dbmodels/user.go",
+		path,
+		path,
 		[]string{getRemoveLine("Validate")},
 		[]string{`
 
     if len(user.FirstName) < 1 {
-        user.validationErrors = append(user.validationErrors, "User first name is empty")
+        user.AddValidationError("User first name is empty", errors.ErrorCodeFieldLengthTooShort, "FirstName")
     }
 
     if len(user.LastName) < 1 {
-        user.validationErrors = append(user.validationErrors, "User last name is empty")
+        user.AddValidationError("User last name is empty", errors.ErrorCodeFieldLengthTooShort, "LastName")
     }
 
     if len(user.Email) < 3 || ! common.ValidateEmail(user.Email)  {
-        user.validationErrors = append(user.validationErrors, "User email not valid")
+        user.AddValidationError("User email not valid", errors.ErrorCodeNotValid, "Email")
     }
 
     if len(user.MobilePhone) > 3 &&  ! common.ValidateMobile(user.MobilePhone)  {
-        user.validationErrors = append(user.validationErrors, "User mobile phone should be valid or empty. Format +0123456789... ")
+        user.AddValidationError("User mobile phone should be valid or empty. Format +0123456789... ", errors.ErrorCodeNotValid, "MobilePhone")
     }
 
     `+ getRemoveLine("Validate") + `
 `},
 		c)
+	addImportIfNeed(path, GetCurrentAppName() + "/errors")
+
 }
 
 func fillAuth(c *ishell.Context) {
@@ -295,21 +298,23 @@ func fillAuth(c *ishell.Context) {
 	` + assignMsName(`"{ms-name}/common"`)},
 		c)
 
+	path := "dbmodels/auth.go"
 	CopyFile(
-		"dbmodels/auth.go",
-		"dbmodels/auth.go",
+		path,
+		path,
 		[]string{getRemoveLine("Validate")},
 		[]string{
-			`if len(auth.Email) < 3 || ! common.ValidateEmail(auth.Email)  {
-        auth.validationErrors = append(auth.validationErrors, "User email not valid")
+			`    if len(auth.Email) < 3 || ! common.ValidateEmail(auth.Email)  {
+        auth.AddValidationError("User email not valid", errors.ErrorCodeFieldLengthTooShort, "Email")
     }
 
     if len(auth.Password) < 1 {
-        auth.validationErrors = append(auth.validationErrors, "User password is empty")
+        auth.AddValidationError("User password is empty", errors.ErrorCodeNotEmpty, "Password")
     }
 
     `+ getRemoveLine("Validate")},
 		c)
+	addImportIfNeed(path, GetCurrentAppName() + "/errors")
 
 
 	CopyFile(

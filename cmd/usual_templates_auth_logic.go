@@ -73,7 +73,7 @@ func AuthCreate(filter types.AuthFilter, query *gorm.DB) (data types.Auth, err e
     } else {
 
         fmt.Println("AuthCreate > Invalid data:", dbAuth)
-        return types.Auth{}, errors.New(dbAuth.GetValidationErrors())
+        return types.Auth{}, dbAuth.GetValidationError()
     }
 }
 
