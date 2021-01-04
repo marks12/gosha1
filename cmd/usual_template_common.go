@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"reflect"
 	"runtime"
+	"strconv"
 )
 
 func ValidateEmail(email string) bool {
@@ -94,6 +95,63 @@ func MyCaller() string {
 	// Skip GetCallerFunctionName and the function to get the caller of
 	return getFrame(2).Function
 }
+
+
+func UniqueStringArray(slice []string) []string {
+	// create a map with all the values as key
+	uniqMap := make(map[string]struct{})
+	for _, v := range slice {
+		uniqMap[v] = struct{}{}
+	}
+
+	// turn the map keys into a slice
+	uniqSlice := make([]string, 0, len(uniqMap))
+	for v := range uniqMap {
+		uniqSlice = append(uniqSlice, v)
+	}
+	return uniqSlice
+}
+
+func UniqueIntArray(slice []int) []int {
+	// create a map with all the values as key
+	uniqMap := make(map[int]struct{})
+	for _, v := range slice {
+		uniqMap[v] = struct{}{}
+	}
+
+	// turn the map keys into a slice
+	uniqSlice := make([]int, 0, len(uniqMap))
+	for v := range uniqMap {
+		uniqSlice = append(uniqSlice, v)
+	}
+	return uniqSlice
+}
+
+func ReverseBytes(in []byte) []byte {
+	res := []byte{}
+
+	for i := len(in) - 1; i >= 0; i-- {
+		res = append(res, in[i])
+	}
+	return res
+}
+
+func IntArrayToStringArray(in []int) (res []string) {
+	for _, val := range in {
+		res = append(res, strconv.Itoa(val))
+	}
+	return
+}
+
+func StringArrayToIntArray(in []string) (res []int) {
+	for _, val := range in {
+		if v, err := strconv.Atoi(val); err == nil {
+			res = append(res, v)
+		}
+	}
+	return
+}
+
 `
 
 const usualCommonGenerator = `package common

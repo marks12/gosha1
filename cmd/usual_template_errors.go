@@ -3,7 +3,7 @@ package cmd
 const usualErrorCode = `
 package errors
 
-const DefaultErrorLanguageId = 10
+const DefaultErrorLanguageId = 1
 
 // Error codes
 const (
@@ -15,6 +15,7 @@ const (
 	ErrorCodeInvalidPerPage                     ErrorCode = 500
 	ErrorCodeRabbitQueueNameNotSet              ErrorCode = 600
 	ErrorCodeNotValid                           ErrorCode = 700
+	ErrorCodeSqlError                           ErrorCode = 750
 	ErrorCodeInvalidCurrentPage                 ErrorCode = 800
 	ErrorCodeNotEmpty                           ErrorCode = 900
 	ErrorCodeAgeToSmall                         ErrorCode = 1000
@@ -31,6 +32,7 @@ const (
 	ErrorEnMessageInvalidPerPage                     = "Invalid PerPage"
 	ErrorEnMessageRabbitQueueNameNotSet              = "RabbitQueueName not set for application"
 	ErrorEnMessageNotValid                           = "Field not valid"
+	ErrorEnMessageSqlError                           = "Sql error"
 	ErrorEnMessageInvalidCurrentPage                 = "Invalid CurrentPage"
 	ErrorEnMessageNotEmpty                           = "Field in not empty"
 	ErrorEnMessageAgeToSmall                         = "You must be over 14 years old"

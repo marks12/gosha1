@@ -28,6 +28,8 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
 
     criteria := core.Db.Where(dbmodels.{Entity}{})
 
+	//{Entity}.FindFilterCode remove this line for disable generator functionality
+
     if len(filterIds) > 0 {
         criteria = criteria.Where("id in (?)", filterIds)
     }
@@ -47,7 +49,7 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
     //            if core.Db.NewScope(&dbmodels.{Entity}{}).HasColumn(field) {
     //                criteria = criteria.Or("` + "`" + `"+field+"` + "`" + `"+" ilike ?", s)
     //            } else {
-    //                err = errors.New("Search by unknown field " + field)
+    //                err = errors.NewErrorWithCode("Search by unknown field", errors.ErrorCodeNotValid ,field)
     //                return
     //            }
     //        }
@@ -69,7 +71,7 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
              if core.Db.NewScope(&dbmodels.{Entity}{}).HasColumn(Field) {
                 criteria = criteria.Order("\"" + strings.ToLower(Field) + "\"" + " " + filter.OrderDirection[index])
             } else {
-                err = errors.New("Ordering by unknown Field " + Field)
+				err = errors.NewErrorWithCode("Ordering by unknown Field", errors.ErrorCodeNotValid ,Field)
                 return
             }
         }
@@ -165,7 +167,7 @@ func {Entity}Create(filter types.{Entity}Filter, query *gorm.DB)  (data types.{E
 
     if query.Error != nil {
         fmt.Println("{Entity}Create > Create {Entity} error:", query.Error)
-        return types.{Entity}{}, errors.New("cant create {Entity}")
+        return types.{Entity}{}, errors.NewErrorWithCode("cant create {Entity}", errors.ErrorCodeSqlError, "")
     }
 
     return Assign{Entity}TypeFromDb(dbModel), nil
@@ -194,7 +196,7 @@ func {Entity}Read(filter types.{Entity}Filter)  (data types.{Entity}, err error)
         return findData[0], nil
     }
 
-    return types.{Entity}{}, errors.New("Not found")
+    return types.{Entity}{}, errors.NewErrorWithCode("Not found", errors.ErrorCodeNotFound, "")
 }
 `
 
@@ -261,7 +263,7 @@ func {Entity}Update(filter types.{Entity}Filter, query *gorm.DB)  (data types.{E
     existsModel, err := {Entity}Read(filter)
 
     if existsModel.Id ` + GetIdIsNotValidExp(mode.GetUuidMode()) + ` || err != nil {
-        err = errors.New("{Entity} not found in db with id: " + ` + GetPkAsString("filter.GetCurrentId()", mode.GetUuidMode()) + `)
+        err = errors.NewErrorWithCode("{Entity} not found in db with id: " + ` + GetPkAsString("filter.GetCurrentId()", mode.GetUuidMode()) + `, errors.ErrorCodeNotFound, "Id")
         return
     }
 
@@ -360,7 +362,7 @@ func {Entity}Delete(filter types.{Entity}Filter, query *gorm.DB)  (isOk bool, er
     if existsModel.Id {GetIdIsNotValidExp} || err != nil {
 
         if err != nil {
-            err = errors.New("{Entity} not found in db with id: " + ` + GetPkAsString("filter.GetCurrentId()", mode.GetUuidMode()) + `)
+            err = errors.NewErrorWithCode("{Entity} not found in db with id: " + ` + GetPkAsString("filter.GetCurrentId()", mode.GetUuidMode()) + `, errors.ErrorCodeNotFound, "")
         }
         return
     }
@@ -490,7 +492,7 @@ func getUsualEntityLogicHeader(isWoModels bool) (header string) {
         "log"
         "fmt"
         "{ms-name}/core"
-        "errors"
+        "{ms-name}/errors"
         "{ms-name}/dbmodels"
 		"strings"` + "\n"
 	}

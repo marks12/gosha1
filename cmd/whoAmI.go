@@ -300,7 +300,8 @@ func setModelFilterAdd() {
             "NIM:" +
             "--entity=SomeName2" +
             "--filter=SomeFilter" +
-            "--data-type=string",
+            "--data-type=string" +
+            "--sql-field=string",
         Func: entityFilterdAdd,
     })
 }

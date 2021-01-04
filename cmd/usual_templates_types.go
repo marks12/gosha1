@@ -393,6 +393,7 @@ type AbstractFilter struct {
 	request *http.Request
 	rawRequestBody []byte
 
+    Regionality
 	GoshaSearchFilter
 	GoshaOrderFilter
 	GoshaFilterIds

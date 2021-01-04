@@ -19,6 +19,7 @@ func GetExistsFilters() (repo ModelRepository) {
 func entityFilterdAdd(c *ishell.Context) {
 
     var filter string
+    var sqlField string
     var entity string
     var err error
     var reg RegularFind
@@ -96,6 +97,15 @@ func entityFilterdAdd(c *ishell.Context) {
         filter, err = getName(c, false, "filter")
     }
 
+    if mode.IsNonInteractive() {
+
+        reg, err = GetOsArgument("sql-field")
+        sqlField = reg.StringResult
+
+    } else {
+        sqlField, err = getName(c, false, "sql-field")
+    }
+
     if err != nil {
         return
     }
@@ -108,12 +118,12 @@ func entityFilterdAdd(c *ishell.Context) {
         return
     }
 
-    existsModels.addFilter(entity, filter, dataType)
+    existsModels.addFilter(entity, filter, dataType, sqlField)
 
     defer clearEntities(existsModels)
 }
 
-func (mr *ModelRepository) addFilter(modelName string, fieldName string, dataType string) (err error) {
+func (mr *ModelRepository) addFilter(modelName string, fieldName string, dataType string, specialSqlField string) (err error) {
 
     fmt.Println("adding new filter to model: ", modelName, "filter: ", fieldName, "type:", dataType)
 
@@ -121,6 +131,7 @@ func (mr *ModelRepository) addFilter(modelName string, fieldName string, dataTyp
     snakeCase := getLowerCase(modelName)
 
     base_snake := strings.Replace(snakeCase, "_filter", "", 1)
+    BaseCamel := strings.Replace(CamelCase, "Filter", "", 1)
 
     sourceFile := "./types/" + base_snake + ".go"
 
@@ -137,6 +148,43 @@ func (mr *ModelRepository) addFilter(modelName string, fieldName string, dataTyp
         []string{getRemoveLine("Get" + CamelCase)},
         []string{getFilterGetter(fieldName, dataType) + "\n\t" + getRemoveLine("Get"+CamelCase)},
         nil)
+
+    filterCode := ""
+
+    switch dataType {
+        case settings.DataTypeArrayInt, settings.DataTypeArrayBytes, settings.DataTypeArrayString, settings.DataTypeString, settings.DataTypeUuid:
+
+            fieldSnakeCase := getLowerCase(fieldName)
+
+            preComment := "//"
+            if len(specialSqlField) > 0 {
+                preComment = ""
+                fieldSnakeCase = specialSqlField
+            }
+
+            filterCode = `if len(filter.` + fieldName + `) > 0 {
+        ` + preComment + `criteria = criteria.Where("` + fieldSnakeCase + ` in (?)", filter.` + fieldName + `)
+    }`
+
+        break
+        case settings.DataTypeInt, settings.DataTypeFloat64:
+
+        break
+
+    }
+
+    if len(filterCode) > 0 {
+
+        path := "./logic/" + base_snake + ".go"
+        line := getRemoveLine(BaseCamel + ".FindFilterCode")
+
+        CopyFile(
+            path,
+            path,
+            []string{line},
+            []string{filterCode + "\n\t" + line},
+            nil)
+    }
 
     switch dataType {
 

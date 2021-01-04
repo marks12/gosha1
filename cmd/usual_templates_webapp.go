@@ -15,6 +15,7 @@ import (
 
 type FilterInterface interface {
     IsDebug() bool
+    GetLanguageId() int
 }
 
 func Bad(w http.ResponseWriter, requestDto FilterInterface, err error) {

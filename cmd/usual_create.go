@@ -82,6 +82,8 @@ func UsualAppInit(c *ishell.Context) {
 		usualCreate(c, email, password, database, isUuidMode, isViewMode)
 		usualAuthAdd(c)
 		initGoModules(c)
+		addTranslate(c)
+		addRegionLang(c)
 		if mode.GetViewMode() {
 			usualCreateHtmlTemplate(c)
 		}
@@ -96,6 +98,64 @@ func UsualAppInit(c *ishell.Context) {
 func initGoModules(c *ishell.Context) {
 	content := GetGoModContent()
 	CreateFile("./go.mod", content, c)
+}
+
+func addTranslate(c *ishell.Context) {
+
+	argsBak := os.Args
+
+	os.Args = append(os.Args, "--entity=TranslateError")
+	os.Args = append(os.Args,"--check-auth=fcruda")
+	usualEntityAdd(c)
+	os.Args = os.Args[:len(os.Args)-2]
+
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=TranslateError", "--Field=Code", "--data-type=int"}
+	entityFieldAdd(c)
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=TranslateError", "--Field=LanguageCode", "--data-type=string"}
+	entityFieldAdd(c)
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=TranslateError", "--Field=Translate", "--data-type=string"}
+	entityFieldAdd(c)
+
+	os.Args = argsBak
+
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FILTER, "--entity=TranslateErrorFilter", "--filter=ErrorCodes", "--data-type=[]int", "--sql-field=code"}
+	entityFilterdAdd(c)
+
+	os.Args = argsBak
+
+	return
+}
+
+func addRegionLang(c *ishell.Context) {
+
+	argsBak := os.Args
+
+	os.Args = append(os.Args, "--entity=Region")
+	os.Args = append(os.Args,"--check-auth=fcruda")
+	usualEntityAdd(c)
+	os.Args = os.Args[:len(os.Args)-2]
+
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Region", "--Field=Name", "--data-type=int"}
+	entityFieldAdd(c)
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Region", "--Field=Code", "--data-type=string"}
+	entityFieldAdd(c)
+
+	os.Args = argsBak
+
+	os.Args = append(os.Args, "--entity=Language")
+	os.Args = append(os.Args,"--check-auth=fcruda")
+	usualEntityAdd(c)
+
+	os.Args = argsBak
+
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Language", "--Field=Name", "--data-type=int"}
+	entityFieldAdd(c)
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Language", "--Field=Code", "--data-type=string"}
+	entityFieldAdd(c)
+
+	os.Args = argsBak
+
+	return
 }
 
 func getEmail(c *ishell.Context) (email string, err error) {
@@ -290,6 +350,9 @@ func usualCreate(c *ishell.Context, email, password string, databaseType Databas
 
 	//flags
 	CreateFile(usualTemplateFlags.Path, usualTemplateFlags.Content, c)
+
+	//Regionality
+	CreateFile(usualTemplateRegionality.Path, usualTemplateRegionality.Content, c)
 
 	//errors
 	CreateFile(usualTemplateErrorCodes.Path, usualTemplateErrorCodes.Content, c)
