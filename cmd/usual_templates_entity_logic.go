@@ -45,14 +45,14 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
     //        for _, field := range filter.SearchBy {
     //
     //            if core.Db.NewScope(&dbmodels.{Entity}{}).HasColumn(field) {
-    //                criteria = criteria.Or("` + "`" + `"+field+"` + "`" + `"+" like ?", s)
+    //                criteria = criteria.Or("` + "`" + `"+field+"` + "`" + `"+" ilike ?", s)
     //            } else {
     //                err = errors.New("Search by unknown field " + field)
     //                return
     //            }
     //        }
     //    } else {
-    //      criteria = criteria.Where("name like ? or code like ?", ("%" + filter.Search + "%"), ("%" + filter.Search + "%"))
+    //      criteria = criteria.Where("name ilike ? or code ilike ?", ("%" + filter.Search + "%"), ("%" + filter.Search + "%"))
     //    }
     //}
 
@@ -158,7 +158,7 @@ func {Entity}Create(filter types.{Entity}Filter, query *gorm.DB)  (data types.{E
 
     if ! dbModel.IsValid() {
         fmt.Println("{Entity}Create > Create {Entity} error:", dbModel)
-        return types.{Entity}{}, errors.New(dbModel.GetValidationErrors())
+        return types.{Entity}{}, dbModel.GetValidationError()
     }
 
     query = query.Create(&dbModel)
@@ -277,7 +277,7 @@ func {Entity}Update(filter types.{Entity}Filter, query *gorm.DB)  (data types.{E
     updateModel.Validate()
 
     if !updateModel.IsValid() {
-        err = errors.New(updateModel.GetValidationErrors())
+        err = updateModel.GetValidationError()
         return
     }
 
@@ -411,7 +411,7 @@ func {Entity}FindOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, er
     findOrCreateModel.Validate()
 
     if !findOrCreateModel.IsValid() {
-        err = errors.New(findOrCreateModel.GetValidationErrors())
+        err = findOrCreateModel.GetValidationError()
         return
     }
 
@@ -440,7 +440,7 @@ func {Entity}UpdateOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, 
     updateOrCreateModel.Validate()
 
     if !updateOrCreateModel.IsValid() {
-        err = errors.New(updateOrCreateModel.GetValidationErrors())
+        err = updateOrCreateModel.GetValidationError()
         return
     }
 

@@ -17,7 +17,6 @@ func GetUsualTemplateTypeContent(cfg TypeConfig) string {
 import (
     "net/http"
     "{ms-name}/settings"` + uuidImport + `
-    "errors"
 )
 
 type {Entity} struct {
@@ -84,7 +83,7 @@ func (filter *{Entity}Filter) Get{Entity}ModelList() (data []{Entity}, err error
         filter.list[k].Validate()
 
         if ! filter.list[k].IsValid() {
-            err = errors.New(filter.list[k].GetValidationErrors())
+            err = filter.list[k].GetValidationError()
             break
         }
     }
