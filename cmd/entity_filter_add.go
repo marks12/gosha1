@@ -18,6 +18,8 @@ func GetExistsFilters() (repo ModelRepository) {
 
 func entityFilterdAdd(c *ishell.Context) {
 
+    fmt.Println("add filter")
+
     var filter string
     var sqlField string
     var entity string
@@ -99,11 +101,11 @@ func entityFilterdAdd(c *ishell.Context) {
 
     if mode.IsNonInteractive() {
 
-        reg, err = GetOsArgument("sql-field")
-        sqlField = reg.StringResult
+        regSql, _ := GetOsArgument("sql-field")
+        sqlField = regSql.StringResult
 
     } else {
-        sqlField, err = getName(c, false, "sql-field")
+        sqlField, _ = getName(c, false, "sql-field")
     }
 
     if err != nil {
@@ -155,8 +157,8 @@ func (mr *ModelRepository) addFilter(modelName string, fieldName string, dataTyp
         case settings.DataTypeArrayInt, settings.DataTypeArrayBytes, settings.DataTypeArrayString, settings.DataTypeString, settings.DataTypeUuid:
 
             fieldSnakeCase := getLowerCase(fieldName)
-
             preComment := "//"
+
             if len(specialSqlField) > 0 {
                 preComment = ""
                 fieldSnakeCase = specialSqlField
