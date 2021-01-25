@@ -14,7 +14,7 @@ func usualAuthAdd(c *ishell.Context) {
 	c.Println(yellow("Hello we start adding auth to app"))
 
 	os.Args = append(os.Args, "--entity=User")
-	os.Args = append(os.Args,"--check-auth=fruda")
+	os.Args = append(os.Args,"--check-auth=fcruda")
 	usualEntityAdd(c)
 
 	os.Args = os.Args[:len(os.Args)-2]
@@ -152,8 +152,48 @@ func fillUser(c *ishell.Context) {
     LastName    string
     MobilePhone string
     Password    string
-    Token       string
     `+ getRemoveLine("User")},
+		c)
+
+	CopyFile(
+		"logic/user.go",
+		"logic/user.go",
+		[]string{getRemoveLine("AssignUserDbFromType.Field")},
+		[]string{
+			`Email:       typeModel.Email,
+        FirstName:   typeModel.FirstName,
+        IsActive:    typeModel.IsActive,
+        LastName:    typeModel.LastName,
+        MobilePhone: typeModel.MobilePhone,
+		Password:    string(hashedPassword),
+    `+ getRemoveLine("AssignUserDbFromType.Field")},
+		c)
+
+	CopyFile(
+		"logic/user.go",
+		"logic/user.go",
+		[]string{getRemoveLine("AssignUserTypeFromDb.Field")},
+		[]string{
+			`Email:       dbUser.Email,
+        FirstName:   dbUser.FirstName,
+        IsActive:    dbUser.IsActive,
+        LastName:    dbUser.LastName,
+        MobilePhone: dbUser.MobilePhone,
+        Password:    "******",
+    `+ getRemoveLine("AssignUserTypeFromDb.Field")},
+		c)
+
+	addImportIfNeed("logic/user.go", GetCurrentAppName()+"/settings")
+	addImportIfNeed("logic/user.go", "golang.org/x/crypto/bcrypt")
+
+	CopyFile(
+		"logic/user.go",
+		"logic/user.go",
+		[]string{getRemoveLine("AssignUserDbFromType predefine")},
+		[]string{
+			`password := []byte(typeModel.Password + settings.PASSWORD_SALT)
+    hashedPassword, _ := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
+    `+ getRemoveLine("AssignUserTypeFromDb predefine")},
 		c)
 
 	CopyFile(
