@@ -525,6 +525,7 @@
                 console.log("body model", JSON.stringify(this.getBodyModel()));
                 console.log(this.currentEntityItem.Action);
 
+                this.saveServerUrl();
                 this.$root.$emit("updateServers");
 
                 this.resetResponse();
