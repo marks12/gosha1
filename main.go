@@ -14,6 +14,7 @@ import (
 )
 
 func main() {
+
 	fmt.Println("Current version:", settings.CurrentReleaseTag, "OS:", runtime.GOOS)
 
 	if settings.CurrentReleaseTag != settings.TegPlaceholderName {

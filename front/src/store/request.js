@@ -6,6 +6,9 @@ const request = {
         setRouteUrl(context, val) {
             context.commit("setRouteUrl", val);
         },
+        setServerUrl(context, val) {
+            context.commit("setServerUrl", val);
+        },
         setHeaders(context, val) {
             context.commit("setHeaders", val);
         },
@@ -27,6 +30,9 @@ const request = {
             context.commit("filters", {});
             context.commit("requestUrl", "");
         },
+        saveServerUrl(context) {
+            return context.commit("saveServerUrl");
+        },
     },
     getters: {
         getRequestUrl(state) {
@@ -34,6 +40,9 @@ const request = {
         },
         getRouteUrl(state) {
             return state.routeUrl;
+        },
+        getServerUrl(state) {
+            return state.serverUrl;
         },
         getHeaders: (state) => {
             return state.headers;
@@ -55,6 +64,9 @@ const request = {
         setRouteUrl(state, data) {
             state.routeUrl = data;
         },
+        setServerUrl(state, data) {
+            state.serverUrl = data;
+        },
         addHeader(state, {Name, Value}) {
             state.headers[Name] = Value;
         },
@@ -67,6 +79,20 @@ const request = {
         setBodyModel(state, data) {
             state.bodyModel = data;
         },
+        saveServerUrl(state) {
+            let storeServers = localStorage.getItem("servers");
+            let servers = JSON.parse(storeServers) || [];
+
+            for (let i = 0; i < servers.length; i++) {
+
+                if (servers[i] === state.serverUrl) {
+                    return false;
+                }
+            }
+
+            servers.push(state.serverUrl);
+            localStorage.setItem("servers", JSON.stringify(servers));
+        },
     },
     state: {
         headers: {},
@@ -74,6 +100,7 @@ const request = {
         bodyModel: {},
         requestUrl: "",
         routeUrl: "",
+        serverUrl: "",
     },
 };
 

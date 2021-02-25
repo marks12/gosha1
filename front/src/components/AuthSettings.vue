@@ -90,7 +90,7 @@
         methods: {
             fillServers() {
                 let stored = localStorage.getItem("servers");
-                this.servers = stored ? JSON.parse(store) : [];
+                this.servers = stored ? JSON.parse(stored) : [];
             },
             tryAuth() {
 

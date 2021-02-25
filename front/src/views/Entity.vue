@@ -375,6 +375,7 @@
                 "createEntity",
                 "setResponse",
                 "setResponseCode",
+                "saveServerUrl",
                 "setResponseStatusText",
                 "resetResponse",
             ]),
@@ -387,6 +388,7 @@
                 "getBodyModel",
                 "getRequestUrl",
                 "getRouteUrl",
+                "getServerUrl",
             ]),
 
             onScrolledBottom() {
@@ -522,6 +524,8 @@
                 console.log(JSON.stringify(this.getFilters()));
                 console.log("body model", JSON.stringify(this.getBodyModel()));
                 console.log(this.currentEntityItem.Action);
+
+                this.$root.$emit("updateServers");
 
                 this.resetResponse();
 

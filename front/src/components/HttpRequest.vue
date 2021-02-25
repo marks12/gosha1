@@ -107,6 +107,9 @@ export default {
       isLoadingModel: false,
     };
   },
+  beforeDestroy() {
+    this.$root.$off("updateServers", this.fillServers);
+  },
   created() {
 
     this.$nextTick(() => {
@@ -114,6 +117,7 @@ export default {
       this.urlChanged();
     });
 
+    this.$root.$on("updateServers", this.fillServers);
     this.fillServers();
     this.findFilter();
 
@@ -187,6 +191,7 @@ export default {
       getResponseCode: 'getResponseCode',
       getResponseStatusText: 'getResponseStatusText',
       getRequestUrl: 'getRequestUrl',
+      getServerUrl: 'getServerUrl',
     }),
 
     ...mapActions('gosha', {
@@ -197,6 +202,7 @@ export default {
       setBodyModel: "setBodyModel",
       setRequestUrl: "setRequestUrl",
       setRouteUrl: "setRouteUrl",
+      setServerUrl: "setServerUrl",
     }),
 
     isValidJsonString(jsonString) {
@@ -449,10 +455,11 @@ export default {
       this.$emit("changeUrl", this.serverUrl + "" + this.routeUrl);
       this.setRequestUrl(this.serverUrl + "" + this.routeUrl);
       this.setRouteUrl(this.routeUrl);
+      this.setServerUrl(this.serverUrl);
     },
     fillServers() {
       let stored = localStorage.getItem("servers");
-      this.servers = stored ? JSON.parse(store) : [];
+      this.servers = stored ? JSON.parse(stored) : [];
     },
   },
   filters: {
