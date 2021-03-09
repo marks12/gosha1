@@ -130,6 +130,10 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 		for _, entity := range res {
 			if strings.Contains(strings.ToUpper(entity.Name), strings.ToUpper(filter.Search)) {
 				filtered = append(filtered, entity)
+			} else if strings.Contains(strings.ToUpper(entity.CommentType), strings.ToUpper(filter.Search)) {
+				filtered = append(filtered, entity)
+			} else if strings.Contains(strings.ToUpper(entity.CommentDb), strings.ToUpper(filter.Search)) {
+				filtered = append(filtered, entity)
 			}
 		}
 		result = filtered
