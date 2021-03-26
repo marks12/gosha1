@@ -28,6 +28,8 @@ export function CurrentApp() {
     this.AdminPassword = "";
     this.DbType = "";
     this.IsUuidMode = false;
+    this.IsViewMode = false;
+    this.IsReadonlyMode = false;
 
     return this;
 }
@@ -50,6 +52,8 @@ export function Field() {
     this.Type = "";
     this.IsDb = false;
     this.IsType = false;
+    this.CommentType = "";
+    this.CommentDb = "";
 
     return this;
 }
@@ -62,6 +66,8 @@ export function Entity() {
     this.ModelFields = [];
     this.Fields = [];
     this.IsFilter = false;
+    this.CommentType = "";
+    this.CommentDb = "";
     this.Structures = {};
     this.HttpMethods = {};
     this.HttpRoutes = {};
@@ -83,6 +89,7 @@ export function EntityFilter() {
     this.IsUpdateOrCreate = false;
     this.IsRegenerateJsTypes = false;
     this.IsUuidMode = false;
+    this.IsViewMode = false;
     this.Search = "";
     this.SearchBy = [];
     this.Order = [];

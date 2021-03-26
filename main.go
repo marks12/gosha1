@@ -41,7 +41,7 @@ func main() {
 			select {}
 		}
 	}
-	if len(os.Args) > 1 && os.Args[0] == "exit" {
+	if len(os.Args) > 1 && os.Args[1] == "exit" {
 		cmd.Run()
 		return
 	}

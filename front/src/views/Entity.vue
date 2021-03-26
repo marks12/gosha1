@@ -24,6 +24,7 @@
                                 :entityItem="entityItem"
                                 :onEdit="editItem"
                                 @onRequest="requestItem"
+                                :isReadOnly="true"
                         ></EntityItem>
                     </template>
                 </VSet>
@@ -215,6 +216,7 @@
                         text="Добавить"
                         accent
                         @click="showCreateForm"
+                        :disabled="IsReadonly"
                 />
             </VSet>
         </template>
@@ -315,11 +317,19 @@
                 this.isLoading = false;
             });
 
+            this.loadCurrentApp({Id:'current'});
+
         },
         computed: {
             ...mapGetters('gosha', {
                 panelMaxWidth: "getPanelMaxWidth",
+                currentApp: "getCurrentApp",
             }),
+
+            IsReadonly() {
+              let current = this.currentApp;
+              return current.IsReadonlyMode;
+            },
 
             partialList() {
                 if (this.entityList && this.entityList.length > 15 * this.parts) {
@@ -378,6 +388,7 @@
                 "saveServerUrl",
                 "setResponseStatusText",
                 "resetResponse",
+                "loadCurrentApp",
             ]),
             ...mapGetters('gosha', [
                 "getListFieldType",

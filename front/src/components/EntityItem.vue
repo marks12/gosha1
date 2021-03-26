@@ -196,7 +196,7 @@
     </VSet>
     <template slot="footer">
       <VSet>
-        <VButton text="Edit" small @click="onEdit(entityItem)"></VButton>
+        <VButton :disabled="this.isReadOnly" text="Edit" small @click="onEdit(entityItem)"></VButton>
       </VSet>
     </template>
   </WorkSpace>
@@ -220,6 +220,7 @@ export default {
   props: {
     entityItem: Object,
     onEdit: Function,
+    isReadOnly: Boolean,
   },
   data() {
     return {

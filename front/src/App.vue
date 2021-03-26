@@ -1,13 +1,16 @@
 <template>
-    <TheLayout id="app">
-        <template #navigation>
-            <VHead style="width: 200px;">{{projectName}}</VHead>
-            <MainMenu></MainMenu>
-        </template>
-        <template slot="content">
-            <router-view #content/>
-        </template>
-    </TheLayout>
+  <TheLayout id="app">
+    <template #navigation>
+      <VHead style="width: 200px;">
+        {{ projectName }}
+        <VBadge v-if="IsReadonly" :color="'attention'">readonly</VBadge>
+      </VHead>
+      <MainMenu></MainMenu>
+    </template>
+    <template slot="content">
+      <router-view #content/>
+    </template>
+  </TheLayout>
 </template>
 
 <style lang="scss">
@@ -15,46 +18,56 @@
 </style>
 
 <script>
-    import TheLayout from "swtui/src/components/TheLayout";
-    import MainMenu from "./components/MainMenu";
-    import {mapGetters, mapActions} from 'vuex';
-    import {ProjectInfoFilter} from "../../webapp/jstypes/apiModel";
-    import VButton from "swtui/src/components/VButton";
-    import VHead from "swtui/src/components/VHead";
+import TheLayout from "swtui/src/components/TheLayout";
+import MainMenu from "./components/MainMenu";
+import {mapGetters, mapActions} from 'vuex';
+import {ProjectInfoFilter} from "../../webapp/jstypes/apiModel";
+import VButton from "swtui/src/components/VButton";
+import VHead from "swtui/src/components/VHead";
+import VBadge from "swtui/src/components/VBadge";
 
-    export default {
-        components: {VHead, VButton, MainMenu, TheLayout},
-        methods: {
-            ...mapGetters('gosha', [
-                'getListProjectInfo',
-            ]),
-            ...mapActions('gosha', [
-                'findProjectInfo',
-            ])
-        },
-        data() {
-            return {
-                piFileter: new ProjectInfoFilter(),
-            };
-        },
-        created() {
+export default {
+  components: {VHead, VButton, MainMenu, TheLayout, VBadge},
+  methods: {
+    ...mapGetters('gosha', [
+      'getListProjectInfo',
+    ]),
+    ...mapActions('gosha', [
+      'findProjectInfo',
+    ])
+  },
+  data() {
+    return {
+      piFileter: new ProjectInfoFilter(),
+    };
+  },
+  created() {
 
-            this.piFileter.CurrentPage = 1;
-            this.piFileter.PerPage = 1000;
+    this.piFileter.CurrentPage = 1;
+    this.piFileter.PerPage = 1000;
 
-            this.findProjectInfo({filter: this.piFileter});
-        },
-        computed: {
+    this.findProjectInfo({filter: this.piFileter});
+  },
+  computed: {
+    ...mapGetters('gosha', {
+      panelMaxWidth: "getPanelMaxWidth",
+      currentApp: "getCurrentApp",
+    }),
 
-            projectName() {
+    IsReadonly() {
+      let current = this.currentApp;
+      return current.IsReadonlyMode;
+    },
 
-                let infoList = this.getListProjectInfo();
+    projectName() {
 
-                let name = infoList.find(item => item.Name === "ProjectName");
+      let infoList = this.getListProjectInfo();
 
-                return name ? name.Value : '';
-            },
-        },
+      let name = infoList.find(item => item.Name === "ProjectName");
 
-    }
+      return name ? name.Value : '';
+    },
+  },
+
+}
 </script>
