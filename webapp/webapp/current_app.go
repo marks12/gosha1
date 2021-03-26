@@ -1,6 +1,7 @@
 package webapp
 
 import (
+    "gosha/mode"
     "gosha/settings"
     "gosha/webapp/logic"
     "gosha/webapp/mdl"
@@ -104,6 +105,9 @@ func CurrentAppRead(w http.ResponseWriter, httpRequest *http.Request) {
         ErrResponse(w, err.Error(), code)
         return
     }
+
+    // set readonly from global mode
+    data.IsReadonlyMode = mode.IsReadOnlyMode()
 
     ValidResponse(w, mdl.ResponseRead{
         data,

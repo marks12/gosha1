@@ -12,6 +12,7 @@ type CurrentApp struct {
 	DbType string
     IsUuidMode bool
     IsViewMode bool
+    IsReadonlyMode bool
 	//CurrentApp remove this line for disable generator functionality
 }
 

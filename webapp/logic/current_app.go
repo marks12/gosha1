@@ -3,6 +3,7 @@ package logic
 import (
     "errors"
     "gosha/cmd"
+    "gosha/mode"
     "gosha/webapp/types"
     "os"
     "strconv"
@@ -14,6 +15,7 @@ func CurrentAppFind(filter types.CurrentAppFilter)  (result []types.CurrentApp, 
 
     result = append(result, types.CurrentApp{
         IsValidStructure: app.IsAppExists,
+        IsReadonlyMode: mode.IsReadOnlyMode(),
     })
 
     return result, len(result), nil
