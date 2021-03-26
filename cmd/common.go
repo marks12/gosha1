@@ -87,7 +87,9 @@ func IsAllDirExists(dirs []string) bool {
 
 func GetCurrentApp() types.App {
 
-    app := types.App{}
+    app := types.App{
+        IsReadOnlyMode: mode.IsReadOnlyMode(),
+    }
 
     if IsAllDirExists(settings.UsualDefaultStructure) {
         app.IsAppExists = true

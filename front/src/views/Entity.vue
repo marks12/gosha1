@@ -593,7 +593,7 @@
                 }
 
                 result.then((response) => {
-                    console.log('!!!res', response);
+                    console.log('response received');
                     this.setResponseCode(response.status);
                     this.setResponseStatusText(response.statusText);
 

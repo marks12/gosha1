@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"gosha/cmd"
+	"gosha/common"
 	"gosha/mode"
 	"gosha/settings"
 	"gosha/updater"
@@ -40,11 +41,21 @@ func main() {
 			select {}
 		}
 	}
-	if len(os.Args) > 1 {
+	if len(os.Args) > 1 && os.Args[0] == "exit" {
 		cmd.Run()
 		return
 	}
+
 	mode.SetNonInteractiveMode()
+
+	if common.InArray("--readonly", os.Args) || common.InArray("readonly", os.Args) {
+		mode.SetReadOnlyMode()
+
+		if mode.IsReadOnlyMode() {
+			fmt.Printf("\nREADONLY MODE\n\n")
+		}
+	}
+
 	webapp.Run()
 
 }
