@@ -1,10 +1,10 @@
 package cmd
 
 import (
-    "gopkg.in/abiosoft/ishell.v2"
-    "os"
     "github.com/fatih/color"
+    "gopkg.in/abiosoft/ishell.v2"
     "gosha/mode"
+    "os"
 )
 
 var shell = ishell.New()
@@ -14,6 +14,7 @@ const GET_APP_INFO = "getAppInfo"
 const GENERATE_TYPES_JS = "gen:types:js"
 const GENERATE_TESTS_WEBAPP = "gen:tests:webapp"
 const GENERATE_GENERATORS = "gen:generators"
+const SetReadOnly = "readonly"
 
 func RunShell() {
 
@@ -71,6 +72,12 @@ func RunShell() {
         Func: genGenerators,
     })
 
+    shell.AddCmd(&ishell.Cmd{
+        Name: SetReadOnly,
+        Help: "Just read operations",
+        Func: setReadOnly,
+    })
+
     // run shell
     if len(os.Args) > 1 && os.Args[1] == "exit" {
 
@@ -89,6 +96,7 @@ func setMode() {
     } else {
         mode.SetInteractiveMode()
     }
+
 }
 
 func GetShell() *ishell.Shell {

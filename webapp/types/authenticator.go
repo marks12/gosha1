@@ -12,6 +12,8 @@ type Authenticator struct {
 
 func (auth *Authenticator) IsAuthorized() bool {
 
+
+
     return true
 }
 

@@ -8,6 +8,15 @@ type mode struct {
 	isInteractive bool
 	isUuidMode bool
 	isViewMode bool
+	isReadOnlyMode bool
+}
+
+func (m *mode) setReadOnly() {
+	m.isReadOnlyMode = true
+}
+
+func (m *mode) IsReadOnly() bool {
+	return m.isReadOnlyMode
 }
 
 func (m *mode) setInteractive() {
@@ -60,6 +69,17 @@ func GetMode() *mode {
 		instance.setInteractive()
 	})
 	return instance
+}
+
+func SetReadOnlyMode() {
+
+	GetMode().setReadOnly()
+	return
+}
+
+func IsReadOnlyMode() bool {
+
+	return GetMode().IsReadOnly()
 }
 
 func SetNonInteractiveMode() {

@@ -601,7 +601,6 @@
                 })
                     .then((r) => {
 
-                        console.log('result', r);
                         console.log('time', (this.microtime(true) - t1).toFixed(3));
                         this.setResponse(r);
                     })
