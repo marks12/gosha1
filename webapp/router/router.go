@@ -1,6 +1,7 @@
 package router
 
 import (
+	"gosha/mode"
 	"net/http"
 	"github.com/gorilla/mux"
 	"encoding/json"
@@ -27,39 +28,53 @@ func Router() http.Handler {
 	//[ Entity ]
 	router.HandleFunc("/api/v1/entity/{id}", webapp.EntityRead).Methods("GET")
 	router.HandleFunc("/api/v1/entity", webapp.EntityFind).Methods("GET")
-	router.HandleFunc("/api/v1/entity", webapp.EntityCreate).Methods("POST")
-	router.HandleFunc("/api/v1/entity/{id}", webapp.EntityUpdate).Methods("PUT")
-	router.HandleFunc("/api/v1/entity/{id}", webapp.EntityDelete).Methods("DELETE")
+
+	if ! mode.IsReadOnlyMode() {
+		router.HandleFunc("/api/v1/entity", webapp.EntityCreate).Methods("POST")
+		router.HandleFunc("/api/v1/entity/{id}", webapp.EntityUpdate).Methods("PUT")
+		router.HandleFunc("/api/v1/entity/{id}", webapp.EntityDelete).Methods("DELETE")
+	}
 
 	//[ Settings ]
 	router.HandleFunc("/api/v1/setting/{id}", 	webapp.SettingRead).Methods("GET")
 	router.HandleFunc("/api/v1/setting", 		webapp.SettingFind).Methods("GET")
-	router.HandleFunc("/api/v1/setting", 		webapp.SettingCreate).Methods("POST")
-	router.HandleFunc("/api/v1/setting/{id}", 	webapp.SettingUpdate).Methods("PUT")
-	router.HandleFunc("/api/v1/setting/{id}", 	webapp.SettingDelete).Methods("DELETE")
-
+	if ! mode.IsReadOnlyMode() {
+		router.HandleFunc("/api/v1/setting", webapp.SettingCreate).Methods("POST")
+		router.HandleFunc("/api/v1/setting/{id}", webapp.SettingUpdate).Methods("PUT")
+		router.HandleFunc("/api/v1/setting/{id}", webapp.SettingDelete).Methods("DELETE")
+	}
 	//[ ProjectInfo ]
 	router.HandleFunc("/api/v1/projectInfo", webapp.ProjectInfoFind).Methods("GET")
 
     //[ BuLayer ]
     router.HandleFunc("/api/v1/buLayer",           webapp.BuLayerFind).Methods("GET")
     router.HandleFunc("/api/v1/buLayer",           webapp.BuLayerCreate).Methods("POST")
-    router.HandleFunc("/api/v1/buLayer/{id}",      webapp.BuLayerRead).Methods("GET")
-    router.HandleFunc("/api/v1/buLayer/{id}",      webapp.BuLayerUpdate).Methods("PUT")
-    router.HandleFunc("/api/v1/buLayer/{id}",      webapp.BuLayerDelete).Methods("DELETE")
+	if ! mode.IsReadOnlyMode() {
+		router.HandleFunc("/api/v1/buLayer/{id}", webapp.BuLayerRead).Methods("GET")
+		router.HandleFunc("/api/v1/buLayer/{id}", webapp.BuLayerUpdate).Methods("PUT")
+		router.HandleFunc("/api/v1/buLayer/{id}", webapp.BuLayerDelete).Methods("DELETE")
+	}
 
     //[ FieldType ]
     router.HandleFunc("/api/v1/fieldType",           webapp.FieldTypeFind).Methods("GET")
 
     //[ CurrentApp ]
     router.HandleFunc("/api/v1/currentApp",           webapp.CurrentAppFind).Methods("GET")
-    router.HandleFunc("/api/v1/currentApp",           webapp.CurrentAppCreate).Methods("POST")
     router.HandleFunc("/api/v1/currentApp/{id}",      webapp.CurrentAppRead).Methods("GET")
+	if ! mode.IsReadOnlyMode() {
+		router.HandleFunc("/api/v1/currentApp", webapp.CurrentAppCreate).Methods("POST")
+	}
 
     //router-generator here dont touch this line
 
+    allowedMethods := []string{"GET", "OPTIONS"}
+
+    if ! mode.IsReadOnlyMode() {
+    	allowedMethods = append(allowedMethods, []string{"POST", "PUT", "DELETE"}...)
+	}
+
 	handler := cors.New(cors.Options{
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedMethods: allowedMethods,
 		AllowedHeaders: []string{"token", "content-type"},
 		AllowedOrigins: []string{"*"},
 	}).Handler(router)
