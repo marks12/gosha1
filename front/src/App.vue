@@ -56,7 +56,7 @@ export default {
 
     IsReadonly() {
       let current = this.currentApp;
-      return current.IsReadonlyMode;
+      return current.IsReadonlyMode === true;
     },
 
     projectName() {

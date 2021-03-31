@@ -24,7 +24,7 @@
                                 :entityItem="entityItem"
                                 :onEdit="editItem"
                                 @onRequest="requestItem"
-                                :isReadOnly="true"
+                                :isReadOnly="IsReadonly"
                         ></EntityItem>
                     </template>
                 </VSet>
@@ -328,7 +328,7 @@
 
             IsReadonly() {
               let current = this.currentApp;
-              return current.IsReadonlyMode;
+              return current.IsReadonlyMode === true;
             },
 
             partialList() {
