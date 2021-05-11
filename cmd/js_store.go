@@ -180,7 +180,9 @@ const {entity} = {
                 state.{Entity}__List = [];
             }
 
-            state.{Entity}__List = state.{Entity}__List.concat(data);
+			if (data !== null) {
+				state.{Entity}__List = state.{Entity}__List.concat(data);				
+			}
         },
         clear{Entity}(state) {
             state.{Entity} = new {Entity}();
