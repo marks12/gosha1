@@ -167,7 +167,9 @@ const currentApp = {
                 state.CurrentApp__List = [];
             }
 
-            state.CurrentApp__List = state.CurrentApp__List.concat(data);
+			if (data !== null) {
+				state.CurrentApp__List = state.CurrentApp__List.concat(data);				
+			}
         },
         clearCurrentApp(state) {
             state.CurrentApp = new CurrentApp();

@@ -303,6 +303,7 @@ export default {
       f.PerPage = 1000;
       f.CurrentPage = 1;
       f.WithFilter = true;
+      f.IsExactMatch = true;
       f.Search = this.entity.Name + "Filter";
 
       this.findEntity({

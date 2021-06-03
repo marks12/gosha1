@@ -167,7 +167,9 @@ const entity = {
                 state.Entity__List = [];
             }
 
-            state.Entity__List = state.Entity__List.concat(data);
+			if (data !== null) {
+				state.Entity__List = state.Entity__List.concat(data);				
+			}
         },
         clearEntity(state) {
             state.Entity = new Entity();

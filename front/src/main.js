@@ -6,8 +6,8 @@ import api from '../../webapp/jstypes/api'
 
 Vue.config.productionTip = false;
 
-api.setServerUrl('');
-//api.setServerUrl('http://' + window.location.hostname + ':4343');
+// api.setServerUrl('');
+api.setServerUrl('http://' + window.location.hostname + ':4343');
 
 
 new Vue({

@@ -167,7 +167,9 @@ const buLayer = {
                 state.BuLayer__List = [];
             }
 
-            state.BuLayer__List = state.BuLayer__List.concat(data);
+			if (data !== null) {
+				state.BuLayer__List = state.BuLayer__List.concat(data);				
+			}
         },
         clearBuLayer(state) {
             state.BuLayer = new BuLayer();

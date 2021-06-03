@@ -167,7 +167,9 @@ const aPIStatus = {
                 state.APIStatus__List = [];
             }
 
-            state.APIStatus__List = state.APIStatus__List.concat(data);
+			if (data !== null) {
+				state.APIStatus__List = state.APIStatus__List.concat(data);				
+			}
         },
         clearAPIStatus(state) {
             state.APIStatus = new APIStatus();

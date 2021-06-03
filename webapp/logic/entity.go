@@ -1,13 +1,13 @@
 package logic
 
 import (
+	"github.com/jinzhu/gorm"
+	"github.com/pkg/errors"
 	"gosha/cmd"
 	"gosha/webapp/types"
 	"os"
 	"regexp"
 	"strings"
-	"github.com/jinzhu/gorm"
-	"github.com/pkg/errors"
 )
 
 func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords int, err error) {
@@ -142,18 +142,23 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 	}
 
 	if !filter.WithFilter {
-
 		filtered := []types.Entity{}
-
 		for _, entity := range result {
-
 			matched, _ := regexp.Match(`Filter`, []byte(entity.Name))
-
 			if !matched {
 				filtered = append(filtered, entity)
 			}
 		}
+		result = filtered
+	}
 
+	if filter.IsExactMatch {
+		filtered := []types.Entity{}
+		for _, entity := range result {
+			if entity.Name == filter.Search {
+				filtered = append(filtered, entity)
+			}
+		}
 		result = filtered
 	}
 

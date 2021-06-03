@@ -167,7 +167,9 @@ const buLayerFilter = {
                 state.BuLayerFilter__List = [];
             }
 
-            state.BuLayerFilter__List = state.BuLayerFilter__List.concat(data);
+			if (data !== null) {
+				state.BuLayerFilter__List = state.BuLayerFilter__List.concat(data);				
+			}
         },
         clearBuLayerFilter(state) {
             state.BuLayerFilter = new BuLayerFilter();

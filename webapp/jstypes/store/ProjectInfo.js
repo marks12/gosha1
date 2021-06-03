@@ -167,7 +167,9 @@ const projectInfo = {
                 state.ProjectInfo__List = [];
             }
 
-            state.ProjectInfo__List = state.ProjectInfo__List.concat(data);
+			if (data !== null) {
+				state.ProjectInfo__List = state.ProjectInfo__List.concat(data);				
+			}
         },
         clearProjectInfo(state) {
             state.ProjectInfo = new ProjectInfo();

@@ -167,7 +167,9 @@ const setting = {
                 state.Setting__List = [];
             }
 
-            state.Setting__List = state.Setting__List.concat(data);
+			if (data !== null) {
+				state.Setting__List = state.Setting__List.concat(data);				
+			}
         },
         clearSetting(state) {
             state.Setting = new Setting();

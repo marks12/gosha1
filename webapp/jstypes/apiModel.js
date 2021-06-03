@@ -90,6 +90,7 @@ export function EntityFilter() {
     this.IsRegenerateJsTypes = false;
     this.IsUuidMode = false;
     this.IsViewMode = false;
+    this.IsExactMatch = false;
     this.Search = "";
     this.SearchBy = [];
     this.Order = [];

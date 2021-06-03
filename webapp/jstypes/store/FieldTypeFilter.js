@@ -167,7 +167,9 @@ const fieldTypeFilter = {
                 state.FieldTypeFilter__List = [];
             }
 
-            state.FieldTypeFilter__List = state.FieldTypeFilter__List.concat(data);
+			if (data !== null) {
+				state.FieldTypeFilter__List = state.FieldTypeFilter__List.concat(data);				
+			}
         },
         clearFieldTypeFilter(state) {
             state.FieldTypeFilter = new FieldTypeFilter();

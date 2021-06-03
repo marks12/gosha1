@@ -167,7 +167,9 @@ const entityFilter = {
                 state.EntityFilter__List = [];
             }
 
-            state.EntityFilter__List = state.EntityFilter__List.concat(data);
+			if (data !== null) {
+				state.EntityFilter__List = state.EntityFilter__List.concat(data);				
+			}
         },
         clearEntityFilter(state) {
             state.EntityFilter = new EntityFilter();

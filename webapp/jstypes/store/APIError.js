@@ -167,7 +167,9 @@ const aPIError = {
                 state.APIError__List = [];
             }
 
-            state.APIError__List = state.APIError__List.concat(data);
+			if (data !== null) {
+				state.APIError__List = state.APIError__List.concat(data);				
+			}
         },
         clearAPIError(state) {
             state.APIError = new APIError();

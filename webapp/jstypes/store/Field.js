@@ -167,7 +167,9 @@ const field = {
                 state.Field__List = [];
             }
 
-            state.Field__List = state.Field__List.concat(data);
+			if (data !== null) {
+				state.Field__List = state.Field__List.concat(data);				
+			}
         },
         clearField(state) {
             state.Field = new Field();

@@ -10,6 +10,9 @@
                         <VCheckbox v-model="entityFilter.WithFilter">
                             <VText font-size="txs">Show filters</VText>
                         </VCheckbox>
+                        <VCheckbox v-model="entityFilter.IsExactMatch">
+                            <VText font-size="txs">Exact match</VText>
+                        </VCheckbox>
                     </VSet>
                 </VSet>
             </VSet>
@@ -227,7 +230,7 @@
 
 <script>
 
-    import EntityGen from "../../../webapp/jstypes/components/EntityGen";
+    import EntityGen from "../components/EntityGen";
     import VBadge from "swtui/src/components/VBadge";
     import VSet from "swtui/src/components/VSet";
     import VSpoiler from "swtui/src/components/VSpoiler";
@@ -749,6 +752,12 @@
                 })
                 this.parts = 1
 
+            },
+            'entityFilter.IsExactMatch': function (newFilter) {
+                this.findEntity({
+                    filter: this.entityFilter
+                })
+                this.parts = 1
             },
             IsRegenerateJsTypes(newVal) {
                 localStorage.setItem("IsRegenerateJsTypes", newVal);

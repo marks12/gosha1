@@ -167,7 +167,9 @@ const settingFilter = {
                 state.SettingFilter__List = [];
             }
 
-            state.SettingFilter__List = state.SettingFilter__List.concat(data);
+			if (data !== null) {
+				state.SettingFilter__List = state.SettingFilter__List.concat(data);				
+			}
         },
         clearSettingFilter(state) {
             state.SettingFilter = new SettingFilter();

@@ -167,7 +167,9 @@ const currentAppFilter = {
                 state.CurrentAppFilter__List = [];
             }
 
-            state.CurrentAppFilter__List = state.CurrentAppFilter__List.concat(data);
+			if (data !== null) {
+				state.CurrentAppFilter__List = state.CurrentAppFilter__List.concat(data);				
+			}
         },
         clearCurrentAppFilter(state) {
             state.CurrentAppFilter = new CurrentAppFilter();

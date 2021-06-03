@@ -167,7 +167,9 @@ const entityFieldFilter = {
                 state.EntityFieldFilter__List = [];
             }
 
-            state.EntityFieldFilter__List = state.EntityFieldFilter__List.concat(data);
+			if (data !== null) {
+				state.EntityFieldFilter__List = state.EntityFieldFilter__List.concat(data);				
+			}
         },
         clearEntityFieldFilter(state) {
             state.EntityFieldFilter = new EntityFieldFilter();

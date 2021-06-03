@@ -167,7 +167,9 @@ const fieldType = {
                 state.FieldType__List = [];
             }
 
-            state.FieldType__List = state.FieldType__List.concat(data);
+			if (data !== null) {
+				state.FieldType__List = state.FieldType__List.concat(data);				
+			}
         },
         clearFieldType(state) {
             state.FieldType = new FieldType();
