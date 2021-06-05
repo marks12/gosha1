@@ -72,6 +72,7 @@ function request(method, url, getParams, data, headerParams) {
                 reject({
                     status: this.status,
                     statusText: xhr.statusText,
+		            errorResponse: JSON.parse(xhr.response),
                 });
             }
         };
@@ -79,6 +80,7 @@ function request(method, url, getParams, data, headerParams) {
             reject({
                 status: this.status,
                 statusText: xhr.statusText,
+		        errorResponse: JSON.parse(xhr.response),
             });
         };
 
