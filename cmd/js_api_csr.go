@@ -66,7 +66,17 @@ function request(method, url, getParams, data, headerParams) {
 
             if (this.status >= 200 && this.status < 300) {
 
-                resolve(JSON.parse(xhr.response));
+				if(xhr.response) {
+				  try {
+					data = JSON.parse(xhr.response)
+					resolve(data);
+				  } catch(e) {
+					reject({
+					  status: this.status,
+					  statusText: "json parse error",
+					});
+				  }
+				}
 
             } else {
                 reject({
