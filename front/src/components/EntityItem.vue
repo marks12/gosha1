@@ -32,8 +32,9 @@
             </VText>
           </template>
         </VSpoiler>
-        <VSign width="M">Db</VSign>
-        <VSign width="M">Types</VSign>
+        <VSign style="cursor: pointer;" width="L" title="Field data type">Type<sup>?</sup></VSign>
+        <VSign style="cursor: pointer;" width="L" title="Is field exists in database model dbmodels">Db<sup>?</sup></VSign>
+        <VSign style="cursor: pointer;" width="L" title="Is field exists in frontend model types">Types<sup>?</sup></VSign>
       </VSet>
       <VSet v-else vertical>
         <VSpoiler
@@ -63,7 +64,7 @@
         </VSpoiler>
         <VSet v-else class="head-row">
           <VText :title="entityItem.Name">{{ entityItem.Name }}</VText>
-          <VSign width="M">Type</VSign>
+          <VSign width="L">Type</VSign>
         </VSet>
 
       </VSet>
@@ -116,11 +117,14 @@
                 <VText>
                   {{ field.Name }}
                 </VText>
-                <VText width="M">
+                <VText width="L" style="direction: rtl;">
+                  <VSign>{{field.Type}}</VSign>
+                </VText>
+                <VText width="L">
                   <VIcon name="check" v-if="field.IsDb"></VIcon>
                   <VIcon name="minus" v-else></VIcon>
                 </VText>
-                <VText width="M">
+                <VText width="L">
                   <VIcon name="check" v-if="field.IsType"></VIcon>
                   <VIcon name="minus" v-else></VIcon>
                 </VText>
@@ -147,11 +151,14 @@
             <VText>
               {{ field.Name }}
             </VText>
-            <VText width="M">
+            <VText width="L" style="direction: rtl;">
+              <VSign>{{field.Type}}</VSign>
+            </VText>
+            <VText width="L">
               <VIcon name="check" v-if="field.IsDb"></VIcon>
               <VIcon name="minus" v-else></VIcon>
             </VText>
-            <VText width="M">
+            <VText width="L">
               <VIcon name="check" v-if="field.IsType"></VIcon>
               <VIcon name="minus" v-else></VIcon>
             </VText>
