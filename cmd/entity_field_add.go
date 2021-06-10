@@ -106,7 +106,7 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
         []string{fieldName + " " + dataType + "\n\t" + getRemoveLine(CamelCase)},
         nil)
 
-    if dataType == settings.DataTypeTimeLink || dataType == settings.DataTypeTime {
+    if isDate(dataType) {
         addImportIfNeed(sourceFile, "time")
     }
     if dataType == settings.DataTypeUuid {
@@ -223,6 +223,20 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
         nil)
 
     return
+}
+
+func isDate(dataType string) bool {
+
+    switch dataType {
+    case settings.DataTypeTimeLink,
+    settings.DataTypeDuration,
+    settings.DataTypeTime:
+        return true
+        break
+    }
+
+    return false
+
 }
 
 func GetFormTemplateField(modelName string, fieldName string, dataType string) string {
