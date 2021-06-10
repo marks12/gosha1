@@ -122,9 +122,10 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
         []string{fieldName + " " + dataType + "\n\t" + getRemoveLine(CamelCase)},
         nil)
 
-    if dataType == settings.DataTypeTimeLink || dataType == settings.DataTypeTime {
+    if isDate(dataType) {
         addImportIfNeed(sourceFile, "time")
     }
+
     if dataType == settings.DataTypeUuid {
         addImportIfNeed(sourceFile, "github.com/google/uuid")
     }
