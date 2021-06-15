@@ -59,7 +59,7 @@ func usualEntityAdd(c *ishell.Context) {
 	CopyFile(
 		sourceFile,
 		destinationFile,
-		[]string{"    // router-list-generator here dont touch this line", "{Entity}", "{entity}"},
+		[]string{"// router-list-generator here dont touch this line", "{Entity}", "{entity}"},
 		[]string{usualTemplateSettingsRoutesListEntity.Content, CamelCase, firstLowerCase},
 		c)
 

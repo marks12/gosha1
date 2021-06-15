@@ -1,17 +1,17 @@
 package router
 
 import (
-	"gosha/mode"
-	"net/http"
-	"github.com/gorilla/mux"
+	"encoding/base64"
 	"encoding/json"
+	"fmt"
+	"github.com/gorilla/mux"
 	"github.com/marks12/gothamel/tag"
 	"github.com/rs/cors"
-	"fmt"
-	"encoding/base64"
-	"strings"
-	"regexp"
+	"gosha/mode"
 	"gosha/webapp/webapp"
+	"net/http"
+	"regexp"
+	"strings"
 )
 
 // Router - маршрутизатор
@@ -64,6 +64,17 @@ func Router() http.Handler {
 	if ! mode.IsReadOnlyMode() {
 		router.HandleFunc("/api/v1/currentApp", webapp.CurrentAppCreate).Methods("POST")
 	}
+
+    //[ SelfUpdate ]
+    //router.HandleFunc(settings.SelfUpdateRoute,         webapp.SelfUpdateFind).Methods("GET")
+    router.HandleFunc("/api/v1/selfUpdate",         webapp.SelfUpdateCreate).Methods("POST")
+    //router.HandleFunc(settings.SelfUpdateRoute+"/{id}", webapp.SelfUpdateRead).Methods("GET")
+    //router.HandleFunc(settings.SelfUpdateRoute+"/list", webapp.SelfUpdateMultiUpdate).Methods("PUT")
+    //router.HandleFunc(settings.SelfUpdateRoute+"/{id}", webapp.SelfUpdateUpdate).Methods("PUT")
+    //router.HandleFunc(settings.SelfUpdateRoute+"/list", webapp.SelfUpdateMultiDelete).Methods("DELETE")
+    //router.HandleFunc(settings.SelfUpdateRoute+"/{id}", webapp.SelfUpdateDelete).Methods("DELETE")
+    //router.HandleFunc(settings.SelfUpdateRoute,         webapp.SelfUpdateFindOrCreate).Methods("PUT")
+    //router.HandleFunc(settings.SelfUpdateRoute,         webapp.SelfUpdateUpdateOrCreate).Methods("PATCH")
 
     //router-generator here dont touch this line
 

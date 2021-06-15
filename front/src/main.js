@@ -6,9 +6,11 @@ import api from '../../webapp/jstypes/api'
 
 Vue.config.productionTip = false;
 
-api.setServerUrl('');
-// api.setServerUrl('http://' + window.location.hostname + ':4343');
-
+if (process && process.env && process.env.NODE_ENV === "development") {
+  api.setServerUrl('http://' + window.location.hostname + ':4343');
+} else {
+  api.setServerUrl('');
+}
 
 new Vue({
   router,

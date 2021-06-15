@@ -13,6 +13,7 @@ type CurrentApp struct {
     IsUuidMode bool
     IsViewMode bool
     IsReadonlyMode bool
+    CurrentVersion string
 	//CurrentApp remove this line for disable generator functionality
 }
 

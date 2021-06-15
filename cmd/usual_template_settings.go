@@ -35,7 +35,7 @@ const HtmlResourceType ConfigId = 3
 
 var RoutesArray = []string{
 
-    // router-list-generator here dont touch this line
+// router-list-generator here dont touch this line
 }
 `
 

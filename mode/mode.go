@@ -9,6 +9,7 @@ type mode struct {
 	isUuidMode bool
 	isViewMode bool
 	isReadOnlyMode bool
+	isSelfUpdateMode bool
 }
 
 func (m *mode) setReadOnly() {
@@ -17,6 +18,14 @@ func (m *mode) setReadOnly() {
 
 func (m *mode) IsReadOnly() bool {
 	return m.isReadOnlyMode
+}
+
+func (m *mode) setSelfUpdate() {
+	m.isSelfUpdateMode = true
+}
+
+func (m *mode) isSelfUpdate() bool {
+	return m.isSelfUpdateMode
 }
 
 func (m *mode) setInteractive() {
@@ -124,4 +133,12 @@ func SetNonViewMode() {
 
 func GetUuidMode() bool {
 	return GetMode().getUuidMode()
+}
+
+func IsSelfUpdate() bool {
+	return GetMode().isSelfUpdate()
+}
+
+func SetSelfUpdateMode() {
+	GetMode().setSelfUpdate()
 }

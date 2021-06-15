@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"gosha/cmd"
-	"gosha/common"
 	"gosha/mode"
 	"gosha/settings"
 	"gosha/updater"
@@ -18,7 +17,9 @@ func main() {
 
 	fmt.Println("Current version:", settings.CurrentReleaseTag, "OS:", runtime.GOOS)
 
-	if settings.CurrentReleaseTag != settings.TegPlaceholderName {
+	mode.CheckSelfUpdate()
+
+	if mode.IsSelfUpdate() && settings.CurrentReleaseTag != settings.TegPlaceholderName {
 		isRestart, err := updater.MakeUpdate()
 		if err != nil {
 			fmt.Println("Error in AutoUpdate:", err.Error())
@@ -47,15 +48,6 @@ func main() {
 	}
 
 	mode.SetNonInteractiveMode()
-
-	if common.InArray("--readonly", os.Args) || common.InArray("readonly", os.Args) {
-		mode.SetReadOnlyMode()
-
-		if mode.IsReadOnlyMode() {
-			fmt.Printf("\nREADONLY MODE\n\n")
-		}
-	}
-
+	mode.CheckReadOnly()
 	webapp.Run()
-
 }

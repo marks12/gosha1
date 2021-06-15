@@ -4,6 +4,7 @@ import (
     "errors"
     "gosha/cmd"
     "gosha/mode"
+    "gosha/settings"
     "gosha/webapp/types"
     "os"
     "strconv"
@@ -16,6 +17,7 @@ func CurrentAppFind(filter types.CurrentAppFilter)  (result []types.CurrentApp, 
     result = append(result, types.CurrentApp{
         IsValidStructure: app.IsAppExists,
         IsReadonlyMode: mode.IsReadOnlyMode(),
+        CurrentVersion: settings.CurrentReleaseTag,
     })
 
     return result, len(result), nil

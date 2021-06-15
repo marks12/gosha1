@@ -13,8 +13,12 @@ import (
 )
 
 func main() {
+
 	fmt.Println("Current version:", settings.CurrentReleaseTag, "OS:", runtime.GOOS)
-	if settings.CurrentReleaseTag != settings.TegPlaceholderName {
+
+	mode.CheckSelfUpdate()
+
+	if mode.IsSelfUpdate() && settings.CurrentReleaseTag != settings.TegPlaceholderName {
 		isRestart, err := updater.MakeUpdate()
 		if err != nil {
 			fmt.Println("Error in AutoUpdate:", err.Error())
@@ -37,6 +41,7 @@ func main() {
 		return
 	}
 	mode.SetNonInteractiveMode()
+	mode.CheckReadOnly()
 	webapp.Run()
 
 }
