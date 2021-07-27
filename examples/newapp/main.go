@@ -1,15 +1,19 @@
 package main
 
 import (
+    "fmt"
+    "net/http"
     "newapp/bootstrap"
+    "newapp/flags"
     "newapp/router"
     "newapp/settings"
     "newapp/wsserver"
-    "fmt"
-    "net/http"
 )
 
 func main() {
+
+    // парсим флаги
+    flags.ParseFlags()
 
     // делаем автомиграцию
     bootstrap.FillDBTestData()
