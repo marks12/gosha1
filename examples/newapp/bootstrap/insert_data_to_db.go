@@ -1,13 +1,14 @@
 package bootstrap
 
 import (
-	"newapp/dbmodels"
-	"newapp/types"
 	"fmt"
-	"os"
 	"newapp/core"
+	"newapp/dbmodels"
+	"newapp/flags"
 	"newapp/logic"
 	"newapp/settings"
+	"newapp/types"
+	"os"
 	"strings"
 )
 
@@ -18,14 +19,7 @@ func FillDBTestData()  {
 		os.Exit(0)
 	}
 
-	isDropTables := false
-
-	if (len(os.Args) > 1 && os.Args[1] == "drop") ||
-		(len(os.Args) > 2 && os.Args[2] == "drop") {
-		isDropTables = true
-	}
-
-	if isDropTables == true {
+	if *flags.Drop == true {
 
 		core.Db.DropTableIfExists(
           //generator insert entity

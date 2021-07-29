@@ -95,6 +95,11 @@ func (filter *{Entity}Filter) Set{Entity}Model(typeModel {Entity}) {
 
     filter.model = typeModel
 }
+
+func (filter *{Entity}Filter) Set{Entity}ModelList(data []{Entity}) {
+
+	filter.list = data
+}
 `
 
     return assignMsName(usualWebappEntityType)
