@@ -16,25 +16,30 @@ const defaultConnectionString = "const DbConnectString = ``"
 const msCoreDb = `package core
 
 import (
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 	"{ms-name}/settings"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"gorm.io/driver/postgres"
+    "gorm.io/gorm/logger"
 )
 
 `+  defaultConnectionString + `
 
-var Db, DbErr = gorm.Open("postgres", DbConnectString)
+var	config = gorm.Config{DisableForeignKeyConstraintWhenMigrating: true}
+
+var Db, DbErr = gorm.Open(postgres.Open(DbConnectString), &config)
 
 func EnableSqlLog() {
-	Db.LogMode(true)
+	Db.Logger.LogMode(logger.Info)
 }
 
 func DisableSqlLog() {
-	Db.LogMode(false)
+	Db.Logger.LogMode(logger.Error)
 }
 
-func GetTableName(dbmodel interface{}) string {
-	return Db.NewScope(dbmodel).TableName()
+func GetTableName(model interface{}) string {
+	stmt := &gorm.Statement{DB: Db}
+	_ = stmt.Parse(model)
+	return stmt.Schema.Table
 }
 `
 

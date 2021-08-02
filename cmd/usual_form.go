@@ -1,12 +1,11 @@
 package cmd
 
 import (
-	"gopkg.in/abiosoft/ishell.v2"
 	"fmt"
-	"strings"
-	"regexp"
-	"github.com/jinzhu/gorm"
+	"gopkg.in/abiosoft/ishell.v2"
 	"os"
+	"regexp"
+	"strings"
 )
 
 type modelEntity struct {
@@ -215,14 +214,14 @@ func GetEntities() (result []modelEntity, totalRecords int, err error) {
 
 	totalRecords = len(result)
 
-	return 
+	return
 }
 
 
 func getExistsFieldIndex(name string, fields []Field) (Field, int) {
 
 	for i, f := range fields {
-		if gorm.ToColumnName(f.Name) == gorm.ToColumnName(name) {
+		if strings.ToLower(f.Name) == strings.ToLower(name) {
 			return f, i
 		}
 	}

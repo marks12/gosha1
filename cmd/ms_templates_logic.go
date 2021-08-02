@@ -36,7 +36,7 @@ func Find{entity-name}(app mdl.Application, filter api.{entity-name}Filter) (pro
     limit       := filter.PerPage
     offset      := filter.GetOffset()
 
-    var count int
+    var count int64
 
     criteria := core.Db.Where(dbmodels.{entity-name}{AppId: appGuid})
 
@@ -63,7 +63,7 @@ func Find{entity-name}(app mdl.Application, filter api.{entity-name}Filter) (pro
         result = append(result, fillApi{entity-name}FromDb(item))
     }
 
-    return result, count, nil
+    return result, int(count), nil
 }
 
 func Create{entity-name}(app mdl.Application, {entity-name}Data api.{entity-name}) (api.{entity-name}, error) {

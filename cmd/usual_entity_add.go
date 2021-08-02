@@ -203,7 +203,7 @@ func usualEntityAdd(c *ishell.Context) {
 			c)
 
 		if ! IsPostgres() && mode.GetUuidMode() {
-			addImportIfNeed(destinationFile, "github.com/jinzhu/gorm")
+			addImportIfNeed(destinationFile, "gorm.io/gorm")
 		}
 	}
 

@@ -11,11 +11,114 @@ import (
     "net/http"
     "encoding/json"
     "fmt"
+    "strings"
+	dynamicStruct "github.com/ompluscator/dynamic-struct"
+    "reflect"
 )
 
 type FilterInterface interface {
     IsDebug() bool
     GetLanguageId() int
+}
+
+
+func ApplyFieldsFilterToData(fields []string, data interface{}) (result interface{}) {
+	if len(fields) < 1 {
+		return data
+	}
+	b, _ := json.Marshal(&data)
+
+	resMap := fieldPreprocessing(fields)
+
+	result = buildStruct(resMap, data)
+	err := json.Unmarshal(b, &result)
+
+	if err != nil {
+		fmt.Printf("ApplyFieldsFilterToData error: %+v", err.Error())
+		return data
+	}
+
+	return
+}
+
+
+// Формирование карты полей
+func fieldPreprocessing(fields []string) map[string]interface{} {
+	res := map[string]interface{}{}
+
+	nextFields := map[string][]string{}
+
+	for _, field := range fields {
+		if len(field) < 1 {
+			continue
+		}
+		validFieldName := strings.Title(field)
+		if !strings.Contains(validFieldName, ".") {
+			res[validFieldName] = true
+		} else {
+			arr := strings.Split(validFieldName, ".")
+			nextFields[arr[0]] = append(nextFields[arr[0]], strings.Join(arr[1:], "."))
+		}
+	}
+	for k, v := range nextFields {
+		res[k] = fieldPreprocessing(v)
+	}
+	return res
+}
+
+
+// Построение стуктуры на основе карты полей
+func buildStruct(structMap map[string]interface{}, data interface{}) interface{} {
+	var i *interface{}
+	isArr := isArray(data)
+	builder := dynamicStruct.NewStruct()
+	for k, v := range structMap {
+		if nextMap, isOk := v.(map[string]interface{}); isOk {
+			builder.AddField(k, buildStruct(nextMap, getDataFromStructByFieldName(data, k)), "")
+		} else {
+			builder.AddField(k, i, "")
+		}
+	}
+	if isArr {
+		return builder.Build().NewSliceOfStructs()
+	}
+	return builder.Build().New()
+}
+
+//Получаем вложенные данные из структуры
+func getDataFromStructByFieldName(data interface{}, field string) interface{} {
+	var i *interface{}
+
+	r := reflect.Indirect(reflect.ValueOf(data))
+	if r.Kind() == reflect.Slice {
+		el := reflect.Indirect(reflect.New(r.Type().Elem()))
+		f := el.FieldByName(field)
+		if !f.IsValid() {
+			return i
+		}
+		return reflect.New(f.Type()).Interface()
+	} else {
+		if !r.IsValid() || r.IsZero() || !(r.Kind() == reflect.Struct) && r.IsNil() {
+			return i
+		}
+		f := reflect.Indirect(r).FieldByName(field)
+		if !(r.Kind() == reflect.Struct) && f.IsNil() || f.IsZero() || !f.IsValid() {
+			return i
+		}
+		return f.Interface()
+	}
+}
+
+func isArray(data interface{}) (res bool) {
+	rt := reflect.Indirect(reflect.ValueOf(data))
+	switch rt.Kind() {
+	case reflect.Slice:
+		return true
+	case reflect.Array:
+		return true
+	default:
+		return false
+	}
 }
 
 func Bad(w http.ResponseWriter, requestDto FilterInterface, err error) {
@@ -202,7 +305,7 @@ func {entity-name}Find(w http.ResponseWriter, httpRequest *http.Request) {
     ` + getErrRespIfErr() + `
 
     ValidResponse(w, mdl.ResponseFind{
-        data,
+        ApplyFieldsFilterToData(requestDto.GetFields(), data),
         totalRecords,
     })
 
@@ -277,7 +380,7 @@ func {entity-name}Create(w http.ResponseWriter, httpRequest *http.Request) {
     ` + getErrRespIfErr() + `
 
     ValidResponse(w, mdl.ResponseCreate{
-        data,
+        ApplyFieldsFilterToData(requestDto.GetFields(), data),
     })
 
     return
@@ -317,7 +420,7 @@ func {entity-name}Read(w http.ResponseWriter, httpRequest *http.Request) {
     }
 
     ValidResponse(w, mdl.ResponseRead{
-        data,
+        ApplyFieldsFilterToData(requestDto.GetFields(), data),
     })
 
     return
@@ -365,7 +468,7 @@ func {entity-name}Update(w http.ResponseWriter, httpRequest *http.Request) {
     ` + getErrRespIfErr() + `
 
     ValidResponse(w, mdl.ResponseUpdate{
-        data,
+        ApplyFieldsFilterToData(requestDto.GetFields(), data),
     })
 
     return
@@ -442,7 +545,7 @@ func {entity-name}FindOrCreate(w http.ResponseWriter, httpRequest *http.Request)
     ` + getErrRespIfErr() + `
 
     ValidResponse(w, mdl.ResponseFindOrCreate{
-        data,
+        ApplyFieldsFilterToData(requestDto.GetFields(), data),
     })
 
     return
@@ -470,7 +573,7 @@ func {entity-name}UpdateOrCreate(w http.ResponseWriter, httpRequest *http.Reques
     ` + getErrRespIfErr() + `
 
     ValidResponse(w, mdl.ResponseUpdateOrCreate{
-        data,
+        ApplyFieldsFilterToData(requestDto.GetFields(), data),
     })
 
     return

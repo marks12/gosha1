@@ -24,7 +24,7 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
     filterIds 	:= filter.GetIds()
     filterExceptIds 	:= filter.GetExceptIds()
 
-    var count int
+    var count int64
 
     criteria := core.Db.Where(dbmodels.{Entity}{})
 
@@ -46,7 +46,7 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
     //
     //        for _, field := range filter.SearchBy {
     //
-    //            if core.Db.NewScope(&dbmodels.{Entity}{}).HasColumn(field) {
+    //            if core.Db.Migrator().HasColumn(&dbmodels.{Entity}{}, field) {
     //                criteria = criteria.Or("` + "`" + `"+field+"` + "`" + `"+" ilike ?", s)
     //            } else {
     //                err = errors.NewErrorWithCode("Search by unknown field", errors.ErrorCodeNotValid ,field)
@@ -68,7 +68,7 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
     // order global criteria
     if len(filter.Order) > 0  {
         for index, Field := range filter.Order {
-             if core.Db.NewScope(&dbmodels.{Entity}{}).HasColumn(Field) {
+             if core.Db.Migrator().HasColumn(&dbmodels.{Entity}{}, Field) {
                 criteria = criteria.Order("\"" + strings.ToLower(Field) + "\"" + " " + filter.OrderDirection[index])
             } else {
 				err = errors.NewErrorWithCode("Ordering by unknown Field", errors.ErrorCodeNotValid ,Field)
@@ -96,7 +96,7 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
        result = append(result, Assign{Entity}TypeFromDb(item))
     }
 
-    return result, count, nil
+    return result, int(count), nil
 }
 `
 
@@ -482,7 +482,7 @@ func getUsualEntityLogicHeader(isWoModels bool) (header string) {
 	}
 
 	footer := `
-        "github.com/jinzhu/gorm"
+        "gorm.io/gorm"
     )
 `
 	middle := ""

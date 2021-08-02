@@ -1,7 +1,6 @@
 package logic
 
 import (
-	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 	"gosha/cmd"
 	"gosha/webapp/types"
@@ -187,7 +186,7 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 func getExistsFieldIndex(name string, fields []types.Field) (types.Field, int) {
 
 	for i, f := range fields {
-		if gorm.ToColumnName(f.Name) == gorm.ToColumnName(name) {
+		if strings.ToLower(f.Name) == strings.ToLower(name) {
 			return f, i
 		}
 	}

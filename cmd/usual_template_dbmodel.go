@@ -5,6 +5,7 @@ var usualDbmodelEntity = `package dbmodels
 import (
     "time"
     "../types"
+    "gorm.io/gorm"
 )
 
 type Entity struct {
@@ -13,7 +14,7 @@ type Entity struct {
 
     CreatedAt time.Time
     UpdatedAt time.Time
-    DeletedAt *time.Time ` + "`" + `sql:"index" json:"-"` + "`" + `
+    DeletedAt gorm.DeletedAt ` + "`" + `sql:"index" json:"-"` + "`" + `
 
     validator
 }

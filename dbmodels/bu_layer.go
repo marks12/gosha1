@@ -1,6 +1,7 @@
 package dbmodels
 
 import (
+    "gorm.io/gorm"
     "time"
 )
 
@@ -11,7 +12,7 @@ type BuLayer struct {
 
     CreatedAt time.Time
     UpdatedAt time.Time
-    DeletedAt *time.Time `sql:"index" json:"-"`
+    DeletedAt gorm.DeletedAt `sql:"index" json:"-"`
 
     validator
 }

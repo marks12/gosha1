@@ -361,7 +361,7 @@ func usualCreate(c *ishell.Context, email, password string, databaseType Databas
 	////ms folder
 	//CreateFile(msTemplateMsTicket.Path, msTemplateMsTicket.Content, c)
 
-	CreateFile("./.gitignore", "./\\.idea\n", c)
+	CreateFile("./.gitignore", "./\\.idea\n.postgres\n", c)
 
 	if IsPostgres() {
 		//docker

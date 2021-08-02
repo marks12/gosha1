@@ -37,7 +37,7 @@ func FillDBTestData()  {
 
 	if isDropTables == true {
 
-		core.Db.DropTableIfExists(
+		core.Db.Migrator().DropTable(
           //generator insert entity
 		)
 
@@ -45,7 +45,7 @@ func FillDBTestData()  {
 		os.Exit(1)
 	}
 
-	core.Db.AutoMigrate(
+	_ = core.Db.Migrator().AutoMigrate(
         //generator insert entity
 	)
 
@@ -66,7 +66,7 @@ func addRouteType() {
 
 func addUser() {
 
-	var count int
+	var count int64
 
 	adminRole := dbmodels.Role{
 		ID:			 settings.AdminRoleId` + GetConfigConverter(mode.GetUuidMode()) + `,

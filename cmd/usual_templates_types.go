@@ -230,6 +230,7 @@ func (authenticator *Authenticator) Validate(functionType string) {
 var usualTypesEntity = `package types
 
 import (
+    "gorm.io/gorm"
     "time"
 )
 // default entity will used when create new entity
@@ -239,7 +240,7 @@ type Entity struct {
 
     CreatedAt time.Time
     UpdatedAt time.Time
-    DeletedAt *time.Time ` + "`" + `sql:"index" json:"-"` + "`" + `
+    DeletedAt gorm.DeletedAt ` + "`" + `sql:"index" json:"-"` + "`" + `
 
     validator
 }
@@ -254,12 +255,12 @@ const usualTypesFilter = `package types
 import (
     "{ms-name}/settings"
     "{ms-name}/errors"
+    "{ms-name}/core"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
 	"github.com/gorilla/mux"
-	"github.com/jinzhu/gorm"
 )
 
 type GoshaFilterIds struct {
@@ -367,6 +368,17 @@ func (filter *GoshaFilterIds) Validate(functionType string) {
 	}
 }
 
+type GoshaFilterFields struct {
+	Fields []string
+}
+
+func (f *GoshaFilterFields) AddField(field string) {
+	f.Fields = append(f.Fields, field)
+}
+func (f *GoshaFilterFields) GetFields() []string {
+	return f.Fields
+}
+
 type GoshaSearchFilter struct {
 	Search   string
 	SearchBy []string
@@ -401,6 +413,7 @@ type AbstractFilter struct {
 	validator
 	Authenticator
 	GoshaDebugFilter
+	GoshaFilterFields
 }
 
 func GetAbstractFilter(request *http.Request, requestBody []byte, functionType string) (filter AbstractFilter, err error) {
@@ -439,7 +452,7 @@ func GetAbstractFilter(request *http.Request, requestBody []byte, functionType s
 
 	for index, field := range arr["Order[]"] {
 
-		filter.Order = append(filter.Order, gorm.ToColumnName(field))
+		filter.Order = append(filter.Order, core.Db.Config.NamingStrategy.ColumnName("", field))
 
 		if len(dirs) > index && dirs[index] == "desc" {
 			filter.OrderDirection = append(filter.OrderDirection, "desc")
@@ -454,7 +467,7 @@ func GetAbstractFilter(request *http.Request, requestBody []byte, functionType s
 	}
 
 	for _, field := range arr["SearchBy[]"] {
-		filter.SearchBy = append(filter.SearchBy, gorm.ToColumnName(field))
+		filter.SearchBy = append(filter.SearchBy, core.Db.Config.NamingStrategy.ColumnName("", field))
 	}
 
 	filter.SetToken(request)
@@ -475,6 +488,10 @@ func GetAbstractFilter(request *http.Request, requestBody []byte, functionType s
 	for _, field := range arr["ExceptIds[]"] {
 		id, _ := strconv.Atoi(field)
 		filter.AddExceptIds(id)
+	}
+
+	for _, field := range arr["Fields[]"] {
+		filter.AddField(field)
 	}
 
 	filter.Validate(functionType)

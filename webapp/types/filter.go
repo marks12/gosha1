@@ -2,13 +2,13 @@ package types
 
 import (
     "errors"
-    "net/http"
-    "strings"
-    "strconv"
     "github.com/gorilla/mux"
+    "gorm.io/gorm"
     "gosha/settings"
+    "net/http"
     "net/url"
-    "github.com/jinzhu/gorm"
+    "strconv"
+    "strings"
 )
 
 type FilterIds struct {
@@ -134,7 +134,7 @@ func GetAbstractFilter(request *http.Request, functionType string) AbstractFilte
 
     for index, field := range arr["Order[]"] {
 
-        filter.Order = append(filter.Order, gorm.ToColumnName(field))
+        filter.Order = append(filter.Order, (gorm.Config{}).NamingStrategy.ColumnName("", field))
 
         if len(dirs) > index && dirs[index] == "desc" {
             filter.OrderDirection = append(filter.OrderDirection, "desc")

@@ -22,4 +22,5 @@ require (
 	github.com/pkg/errors v0.8.1
 	github.com/rs/cors v1.7.0
 	gopkg.in/abiosoft/ishell.v2 v2.0.0
+	gorm.io/gorm v1.21.12
 )

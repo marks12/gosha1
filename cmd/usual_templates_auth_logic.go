@@ -5,7 +5,7 @@ import "gosha/mode"
 const usualAuthLogic = `package logic
 
 import (
-    "github.com/jinzhu/gorm"
+    "gorm.io/gorm"
     "{ms-name}/types"
     "{ms-name}/dbmodels"
     "{ms-name}/core"
