@@ -1,6 +1,6 @@
 package cmd
 
-const usualWebappErrors = `package webapp
+const usualWebappResponse = `package webapp
 
 import (
     "{ms-name}/common"
@@ -243,8 +243,8 @@ func ValidResponse (w http.ResponseWriter, data interface{}) {
 }`
 
 var usualTemplateWebappErrors = template{
-	Path:    "./webapp/errors.go",
-	Content: assignMsName(usualWebappErrors),
+	Path:    "./webapp/response.go",
+	Content: assignMsName(usualWebappResponse),
 }
 
 var usualTemplateWebappEntity = template{
