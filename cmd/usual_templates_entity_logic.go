@@ -43,16 +43,21 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
     //    s := ("%" + filter.Search + "%")
     //
     //    if len(filter.SearchBy) > 0 {
+	//
+	//		subCriteria := core.Db
     //
     //        for _, field := range filter.SearchBy {
     //
     //            if core.Db.Migrator().HasColumn(&dbmodels.{Entity}{}, field) {
-    //                criteria = criteria.Or("` + "`" + `"+field+"` + "`" + `"+" ilike ?", s)
+	//				  subCriteria = subCriteria.Or("` + "`" + `"+field+"` + "`" + `"+" ilike ?", s)
     //            } else {
     //                err = errors.NewErrorWithCode("Search by unknown field", errors.ErrorCodeNotValid ,field)
     //                return
     //            }
     //        }
+	//
+	//		criteria = criteria.Where(subCriteria)
+	//
     //    } else {
     //      criteria = criteria.Where("name ilike ? or code ilike ?", ("%" + filter.Search + "%"), ("%" + filter.Search + "%"))
     //    }
