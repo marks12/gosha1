@@ -20,21 +20,20 @@
               </VSet>
           </template>
           <template #content>
-            <VText style="max-width: 240px;">
+            <VText>
               <VSet vertical  has-no-indent>
                 <VText color="weak" v-if="entityItem.CommentType">
-                  Types: {{ entityItem.CommentType }}
+                  Types:
+                  <vue-simple-markdown :source="entityItem.CommentType" style="font-size:inherit !important;font-weight:inherit!important;line-height:inherit!important;color:inherit !important;"></vue-simple-markdown>
                 </VText>
                 <VText color="weak" v-if="entityItem.CommentDb">
-                  Db: {{ entityItem.CommentDb }}
+                  Db:
+                  <vue-simple-markdown :source="entityItem.CommentDb" style="font-size:inherit !important;font-weight:inherit!important;line-height:inherit!important;color:inherit !important;"></vue-simple-markdown>
                 </VText>
               </VSet>
             </VText>
           </template>
         </VSpoiler>
-        <VSign style="cursor: pointer;" width="L" title="Field data type">Type<sup>?</sup></VSign>
-        <VSign style="cursor: pointer;" width="L" title="Is field exists in database model dbmodels">Db<sup>?</sup></VSign>
-        <VSign style="cursor: pointer;" width="L" title="Is field exists in frontend model types">Types<sup>?</sup></VSign>
       </VSet>
       <VSet v-else vertical>
         <VSpoiler
@@ -108,8 +107,14 @@
 
       </VSet>
 
-
       <VSet vertical v-if="!entityItem.IsFilter">
+
+        <VSet horizontal-align="right">
+          <VSign style="cursor: pointer;" width="L" title="Field data type">Type<sup>?</sup></VSign>
+          <VSign style="cursor: pointer;" width="L" title="Is field exists in database model dbmodels">Db<sup>?</sup></VSign>
+          <VSign style="cursor: pointer;margin-right: 28px;" width="L" title="Is field exists in frontend model types">Types<sup>?</sup></VSign>
+        </VSet>
+
         <template v-for="(field, i) in entityItem.Fields">
           <VSpoiler v-if="field.CommentType || field.CommentDb" style="margin-top: 0; margin-bottom: 3px;" content-indent="XS">
             <template #head>

@@ -25,6 +25,12 @@ import {ProjectInfoFilter} from "../../webapp/jstypes/apiModel";
 import VButton from "swtui/src/components/VButton";
 import VHead from "swtui/src/components/VHead";
 import VBadge from "swtui/src/components/VBadge";
+import Vue from 'vue'
+import VueSimpleMarkdown from 'vue-simple-markdown'
+// You need a specific loader for CSS files like https://github.com/webpack/css-loader
+import 'vue-simple-markdown/dist/vue-simple-markdown.css'
+
+Vue.use(VueSimpleMarkdown)
 
 export default {
   components: {VHead, VButton, MainMenu, TheLayout, VBadge},

@@ -14,6 +14,7 @@
     "swtui": "^0.13.4",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6",
+    "vue-simple-markdown": "^1.1.5",
     "vuex": "^3.3.0"
   },
   "devDependencies": {
