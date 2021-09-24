@@ -4,15 +4,15 @@ import "gosha/mode"
 
 func GetUsualTemplateTypeContent(cfg TypeConfig) string {
 
-    uuidImport := ""
+	uuidImport := ""
 
-    if mode.GetUuidMode() {
-        uuidImport = `
+	if mode.GetUuidMode() {
+		uuidImport = `
     "github.com/google/uuid"
 `
-    }
+	}
 
-    var usualWebappEntityType = `package types
+	var usualWebappEntityType = `package types
 
 import (
     "net/http"
@@ -79,7 +79,7 @@ func (filter *{Entity}Filter) Get{Entity}Model() {Entity} {
 
 func (filter *{Entity}Filter) Get{Entity}ModelList() (data []{Entity}, err error) {
 
-    for k, _ := range filter.list {
+    for k := range filter.list {
         filter.list[k].Validate()
 
         if ! filter.list[k].IsValid() {
@@ -102,18 +102,18 @@ func (filter *{Entity}Filter) Set{Entity}ModelList(data []{Entity}) {
 }
 `
 
-    return assignMsName(usualWebappEntityType)
+	return assignMsName(usualWebappEntityType)
 }
 
 func getTypeId(config TypeConfig) string {
 
-    if config.IsId {
+	if config.IsId {
 
-        if mode.GetUuidMode() {
-            return `Id uuid.UUID`
-        }
-        return `Id   int`
-    }
+		if mode.GetUuidMode() {
+			return `Id uuid.UUID`
+		}
+		return `Id   int`
+	}
 
-    return ""
+	return ""
 }
