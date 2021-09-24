@@ -288,7 +288,7 @@ func {Entity}Update(filter types.{Entity}Filter, query *gorm.DB)  (data types.{E
         return
     }
 
-    q := query.Model(dbmodels.{Entity}{}).Save(&updateModel)
+    q := query.Save(&updateModel)
 
     if q.Error != nil {
         err = q.Error
