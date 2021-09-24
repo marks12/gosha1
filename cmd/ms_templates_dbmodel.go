@@ -12,7 +12,7 @@ type Entity struct {
     ID          		uuid.UUID	` + "`" + `sql:"primary_key;type:uuid;default:uuid_generate_v4()"` + "`" + `
     AppId          		uuid.UUID
 
-    CreatedAt time.Time
+    CreatedAt time.Time ` + "`" + `gorm:"<-:create"` + "`" + `
     UpdatedAt time.Time
     DeletedAt gorm.DeletedAt ` + "`" + `sql:"index"` + "`" + `
 
@@ -54,12 +54,11 @@ func (val *validator) AddValidationError(err string, code errors.ErrorCode, fiel
 `
 
 var msTemplateDbmodelsEntity = template{
-    Path:    "./dbmodels/entity.go",
-    Content: msDbmodelEntity,
+	Path:    "./dbmodels/entity.go",
+	Content: msDbmodelEntity,
 }
 
 var msTemplateDbmodelsValidator = template{
-    Path:    "./dbmodels/validator.go",
-    Content: msDbmodelValidator,
+	Path:    "./dbmodels/validator.go",
+	Content: msDbmodelValidator,
 }
-

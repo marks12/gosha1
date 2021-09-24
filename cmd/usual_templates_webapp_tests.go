@@ -1,15 +1,15 @@
 package cmd
 
 var usualTemplateWebappTestEntity = template{
-    Path:    "./webapp/{entity-name}.go",
-    Content: assignMsName(GetUsualTemplateWebAppTestContent(
-        Crud{true, true, true, true, true, true, true},
-    )),
+	Path: "./webapp/{entity-name}.go",
+	Content: assignMsName(GetUsualTemplateWebAppTestContent(
+		Crud{true, true, true, true, true, true, true},
+	)),
 }
 
 func GetUsualTemplateWebAppTestContent(methodsCrud Crud) string {
 
-    var usualWebappTestEntity = `package webapp
+	var usualWebappTestEntity = `package webapp
 
 import (
 	"{ms-name}/settings"
@@ -89,7 +89,7 @@ func get{entity-name}ParsedList(response *httptest.ResponseRecorder) (list []typ
 		Total: 1,
 	}
 
-	json.Unmarshal(response.Body.Bytes(), &responseData)
+	_ = json.Unmarshal(response.Body.Bytes(), &responseData)
 
 	return responseData.List, responseData.Total
 }
@@ -101,7 +101,7 @@ func get{entity-name}ParsedModel(response *httptest.ResponseRecorder) types.{ent
 	} {
 		Model:types.{entity-name}{},
 	}
-	json.Unmarshal(response.Body.Bytes(), &responseData)
+	_ = json.Unmarshal(response.Body.Bytes(), &responseData)
 
 	return responseData.Model
 }
@@ -126,13 +126,13 @@ func Test{entity-name}(t *testing.T) {
 }
 
 `
-    return usualWebappTestEntity
+	return usualWebappTestEntity
 }
 
 func getWebappTestFind(methodCrud Crud) (c string) {
 
-    if methodCrud.IsFind {
-        c = `{
+	if methodCrud.IsFind {
+		c = `{
 		Name:         "Find {entity-name}s as admin",
 		ResponseCode: 200,
 		TestFunc: func(tt tests.WebTest) (*httptest.ResponseRecorder, error) {
@@ -166,15 +166,15 @@ func getWebappTestFind(methodCrud Crud) (c string) {
 			}
 		},
 	},`
-    }
+	}
 
-    return
+	return
 }
 
 func getWebappTestCreate(methodCrud Crud) (c string) {
 
-    if methodCrud.IsCreate {
-        c = `{
+	if methodCrud.IsCreate {
+		c = `{
 		Name:         "Create new {entity-name} as admin",
 		Request:      createAdminRequest{entity-name},
 		ResponseCode: 201,
@@ -193,15 +193,15 @@ func getWebappTestCreate(methodCrud Crud) (c string) {
 		ResponseCode:    403,
 		TestFunc:        testCreateFunc{entity-name},
 	},`
-    }
+	}
 
-    return
+	return
 }
 
 func getWebappTestRead(methodCrud Crud) (c string) {
 
-    if methodCrud.IsRead {
-        c = `{
+	if methodCrud.IsRead {
+		c = `{
 		Name:         "Read {entity-name} as non authorized user",
 		ResponseCode: 403,
 		TestFunc: func(tt tests.WebTest) (*httptest.ResponseRecorder, error) {
@@ -240,15 +240,15 @@ func getWebappTestRead(methodCrud Crud) (c string) {
 			validateFields{entity-name}(t, createdModel{entity-name}, updateModel{entity-name}, response)
 		},
 	},`
-    }
+	}
 
-    return
+	return
 }
 
 func getWebappTestUpdate(methodCrud Crud) (c string) {
 
-    if methodCrud.IsUpdate {
-        c = `{
+	if methodCrud.IsUpdate {
+		c = `{
 		Name:         "Update {entity-name} as admin",
 		ResponseCode: 200,
 		TestFunc: func(tt tests.WebTest) (*httptest.ResponseRecorder, error) {
@@ -287,15 +287,15 @@ func getWebappTestUpdate(methodCrud Crud) (c string) {
 			validateFields{entity-name}(t, model, updateModel{entity-name}, readResponse)
 		},
 	},`
-    }
+	}
 
-    return
+	return
 }
 
 func getWebappTestDelete(methodCrud Crud) (c string) {
 
-    if methodCrud.IsDelete {
-        c = `{
+	if methodCrud.IsDelete {
+		c = `{
 		Name: "Delete {entity-name} as unauthorized user",
 		//Request: inside delete func,
 		ResponseCode: 403,
@@ -360,27 +360,27 @@ func getWebappTestDelete(methodCrud Crud) (c string) {
 			return tests.SendRequest(settings.{entity-name}Route+"/{id}", req, {entity-name}Delete, http.MethodDelete), nil
 		},
 	},`
-    }
+	}
 
-    return
+	return
 }
 
 func getWebappTestFindOrCreate(methodCrud Crud) (c string) {
 
-    if methodCrud.IsFindOrCreate {
-        c = `
+	if methodCrud.IsFindOrCreate {
+		c = `
 `
-    }
+	}
 
-    return
+	return
 }
 
 func getWebappTestUpdateOrCreate(methodCrud Crud) (c string) {
 
-    if methodCrud.IsUpdateOrCreate {
-        c = `
+	if methodCrud.IsUpdateOrCreate {
+		c = `
 `
-    }
+	}
 
-    return
+	return
 }
