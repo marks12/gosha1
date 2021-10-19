@@ -52,13 +52,12 @@ func (val *validator) AddValidationError(err string, code errors.ErrorCode, fiel
 }
 `
 
-var usualTemplateDbmodelsEntity = template{
+/*var usualTemplateDbmodelsEntity = template{
     Path:    "./dbmodels/entity.go",
     Content: usualDbmodelEntity,
-}
+}*/
 
 var usualTemplateDbmodelsValidator = template{
-    Path:    "./dbmodels/validator.go",
-    Content: usualDbmodelValidator,
+	Path:    "./dbmodels/validator.go",
+	Content: usualDbmodelValidator,
 }
-

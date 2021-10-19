@@ -35,9 +35,9 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 			}
 
 			fields = append(fields, types.Field{
-				Name:   field.Name,
-				Type:   field.Type,
-				IsType: true,
+				Name:        field.Name,
+				Type:        field.Type,
+				IsType:      true,
 				CommentType: field.Comment,
 			})
 		}
@@ -45,10 +45,10 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 		isFilter, _ := regexp.Match("Filter", []byte(t))
 
 		res = append(res, types.Entity{
-			Id:       id,
-			Name:     t,
-			Fields:   fields,
-			IsFilter: isFilter,
+			Id:          id,
+			Name:        t,
+			Fields:      fields,
+			IsFilter:    isFilter,
 			CommentType: existsTypes.GetModelComment(t),
 		})
 		id++
@@ -74,7 +74,7 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 			Id:          id,
 			Name:        t,
 			ModelFields: modelFields,
-			CommentDb: existsModels.GetModelComment(t),
+			CommentDb:   existsModels.GetModelComment(t),
 		})
 		id++
 	}
@@ -91,9 +91,9 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 
 				if len(etf.Name) < 1 {
 					res[index].Fields = append(res[index].Fields, types.Field{
-						Name: emf.Name,
-						Type: emf.Type,
-						IsDb: true,
+						Name:      emf.Name,
+						Type:      emf.Type,
+						IsDb:      true,
 						CommentDb: emf.Comment,
 					})
 
@@ -111,10 +111,10 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 			for _, mf := range em.ModelFields {
 
 				em.Fields = append(em.Fields, types.Field{
-					Name: mf.Name,
-					Type: mf.Type,
-					IsDb: true,
-					CommentDb:  mf.Comment,
+					Name:      mf.Name,
+					Type:      mf.Type,
+					IsDb:      true,
+					CommentDb: mf.Comment,
 				})
 			}
 
@@ -269,6 +269,10 @@ func EntityCreate(filter types.EntityFilter) (data types.Entity, err error) {
 
 	if filter.IsViewMode {
 		args = append(args, cmd.ViewMode.CliArgument("true"))
+	}
+
+	if filter.IsSoftDelete {
+		args = append(args, cmd.SoftDelete.CliArgument("true"))
 	}
 
 	os.Args = args

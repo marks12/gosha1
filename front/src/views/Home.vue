@@ -52,6 +52,11 @@
                                 <VBadge  v-if="IsViewMode" :color="IsViewMode ? 'selection' : 'attention-secondary'">Enabled</VBadge>
                                 <VBadge  v-else :color="IsViewMode ? 'selection' : 'attention-secondary'">Disabled</VBadge>
                             </VSet>
+                          <VSet>
+                            <VCheckbox v-model="IsSoftDelete" width="dyn">
+                              <VText>Soft delete</VText>
+                            </VCheckbox>
+                          </VSet>
                         </VSet>
                         <VSet width="fit">
                             <VText color="attention">{{ error }}</VText>
@@ -94,6 +99,7 @@
                 error: "",
                 IsUuidMode: localStorage.getItem("IsUuidMode") === 'true',
                 IsViewMode: localStorage.getItem("IsViewMode") === 'true',
+                IsSoftDelete: localStorage.getItem("IsSoftDelete") === 'true',
                 segmentControls: [
                     {
                         label: 'MySql',
@@ -129,6 +135,7 @@
                 app.DbType = this.appDb;
                 app.IsUuidMode = this.IsUuidMode;
                 app.IsViewMode = this.IsViewMode;
+                app.IsSoftDelete = this.IsSoftDelete;
 
                 this.createCurrentApp({
                     data: app
@@ -170,6 +177,9 @@
             },
             IsViewMode(newVal) {
                 localStorage.setItem("IsViewMode", newVal);
+            },
+            IsSoftDelete(newVal) {
+              localStorage.setItem("IsSoftDelete", newVal);
             },
         },
     }

@@ -1,10 +1,10 @@
 package cmd
 
 import (
-    "fmt"
-    "io/ioutil"
-    "os"
-    "strings"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"strings"
 )
 
 var usualWebappEntityDbModels = `package dbmodels
@@ -22,7 +22,7 @@ type {Entity} struct {
 
     CreatedAt time.Time
     UpdatedAt time.Time
-    DeletedAt gorm.DeletedAt ` + "`" + `sql:"index" json:"-"` + "`" + `
+    {SoftDelete}
 
     validator
 }
@@ -33,26 +33,30 @@ func ({entity} *{Entity}) Validate() {
 
 `
 
-func getDbModelContent(isUuid bool) string {
+func getDbModelContent(isUuid bool, isSoftDelete bool) string {
 
-    idImport := ""
-    idField := `ID        int       ` + "`" + `gorm:"primary_key"` + "`"
+	idImport := ""
+	idField := `ID        int       ` + "`" + `gorm:"primary_key"` + "`"
+	softDeleteField := ""
+	if isSoftDelete {
+		softDeleteField = `DeletedAt gorm.DeletedAt ` + "`" + `sql:"index" json:"-"` + "`"
+	}
 
-    if isUuid {
+	if isUuid {
 
-        idImport = "\"github.com/google/uuid\""
+		idImport = "\"github.com/google/uuid\""
 
-        if IsPostgres() {
-            idField = "ID   uuid.UUID `sql:\"primary_key;type:uuid;default:uuid_generate_v4()\"`"
-        } else {
-            idField = "ID   uuid.UUID `sql:\"primary_key;default:uuid()\"`"
-            //idField = `ID   uuid.UUID ` + "`" + `gorm:"primary_key, default: uuid()"` + "`"
-        }
-    }
+		if IsPostgres() {
+			idField = "ID   uuid.UUID `sql:\"primary_key;type:uuid;default:uuid_generate_v4()\"`"
+		} else {
+			idField = "ID   uuid.UUID `sql:\"primary_key;default:uuid()\"`"
+			//idField = `ID   uuid.UUID ` + "`" + `gorm:"primary_key, default: uuid()"` + "`"
+		}
+	}
 
-    beforeCreate := ""
-    if ! IsPostgres() && isUuid {
-        beforeCreate = `
+	beforeCreate := ""
+	if !IsPostgres() && isUuid {
+		beforeCreate = `
 func (model *{Entity}) BeforeCreate(scope *gorm.Scope) error {
     if model.ID == uuid.Nil {
         model.ID = uuid.New()
@@ -60,37 +64,39 @@ func (model *{Entity}) BeforeCreate(scope *gorm.Scope) error {
     return scope.SetColumn("ID", model.ID)
 }
 `
-    }
+	}
 
-    usualWebappEntityDbModels = AssignVar(usualWebappEntityDbModels, "{beforeCreate}", beforeCreate)
-    cont := AssignVar(AssignVar(assignMsName(usualWebappEntityDbModels), "{ID}", idField), "{IdImport}", idImport)
-    content := template{
-        Path:    "",
-        Content: cont,
-    }
+	usualWebappEntityDbModels = AssignVar(usualWebappEntityDbModels, "{beforeCreate}", beforeCreate)
+	usualWebappEntityDbModels = AssignVar(usualWebappEntityDbModels, "{SoftDelete}", softDeleteField)
+	cont := AssignVar(AssignVar(assignMsName(usualWebappEntityDbModels), "{ID}", idField), "{IdImport}", idImport)
 
-    return content.Content
+	content := template{
+		Path:    "",
+		Content: cont,
+	}
+
+	return content.Content
 
 }
 
 func IsPostgres() bool {
 
-    dat, err := ioutil.ReadFile("core/db.go")
-    if err != nil {
-        fmt.Println("Cant read file \"core/db.go\" for detect database type")
-        os.Exit(1)
-    }
+	dat, err := ioutil.ReadFile("core/db.go")
+	if err != nil {
+		fmt.Println("Cant read file \"core/db.go\" for detect database type")
+		os.Exit(1)
+	}
 
-    if strings.Contains(string(dat), "postgres") && ! strings.Contains(string(dat), "mysql") {
-        return true
-    }
+	if strings.Contains(string(dat), "postgres") && !strings.Contains(string(dat), "mysql") {
+		return true
+	}
 
-    if ! strings.Contains(string(dat), "postgres") && strings.Contains(string(dat), "mysql") {
-        return false
-    }
+	if !strings.Contains(string(dat), "postgres") && strings.Contains(string(dat), "mysql") {
+		return false
+	}
 
-    fmt.Println("Cant detect db type in file \"core/db.go\"")
-    os.Exit(1)
+	fmt.Println("Cant detect db type in file \"core/db.go\"")
+	os.Exit(1)
 
-    return false
+	return false
 }

@@ -1,19 +1,19 @@
 package cmd
 
-
 type osArgumentVal string
 type command string
 
 const (
 	SetAppType command = "setAppType"
-	Exit command = "exit"
+	Exit       command = "exit"
 
-	Type osArgumentVal = "type"
-	Entity osArgumentVal = "entity"
-	CRUD osArgumentVal = "crud"
-	CheckAuth osArgumentVal = "check-auth"
-	UuidAsPk osArgumentVal = "uuidaspk"
-	ViewMode osArgumentVal = "viewmode"
+	Type       osArgumentVal = "type"
+	Entity     osArgumentVal = "entity"
+	CRUD       osArgumentVal = "crud"
+	CheckAuth  osArgumentVal = "check-auth"
+	UuidAsPk   osArgumentVal = "uuidaspk"
+	ViewMode   osArgumentVal = "viewmode"
+	SoftDelete osArgumentVal = "soft-delete"
 
 	WithoutDbModels osArgumentVal = "without-db-models"
 )

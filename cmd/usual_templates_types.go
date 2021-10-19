@@ -3,7 +3,7 @@ package cmd
 import "gosha/mode"
 
 type TypeConfig struct {
-    IsId bool
+	IsId bool
 }
 
 var usualTypesAuthenticator = `package types
@@ -121,7 +121,7 @@ func (auth *Authenticator) IsAuthorized() bool {
         roleResources := []dbmodels.RoleResource{}
 
         core.Db.Model(dbmodels.RoleResource{}).
-            Where("role_id in (select role_id from user_roles where deleted_at IS NULL and user_id = ?) and resource_id in (?)", dbAuth.UserId, ids).Find(&roleResources)
+            Where("role_id in (select role_id from user_roles where user_id = ?) and resource_id in (?)", dbAuth.UserId, ids).Find(&roleResources)
 
         switch auth.functionType {
         case settings.FunctionTypeFind:
@@ -658,8 +658,8 @@ type APIError struct {
 type Error struct {
 	ErrorMessage string
 	ErrorCode    int
-	Field        string `+"`" + `json:"Field,omitempty"`+"`" + `
-	ErrorDebug   string `+"`" + `json:"ErrorDebug,omitempty"`+"`" + `
+	Field        string ` + "`" + `json:"Field,omitempty"` + "`" + `
+	ErrorDebug   string ` + "`" + `json:"ErrorDebug,omitempty"` + "`" + `
 }
 
 type Pagination struct {
@@ -713,75 +713,75 @@ func (pagination *Pagination) Validate(functionType string) {
 
 func getUsualTemplateTypesAuthenticator(isUuidAsPk bool) template {
 
-    cont := AssignVar(
-        assignMsName(usualTypesAuthenticator),
-        "{ID}",
-        GetPKType(isUuidAsPk),
-    )
+	cont := AssignVar(
+		assignMsName(usualTypesAuthenticator),
+		"{ID}",
+		GetPKType(isUuidAsPk),
+	)
 
-    cont = AssignVar(
-        cont,
-        "{GetIdIsNotValidExp}",
-        GetIdIsNotValidExp(isUuidAsPk),
-    )
+	cont = AssignVar(
+		cont,
+		"{GetIdIsNotValidExp}",
+		GetIdIsNotValidExp(isUuidAsPk),
+	)
 
-    usualTemplateTypesAuthenticator := template{
-        Path:    "./types/authenticator.go",
-        Content: cont,
-    }
-    return usualTemplateTypesAuthenticator
+	usualTemplateTypesAuthenticator := template{
+		Path:    "./types/authenticator.go",
+		Content: cont,
+	}
+	return usualTemplateTypesAuthenticator
 }
 
-var usualTemplateTypesEntity = template{
+/*var usualTemplateTypesEntity = template{
     Path:    "./types/entity.go",
     Content: usualTypesEntity,
-}
+}*/
 
 func getUsualTemplateTypesFilter(isUuidAsPk bool) template {
 
-    tpl := AssignVar(
-        assignMsName(usualTypesFilter),
-        "{ID}",
-        GetPKType(isUuidAsPk),
-    )
+	tpl := AssignVar(
+		assignMsName(usualTypesFilter),
+		"{ID}",
+		GetPKType(isUuidAsPk),
+	)
 
-    tpl = AssignVar(
-        tpl,
-        "{STRTOID}",
-        GetStrToIdFuncName(isUuidAsPk),
-    )
+	tpl = AssignVar(
+		tpl,
+		"{STRTOID}",
+		GetStrToIdFuncName(isUuidAsPk),
+	)
 
-    tpl = AssignVar(
-        tpl,
-        "{PkNil}",
-        GetIdNil(isUuidAsPk),
-    )
+	tpl = AssignVar(
+		tpl,
+		"{PkNil}",
+		GetIdNil(isUuidAsPk),
+	)
 
-    tpl = AssignVar(
-        tpl,
-        "{GetIdIsValidExp}",
-        GetIdIsValidExp(isUuidAsPk),
-    )
+	tpl = AssignVar(
+		tpl,
+		"{GetIdIsValidExp}",
+		GetIdIsValidExp(isUuidAsPk),
+	)
 
-    usualTemplateTypesFilter := template{
-        Path:    "./types/filter.go",
-        Content: tpl,
-    }
+	usualTemplateTypesFilter := template{
+		Path:    "./types/filter.go",
+		Content: tpl,
+	}
 
-    return usualTemplateTypesFilter
+	return usualTemplateTypesFilter
 }
 
 var usualTemplateTypesRequest = template{
-    Path:    "./types/request.go",
-    Content: usualTypesRequest,
+	Path:    "./types/request.go",
+	Content: usualTypesRequest,
 }
 
 var usualTemplateTypesResponse = template{
-    Path:    "./types/response.go",
-    Content: assignMsName(usualTypesResponse),
+	Path:    "./types/response.go",
+	Content: assignMsName(usualTypesResponse),
 }
 
 var usualTemplateTypesValidator = template{
-    Path:    "./types/validator.go",
-    Content: assignMsName(usualTypesValidator),
+	Path:    "./types/validator.go",
+	Content: assignMsName(usualTypesValidator),
 }
