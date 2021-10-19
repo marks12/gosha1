@@ -30,6 +30,7 @@ export function CurrentApp() {
     this.IsUuidMode = false;
     this.IsViewMode = false;
     this.IsReadonlyMode = false;
+    this.IsSoftDelete = false;
 
     return this;
 }
@@ -90,6 +91,7 @@ export function EntityFilter() {
     this.IsRegenerateJsTypes = false;
     this.IsUuidMode = false;
     this.IsViewMode = false;
+    this.IsSoftDelete = false;
     this.IsExactMatch = false;
     this.Search = "";
     this.SearchBy = [];

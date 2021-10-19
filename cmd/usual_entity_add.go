@@ -5,8 +5,8 @@ import (
 	"github.com/fatih/color"
 	"gopkg.in/abiosoft/ishell.v2"
 	"gosha/mode"
-	"strings"
 	"os"
+	"strings"
 )
 
 const replaceCommentLink = `//generator insert entity`
@@ -20,6 +20,7 @@ func usualEntityAdd(c *ishell.Context) {
 	WoDbModel, _ := GetOsArgument(WithoutDbModels.ToString())
 	Uuid, _ := GetOsArgument(UuidAsPk.ToString())
 	isView, _ := GetOsArgument(ViewMode.ToString())
+	isSoftDelete, _ := GetOsArgument(SoftDelete.ToString())
 
 	if Uuid.BoolResult {
 		mode.SetUuidMode()
@@ -73,11 +74,11 @@ func usualEntityAdd(c *ishell.Context) {
 		[]string{getRouteContent(), CamelCase, firstLowerCase},
 		c)
 
-	CreateFileIfNotExists(usualTemplateGen.Path, usualTemplateGen.Content, c)
+	_ = CreateFileIfNotExists(usualTemplateGen.Path, usualTemplateGen.Content, c)
 
 	sourceFile = "./generator/" + snakeCase + ".go"
 	destinationFile = "./generator/" + snakeCase + ".go"
-	CreateFile(sourceFile, getEntityGenContent(), c)
+	_ = CreateFile(sourceFile, getEntityGenContent(), c)
 	CopyFile(
 		sourceFile,
 		destinationFile,
@@ -87,7 +88,7 @@ func usualEntityAdd(c *ishell.Context) {
 
 	sourceFile = "./webapp/" + snakeCase + ".go"
 	destinationFile = "./webapp/" + snakeCase + ".go"
-	CreateFile(sourceFile, getWebAppContent(), c)
+	_ = CreateFile(sourceFile, getWebAppContent(), c)
 
 	CopyFile(
 		sourceFile,
@@ -96,12 +97,11 @@ func usualEntityAdd(c *ishell.Context) {
 		[]string{CamelCase, CamelCase, firstLowerCase},
 		c)
 
-
 	if _, err := os.Stat("./view"); os.IsNotExist(err) {
 		fmt.Println("view folder not exists cant create bs4 template")
 	} else {
 
-		CreateFile(usualTemplateBs4ViewFields.Path, usualTemplateBs4ViewFields.Content, c)
+		_ = CreateFile(usualTemplateBs4ViewFields.Path, usualTemplateBs4ViewFields.Content, c)
 		CopyFile(
 			usualTemplateBs4ViewFields.Path,
 			usualTemplateBs4ViewFields.Path,
@@ -109,7 +109,7 @@ func usualEntityAdd(c *ishell.Context) {
 			[]string{CamelCase, CamelCase, firstLowerCase},
 			c)
 
-		CreateFileIfNotExists(usualTemplateViewStore.Path, usualTemplateViewStore.Content, c)
+		_ = CreateFileIfNotExists(usualTemplateViewStore.Path, usualTemplateViewStore.Content, c)
 		CopyFile(
 			usualTemplateViewStore.Path,
 			usualTemplateViewStore.Path,
@@ -127,7 +127,7 @@ func usualEntityAdd(c *ishell.Context) {
 
 		sourceFile = "./view/form/" + snakeCase + ".go"
 		destinationFile = "./view/form/" + snakeCase + ".go"
-		CreateFile(sourceFile, getEntityBs4vView(), c)
+		_ = CreateFile(sourceFile, getEntityBs4vView(), c)
 		CopyFile(
 			sourceFile,
 			destinationFile,
@@ -135,11 +135,11 @@ func usualEntityAdd(c *ishell.Context) {
 			[]string{CamelCase, CamelCase, firstLowerCase},
 			c)
 
-		CreateFileIfNotExists(usualTemplateModelsInit.Path, getEntityInit(), nil)
-		CreateFileIfNotExists(usualTemplateModelsStore.Path, usualTemplateModelsStore.Content, nil)
+		_ = CreateFileIfNotExists(usualTemplateModelsInit.Path, getEntityInit(), nil)
+		_ = CreateFileIfNotExists(usualTemplateModelsStore.Path, usualTemplateModelsStore.Content, nil)
 
 		modelFile := strings.Replace(usualTemplateModelsEntity.Path, "{entity}", snakeCase, -1)
-		CreateFileIfNotExists(modelFile, getEntityModel(), nil)
+		_ = CreateFileIfNotExists(modelFile, getEntityModel(), nil)
 
 		CopyFile(
 			modelFile,
@@ -164,7 +164,7 @@ func usualEntityAdd(c *ishell.Context) {
 		sourceFile = "./webapp/" + snakeCase + "_test.go"
 		destinationFile = "./webapp/" + snakeCase + "_test.go"
 
-		CreateFile(sourceFile, getWebAppTestContent(), c)
+		_ = CreateFile(sourceFile, getWebAppTestContent(), c)
 
 		CopyFile(
 			sourceFile,
@@ -178,7 +178,7 @@ func usualEntityAdd(c *ishell.Context) {
 	sourceFile = "./types/" + snakeCase + ".go"
 	destinationFile = "./types/" + snakeCase + ".go"
 
-	CreateFile(sourceFile, getTypeContent(), c)
+	_ = CreateFile(sourceFile, getTypeContent(), c)
 
 	CopyFile(
 		sourceFile,
@@ -187,13 +187,12 @@ func usualEntityAdd(c *ishell.Context) {
 		[]string{CamelCase, CamelCase, firstLowerCase},
 		c)
 
-
-	if ! WoDbModel.BoolResult {
+	if !WoDbModel.BoolResult {
 
 		sourceFile = "./dbmodels/" + snakeCase + ".go"
 		destinationFile = "./dbmodels/" + snakeCase + ".go"
 
-		CreateFile(sourceFile, getDbModelContent(Uuid.BoolResult), c)
+		_ = CreateFile(sourceFile, getDbModelContent(Uuid.BoolResult, isSoftDelete.BoolResult), c)
 
 		CopyFile(
 			sourceFile,
@@ -202,14 +201,14 @@ func usualEntityAdd(c *ishell.Context) {
 			[]string{CamelCase, CamelCase, firstLowerCase},
 			c)
 
-		if ! IsPostgres() && mode.GetUuidMode() {
+		if !IsPostgres() && mode.GetUuidMode() {
 			addImportIfNeed(destinationFile, "gorm.io/gorm")
 		}
 	}
 
 	sourceFile = "./logic/" + snakeCase + ".go"
 	destinationFile = "./logic/" + snakeCase + ".go"
-	CreateFile(sourceFile, getLogicContent(), c)
+	_ = CreateFile(sourceFile, getLogicContent(), c)
 	CopyFile(
 		sourceFile,
 		destinationFile,
@@ -217,7 +216,7 @@ func usualEntityAdd(c *ishell.Context) {
 		[]string{CamelCase, CamelCase, firstLowerCase},
 		c)
 
-	if ! WoDbModel.BoolResult {
+	if !WoDbModel.BoolResult {
 
 		CopyFile(
 			sourceFile,
@@ -227,7 +226,7 @@ func usualEntityAdd(c *ishell.Context) {
 			c)
 	}
 
-	if ! WoDbModel.BoolResult {
+	if !WoDbModel.BoolResult {
 
 		sourceFile = "./bootstrap/insert_data_to_db.go"
 		destinationFile = "./bootstrap/insert_data_to_db.go"
@@ -279,7 +278,7 @@ func getLogicContent() (c string) {
 	//	crudParams.IsFindOrCreate = strings.Contains(crudArgs.StringResult, "a")
 	//	crudParams.IsUpdateOrCreate = strings.Contains(crudArgs.StringResult, "x")
 	//} else {
-		crudParams = Crud{true, true, true, true, true, true, true}
+	crudParams = Crud{true, true, true, true, true, true, true}
 	//}
 
 	c = GetUsualTemplateLogicContent(crudParams, WoDbModel.BoolResult)
@@ -312,18 +311,18 @@ func getWebAppContent() (webappContent string) {
 
 	webappContent = usualTemplateWebappEntity.Content
 
-	AuthcrudArgs, _ := GetOsArgument(CheckAuth.ToString())
+	AuthCrudArgs, _ := GetOsArgument(CheckAuth.ToString())
 	authParams := Crud{true, true, true, true, true, true, true}
 
-	if len(AuthcrudArgs.StringResult) > 0 {
+	if len(AuthCrudArgs.StringResult) > 0 {
 
-		authParams.IsFind = strings.Contains(AuthcrudArgs.StringResult, "f")
-		authParams.IsCreate = strings.Contains(AuthcrudArgs.StringResult, "c")
-		authParams.IsRead = strings.Contains(AuthcrudArgs.StringResult, "r")
-		authParams.IsUpdate = strings.Contains(AuthcrudArgs.StringResult, "u")
-		authParams.IsDelete = strings.Contains(AuthcrudArgs.StringResult, "d")
-		authParams.IsFindOrCreate = strings.Contains(AuthcrudArgs.StringResult, "a")
-		authParams.IsUpdateOrCreate = strings.Contains(AuthcrudArgs.StringResult, "x")
+		authParams.IsFind = strings.Contains(AuthCrudArgs.StringResult, "f")
+		authParams.IsCreate = strings.Contains(AuthCrudArgs.StringResult, "c")
+		authParams.IsRead = strings.Contains(AuthCrudArgs.StringResult, "r")
+		authParams.IsUpdate = strings.Contains(AuthCrudArgs.StringResult, "u")
+		authParams.IsDelete = strings.Contains(AuthCrudArgs.StringResult, "d")
+		authParams.IsFindOrCreate = strings.Contains(AuthCrudArgs.StringResult, "a")
+		authParams.IsUpdateOrCreate = strings.Contains(AuthCrudArgs.StringResult, "x")
 
 	}
 
@@ -377,7 +376,6 @@ func getEntityModel() (content string) {
 	return
 }
 
-
 func getWebAppTestContent() (webappTestContent string) {
 
 	webappTestContent = usualTemplateWebappTestEntity.Content
@@ -420,12 +418,12 @@ func getEntity(c *ishell.Context) (entity string, err error) {
 func getRouteContent() string {
 
 	crudParams := Crud{
-		IsFind:         true,
-		IsCreate:       true,
-		IsRead:         true,
-		IsUpdate:       true,
-		IsDelete:       true,
-		IsFindOrCreate: true,
+		IsFind:           true,
+		IsCreate:         true,
+		IsRead:           true,
+		IsUpdate:         true,
+		IsDelete:         true,
+		IsFindOrCreate:   true,
 		IsUpdateOrCreate: true,
 	}
 

@@ -8,12 +8,12 @@ import (
 )
 
 type Field struct {
-	Name    string
-	Type    string
-	IsDb    bool
-	IsType  bool
+	Name        string
+	Type        string
+	IsDb        bool
+	IsType      bool
 	CommentType string
-	CommentDb string
+	CommentDb   string
 }
 
 type Entity struct {
@@ -53,7 +53,8 @@ type EntityFilter struct {
 	IsRegenerateJsTypes bool
 	IsUuidMode          bool
 	IsViewMode          bool
-	IsExactMatch bool
+	IsExactMatch        bool
+	IsSoftDelete        bool
 	//EntityFilter remove this line for disable generator functionality
 
 	AbstractFilter
@@ -88,6 +89,7 @@ func GetEntityFilter(request *http.Request, functionType string) EntityFilter {
 	filter.IsRegenerateJsTypes = strings.ToLower(request.FormValue("IsRegenerateJsTypes")) != "false" && len(request.FormValue("IsRegenerateJsTypes")) > 0
 	filter.IsUuidMode = strings.ToLower(request.FormValue("IsUuidMode")) != "false" && len(request.FormValue("IsUuidMode")) > 0
 	filter.IsExactMatch, _ = strconv.ParseBool(request.FormValue("IsExactMatch"))
+	filter.IsSoftDelete, _ = strconv.ParseBool(request.FormValue("IsSoftDelete"))
 	//GetEntityFilter remove this line for disable generator functionality
 
 	ReadJSON(request, &filter.model)

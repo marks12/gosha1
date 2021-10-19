@@ -144,6 +144,13 @@
                                     </VSet>
 
                                 </VSet>
+                              <VSet v-if="isPanelCreate" width="dyn" :key="'newf-id'">
+                              <VSet width="dyn">
+                                <VCheckbox v-model="IsSoftDelete">
+                                  <VText>Soft delete</VText>
+                                </VCheckbox>
+                              </VSet>
+                              </VSet>
                                 <VSet v-for="(f, index) in newFields" width="dyn" :key="'newf-' + index">
                                     <VInput v-model="f.Name" @input="updateNewFieldsList"></VInput>
                                     <VSelect v-model="f.Type" :items="getTypes"></VSelect>
@@ -303,6 +310,7 @@
                 IsRegenerateJsTypes: localStorage.getItem("IsRegenerateJsTypes") === 'true',
                 IsUuidMode: localStorage.getItem("IsUuidMode") === 'true',
                 IsViewMode: localStorage.getItem("IsViewMode") === 'true',
+                IsSoftDelete: localStorage.getItem("IsSoftDelete") === 'true',
                 parts: 1,
                 SearchTimer: null,
             };
@@ -693,6 +701,7 @@
                         IsRegenerateJsTypes: this.IsRegenerateJsTypes,
                         IsUuidMode: this.IsUuidMode,
                         IsViewMode: this.IsViewMode,
+                        IsSoftDelete: this.IsSoftDelete,
                     },
                     data: this.currentEntityItem.item,
                 }).then((response) => {
@@ -767,6 +776,9 @@
             },
             IsViewMode(newVal) {
                 localStorage.setItem("IsViewMode", newVal);
+            },
+            IsSoftDelete(newVal) {
+                localStorage.setItem("IsSoftDelete", newVal);
             },
         },
     }
