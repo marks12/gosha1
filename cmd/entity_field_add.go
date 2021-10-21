@@ -528,65 +528,67 @@ func (mr *ModelRepository) GetFields(modelName string, fields []Field) []Field {
                 structDecl := md.(*ast.TypeSpec)
                 if structDecl.Name.String() == modelName {
 
-                    structDecl := md.(*ast.TypeSpec).Type.(*ast.StructType)
+                    if structDecl, ok := md.(*ast.TypeSpec).Type.(*ast.StructType); ok {
 
-                    for _, ft := range structDecl.Fields.List {
+                        for _, ft := range structDecl.Fields.List {
 
-                        if len(ft.Names) > 0 {
+                            if len(ft.Names) > 0 {
 
-                            typeString := ""
+                                typeString := ""
 
-                            if ident, ok := ft.Type.(*ast.Ident); ok { // allow subsequent panic to provide a more descriptive error
-                                typeString = ident.Name
-                            } else if _, ok := ft.Type.(*ast.ArrayType); ok { // allow subsequent panic to provide a more descriptive error
-                                typeString = "array"
-                            } else {
+                                if ident, ok := ft.Type.(*ast.Ident); ok { // allow subsequent panic to provide a more descriptive error
+                                    typeString = ident.Name
+                                } else if _, ok := ft.Type.(*ast.ArrayType); ok { // allow subsequent panic to provide a more descriptive error
+                                    typeString = "array"
+                                } else {
 
-                                switch x := ft.Type.(type) {
-                                case *ast.BasicLit:
-                                    typeString = x.Value
-                                case *ast.Ident:
-                                    typeString = x.Name
-                                case *ast.StarExpr:
-                                    {
-                                        //typeString = x.Star
-                                        if ident, ok := x.X.(*ast.Ident); ok { // allow subsequent panic to provide a more descriptive error
-                                            typeString = "*" + ident.Name
-                                        } else {
-                                            // Обработка указателей на сложные типы
-                                            x, ok := x.X.(*ast.SelectorExpr)
-                                            if !ok {
-                                                continue
+                                    switch x := ft.Type.(type) {
+                                    case *ast.BasicLit:
+                                        typeString = x.Value
+                                    case *ast.Ident:
+                                        typeString = x.Name
+                                    case *ast.StarExpr:
+                                        {
+                                            //typeString = x.Star
+                                            if ident, ok := x.X.(*ast.Ident); ok { // allow subsequent panic to provide a more descriptive error
+                                                typeString = "*" + ident.Name
+                                            } else {
+                                                // Обработка указателей на сложные типы
+                                                x, ok := x.X.(*ast.SelectorExpr)
+                                                if !ok {
+                                                    continue
+                                                }
+                                                if ident, ok := x.X.(*ast.Ident); ok { // allow subsequent panic to provide a more descriptive error
+                                                    typeString = ident.Name + "." + x.Sel.Name
+                                                }
                                             }
+                                        }
+                                    case *ast.SelectorExpr:
+                                        {
                                             if ident, ok := x.X.(*ast.Ident); ok { // allow subsequent panic to provide a more descriptive error
                                                 typeString = ident.Name + "." + x.Sel.Name
                                             }
                                         }
+                                    default:
+                                        typeString = "unknown"
                                     }
-                                case *ast.SelectorExpr:
-                                    {
-                                        if ident, ok := x.X.(*ast.Ident); ok { // allow subsequent panic to provide a more descriptive error
-                                            typeString = ident.Name + "." + x.Sel.Name
-                                        }
-                                    }
-                                default:
-                                    typeString = "unknown"
+                                }
+
+                                fields = append(fields, Field{
+                                    Type:     strings.Title(typeString),
+                                    Name:     ft.Names[0].Name,
+                                    Relation: mr.GetFieldRelation(ft),
+                                    Comment:  strings.TrimSpace(ft.Doc.Text()),
+                                })
+                            } else {
+
+                                if ident, ok := ft.Type.(*ast.Ident); ok { // allow subsequent panic to provide a more descriptive error
+
+                                    fields = mr.GetFields(ident.Name, fields)
                                 }
                             }
-
-                            fields = append(fields, Field{
-                                Type:     strings.Title(typeString),
-                                Name:     ft.Names[0].Name,
-                                Relation: mr.GetFieldRelation(ft),
-                                Comment:  strings.TrimSpace(ft.Doc.Text()),
-                            })
-                        } else {
-
-                            if ident, ok := ft.Type.(*ast.Ident); ok { // allow subsequent panic to provide a more descriptive error
-
-                                fields = mr.GetFields(ident.Name, fields)
-                            }
                         }
+
                     }
                 }
             }
