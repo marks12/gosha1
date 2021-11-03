@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"gopkg.in/abiosoft/ishell.v2"
 	"os"
-	"regexp"
 	"strings"
 )
 
@@ -129,13 +128,13 @@ func GetEntities() (result []modelEntity, totalRecords int, err error) {
 			})
 		}
 
-		isFilter, _ := regexp.Match("Filter", []byte(t))
+		//isFilter, _ := regexp.Match("Filter", []byte(t))
 
 		res = append(res, modelEntity{
 			Id:       id,
 			Name:     t,
 			Fields:   fields,
-			IsFilter: isFilter,
+			IsFilter: existsTypes.IsFilter(t),
 		})
 		id++
 	}
@@ -203,9 +202,10 @@ func GetEntities() (result []modelEntity, totalRecords int, err error) {
 
 	for _, entity := range res {
 
-		matched, _ := regexp.Match(`Filter`, []byte(entity.Name))
+		//matched, _ := regexp.Match(`Filter`, []byte(entity.Name))
+		isFilter := existsTypes.IsFilter(entity.Name)
 
-		if !matched {
+		if !isFilter {
 			filtered = append(filtered, entity)
 		}
 	}

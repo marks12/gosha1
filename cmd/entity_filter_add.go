@@ -1,15 +1,15 @@
 package cmd
 
 import (
-    "gopkg.in/abiosoft/ishell.v2"
-    "github.com/fatih/color"
-    "gosha/mode"
     "fmt"
-    "os"
-    "strings"
-    "gosha/settings"
+    "github.com/fatih/color"
     "go/ast"
+    "gopkg.in/abiosoft/ishell.v2"
+    "gosha/mode"
+    "gosha/settings"
+    "os"
     "regexp"
+    "strings"
 )
 
 func GetExistsFilters() (repo ModelRepository) {
@@ -132,10 +132,19 @@ func (mr *ModelRepository) addFilter(modelName string, fieldName string, dataTyp
     CamelCase := strings.Title(modelName)
     snakeCase := getLowerCase(modelName)
 
-    base_snake := strings.Replace(snakeCase, "_filter", "", 1)
-    BaseCamel := strings.Replace(CamelCase, "Filter", "", 1)
+    base_snake_go := strings.Replace(snakeCase + ".go", "_filter.go", ".go", 1)
 
-    sourceFile := "./types/" + base_snake + ".go"
+    BaseCamel := ""
+
+    re := regexp.MustCompile("FilterFilter$")
+    if re.Match([]byte(CamelCase)) {
+        BaseCamel = strings.Replace(CamelCase, "FilterFilter", "Filter", 1)
+    } else {
+        ref := regexp.MustCompile("(Filter)$")
+        BaseCamel = string(ref.ReplaceAll([]byte(CamelCase), []byte("")))
+    }
+
+    sourceFile := "./types/" + base_snake_go
 
     CopyFile(
         sourceFile,
@@ -171,13 +180,17 @@ func (mr *ModelRepository) addFilter(modelName string, fieldName string, dataTyp
         break
         case settings.DataTypeInt, settings.DataTypeFloat64:
 
+            filterCode = `if filter.` + fieldName + ` > 0 {
+        criteria = criteria.Where(dbmodels.` + BaseCamel + `{` + fieldName + `: filter.` + fieldName + `})
+    }`
+
         break
 
     }
 
     if len(filterCode) > 0 {
 
-        path := "./logic/" + base_snake + ".go"
+        path := "./logic/" + base_snake_go
         line := getRemoveLine(BaseCamel + ".FindFilterCode")
 
         CopyFile(
@@ -300,7 +313,8 @@ func GetFiltersList(repository ModelRepository) (list []string) {
 
                 name := structDecl.Name.String()
 
-                isFilter, _ := regexp.Match("Filter", []byte(name))
+                //isFilter, _ := regexp.Match("Filter", []byte(name))
+                isFilter := repository.IsFilter(name)
 
                 if isFilter {
                     list = append(list, name)

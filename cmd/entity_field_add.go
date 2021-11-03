@@ -223,6 +223,11 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
         []string{fieldName + ": " + getGeneratorByDataType(dataType) + "\n\t\t" + getRemoveLine(CamelCase)},
         nil)
 
+    // добавляем автофильтры для int полей содержащих id
+    if strings.ToLower(dataType) == settings.DataTypeInt && (strings.Contains(fieldName, "Id") || strings.Contains(fieldName, "ID")) {
+        err = mr.addFilter(modelName + "Filter", fieldName, dataType, "")
+    }
+
     return
 }
 
@@ -596,6 +601,45 @@ func (mr *ModelRepository) GetFields(modelName string, fields []Field) []Field {
     }
 
     return fields
+}
+
+func (mr *ModelRepository) IsFilter(modelName string) bool {
+
+    for _, model := range mr.list {
+
+        for _, spec := range model.Structures {
+
+            tp, ok := spec.(*ast.GenDecl)
+
+            if !ok {
+                continue
+            }
+
+            for _, md := range tp.Specs {
+
+                _, ok := md.(*ast.TypeSpec)
+                if !ok {
+                    continue
+                }
+
+                structDecl := md.(*ast.TypeSpec)
+                if structDecl.Name.String() == modelName {
+
+                    if structDecl, ok := md.(*ast.TypeSpec).Type.(*ast.StructType); ok {
+
+                        for _, ft := range structDecl.Fields.List {
+
+                            if fmt.Sprintf("%+v", ft.Type) == "AbstractFilter" {
+                                return true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return false
 }
 
 func (mr *ModelRepository) GetModelComment(modelName string) string {
