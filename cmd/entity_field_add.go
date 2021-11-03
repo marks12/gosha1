@@ -225,7 +225,7 @@ func (mr *ModelRepository) addField(modelName string, fieldName string, dataType
 
     // добавляем автофильтры для int полей содержащих id
     if strings.ToLower(dataType) == settings.DataTypeInt && (strings.Contains(fieldName, "Id") || strings.Contains(fieldName, "ID")) {
-        err = mr.addFilter(modelName + "Filter", fieldName, dataType, "")
+        err = mr.addFilter(modelName + "Filter", fieldName, dataType, "", true)
     }
 
     return
@@ -601,6 +601,58 @@ func (mr *ModelRepository) GetFields(modelName string, fields []Field) []Field {
     }
 
     return fields
+}
+
+func (mr *ModelRepository) IsFieldExists(modelName string, field string) bool {
+
+    for _, model := range mr.list {
+
+        for _, spec := range model.Structures {
+
+            tp, ok := spec.(*ast.GenDecl)
+
+            if !ok {
+                continue
+            }
+
+            for _, md := range tp.Specs {
+
+                structDecl, ok := md.(*ast.TypeSpec)
+                if !ok {
+                    continue
+                }
+
+                if structDecl.Name.String() == modelName {
+
+                    if structType, ok := md.(*ast.TypeSpec).Type.(*ast.StructType); ok {
+
+                        includedStructs := []string{}
+
+                        for _, ft := range structType.Fields.List {
+
+                            if len(ft.Names) < 1 {
+                                includedStructs = append(includedStructs, fmt.Sprintf("%+v", ft.Type))
+                                continue
+                            }
+
+                            if ft.Names[0].Name == field {
+                                return true
+                            }
+                        }
+
+                        for _, includeStruct := range includedStructs {
+                            hasField := mr.IsFieldExists(includeStruct, field)
+                            if hasField {
+                                return true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return false
 }
 
 func (mr *ModelRepository) IsFilter(modelName string) bool {
