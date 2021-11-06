@@ -235,7 +235,7 @@ import (
 )
 // default entity will used when create new entity
 type Entity struct {
-    ID        int       ` + "`" + `gorm:"primary_key"` + "`" + `
+    ID        int       ` + "`" + `gorm:"type:bigint;primaryKey"` + "`" + `
     ` + getRemoveLine("Entity") + `
 
     CreatedAt time.Time

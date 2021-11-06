@@ -36,7 +36,7 @@ func ({entity} *{Entity}) Validate() {
 func getDbModelContent(isUuid bool, isSoftDelete bool) string {
 
 	idImport := ""
-	idField := `ID        int       ` + "`" + `gorm:"primary_key"` + "`"
+	idField := `ID        int       ` + "`" + `gorm:"type:bigint;primaryKey"` + "`"
 	softDeleteField := ""
 	if isSoftDelete {
 		softDeleteField = `DeletedAt gorm.DeletedAt ` + "`" + `sql:"index" json:"-"` + "`"
@@ -50,7 +50,6 @@ func getDbModelContent(isUuid bool, isSoftDelete bool) string {
 			idField = "ID   uuid.UUID `sql:\"primary_key;type:uuid;default:uuid_generate_v4()\"`"
 		} else {
 			idField = "ID   uuid.UUID `sql:\"primary_key;default:uuid()\"`"
-			//idField = `ID   uuid.UUID ` + "`" + `gorm:"primary_key, default: uuid()"` + "`"
 		}
 	}
 
