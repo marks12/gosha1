@@ -5,7 +5,6 @@ import (
 	"gosha/cmd"
 	"gosha/webapp/types"
 	"os"
-	"regexp"
 	"strings"
 )
 
@@ -42,13 +41,11 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 			})
 		}
 
-		isFilter, _ := regexp.Match("Filter", []byte(t))
-
 		res = append(res, types.Entity{
 			Id:          id,
 			Name:        t,
 			Fields:      fields,
-			IsFilter:    isFilter,
+			IsFilter:    existsTypes.IsFilter(t),
 			CommentType: existsTypes.GetModelComment(t),
 		})
 		id++
@@ -143,8 +140,9 @@ func EntityFind(filter types.EntityFilter) (result []types.Entity, totalRecords 
 	if !filter.WithFilter {
 		filtered := []types.Entity{}
 		for _, entity := range result {
-			matched, _ := regexp.Match(`Filter`, []byte(entity.Name))
-			if !matched {
+			//matched, _ := regexp.Match(`Filter`, []byte(entity.Name))
+			isFilter := existsTypes.IsFilter(entity.Name)
+			if !isFilter {
 				filtered = append(filtered, entity)
 			}
 		}
@@ -344,7 +342,10 @@ func EntityUpdate(filter types.EntityFilter) (data types.Entity, err error) {
 
 	e := filter.GetEntityModel()
 
-	isFilter, _ := regexp.Match("Filter", []byte(e.Name))
+	existsEntity := cmd.GetExistsTypes()
+
+	//isFilter, _ := regexp.Match("Filter", []byte(e.Name))
+	isFilter := existsEntity.IsFilter(e.Name)
 
 	if isFilter {
 		addFilters(e.Name, e.Fields)
