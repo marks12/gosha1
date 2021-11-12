@@ -36,7 +36,7 @@ func ({entity} *{Entity}) Validate() {
 func getDbModelContent(isUuid bool, isSoftDelete bool) string {
 
 	idImport := ""
-	idField := `ID        int       ` + "`" + `gorm:"type:bigint;primaryKey"` + "`"
+	idField := `ID        int`
 	softDeleteField := ""
 	if isSoftDelete {
 		softDeleteField = `DeletedAt gorm.DeletedAt ` + "`" + `sql:"index" json:"-"` + "`"

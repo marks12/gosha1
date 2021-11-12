@@ -9,7 +9,7 @@ import (
 )
 
 type Entity struct {
-    ID        int       ` + "`" + `gorm:"type:bigint;primaryKey"` + "`" + `
+    ID        int
     ` + getRemoveLine("Entity") + `
 
     CreatedAt time.Time
