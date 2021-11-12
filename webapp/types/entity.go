@@ -89,7 +89,7 @@ func GetEntityFilter(request *http.Request, functionType string) EntityFilter {
 	filter.IsRegenerateJsTypes = strings.ToLower(request.FormValue("IsRegenerateJsTypes")) != "false" && len(request.FormValue("IsRegenerateJsTypes")) > 0
 	filter.IsUuidMode = strings.ToLower(request.FormValue("IsUuidMode")) != "false" && len(request.FormValue("IsUuidMode")) > 0
 	filter.IsExactMatch, _ = strconv.ParseBool(request.FormValue("IsExactMatch"))
-	filter.IsSoftDelete, _ = strconv.ParseBool(request.FormValue("IsSoftDelete"))
+	filter.IsSoftDelete = strings.ToLower(request.FormValue("IsSoftDelete")) != "false" && len(request.FormValue("IsSoftDelete")) > 0
 	//GetEntityFilter remove this line for disable generator functionality
 
 	ReadJSON(request, &filter.model)

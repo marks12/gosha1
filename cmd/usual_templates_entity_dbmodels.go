@@ -10,7 +10,7 @@ import (
 var usualWebappEntityDbModels = `package dbmodels
 
 import (
-    "gorm.io/gorm"
+	{SoftDeleteGorm}
     "time"
     {IdImport}
 )
@@ -38,8 +38,10 @@ func getDbModelContent(isUuid bool, isSoftDelete bool) string {
 	idImport := ""
 	idField := `ID        int`
 	softDeleteField := ""
+	softDeleteGormField := ""
 	if isSoftDelete {
 		softDeleteField = `DeletedAt gorm.DeletedAt ` + "`" + `sql:"index" json:"-"` + "`"
+		softDeleteGormField = `"gorm.io/gorm"`
 	}
 
 	if isUuid {
@@ -67,6 +69,7 @@ func (model *{Entity}) BeforeCreate(scope *gorm.Scope) error {
 
 	usualWebappEntityDbModels = AssignVar(usualWebappEntityDbModels, "{beforeCreate}", beforeCreate)
 	usualWebappEntityDbModels = AssignVar(usualWebappEntityDbModels, "{SoftDelete}", softDeleteField)
+	usualWebappEntityDbModels = AssignVar(usualWebappEntityDbModels, "{SoftDeleteGorm}", softDeleteGormField)
 	cont := AssignVar(AssignVar(assignMsName(usualWebappEntityDbModels), "{ID}", idField), "{IdImport}", idImport)
 
 	content := template{

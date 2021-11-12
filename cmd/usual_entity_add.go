@@ -202,7 +202,9 @@ func usualEntityAdd(c *ishell.Context) {
 			c)
 
 		if !IsPostgres() && mode.GetUuidMode() {
-			addImportIfNeed(destinationFile, "gorm.io/gorm")
+			if isSoftDelete.BoolResult {
+				addImportIfNeed(destinationFile, "gorm.io/gorm")
+			}
 		}
 	}
 
