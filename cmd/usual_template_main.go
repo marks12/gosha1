@@ -35,8 +35,11 @@ func runWsServer() {
 
 func runHttpServer() {
 
-	fmt.Println("API сервер запущен :" + settings.ServerPort)
-	http.ListenAndServe("0.0.0.0:" + settings.ServerPort, router.Router())
+	fmt.Println("API server running :" + settings.ServerPort)
+	err := http.ListenAndServe("0.0.0.0:" + settings.ServerPort, router.Router())
+	if err != nil {
+		fmt.Printf("Cant run server with err: %+v \n", err)
+	}
 }
 `
 
