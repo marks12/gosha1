@@ -1,39 +1,18 @@
 package cmd
 
-const FindUrl = "/api/v1/{entity}"
-const ReadUrl = "/api/v1/{entity}/" // + id
-const CreateUrl = "/api/v1/{entity}"
-const MultiCreateUrl = "/api/v1/{entity}/list"
-const UpdateUrl = "/api/v1/{entity}/" // + id
-const MultiUpdateUrl = "/api/v1/{entity}/list"
-const DeleteUrl = "/api/v1/{entity}/" // + id
-const MultiDeleteUrl = "/api/v1/{entity}/list"
-const FindOrCreateUrl = "/api/v1/{entity}"
-const UpdateOrCreateUrl = "/api/v1/{entity}"
-
 const storeTemplate = `
 import {{Entity}} from "../apiModel";
 import api from "../api";
 import {findItemIndex} from "../common";
-
-let findUrl = "` + FindUrl + `";
-let readUrl = "` + ReadUrl + `"; // + id
-let createUrl = "` + CreateUrl + `";
-let multiCreateUrl = "` + MultiCreateUrl + `";
-let updateUrl = "` + UpdateUrl + `"; // + id
-let multiUpdateUrl = "` + MultiUpdateUrl + `";
-let deleteUrl = "` + DeleteUrl + `"; // + id
-let multiDeleteUrl = "` + MultiDeleteUrl + `";
-let findOrCreateUrl = "` + FindOrCreateUrl + `";
-let updateOrCreateUrl = "` + UpdateOrCreateUrl + `";
+import routes{Entity} from "../route/{Entity}.js";
 
 const {entity} = {
     actions: {
         create{Entity}(context, {data, filter, header, noMutation}) {
 
-            let url = createUrl;
+            let url = routes{Entity}.create;
             if (Array.isArray && Array.isArray(data)) {
-                url = multiCreateUrl
+                url = routes{Entity}.multiCreate
             }
 
             return api.create(url, data, filter, header)
@@ -56,10 +35,10 @@ const {entity} = {
             let dataOrNull = null;
 
             if (Array.isArray && Array.isArray(id)) {
-                url = multiDeleteUrl;
+                url = routes{Entity}.multiDelete;
                 dataOrNull = id.map(item => typeof item === "number" ? {Id: item} : item);
             } else {
-                url = deleteUrl + id;
+                url = routes{Entity}.delete + id;
             }
 
             return api.remove(url, header, dataOrNull)
@@ -76,7 +55,7 @@ const {entity} = {
         },
         find{Entity}(context, {filter, header, isAppend, noMutation}) {
 
-            return api.find(findUrl, filter, header)
+            return api.find(routes{Entity}.find, filter, header)
                 .then(function(response) {
 
 					if(! noMutation) {
@@ -96,7 +75,7 @@ const {entity} = {
         },
         load{Entity}(context, {id, filter, header, noMutation}) {
 
-            return api.find(readUrl + id, filter, header)
+            return api.find(routes{Entity}.read + id, filter, header)
                 .then(function(response) {
 
 					if(! noMutation) {
@@ -111,9 +90,9 @@ const {entity} = {
         },
         update{Entity}(context, {id, data, filter, header, noMutation}) {
 
-            let url = updateUrl + id;
+            let url = routes{Entity}.update + id;
             if (Array.isArray && Array.isArray(data)) {
-                url = multiUpdateUrl
+                url = routes{Entity}.multiUpdate
             }
 
             return api.update(url, data, filter, header)
@@ -130,7 +109,7 @@ const {entity} = {
         },
         findOrCreate{Entity}(context, {id, data, filter, header, noMutation}) {
 
-            return api.update(findOrCreateUrl, data, filter, header)
+            return api.update(routes{Entity}.findOrCreate, data, filter, header)
                 .then(function(response) {
 
 					if(! noMutation) {
@@ -220,18 +199,7 @@ const {entity} = {
     state: {
         {Entity}: new {Entity}(),
         {Entity}__List: [],
-        {Entity}__Routes: {
-            find: findUrl,
-            read: readUrl,
-            create: createUrl,
-            multiCreate: multiCreateUrl,
-            update: updateUrl,
-            multiUpdate: multiUpdateUrl,
-            delete: deleteUrl,
-            multiDelete: multiDeleteUrl,
-            findOrCreate: findOrCreateUrl,
-            updateOrCreate: updateOrCreateUrl,
-        },
+        {Entity}__Routes: routes{Entity},
     },
 };
 

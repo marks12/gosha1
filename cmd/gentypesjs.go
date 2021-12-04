@@ -13,6 +13,11 @@ type store struct {
 	jscode string
 }
 
+type jsRoute struct {
+	name   string
+	jscode string
+}
+
 type vueComponent struct {
 	name   string
 	jscode string
@@ -30,6 +35,7 @@ func genTypesJs(c *ishell.Context) {
 
 	folder := "./jstypes"
 	folderStore := folder + "/store"
+	folderRoute := folder + "/route"
 	folderData := folder + "/data"
 	file := folder + "/apiModel.js"
 	apiFile := folder + "/api.js"
@@ -41,8 +47,9 @@ func genTypesJs(c *ishell.Context) {
 	os.MkdirAll(folder, 0755)
 	os.MkdirAll(folderStore, 0755)
 	os.MkdirAll(folderData, 0755)
+	os.MkdirAll(folderRoute, 0755)
 
-	modelContent, stores, _, data := getTypesJs(storeNamespace.StringResult)
+	modelContent, stores, _, data, routes := getTypesJs(storeNamespace.StringResult)
 
 	cb := []byte(modelContent)
 	ioutil.WriteFile(file, cb, 0644)
@@ -66,9 +73,13 @@ func genTypesJs(c *ishell.Context) {
 	for _, d := range data {
 		ioutil.WriteFile(folderData+"/"+d.name+"Data.js", []byte(d.jscode), 0644)
 	}
+
+	for _, r := range routes {
+		ioutil.WriteFile(folderRoute+"/"+r.name+".js", []byte(r.jscode), 0644)
+	}
 }
 
-func getTypesJs(storeNameSpace string) (string, []store, []vueComponent, []vueComponentData) {
+func getTypesJs(storeNameSpace string) (string, []store, []vueComponent, []vueComponentData, []jsRoute) {
 
 	existsTypes := GetExistsTypes()
 	typeNames := GetModelsList(existsTypes)
@@ -77,7 +88,7 @@ func getTypesJs(storeNameSpace string) (string, []store, []vueComponent, []vueCo
 
 }
 
-func getFileContent(repository ModelRepository, typeNames []string, storeNameSpace string) (content string, stores []store, vueComponentTemplates []vueComponent, vueData []vueComponentData) {
+func getFileContent(repository ModelRepository, typeNames []string, storeNameSpace string) (content string, stores []store, vueComponentTemplates []vueComponent, vueData []vueComponentData, routes []jsRoute) {
 
 	content = `
 	//some common actions
@@ -134,6 +145,11 @@ func getFileContent(repository ModelRepository, typeNames []string, storeNameSpa
 			jscode: getTemplateDataJsCode(t),
 		})
 
+		routes = append(routes, jsRoute{
+			name:   t,
+			jscode: getTemplateRouteJsCode(t),
+		})
+
 		content += "\nexport function " + t + "() {\n\n"
 
 		//sort.Sort(ByCase(fields))
@@ -170,6 +186,13 @@ func getTemplateDataJsCode(entity string) string {
 
 	return AssignVar(
 		AssignVar(usualEntityVueComponentData, "{Entity}", entity),
+		"{entity}", GetFirstLowerCase(entity))
+}
+
+func getTemplateRouteJsCode(entity string) string {
+
+	return AssignVar(
+		AssignVar(usualEntityJsRoute, "{Entity}", entity),
 		"{entity}", GetFirstLowerCase(entity))
 }
 
