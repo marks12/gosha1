@@ -14,7 +14,7 @@ const usualEntityVueComponent = `
                 <table>
                     <thead>
                         <tr>
-                            <th v-for="header in fields">{{ header }}</th>
+                            <th v-for="(header, index) in fields" :key="index">{{ header }}</th>
                         </tr>
                     </thead>
             
@@ -26,7 +26,7 @@ const usualEntityVueComponent = `
                             class="sw-table__row_can-select"
                             :class="{'sw-table__row_is-selected': {entity}Item.Id === current{Entity}Item.item.Id}"
                         >
-                            <td v-for="(value, key) in fields">
+                            <td v-for="(value, key) in fields" :key="key + '-fields'">
                                 <VCheckbox v-if="isCheckbox({entity}Item[key])" :checked="{entity}Item[key]" disabled></VCheckbox>
                                 <VText v-else>{{ {entity}Item[key] }}</VText>
                             </td>
@@ -47,9 +47,9 @@ const usualEntityVueComponent = `
         
                     <template #content>
                         <form @submit.prevent="saveChangesSubmit">
-                            <VSet direction="vertical">
+                            <VSet vertical>
                                 <VSet
-                                    v-for="(filed, key) in editFields"
+                                    v-for="(filed, key) in editFields" :key="key + '-editFields'"
                                     vertical-align="center"
                                 >
                                     <VLabel
@@ -67,7 +67,7 @@ const usualEntityVueComponent = `
 										v-if="isCheckbox(current{Entity}Item.item[key])"
                                         v-model="current{Entity}Item.item[key]"
                                         :id="` + "`" + `current{Entity}Item${key}` + "`" + `"
-										@input="changeCurrentApplicationItem"
+										@input="changeCurrent{Entity}Item"
 									/>
 									
                                 </VSet>
@@ -124,11 +124,13 @@ const usualEntityVueComponent = `
             <slot name="pageFooter">
                 <VSet>
                     <VButton
+                        v-if="canCreate"
                         text="Добавить"
                         accent
                         @click="showPanel(panel.create)"
                     />
                     <VButton
+                        v-if="canDelete"
                         text="Удалить"
                         :disabled="!current{Entity}Item.isSelected"
                         @click="delete{Entity}ItemHandler"
@@ -152,14 +154,11 @@ const usualEntityVueComponent = `
     import VText from "swui/src/components/VText";
     import VPanel from "swui/src/components/VPanel";
     import VButton from "swui/src/components/VButton";
-    import VIcon from "swui/src/components/VIcon";
-    import VSign from "swui/src/components/VSign";
-    import VSelectSimple from "swui/src/components/VSelectSimple";
 
     export default {
         name: '{Entity}Gen',
 
-        components: {VSelectSimple, VSign, VIcon, VButton, VPanel, VText, VInput, VLabel, VSet, VHead, WorkSpace, VCheckbox},
+        components: {VButton, VPanel, VText, VInput, VLabel, VSet, VHead, WorkSpace, VCheckbox},
 
         props: {
             fields: {
@@ -195,7 +194,15 @@ const usualEntityVueComponent = `
 
                     return fieldsObj;
                 }
-            }
+            },
+            canDelete: {
+                type: Boolean,
+                default: true,
+            },
+            canCreate: {
+                type: Boolean,
+                default: true,
+            },
         },
 
         data() {
@@ -203,12 +210,11 @@ const usualEntityVueComponent = `
         },
 
         created() {
-            this.fill{Entity}Filter();
-            this.fetch{Entity}Data();
+			this.onCreated();
         },
 
         computed: {
-            ...mapGetters({
+            ...mapGetters({namespace}{
                 {entity}List: 'getList{Entity}'
             }),
             isPanelCreate() {
@@ -252,18 +258,23 @@ const usualEntityVueComponent = `
         },
 
         methods: {
-            ...mapActions([
+            ...mapActions({namespace}[
                 'find{Entity}',
                 'update{Entity}',
                 'delete{Entity}',
                 'create{Entity}',
             ]),
 
-            ...mapMutations([
+            ...mapMutations({namespace}[
                 'add{Entity}ItemToList',
                 'delete{Entity}FromList',
                 'update{Entity}ById',
             ]),
+
+			onCreated() {
+				this.fill{Entity}Filter();
+	            this.fetch{Entity}Data();
+			},
 
             fill{Entity}Filter() {
                 this.{entity}Filter.CurrentPage = 1;
@@ -330,12 +341,8 @@ const usualEntityVueComponent = `
             },
 
             create{Entity}ItemSubmit() {
-                this.create{Entity}({
-                    data: {
-                        Name: this.current{Entity}Item.item.Name,
-                        Value: this.current{Entity}Item.item.Value,
-                        Description: this.current{Entity}Item.item.Description,
-                    }
+                return this.create{Entity}({
+					data: this.current{Entity}Item.item,
                 }).then((response) => {
 
                     if (response.Model) {
@@ -351,8 +358,9 @@ const usualEntityVueComponent = `
             },
 
             edit{Entity}ItemSubmit() {
+
                 if (this.current{Entity}Item.hasChange) {
-                    this.update{Entity}({
+                    return this.update{Entity}({
                         id: this.current{Entity}Item.item.Id,
                         data: this.current{Entity}Item.item,
                     }).then((response) => {
@@ -369,7 +377,10 @@ const usualEntityVueComponent = `
                     }).catch(error => {
                         console.error('Ошибка изменения записи: ', error);
                     });
-                }
+
+                } else {
+					return new Promise(function(resolve, reject) {reject("Item has no changes. Nothing to save");})
+				}
             },
 
             delete{Entity}ItemHandler() {

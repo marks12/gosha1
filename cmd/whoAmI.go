@@ -7,6 +7,7 @@ import (
     "fmt"
     "os"
     "strings"
+    "gosha/settings"
 )
 
 const MSCORE_ENTITY_ADD = "core:entity:add"
@@ -25,7 +26,11 @@ const USUAL_ENTITY_ADD  = "usual:entity:add"
 
 const USUAL_AUTH_ADD    = "usual:auth:add"
 
-const ENTITY_ADD_FIELD = "entity:Field:add"
+const ENTITY_ADD_FIELD = "entity:field:add"
+
+const ENTITY_ADD_FILTER = "entity:filter:add"
+
+const CREATE_VIEW_FORMS  = "usual:forms:create"
 
 func setAppType(c *ishell.Context) {
 
@@ -45,6 +50,27 @@ func setAppType(c *ishell.Context) {
     if IsNextCommand(choice) {
          runSecondLevelProgram(c)
     }
+}
+
+func getAppInfo(c *ishell.Context) {
+
+    shell.DeleteCmd(MSCORE_ENTITY_ADD)
+    shell.DeleteCmd(MSRPC_ENTITY_ADD)
+
+    app := GetCurrentApp()
+
+    green := color.New(color.FgGreen).SprintFunc()
+    red := color.New(color.FgRed).SprintFunc()
+
+    successText := red("invalid structure. Your app must have follow folders: ", settings.UsualDefaultStructure)
+
+    if app.IsAppExists {
+        successText = green("success structure")
+    }
+
+    InteractiveEcho([]string{
+        "Current app has " + successText,
+    })
 }
 
 func runSecondLevelProgram(c *ishell.Context) {
@@ -145,9 +171,10 @@ func setAppCommands(choice int, c *ishell.Context) {
         InteractiveEcho([]string{
             "Hello " + blue("usual") + " application:",
             green(USUAL_APP_CREATE), " - Create new app",
-            green(USUAL_ENTITY_ADD), " - Add entity. NIM: --entity=SomeName --crud=fcruda --check-auth=fcruda, where a=findOrCreate",
+            green(USUAL_ENTITY_ADD), " - Add entity. NIM: --entity=SomeName --crud=fcrudax --check-auth=fcruda, where a=findOrCreate x=updateOrCreate",
             green(USUAL_AUTH_ADD), " - Add user, roles, auth, to app",
             green(ENTITY_ADD_FIELD), " - Add Field to model. NIM: --entity=SomeName2 --Field=SomeField --data-type=string",
+            green(ENTITY_ADD_FILTER), " - Add filter to type. NIM: --entity=SomeName2 --filter=SomeFilter --data-type=string",
         })
 
         setUsualAppCreate()
@@ -157,6 +184,10 @@ func setAppCommands(choice int, c *ishell.Context) {
 		setUsualAuthAdd()
 
         setModelFieldAdd()
+
+        setModelFilterAdd()
+
+        setCreateViewForms()
 
         break
 
@@ -213,7 +244,7 @@ func setUsualAppCreate() {
     shell.AddCmd(&ishell.Cmd{
         Name: USUAL_APP_CREATE,
         Help: "Command create new usual non MS application",
-        Func: usualAppInit,
+        Func: UsualAppInit,
     })
 }
 
@@ -224,9 +255,18 @@ func setUsualEntityAdd() {
         Name: USUAL_ENTITY_ADD,
         Help: "Command add new entity to usual app NIM. Use follow arguments:" +
             "\n\t\t\t\t--entity=SomeName - create entity with name SomeName" +
-            "\n\t\t\t\t--crud=fcruda - add follow methods to route" +
-            "\n\t\t\t\t--check-auth=fcruda  - add auth, where a=findOrCreate",
+            "\n\t\t\t\t--crud=fcrudax - add follow methods to route" +
+            "\n\t\t\t\t--check-auth=fcrudax - add auth, where a=findOrCreate x=updateOrCreate",
         Func: usualEntityAdd,
+    })
+}
+
+func setCreateViewForms() {
+
+    shell.AddCmd(&ishell.Cmd{
+        Name: CREATE_VIEW_FORMS,
+        Help: "Command create all non exists forms in ./view/form",
+        Func: createViewForms,
     })
 }
 
@@ -249,5 +289,19 @@ func setModelFieldAdd() {
             "--Field=SomeField" +
             "--data-type=string",
         Func: entityFieldAdd,
+    })
+}
+
+func setModelFilterAdd() {
+
+    shell.AddCmd(&ishell.Cmd{
+        Name: ENTITY_ADD_FILTER,
+        Help: "Command add new filter to model." +
+            "NIM:" +
+            "--entity=SomeName2" +
+            "--filter=SomeFilter" +
+            "--data-type=string" +
+            "--sql-field=string",
+        Func: entityFilterdAdd,
     })
 }

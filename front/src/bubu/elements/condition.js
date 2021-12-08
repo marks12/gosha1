@@ -1,19 +1,17 @@
-import Names from "../attributes/names";
 import Types from "../attributes/types";
 import {TYPES} from "../constants";
-import Coordinates from "../attributes/coordinates";
+import BasicSet from "../attributes/basic-set";
+import Delete from "../actions/delete";
 
-function Condition() {
+function Condition(config) {
 
-    let condition = {};
+    BasicSet.apply(this, arguments);
+    Delete.apply(this, arguments);
 
-    Object.assign(condition,
-        new Coordinates(condition),
-        new Names(condition),
-        new Types(condition, TYPES.CONDITION),
-    );
+    Types.apply(this, arguments);
+    this.SetType(TYPES.condition);
 
-    return condition;
+    return this;
 }
 
 export default Condition;

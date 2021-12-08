@@ -6,25 +6,40 @@ import (
     "{ms-name}/bootstrap"
     "{ms-name}/router"
     "{ms-name}/settings"
+    "{ms-name}/wsserver"
     "fmt"
-    "os"
-    "gosha/cmd"
     "net/http"
 )
 
 func main() {
 
-    if len(os.Args) > 1 && os.Args[1] == "shell" {
-        cmd.Run()
-        os.Exit(1)
-    }
-
     // делаем автомиграцию
     bootstrap.FillDBTestData()
 
-	fmt.Println("API сервер запущен :" + settings.ServerPort)
-	http.ListenAndServe("0.0.0.0:" + settings.ServerPort, router.Router())
+    if settings.IsDev() {
+        fmt.Println("Running in DEV mode")
+    } else {
+        fmt.Println("Running in PROD mode")
+    }
 
+    go runWsServer()
+    runHttpServer()
+}
+
+func runWsServer() {
+
+	fmt.Println("Websocket сервер запущен :" + settings.GetWssPort())
+    wsserver.SetMessageHandler("", router.HandleWss)
+    wsserver.Run("", settings.GetWssPort())
+}
+
+func runHttpServer() {
+
+	fmt.Println("API server running :" + settings.ServerPort)
+	err := http.ListenAndServe("0.0.0.0:" + settings.ServerPort, router.Router())
+	if err != nil {
+		fmt.Printf("Cant run server with err: %+v \n", err)
+	}
 }
 `
 

@@ -6,98 +6,152 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/setting";
 let readUrl = "/api/v1/setting/"; // + id
 let createUrl = "/api/v1/setting";
+let multiCreateUrl = "/api/v1/setting/list";
 let updateUrl = "/api/v1/setting/"; // + id
+let multiUpdateUrl = "/api/v1/setting/list";
 let deleteUrl = "/api/v1/setting/"; // + id
-let findOrCreateUrl = "/api/v1/setting"; // + id
+let multiDeleteUrl = "/api/v1/setting/list";
+let findOrCreateUrl = "/api/v1/setting";
+let updateOrCreateUrl = "/api/v1/setting";
 
 const setting = {
     actions: {
-        createSetting(context, {data, filter, header}) {
+        createSetting(context, {data, filter, header, noMutation}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setSetting", response.Model);
+					if(! noMutation) {
+	                    context.commit("setSetting", response.Model);
+					}
 
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        deleteSetting(context, {id, header}) {
+        deleteSetting(context, {id, header, noMutation}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id.map(item => typeof item === "number" ? {Id: item} : item);
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
-                    context.commit("clearSetting");
+					if(! noMutation) {
+	                    context.commit("clearSetting");
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        findSetting(context, {filter, header}) {
+        findSetting(context, {filter, header, isAppend, noMutation}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setSetting__List", response.List);
+					if(! noMutation) {
+						if (isAppend) {
+							context.commit("appendSetting__List", response.List);
+						} else {
+							context.commit("setSetting__List", response.List);
+						}
+					}
 
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        loadSetting(context, {id, filter, header}) {
+        loadSetting(context, {id, filter, header, noMutation}) {
 
             return api.find(readUrl + id, filter, header)
                 .then(function(response) {
 
-                    context.commit("setSetting", response.Model);
-
+					if(! noMutation) {
+	                    context.commit("setSetting", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        updateSetting(context, {id, data, filter, header}) {
+        updateSetting(context, {id, data, filter, header, noMutation}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
-
-                    context.commit("setSetting", response.Model);
-
+					if(! noMutation) {
+	                    context.commit("setSetting", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        findOrCreateSetting(context, {id, data, filter, header}) {
+        findOrCreateSetting(context, {id, data, filter, header, noMutation}) {
 
             return api.update(findOrCreateUrl, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setSetting", response.Model);
-
+					if(! noMutation) {
+	                    context.commit("setSetting", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListSetting(context) {
             context.commit("clearListSetting");
+        },
+        clearSetting(context) {
+            context.commit("clearSetting");
         },
     },
     getters: {
         getSetting: (state) => {
             return state.Setting;
         },
+        getSettingById: state => id => {
+            return state.Setting__List.find(item => item.Id === id);
+        },
         getListSetting: (state) => {
             return state.Setting__List;
+        },
+        getRoute__Setting: state => action => {
+            return state.Setting__Routes[action];
+        },
+        getRoutes__Setting: state => {
+            return state.Setting__Routes;
         },
     },
     mutations: {
@@ -105,7 +159,17 @@ const setting = {
             state.Setting = data;
         },
         setSetting__List(state, data) {
-            state.Setting__List = data;
+            state.Setting__List = data || [];
+        },
+        appendSetting__List(state, data) {
+
+            if (! state.Setting__List) {
+                state.Setting__List = [];
+            }
+
+			if (data !== null) {
+				state.Setting__List = state.Setting__List.concat(data);				
+			}
         },
         clearSetting(state) {
             state.Setting = new Setting();
@@ -143,6 +207,18 @@ const setting = {
     state: {
         Setting: new Setting(),
         Setting__List: [],
+        Setting__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+            updateOrCreate: updateOrCreateUrl,
+        },
     },
 };
 

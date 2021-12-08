@@ -1,16 +1,16 @@
 package cmd
-
-const msLogicAssigner = `package logic
-
-import (
-	"{ms-name}/dbmodels"
-	"golang.org/x/crypto/bcrypt"
-	"{ms-name}/types"
-	"{ms-name}/settings"
-)
-
-// add all assign functions
-`
+//
+//const msLogicAssigner = `package logic
+//
+//import (
+//	"{ms-name}/dbmodels"
+//	"golang.org/x/crypto/bcrypt"
+//	"{ms-name}/types"
+//	"{ms-name}/settings"
+//)
+//
+//// add all assign functions
+//`
 
 const msLogicEntity = `
 package logic
@@ -36,7 +36,7 @@ func Find{entity-name}(app mdl.Application, filter api.{entity-name}Filter) (pro
     limit       := filter.PerPage
     offset      := filter.GetOffset()
 
-    var count int
+    var count int64
 
     criteria := core.Db.Where(dbmodels.{entity-name}{AppId: appGuid})
 
@@ -63,7 +63,7 @@ func Find{entity-name}(app mdl.Application, filter api.{entity-name}Filter) (pro
         result = append(result, fillApi{entity-name}FromDb(item))
     }
 
-    return result, count, nil
+    return result, int(count), nil
 }
 
 func Create{entity-name}(app mdl.Application, {entity-name}Data api.{entity-name}) (api.{entity-name}, error) {
@@ -204,17 +204,17 @@ func fillApi{entity-name}FromDb(db{entity-name} dbmodels.{entity-name}) api.{ent
 
 `
 
-var msTemplateLogicAssigner = template{
-    Path:    "./logic/assigner.go",
-    Content: assignMsName(msLogicAssigner),
-}
+//var msTemplateLogicAssigner = template{
+//    Path:    "./logic/assigner.go",
+//    Content: assignMsName(msLogicAssigner),
+//}
 
 var msTemplateLogicEntity = template{
     Path:    "",
     Content: msLogicEntity,
 }
 
-var msTemplateLogicAssignEntity = template{
-    Path:    "./logic/assigner.go",
-    Content: msLogicAssignEntity,
-}
+//var msTemplateLogicAssignEntity = template{
+//   Path:    "./logic/assigner.go",
+//   Content: msLogicAssignEntity,
+//}

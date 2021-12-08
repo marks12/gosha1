@@ -1,30 +1,35 @@
 package cmd
 
 import (
-    "strings"
-    "os"
-    "github.com/google/uuid"
-    "math/rand"
-    "time"
-    "regexp"
-    "gopkg.in/abiosoft/ishell.v2"
-    "io/ioutil"
-    "fmt"
-    "errors"
-    "bytes"
-    "github.com/fatih/color"
-    "log"
     "bufio"
-    "io"
-    "reflect"
+    "bytes"
+    "errors"
+    "fmt"
     "gosha/mode"
+    "gosha/settings"
+    "gosha/types"
+    "io"
+    "io/ioutil"
+    "log"
+    "math/rand"
+    "os"
+    "path/filepath"
+    "reflect"
+    "regexp"
+    "runtime"
+    "strings"
+    "time"
     "unicode"
+
+    "github.com/fatih/color"
+    "github.com/google/uuid"
+    "gopkg.in/abiosoft/ishell.v2"
 )
 
 type RegularFind struct {
-    BoolResult bool
+    BoolResult   bool
     StringResult string
-    ArrayResult []string
+    ArrayResult  []string
 }
 
 type ByCase []string
@@ -61,15 +66,53 @@ func (s ByCase) Less(i, j int) bool {
     return false
 }
 
+func IsDirExists(path string) bool {
+
+    if _, err := os.Stat(path); !os.IsNotExist(err) {
+        return true
+    }
+
+    return false
+}
+
+func IsAllDirExists(dirs []string) bool {
+
+    for _, d := range dirs {
+        if !IsDirExists(d) {
+            return false
+        }
+    }
+    return true
+}
+
+func GetCurrentApp() types.App {
+
+    app := types.App{}
+
+    if IsAllDirExists(settings.UsualDefaultStructure) {
+        app.IsAppExists = true
+    } else {
+        app.IsAppExists = false
+    }
+
+    return app
+}
+
 func GetOsArgument(arg string) (RegularFind, error) {
+
+    arg = strings.TrimSpace(arg)
+    arg = strings.Replace(arg, "--", "", -1)
 
     for _, a := range os.Args {
 
-        if a == arg || a == `--` + arg {
-            return RegularFind{BoolResult:true}, nil
+        a = strings.TrimSpace(a)
+        a = strings.Replace(a, "--", "", -1)
+
+        if a == arg || strings.ToLower(a) == strings.ToLower(arg+`=true`) {
+            return RegularFind{BoolResult: true}, nil
         }
 
-        re := regexp.MustCompile(arg + `=([a-zA-Z0-9а-яА-Я!#$%&()*+,./:;\<>?@ _{|}~\-"^=]*)`)
+        re := regexp.MustCompile(arg + `=([a-zA-Z0-9а-яА-Я!#$%&()*+,./:;\<>?@ _{|}~\-"^=\[\]]*)`)
         as := re.FindSubmatch([]byte(a))
 
         if len(as) > 1 {
@@ -82,7 +125,7 @@ func GetOsArgument(arg string) (RegularFind, error) {
 
             return RegularFind{
                 StringResult: string(as[1]),
-                ArrayResult: arrs,
+                ArrayResult:  arrs,
             }, nil
         }
     }
@@ -125,18 +168,71 @@ func getCurrentDirName() string {
     return folders[len(folders)-1]
 }
 
+func getGoModName() (name string, err error) {
+    b, err := ioutil.ReadFile("./go.mod")
+    if err != nil {
+        return
+    }
+    firstLine := strings.Split(string(b), "\n")[0]
+    name = strings.Replace(firstLine, "module ", "", -1)
+    return strings.TrimSpace(name), err
+}
+
+func GetCurrentAppName() string {
+    name, err := getGoModName()
+    if err != nil || len(name) < 1 {
+        return getCurrentDirName()
+    }
+    return name
+}
+
+func GetGoVersion() string {
+    raw := runtime.Version()
+
+    reg, err := regexp.Compile("[a-zA-Z]+")
+    if err != nil {
+        log.Fatal(err)
+    }
+    fullVersion := reg.ReplaceAllString(raw, "")
+
+    versionArray := strings.Split(fullVersion, ".")
+    if len(versionArray) < 3 {
+        return fullVersion
+    }
+    return fmt.Sprintf("%s.%s", versionArray[0], versionArray[1])
+}
+
 func CreateFile(file, content string, c *ishell.Context) (err error) {
+
+    var choice int
+    var fmode os.FileMode = 0644
 
     if _, err := os.Stat(file); !os.IsNotExist(err) {
 
-        choice := c.MultiChoice([]string{"No", "Yes"}, "file " + file + " already exists, rewrite?")
+        if mode.IsInteractive() {
+            choice = c.MultiChoice([]string{"No", "Yes"}, "file "+file+" already exists, rewrite?")
+        } else {
+            choice = 1
+        }
 
         if choice == 0 {
-            return errors.New("Cancel rewrite file")
+            return errors.New("Cancel rewrite file: " + file)
         }
     }
 
-    err = ioutil.WriteFile(file, []byte(content), 0644)
+    reg := regexp.MustCompile("\\.sh$")
+    if reg.MatchString(file) {
+        fmode = 0755
+    }
+
+    dir := filepath.Dir(file)
+    if _, err := os.Stat(dir); os.IsNotExist(err) {
+        os.MkdirAll(dir, 0755)
+    }
+
+    content = assignMsName(content)
+
+    err = ioutil.WriteFile(file, []byte(content), fmode)
 
     if err != nil {
         fmt.Println("Error creating", file)
@@ -144,6 +240,13 @@ func CreateFile(file, content string, c *ishell.Context) (err error) {
     }
 
     return
+}
+
+func CreateFileIfNotExists(file, content string, c *ishell.Context) (err error) {
+    if _, err := os.Stat(file); !os.IsNotExist(err) {
+        return errors.New("Cancel rewrite file: " + file)
+    }
+    return CreateFile(file, content, c)
 }
 
 func getNewGuid() string {
@@ -165,20 +268,20 @@ func generatePassword(n int) string {
     return string(b)
 }
 
-func assignVar(template string, variable string, value string) string {
+func AssignVar(template string, variable string, value string) string {
     var microserviceNameRegexp = regexp.MustCompile(variable)
     return microserviceNameRegexp.ReplaceAllString(template, value)
 }
 
 func assignMsName(template string) string {
     var microserviceNameRegexp = regexp.MustCompile("{ms-name}")
-    return microserviceNameRegexp.ReplaceAllString(template, getCurrentDirName())
+    return microserviceNameRegexp.ReplaceAllString(template, GetCurrentAppName())
 }
 
-func assignPass(template string) string {
+func assignPass(template, pass string) string {
 
     var newPassRegexp = regexp.MustCompile("{new-pass}")
-    template = newPassRegexp.ReplaceAllString(template, generatePassword(8))
+    template = newPassRegexp.ReplaceAllString(template, pass)
 
     return template
 }
@@ -188,8 +291,8 @@ func assignGuid(template string) string {
     var reg, _ = regexp.Compile("{new-guid}")
     template = reg.ReplaceAllString(template, getNewGuid())
 
-    for i:=1; i < 100; i++ {
-        template = strings.Replace(template, "{new-guid" + string(i) + "}", getNewGuid(), -1)
+    for i := 1; i < 100; i++ {
+        template = strings.Replace(template, "{new-guid"+string(i)+"}", getNewGuid(), -1)
     }
 
     return template
@@ -212,7 +315,6 @@ func assignCurrentDateTime(template string) string {
 
     return res
 }
-
 
 func getFileLines(filepath string) (strArr []string) {
 
@@ -274,7 +376,7 @@ func AppendFile(sourceFile, appendString string) {
         return
     }
 
-    err = ioutil.WriteFile(sourceFile, []byte(string(input) + appendString), 0644)
+    err = ioutil.WriteFile(sourceFile, []byte(string(input)+appendString), 0644)
 
     if err != nil {
         fmt.Println("Error appending", sourceFile)
@@ -286,14 +388,14 @@ func AppendFile(sourceFile, appendString string) {
 func getLowerCase(ent string) string {
 
     var matchFirstCap = regexp.MustCompile("(.)([A-Z][a-z]+)")
-    var matchAllCap   = regexp.MustCompile("([a-z0-9])([A-Z])")
+    var matchAllCap = regexp.MustCompile("([a-z0-9])([A-Z])")
 
     snake := matchFirstCap.ReplaceAllString(ent, "${1}_${2}")
-    snake  = matchAllCap.ReplaceAllString(snake, "${1}_${2}")
+    snake = matchAllCap.ReplaceAllString(snake, "${1}_${2}")
     return strings.ToLower(snake)
 }
 
-func getFirstLowerCase(s string) string {
+func GetFirstLowerCase(s string) string {
 
     if len(s) < 2 {
         return strings.ToLower(s)
@@ -341,7 +443,7 @@ func getName(c *ishell.Context, IsExistsStruct bool, targetName string) (string,
             "Yes",
             "No",
             "Cancel",
-        }, "Correct name " + green(selectedName) + " ?")
+        }, "Correct "+targetName+" "+green(selectedName)+" ?")
 
         if choice == 0 {
 
@@ -369,4 +471,60 @@ func getName(c *ishell.Context, IsExistsStruct bool, targetName string) (string,
     fmt.Println(TargetName + " name is empty. Please type CTRL + C for cancel operation!")
 
     return getName(c, IsExistsStruct, targetName)
+}
+
+func GetPKType(isUuidAsPk bool) string {
+    if isUuidAsPk {
+        return "uuid.UUID"
+    }
+
+    return "int"
+}
+
+func GetConfigConverter(isUuidAsPk bool) string {
+    if isUuidAsPk {
+        return ".Uuid()"
+    }
+
+    return ".Int()"
+}
+
+func GetPkAsString(varExp string, isUuidAsPk bool) string {
+    if isUuidAsPk {
+        return varExp + ".String()"
+    }
+
+    return "strconv.Itoa(" + varExp + ")"
+}
+
+func GetStrToIdFuncName(isUuidAsPk bool) string {
+    if isUuidAsPk {
+        return "uuid.Parse"
+    }
+
+    return "strconv.Atoi"
+}
+
+func GetIdIsValidExp(isUuidAsPk bool) string {
+    if isUuidAsPk {
+        return "!= uuid.Nil"
+    }
+
+    return "> 0"
+}
+
+func GetIdNil(isUuidAsPk bool) string {
+    if isUuidAsPk {
+        return "uuid.Nil"
+    }
+
+    return "0"
+}
+
+func GetIdIsNotValidExp(isUuidAsPk bool) string {
+    if isUuidAsPk {
+        return "== uuid.Nil"
+    }
+
+    return "< 1"
 }

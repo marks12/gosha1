@@ -6,98 +6,152 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/aPIStatus";
 let readUrl = "/api/v1/aPIStatus/"; // + id
 let createUrl = "/api/v1/aPIStatus";
+let multiCreateUrl = "/api/v1/aPIStatus/list";
 let updateUrl = "/api/v1/aPIStatus/"; // + id
+let multiUpdateUrl = "/api/v1/aPIStatus/list";
 let deleteUrl = "/api/v1/aPIStatus/"; // + id
-let findOrCreateUrl = "/api/v1/aPIStatus"; // + id
+let multiDeleteUrl = "/api/v1/aPIStatus/list";
+let findOrCreateUrl = "/api/v1/aPIStatus";
+let updateOrCreateUrl = "/api/v1/aPIStatus";
 
 const aPIStatus = {
     actions: {
-        createAPIStatus(context, {data, filter, header}) {
+        createAPIStatus(context, {data, filter, header, noMutation}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAPIStatus", response.Model);
+					if(! noMutation) {
+	                    context.commit("setAPIStatus", response.Model);
+					}
 
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        deleteAPIStatus(context, {id, header}) {
+        deleteAPIStatus(context, {id, header, noMutation}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id.map(item => typeof item === "number" ? {Id: item} : item);
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
-                    context.commit("clearAPIStatus");
+					if(! noMutation) {
+	                    context.commit("clearAPIStatus");
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        findAPIStatus(context, {filter, header}) {
+        findAPIStatus(context, {filter, header, isAppend, noMutation}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAPIStatus__List", response.List);
+					if(! noMutation) {
+						if (isAppend) {
+							context.commit("appendAPIStatus__List", response.List);
+						} else {
+							context.commit("setAPIStatus__List", response.List);
+						}
+					}
 
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        loadAPIStatus(context, {id, filter, header}) {
+        loadAPIStatus(context, {id, filter, header, noMutation}) {
 
             return api.find(readUrl + id, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAPIStatus", response.Model);
-
+					if(! noMutation) {
+	                    context.commit("setAPIStatus", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        updateAPIStatus(context, {id, data, filter, header}) {
+        updateAPIStatus(context, {id, data, filter, header, noMutation}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
-
-                    context.commit("setAPIStatus", response.Model);
-
+					if(! noMutation) {
+	                    context.commit("setAPIStatus", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        findOrCreateAPIStatus(context, {id, data, filter, header}) {
+        findOrCreateAPIStatus(context, {id, data, filter, header, noMutation}) {
 
             return api.update(findOrCreateUrl, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setAPIStatus", response.Model);
-
+					if(! noMutation) {
+	                    context.commit("setAPIStatus", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListAPIStatus(context) {
             context.commit("clearListAPIStatus");
+        },
+        clearAPIStatus(context) {
+            context.commit("clearAPIStatus");
         },
     },
     getters: {
         getAPIStatus: (state) => {
             return state.APIStatus;
         },
+        getAPIStatusById: state => id => {
+            return state.APIStatus__List.find(item => item.Id === id);
+        },
         getListAPIStatus: (state) => {
             return state.APIStatus__List;
+        },
+        getRoute__APIStatus: state => action => {
+            return state.APIStatus__Routes[action];
+        },
+        getRoutes__APIStatus: state => {
+            return state.APIStatus__Routes;
         },
     },
     mutations: {
@@ -105,7 +159,17 @@ const aPIStatus = {
             state.APIStatus = data;
         },
         setAPIStatus__List(state, data) {
-            state.APIStatus__List = data;
+            state.APIStatus__List = data || [];
+        },
+        appendAPIStatus__List(state, data) {
+
+            if (! state.APIStatus__List) {
+                state.APIStatus__List = [];
+            }
+
+			if (data !== null) {
+				state.APIStatus__List = state.APIStatus__List.concat(data);				
+			}
         },
         clearAPIStatus(state) {
             state.APIStatus = new APIStatus();
@@ -143,6 +207,18 @@ const aPIStatus = {
     state: {
         APIStatus: new APIStatus(),
         APIStatus__List: [],
+        APIStatus__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+            updateOrCreate: updateOrCreateUrl,
+        },
     },
 };
 

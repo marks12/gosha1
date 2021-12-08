@@ -1,5 +1,13 @@
 #!/bin/bash
 
+cd front
+
+npm i
+
+npm run build
+
+cd ../
+
 declare -a files
 declare -a content
 
@@ -12,14 +20,10 @@ walk_dir () {
             add_file $pathname
         fi
     done
-
-
 }
 
 add_file () {
     shopt -s nullglob dotglob
-
-#    printf '%s\n' adding "$pathname"
 
     value=`cat $pathname  | base64`
 
@@ -32,8 +36,7 @@ DOWNLOADING_DIR=./front/dist
 
 walk_dir "$DOWNLOADING_DIR"
 
-
-cat > ./webapp/html.go <<EOL
+cat > ./webapp/webapp/html.go <<EOL
 package webapp
 
 type HtmlFile struct {
@@ -49,19 +52,18 @@ EOL
 
 for i in "${!files[@]}"; do
 
-cat >> ./webapp/html.go << EOL
+cat >> ./webapp/webapp/html.go << EOL
     Files =  append(Files, HtmlFile{Path: "${files[i]}", Content: \`${content[i]}\`})
 EOL
 
 done
 
-cat >> ./webapp/html.go <<EOL
+cat >> ./webapp/webapp/html.go <<EOL
 
     return Files
 }
 EOL
 
+go build -o ./gosha -v ./main.go
 
-env GOOS=darwin GOARCH=amd64 go build -o ./gosha-mac -v ./main.go
-
-go build -v
+env GOOS=darwin GOARCH=amd64 go build -o ./gosha-mac -v ./main-mac.go

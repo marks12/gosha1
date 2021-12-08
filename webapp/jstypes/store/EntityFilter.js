@@ -6,98 +6,152 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/entityFilter";
 let readUrl = "/api/v1/entityFilter/"; // + id
 let createUrl = "/api/v1/entityFilter";
+let multiCreateUrl = "/api/v1/entityFilter/list";
 let updateUrl = "/api/v1/entityFilter/"; // + id
+let multiUpdateUrl = "/api/v1/entityFilter/list";
 let deleteUrl = "/api/v1/entityFilter/"; // + id
-let findOrCreateUrl = "/api/v1/entityFilter"; // + id
+let multiDeleteUrl = "/api/v1/entityFilter/list";
+let findOrCreateUrl = "/api/v1/entityFilter";
+let updateOrCreateUrl = "/api/v1/entityFilter";
 
 const entityFilter = {
     actions: {
-        createEntityFilter(context, {data, filter, header}) {
+        createEntityFilter(context, {data, filter, header, noMutation}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setEntityFilter", response.Model);
+					if(! noMutation) {
+	                    context.commit("setEntityFilter", response.Model);
+					}
 
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        deleteEntityFilter(context, {id, header}) {
+        deleteEntityFilter(context, {id, header, noMutation}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id.map(item => typeof item === "number" ? {Id: item} : item);
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
-                    context.commit("clearEntityFilter");
+					if(! noMutation) {
+	                    context.commit("clearEntityFilter");
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        findEntityFilter(context, {filter, header}) {
+        findEntityFilter(context, {filter, header, isAppend, noMutation}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setEntityFilter__List", response.List);
+					if(! noMutation) {
+						if (isAppend) {
+							context.commit("appendEntityFilter__List", response.List);
+						} else {
+							context.commit("setEntityFilter__List", response.List);
+						}
+					}
 
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        loadEntityFilter(context, {id, filter, header}) {
+        loadEntityFilter(context, {id, filter, header, noMutation}) {
 
             return api.find(readUrl + id, filter, header)
                 .then(function(response) {
 
-                    context.commit("setEntityFilter", response.Model);
-
+					if(! noMutation) {
+	                    context.commit("setEntityFilter", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        updateEntityFilter(context, {id, data, filter, header}) {
+        updateEntityFilter(context, {id, data, filter, header, noMutation}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
-
-                    context.commit("setEntityFilter", response.Model);
-
+					if(! noMutation) {
+	                    context.commit("setEntityFilter", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        findOrCreateEntityFilter(context, {id, data, filter, header}) {
+        findOrCreateEntityFilter(context, {id, data, filter, header, noMutation}) {
 
             return api.update(findOrCreateUrl, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setEntityFilter", response.Model);
-
+					if(! noMutation) {
+	                    context.commit("setEntityFilter", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListEntityFilter(context) {
             context.commit("clearListEntityFilter");
+        },
+        clearEntityFilter(context) {
+            context.commit("clearEntityFilter");
         },
     },
     getters: {
         getEntityFilter: (state) => {
             return state.EntityFilter;
         },
+        getEntityFilterById: state => id => {
+            return state.EntityFilter__List.find(item => item.Id === id);
+        },
         getListEntityFilter: (state) => {
             return state.EntityFilter__List;
+        },
+        getRoute__EntityFilter: state => action => {
+            return state.EntityFilter__Routes[action];
+        },
+        getRoutes__EntityFilter: state => {
+            return state.EntityFilter__Routes;
         },
     },
     mutations: {
@@ -105,7 +159,17 @@ const entityFilter = {
             state.EntityFilter = data;
         },
         setEntityFilter__List(state, data) {
-            state.EntityFilter__List = data;
+            state.EntityFilter__List = data || [];
+        },
+        appendEntityFilter__List(state, data) {
+
+            if (! state.EntityFilter__List) {
+                state.EntityFilter__List = [];
+            }
+
+			if (data !== null) {
+				state.EntityFilter__List = state.EntityFilter__List.concat(data);				
+			}
         },
         clearEntityFilter(state) {
             state.EntityFilter = new EntityFilter();
@@ -143,6 +207,18 @@ const entityFilter = {
     state: {
         EntityFilter: new EntityFilter(),
         EntityFilter__List: [],
+        EntityFilter__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+            updateOrCreate: updateOrCreateUrl,
+        },
     },
 };
 

@@ -6,98 +6,152 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/field";
 let readUrl = "/api/v1/field/"; // + id
 let createUrl = "/api/v1/field";
+let multiCreateUrl = "/api/v1/field/list";
 let updateUrl = "/api/v1/field/"; // + id
+let multiUpdateUrl = "/api/v1/field/list";
 let deleteUrl = "/api/v1/field/"; // + id
-let findOrCreateUrl = "/api/v1/field"; // + id
+let multiDeleteUrl = "/api/v1/field/list";
+let findOrCreateUrl = "/api/v1/field";
+let updateOrCreateUrl = "/api/v1/field";
 
 const field = {
     actions: {
-        createField(context, {data, filter, header}) {
+        createField(context, {data, filter, header, noMutation}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setField", response.Model);
+					if(! noMutation) {
+	                    context.commit("setField", response.Model);
+					}
 
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        deleteField(context, {id, header}) {
+        deleteField(context, {id, header, noMutation}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id.map(item => typeof item === "number" ? {Id: item} : item);
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
-                    context.commit("clearField");
+					if(! noMutation) {
+	                    context.commit("clearField");
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        findField(context, {filter, header}) {
+        findField(context, {filter, header, isAppend, noMutation}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setField__List", response.List);
+					if(! noMutation) {
+						if (isAppend) {
+							context.commit("appendField__List", response.List);
+						} else {
+							context.commit("setField__List", response.List);
+						}
+					}
 
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        loadField(context, {id, filter, header}) {
+        loadField(context, {id, filter, header, noMutation}) {
 
             return api.find(readUrl + id, filter, header)
                 .then(function(response) {
 
-                    context.commit("setField", response.Model);
-
+					if(! noMutation) {
+	                    context.commit("setField", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        updateField(context, {id, data, filter, header}) {
+        updateField(context, {id, data, filter, header, noMutation}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
-
-                    context.commit("setField", response.Model);
-
+					if(! noMutation) {
+	                    context.commit("setField", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        findOrCreateField(context, {id, data, filter, header}) {
+        findOrCreateField(context, {id, data, filter, header, noMutation}) {
 
             return api.update(findOrCreateUrl, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setField", response.Model);
-
+					if(! noMutation) {
+	                    context.commit("setField", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListField(context) {
             context.commit("clearListField");
+        },
+        clearField(context) {
+            context.commit("clearField");
         },
     },
     getters: {
         getField: (state) => {
             return state.Field;
         },
+        getFieldById: state => id => {
+            return state.Field__List.find(item => item.Id === id);
+        },
         getListField: (state) => {
             return state.Field__List;
+        },
+        getRoute__Field: state => action => {
+            return state.Field__Routes[action];
+        },
+        getRoutes__Field: state => {
+            return state.Field__Routes;
         },
     },
     mutations: {
@@ -105,7 +159,17 @@ const field = {
             state.Field = data;
         },
         setField__List(state, data) {
-            state.Field__List = data;
+            state.Field__List = data || [];
+        },
+        appendField__List(state, data) {
+
+            if (! state.Field__List) {
+                state.Field__List = [];
+            }
+
+			if (data !== null) {
+				state.Field__List = state.Field__List.concat(data);				
+			}
         },
         clearField(state) {
             state.Field = new Field();
@@ -143,6 +207,18 @@ const field = {
     state: {
         Field: new Field(),
         Field__List: [],
+        Field__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+            updateOrCreate: updateOrCreateUrl,
+        },
     },
 };
 

@@ -5,15 +5,16 @@ const msDbmodelEntity = `package dbmodels
 import (
     "time"
     "github.com/google/uuid"
+    "gorm.io/gorm"
 )
 
 type Entity struct {
     ID          		uuid.UUID	` + "`" + `sql:"primary_key;type:uuid;default:uuid_generate_v4()"` + "`" + `
     AppId          		uuid.UUID
 
-    CreatedAt time.Time
+    CreatedAt time.Time ` + "`" + `gorm:"<-:create"` + "`" + `
     UpdatedAt time.Time
-    DeletedAt *time.Time ` + "`" + `sql:"index"` + "`" + `
+    DeletedAt gorm.DeletedAt ` + "`" + `sql:"index"` + "`" + `
 
     validator
 }
@@ -30,29 +31,34 @@ func (entity *Entity) Validate()  {
 
 const msDbmodelValidator = `package dbmodels
 
-import "strings"
+import (
+	"{ms-name}/errors"
+)
 
 type validator struct {
-    validationErrors	[]string
+	validationError errors.ValidatorError
 }
 
 func (val *validator) IsValid() bool {
-    return len(val.validationErrors) < 1
+
+	return val.validationError.IsEmpty()
 }
 
-func (val *validator) GetValidationErrors() string {
+func (val *validator) GetValidationError() errors.ValidatorErrorInterface {
+	return &val.validationError
+}
 
-    return strings.Join(val.validationErrors, ". ")
+func (val *validator) AddValidationError(err string, code errors.ErrorCode, field string) {
+	val.validationError.AddError(errors.NewErrorWithCode(err, code, field))
 }
 `
 
 var msTemplateDbmodelsEntity = template{
-    Path:    "./dbmodels/entity.go",
-    Content: msDbmodelEntity,
+	Path:    "./dbmodels/entity.go",
+	Content: msDbmodelEntity,
 }
 
 var msTemplateDbmodelsValidator = template{
-    Path:    "./dbmodels/validator.go",
-    Content: msDbmodelValidator,
+	Path:    "./dbmodels/validator.go",
+	Content: msDbmodelValidator,
 }
-

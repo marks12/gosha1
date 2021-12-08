@@ -6,6 +6,26 @@ import (
 
 type mode struct {
 	isInteractive bool
+	isUuidMode bool
+	isViewMode bool
+	isReadOnlyMode bool
+	isSelfUpdateMode bool
+}
+
+func (m *mode) setReadOnly() {
+	m.isReadOnlyMode = true
+}
+
+func (m *mode) IsReadOnly() bool {
+	return m.isReadOnlyMode
+}
+
+func (m *mode) setSelfUpdate() {
+	m.isSelfUpdateMode = true
+}
+
+func (m *mode) isSelfUpdate() bool {
+	return m.isSelfUpdateMode
 }
 
 func (m *mode) setInteractive() {
@@ -24,6 +44,30 @@ func (m *mode) isNonInteractiveMode() bool {
 	return m.isInteractive == false
 }
 
+func (m *mode) setNonUuidMode() {
+	m.isUuidMode = false
+}
+
+func (m *mode) setNoneViewMode() {
+	m.isViewMode = false
+}
+
+func (m *mode) setUuidMode() {
+	m.isUuidMode = true
+}
+
+func (m *mode) setViewMode() {
+	m.isViewMode = true
+}
+
+func (m *mode) getViewMode() bool {
+	return m.isViewMode
+}
+
+func (m *mode) getUuidMode() bool {
+	return m.isUuidMode
+}
+
 var instance *mode
 var once sync.Once
 
@@ -34,6 +78,17 @@ func GetMode() *mode {
 		instance.setInteractive()
 	})
 	return instance
+}
+
+func SetReadOnlyMode() {
+
+	GetMode().setReadOnly()
+	return
+}
+
+func IsReadOnlyMode() bool {
+
+	return GetMode().IsReadOnly()
 }
 
 func SetNonInteractiveMode() {
@@ -54,4 +109,36 @@ func IsInteractive() bool {
 
 func IsNonInteractive() bool {
 	return GetMode().isNonInteractiveMode()
+}
+
+func SetUuidMode() {
+	GetMode().setUuidMode()
+}
+
+func SetNonUuidMode() {
+	GetMode().setNonUuidMode()
+}
+
+func SetViewMode() {
+	GetMode().setViewMode()
+}
+
+func GetViewMode() bool {
+	return GetMode().getViewMode()
+}
+
+func SetNonViewMode() {
+	GetMode().setNoneViewMode()
+}
+
+func GetUuidMode() bool {
+	return GetMode().getUuidMode()
+}
+
+func IsSelfUpdate() bool {
+	return GetMode().isSelfUpdate()
+}
+
+func SetSelfUpdateMode() {
+	GetMode().setSelfUpdate()
 }

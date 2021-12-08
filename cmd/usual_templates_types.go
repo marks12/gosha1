@@ -1,44 +1,203 @@
 package cmd
 
+import "gosha/mode"
+
 type TypeConfig struct {
-    IsId bool
+	IsId bool
 }
 
-const usualTypesAuthenticator = `package types
+var usualTypesAuthenticator = `package types
 
 import (
-    "{ms-name}/settings"
-    "{ms-name}/dbmodels"
-    "net/http"
     "{ms-name}/core"
+    "{ms-name}/dbmodels"
+    "{ms-name}/flags"
+    "{ms-name}/settings"
+    "{ms-name}/common"
+    "{ms-name}/errors"
+    "net/http"
+    "strings"
 )
 
+type Access struct {
+	Find bool
+	Read bool
+	Create bool
+	Update bool
+	Delete bool
+	FindOrCreate bool
+	UpdateOrCreate bool
+}
+
 type Authenticator struct {
-    Token string
+    Token        string
+    functionType string
+    urlPath      string
+	ip           string
+	maxPerPage   int
+	user         dbmodels.User
+	auth         dbmodels.Auth
+	userId       {ID}
+    roleIds      []{ID}
     validator
 }
 
+func (auth *Authenticator) GetCurrentUserId() {ID} {
+    return auth.userId
+}
+
+func (auth *Authenticator) SetIp(r *http.Request) {
+	auth.ip = r.Header.Get("X-Forwarded-For")
+}
+
+func (auth *Authenticator) GetIp() string {
+	return auth.ip
+}
+
+func (auth *Authenticator) SetMaxPerPage(i int) {
+	auth.maxPerPage = i
+}
+func (auth *Authenticator) GetMaxPerPage() int {
+	return auth.maxPerPage
+}
+
+func (auth *Authenticator) SetCurrentUserId(id {ID}) {
+    auth.userId = id
+}
+
+func (auth *Authenticator) GetCurrentUserRoleIds() []{ID} {
+    return auth.roleIds
+}
+
+func (auth *Authenticator) IsCurrentUserAdmin() bool {
+    return common.InArray(settings.AdminRoleId, auth.roleIds)
+}
+
 func (auth *Authenticator) IsAuthorized() bool {
+
+    if *flags.Auth {
+        return true
+    }
 
     if len(auth.Token) < 1 {
         return false
     }
 
-    dbUser := dbmodels.User{}
-    core.Db.Where(dbmodels.User{Token: auth.Token}).Find(&dbUser)
+    dbAuth := dbmodels.Auth{}
+    core.Db.Where(dbmodels.Auth{Token: auth.Token}).First(&dbAuth)
 
-    if len(dbUser.Token) < 1 {
-        return false
+    if dbAuth.IsActive {
+
+        if dbAuth.UserId {GetIdIsNotValidExp} {
+            return false
+        }
+
+        auth.SetCurrentUserId(dbAuth.UserId)
+
+        userRoles := []dbmodels.UserRole{}
+        core.Db.Where(dbmodels.UserRole{UserId: dbAuth.UserId}).Find(&userRoles)
+
+        for _, ur := range userRoles {
+            auth.roleIds = append(auth.roleIds, ur.RoleId)
+        }
+
+        usedResources := []dbmodels.Resource{}
+
+        core.Db.Where(dbmodels.Resource{
+            Code:   clearPath(auth.urlPath),
+            TypeId: settings.HttpRouteResourceType` + GetConfigConverter(mode.GetUuidMode()) + `,
+        }).Find(&usedResources)
+
+        if len(usedResources) < 1 {
+            return false
+        }
+
+        ids := []{ID}{}
+
+        for _, r := range usedResources {
+            ids = append(ids, r.ID)
+        }
+
+        roleResources := []dbmodels.RoleResource{}
+
+        core.Db.Model(dbmodels.RoleResource{}).
+            Where("role_id in (select role_id from user_roles where user_id = ?) and resource_id in (?)", dbAuth.UserId, ids).Find(&roleResources)
+
+        switch auth.functionType {
+        case settings.FunctionTypeFind:
+            for _, rr := range roleResources {
+                if rr.Find {
+                    return true
+                }
+            }
+            return false
+
+        case settings.FunctionTypeRead:
+            for _, rr := range roleResources {
+                if rr.Read {
+                    return true
+                }
+            }
+            return false
+
+        case settings.FunctionTypeCreate, settings.FunctionTypeMultiCreate:
+            for _, rr := range roleResources {
+                if rr.Create {
+                    return true
+                }
+            }
+            return false
+
+        case settings.FunctionTypeUpdate, settings.FunctionTypeMultiUpdate:
+            for _, rr := range roleResources {
+                if rr.Update {
+                    return true
+                }
+            }
+            return false
+
+        case settings.FunctionTypeDelete, settings.FunctionTypeMultiDelete:
+            for _, rr := range roleResources {
+                if rr.Delete {
+                    return true
+                }
+            }
+            return false
+
+        case settings.FunctionTypeFindOrCreate:
+            for _, rr := range roleResources {
+                if rr.FindOrCreate {
+                    return true
+                }
+            }
+            return false
+
+        case settings.FunctionTypeUpdateOrCreate:
+            for _, rr := range roleResources {
+                if rr.UpdateOrCreate {
+                    return true
+                }
+            }
+            return false
+        }
     }
 
-    return  true
+    return false
+}
+
+func clearPath(s string) string {
+    if strings.Count(s, "/") > 3 {
+        return s[0:strings.LastIndex(s, "/")]
+    }
+
+    return s
 }
 
 func (auth *Authenticator) SetToken(r *http.Request) error {
 
     auth.Token = r.Header.Get("Token")
 
-    return  nil
+    return nil
 }
 
 func (authenticator *Authenticator) Validate(functionType string) {
@@ -46,29 +205,23 @@ func (authenticator *Authenticator) Validate(functionType string) {
     switch functionType {
 
     case settings.FunctionTypeFind:
-
         break;
     case settings.FunctionTypeCreate:
-
-
-
         break;
     case settings.FunctionTypeRead:
-
-
-
         break;
     case settings.FunctionTypeUpdate:
-
-
-
         break;
     case settings.FunctionTypeDelete:
-
         break;
-
+    case settings.FunctionTypeMultiCreate:
+        break
+    case settings.FunctionTypeMultiUpdate:
+        break
+    case settings.FunctionTypeMultiDelete:
+        break
     default:
-        authenticator.validator.validationErrors = append(authenticator.validator.validationErrors, "Usupported function type: " + functionType)
+        authenticator.validator.AddValidationError("Unsupported function type: " + functionType, errors.ErrorCodeUnsupportedFunctionType, "")
         break;
     }
 }
@@ -77,16 +230,17 @@ func (authenticator *Authenticator) Validate(functionType string) {
 var usualTypesEntity = `package types
 
 import (
+    "gorm.io/gorm"
     "time"
 )
 // default entity will used when create new entity
 type Entity struct {
-    ID        int       ` + "`" + `gorm:"primary_key"` + "`" + `
+    ID    int
     ` + getRemoveLine("Entity") + `
 
     CreatedAt time.Time
     UpdatedAt time.Time
-    DeletedAt *time.Time ` + "`" + `sql:"index" json:"-"` + "`" + `
+    DeletedAt gorm.DeletedAt ` + "`" + `sql:"index" json:"-"` + "`" + `
 
     validator
 }
@@ -99,220 +253,355 @@ func (entity *Entity) Validate()  {
 const usualTypesFilter = `package types
 
 import (
-    "errors"
     "{ms-name}/settings"
-    "net/http"
-    "strings"
-    "strconv"
-    "github.com/gorilla/mux"
+    "{ms-name}/errors"
+    "{ms-name}/core"
+	"net/http"
+	"net/url"
+	"strconv"
+	"strings"
+	"github.com/gorilla/mux"
 )
 
-type FilterIds struct {
-    ids []int
+type GoshaFilterIds struct {
+	Ids       []int
+	ExceptIds []int
+	currentId int
 
-    validator
+	validator
 }
 
-func (filter *FilterIds) GetFirstId() (int, error) {
-    for _, id := range filter.ids {
-        return id, nil
-    }
-    return 0, errors.New("Empty array")
+func (filter *GoshaFilterIds) GetFirstId() (int, error) {
+	for _, id := range filter.Ids {
+		return id, nil
+	}
+	return 0, errors.New("Empty array")
 }
 
-func (filter *FilterIds) GetIds() []int {
-    return filter.ids
+func (filter *GoshaFilterIds) GetCurrentId() int {
+	return filter.currentId
 }
 
-func (filter *FilterIds) AddId(id int) *FilterIds {
-    filter.ids = append(filter.ids, id)
-    return filter
+func (filter *GoshaFilterIds) SetCurrentId(id int) int {
+	filter.currentId = id
+	return filter.currentId
 }
 
-func (filter *FilterIds) AddIds(ids []int) *FilterIds {
-    for _, id := range ids {
-        filter.AddId(id)
-    }
-    return filter
+func (filter *GoshaFilterIds) GetIds() []int {
+	return filter.Ids
 }
 
-func (filter *FilterIds) Clear() *FilterIds {
+func (filter *GoshaFilterIds) GetExceptIds() []int {
+	return filter.ExceptIds
+}
 
-    filter.ids = []int{}
-    return filter
+func (filter *GoshaFilterIds) AddId(id int) *GoshaFilterIds {
+	filter.Ids = append(filter.Ids, id)
+	return filter
+}
+
+func (filter *GoshaFilterIds) AddExceptIds(id int) *GoshaFilterIds {
+	filter.ExceptIds = append(filter.ExceptIds, id)
+	return filter
+}
+
+func (filter *GoshaFilterIds) AddIds(ids []int) *GoshaFilterIds {
+	for _, id := range ids {
+		filter.AddId(id)
+	}
+	return filter
+}
+
+func (filter *GoshaFilterIds) Clear() *GoshaFilterIds {
+	filter.Ids = []int{}
+	return filter
+}
+
+func (filter *GoshaFilterIds) ClearIds() *GoshaFilterIds {
+	filter.Ids = []int{}
+	return filter
+}
+
+func (filter *GoshaFilterIds) ClearExceptId() *GoshaFilterIds {
+	filter.ExceptIds = []int{}
+	return filter
 }
 
 // method find read create update delete
-func (filter *FilterIds) Validate(functionType string) {
+func (filter *GoshaFilterIds) Validate(functionType string) {
 
-    switch functionType {
-        case settings.FunctionTypeFind:
+	switch functionType {
+	case settings.FunctionTypeFind:
 
+		break
+	case settings.FunctionTypeCreate:
 
-
-            break;
-        case settings.FunctionTypeCreate:
-
-
-
-            break;
-        case settings.FunctionTypeRead:
-
-
-
-            break;
-        case settings.FunctionTypeUpdate:
-
-
-
-            break;
-        case settings.FunctionTypeDelete:
-
-
-
-            break;
-        default:
-            filter.validator.validationErrors = append(filter.validator.validationErrors, "Usupported method")
-            break;
-    }
+		break
+	case settings.FunctionTypeRead:
+		if len(filter.GetIds()) != 1 || filter.GetIds()[0] < 1 {
+			filter.AddValidationError("Error parse Id", errors.ErrorCodeParseId, "Id")
+		}
+		break
+	case settings.FunctionTypeUpdate:
+		if len(filter.GetIds()) != 1 || filter.GetIds()[0] < 1 {
+			filter.AddValidationError("Error parse Id", errors.ErrorCodeParseId, "Id")
+		}
+		break
+	case settings.FunctionTypeDelete:
+		if len(filter.GetIds()) != 1 || filter.GetIds()[0] < 1 {
+			filter.AddValidationError("Error parse Id", errors.ErrorCodeParseId, "Id")
+		}
+		break
+	case settings.FunctionTypeMultiDelete:
+		break
+	case settings.FunctionTypeFindOrCreate:
+		break
+	case settings.FunctionTypeMultiCreate:
+		break
+	case settings.FunctionTypeMultiUpdate:
+		break
+	case settings.FunctionTypeUpdateOrCreate:
+		break
+	default:
+		filter.AddValidationError("Unsupported function type: "+functionType, errors.ErrorCodeUnsupportedFunctionType, "")
+		break
+	}
 }
 
-
-type SearchFilter struct {
-
-    Search string
+type GoshaFilterFields struct {
+	Fields []string
 }
 
-type OrderFilter struct {
+func (f *GoshaFilterFields) AddField(field string) {
+	f.Fields = append(f.Fields, field)
+}
+func (f *GoshaFilterFields) GetFields() []string {
+	return f.Fields
+}
 
-    Order []string
-    OrderDirection []string
+type GoshaSearchFilter struct {
+	Search   string
+	SearchBy []string
+}
+
+type GoshaOrderFilter struct {
+	Order          []string
+	OrderDirection []string
+}
+
+type GoshaDebugFilter struct {
+	isDebug bool
+}
+
+func (filter *GoshaDebugFilter) SetDebug(isDebug bool) {
+	filter.isDebug = isDebug
+}
+
+func (filter GoshaDebugFilter) IsDebug() bool {
+	return filter.isDebug
 }
 
 type AbstractFilter struct {
+	request *http.Request
+	rawRequestBody []byte
 
-    request *http.Request
-    SearchFilter
-    OrderFilter
-    FilterIds
-    Pagination
-    validator
-    Authenticator
+    Regionality
+	GoshaSearchFilter
+	GoshaOrderFilter
+	GoshaFilterIds
+	Pagination
+	validator
+	Authenticator
+	GoshaDebugFilter
+	GoshaFilterFields
 }
 
-func GetAbstractFilter(request *http.Request, functionType string) AbstractFilter {
+func GetAbstractFilter(request *http.Request, requestBody []byte, functionType string) (filter AbstractFilter, err error) {
 
-    var filter AbstractFilter
+	filter.request = request
+    filter.rawRequestBody = requestBody
+	filter.functionType = functionType
+	filter.urlPath = request.URL.Path
 
-    filter.request = request
-
-    ReadJSON(filter.request, &filter)
-    ReadJSON(filter.request, &filter.FilterIds)
-
-    filter.Pagination.CurrentPage,_  = strconv.Atoi(request.FormValue("CurrentPage"))
-    filter.Pagination.PerPage,_  = strconv.Atoi(request.FormValue("PerPage"))
-    filter.Search  = request.FormValue("Search")
-
-
-    dirs := []string{}
-
-    for _, dir := range arr["OrderDirection[]"] {
-        if strings.ToLower(dir) == "desc" {
-            dirs = append(dirs, "desc")
-        } else {
-            dirs = append(dirs, "asc")
+	if !isGroupFunctionType(functionType) {
+        err = ReadJSON(filter.rawRequestBody, &filter.GoshaFilterIds)
+        if err != nil {
+            return
         }
     }
 
-    for index, Field := range arr["Order[]"] {
-        filter.Order = append(filter.Order, Field)
-        if len(dirs) > index && dirs[index] == "desc" {
-            filter.OrderDirection = append(filter.OrderDirection, "desc")
-        } else {
-            filter.OrderDirection = append(filter.OrderDirection, "asc")
-        }
+	filter.Pagination.CurrentPage, _ = strconv.Atoi(request.FormValue("CurrentPage"))
+	filter.Pagination.PerPage, _ = strconv.Atoi(request.FormValue("PerPage"))
+	filter.Search = request.FormValue("Search")
+
+	isDebug, _ := strconv.ParseBool(request.FormValue("IsDebug"))
+	filter.GoshaDebugFilter.SetDebug(isDebug)
+
+	arr, _ := url.ParseQuery(request.URL.RawQuery)
+
+	dirs := []string{}
+
+	for _, dir := range arr["OrderDirection[]"] {
+
+		if strings.ToLower(dir) == settings.OrderDirectionDesc {
+			dirs = append(dirs, settings.OrderDirectionDesc)
+		} else {
+			dirs = append(dirs, settings.OrderDirectionAsc)
+		}
+	}
+
+	for index, field := range arr["Order[]"] {
+
+		filter.Order = append(filter.Order, core.Db.Config.NamingStrategy.ColumnName("", field))
+
+		if len(dirs) > index && dirs[index] == "desc" {
+			filter.OrderDirection = append(filter.OrderDirection, "desc")
+		} else {
+			filter.OrderDirection = append(filter.OrderDirection, "asc")
+		}
+	}
+
+	if len(filter.Order) < 1 && len(filter.OrderDirection) < 1 {
+		filter.Order = append(filter.Order, "id")
+		filter.OrderDirection = append(filter.OrderDirection, "asc")
+	}
+
+	for _, field := range arr["SearchBy[]"] {
+		filter.SearchBy = append(filter.SearchBy, core.Db.Config.NamingStrategy.ColumnName("", field))
+	}
+
+	filter.SetToken(request)
+	filter.SetIp(request)
+
+	vars := mux.Vars(request)
+	id, _ := strconv.Atoi(vars["id"])
+
+	if id > 0 {
+		filter.AddId(id)
+		filter.SetCurrentId(id)
+	}
+
+	for _, field := range arr["Ids[]"] {
+		id, _ := strconv.Atoi(field)
+		filter.AddId(id)
+	}
+	for _, field := range arr["ExceptIds[]"] {
+		id, _ := strconv.Atoi(field)
+		filter.AddExceptIds(id)
+	}
+
+	for _, field := range arr["Fields[]"] {
+		filter.AddField(field)
+	}
+
+	filter.Validate(functionType)
+
+	return filter, err
+}
+
+func (filter *AbstractFilter) IsValid() bool {
+
+	return filter.GoshaFilterIds.IsValid() &&
+		filter.Pagination.IsValid() &&
+		filter.validator.IsValid() &&
+		filter.Authenticator.IsValid()
+}
+
+func (filter *AbstractFilter) Validate(functionType string) {
+
+	filter.GoshaFilterIds.Validate(functionType)
+	filter.Pagination.Validate(functionType)
+	filter.validator.Validate(functionType)
+	filter.Authenticator.Validate(functionType)
+}
+
+func (filter *AbstractFilter) GetValidationError() error {
+	return errors.JoinValidatorError(filter.GoshaFilterIds.GetValidationError(),
+		filter.Pagination.GetValidationError(),
+		filter.validator.GetValidationError(),
+		filter.Authenticator.GetValidationError())
+}
+
+func (filter *AbstractFilter) ValidatePerPage() {
+	if filter.PerPage > filter.GetMaxPerPage() {
+		filter.AddValidationError("PerPage more than maximum", errors.ErrorCodeInvalidPerPage, "PerPage")
+	}
+}
+
+func (filter *AbstractFilter) GetHost() string {
+	return filter.request.Host
+}
+
+func (filter *AbstractFilter) GetCurrentIp() string {
+
+	ip := filter.request.Header.Get("X-Forwarded-For")
+	return ip
+}
+
+func (filter *AbstractFilter) GetCurrentUserAgent() string {
+	return filter.request.UserAgent()
+}
+
+func isGroupFunctionType(functionType string) bool {
+    switch functionType {
+    case settings.FunctionTypeMultiCreate, settings.FunctionTypeMultiUpdate, settings.FunctionTypeMultiDelete, settings.FunctionTypeMultiFindOrCreate:
+        return true
+    default:
+        return false
     }
-
-
-    filter.SetToken(request)
-
-    ReadJSON(filter.request, &filter.validator)
-
-    vars := mux.Vars(request)
-    id, _ := strconv.Atoi(vars["id"])
-
-    if id > 0 {
-        filter.AddId(id)
-    }
-
-    filter.Validate(functionType)
-
-    return  filter
 }
 
-func (filter *AbstractFilter) IsValid() bool  {
-
-    return  filter.FilterIds.IsValid() &&
-        filter.Pagination.IsValid() &&
-        filter.validator.IsValid() &&
-        filter.Authenticator.IsValid()
-}
-
-func (filter *AbstractFilter) Validate(functionType string)  {
-
-    filter.FilterIds.Validate(functionType)
-    filter.Pagination.Validate(functionType)
-    filter.validator.Validate(functionType)
-    filter.Authenticator.Validate(functionType)
-}
-
-func (filter *AbstractFilter) GetValidationErrors() string  {
-
-    return strings.Join([]string{
-        filter.FilterIds.GetValidationErrors(),
-        filter.Pagination.GetValidationErrors(),
-        filter.validator.GetValidationErrors(),
-        filter.Authenticator.GetValidationErrors(),
-    }, ". ")
-}
 `
 
-const usualTypesRequest= `package types
+const usualTypesRequest = `package types
 
 import (
     "encoding/json"
+    "io/ioutil"
     "net/http"
 )
 
-// ReadJSON -
-func ReadJSON(r *http.Request, entity interface{}) {
-
-    decoder := json.NewDecoder(r.Body)
-    decoder.Decode(entity)
-
-    defer r.Body.Close()
+func GetRawBodyContent(request *http.Request) (data []byte, err error) {
+    defer request.Body.Close()
+    data, err = ioutil.ReadAll(request.Body)
+    if err == http.ErrBodyReadAfterClose {
+        err = nil
+    }
+    return
+}
+func ReadJSON(body []byte, entity interface{}) (err error) {
+    if len(body) > 0 {
+        err = json.Unmarshal(body, entity)
+    }
+    if err != nil && err.Error() == "invalid character '-' in numeric literal" {
+        err = nil
+    }
+    return
 }
 `
 
 const usualTypesValidator = `package types
 
 import (
-    "strings"
     "{ms-name}/settings"
+    "{ms-name}/errors"
 )
 
 type validator struct {
-    validationErrors	[]string
+    validationError errors.ValidatorError
 }
 
 func (val *validator) IsValid() bool {
 
-    return len(val.validationErrors) < 1
+    return val.validationError.IsEmpty()
 }
 
-func (val *validator) GetValidationErrors() string {
+func (val *validator) GetValidationError() errors.ValidatorErrorInterface {
+    return &val.validationError
+}
 
-    return strings.Join(val.validationErrors, ". ")
+func (val *validator) AddValidationError(err string, code errors.ErrorCode, field string) {
+    val.validationError.AddError(errors.NewErrorWithCode(err, code, field))
 }
 
 func (val *validator) Validate(functionType string) {
@@ -325,27 +614,36 @@ func (val *validator) Validate(functionType string) {
     case settings.FunctionTypeCreate:
         break
 
+    case settings.FunctionTypeMultiCreate:
+        break
+
     case settings.FunctionTypeRead:
         break
 
     case settings.FunctionTypeUpdate:
         break
 
+    case settings.FunctionTypeMultiUpdate:
+        break
+
     case settings.FunctionTypeDelete:
         break
 
+    case settings.FunctionTypeMultiDelete:
+        break
+
     default:
-        val.validationErrors = append(val.validationErrors, "Usupported function type: " + functionType)
+        val.AddValidationError("Unsupported function type: "+functionType, errors.ErrorCodeUnsupportedFunctionType, "")
         break
     }
 }
-
 `
 
 const usualTypesResponse = `package types
 
 import (
 	"{ms-name}/settings"
+	"{ms-name}/errors"
 )
 
 type APIStatus struct {
@@ -353,19 +651,24 @@ type APIStatus struct {
 }
 
 type APIError struct {
-	Error bool
+	Error  bool
+	Errors []Error
+}
+
+type Error struct {
 	ErrorMessage string
+	ErrorCode    int
+	Field        string ` + "`" + `json:"Field,omitempty"` + "`" + `
+	ErrorDebug   string ` + "`" + `json:"ErrorDebug,omitempty"` + "`" + `
 }
 
 type Pagination struct {
-
-	TotalRecords	int
-	TotalPages		int
-	CurrentPage		int
-	PerPage			int
+	CurrentPage int
+	PerPage     int
 
 	validator
 }
+
 
 func (pagination *Pagination) GetOffset() int {
 	return (pagination.CurrentPage - 1) * pagination.PerPage
@@ -378,67 +681,107 @@ func (pagination *Pagination) Validate(functionType string) {
 	case settings.FunctionTypeFind:
 
 		if pagination.CurrentPage < 1 {
-			pagination.validator.validationErrors = append(pagination.validator.validationErrors, "CurrentPage parameter is not set")
+			pagination.AddValidationError("CurrentPage parameter is not set", errors.ErrorCodeInvalidCurrentPage,"CurrentPage")
 		}
 
 		if pagination.PerPage < 1 {
-			pagination.validator.validationErrors = append(pagination.validator.validationErrors, "PerPage parameter is not set")
+			pagination.AddValidationError("PerPage parameter is not set", errors.ErrorCodeInvalidPerPage,"PerPage")
 		}
 
 		break
-	case settings.FunctionTypeCreate:
-
-
-
+    case settings.FunctionTypeCreate:
+		break
+	case settings.FunctionTypeMultiCreate:
 		break
 	case settings.FunctionTypeRead:
-
-
-
 		break
 	case settings.FunctionTypeUpdate:
-
-
-
+		break
+	case settings.FunctionTypeMultiUpdate:
 		break
 	case settings.FunctionTypeDelete:
-
+		break
+	case settings.FunctionTypeMultiDelete:
 		break
 
 	default:
-		pagination.validator.validationErrors = append(pagination.validator.validationErrors, "Usupported function type: " + functionType)
+		pagination.validator.AddValidationError("Usupported function type: " + functionType, errors.ErrorCodeUnsupportedFunctionType, "")
 		break
 	}
 }
 `
 
-var usualTemplateTypesAuthenticator = template{
-    Path:    "./types/authenticator.go",
-    Content: assignMsName(usualTypesAuthenticator),
+func getUsualTemplateTypesAuthenticator(isUuidAsPk bool) template {
+
+	cont := AssignVar(
+		assignMsName(usualTypesAuthenticator),
+		"{ID}",
+		GetPKType(isUuidAsPk),
+	)
+
+	cont = AssignVar(
+		cont,
+		"{GetIdIsNotValidExp}",
+		GetIdIsNotValidExp(isUuidAsPk),
+	)
+
+	usualTemplateTypesAuthenticator := template{
+		Path:    "./types/authenticator.go",
+		Content: cont,
+	}
+	return usualTemplateTypesAuthenticator
 }
 
-var usualTemplateTypesEntity = template{
+/*var usualTemplateTypesEntity = template{
     Path:    "./types/entity.go",
     Content: usualTypesEntity,
-}
+}*/
 
-var usualTemplateTypesFilter = template{
-    Path:    "./types/filter.go",
-    Content: assignMsName(usualTypesFilter),
+func getUsualTemplateTypesFilter(isUuidAsPk bool) template {
+
+	tpl := AssignVar(
+		assignMsName(usualTypesFilter),
+		"{ID}",
+		GetPKType(isUuidAsPk),
+	)
+
+	tpl = AssignVar(
+		tpl,
+		"{STRTOID}",
+		GetStrToIdFuncName(isUuidAsPk),
+	)
+
+	tpl = AssignVar(
+		tpl,
+		"{PkNil}",
+		GetIdNil(isUuidAsPk),
+	)
+
+	tpl = AssignVar(
+		tpl,
+		"{GetIdIsValidExp}",
+		GetIdIsValidExp(isUuidAsPk),
+	)
+
+	usualTemplateTypesFilter := template{
+		Path:    "./types/filter.go",
+		Content: tpl,
+	}
+
+	return usualTemplateTypesFilter
 }
 
 var usualTemplateTypesRequest = template{
-    Path:    "./types/request.go",
-    Content: usualTypesRequest,
+	Path:    "./types/request.go",
+	Content: usualTypesRequest,
 }
 
 var usualTemplateTypesResponse = template{
-    Path:    "./types/response.go",
-    Content: assignMsName(usualTypesResponse),
+	Path:    "./types/response.go",
+	Content: assignMsName(usualTypesResponse),
 }
 
 var usualTemplateTypesValidator = template{
-    Path:    "./types/validator.go",
-    Content: assignMsName(usualTypesValidator),
+	Path:    "./types/validator.go",
+	Content: assignMsName(usualTypesValidator),
 }
-

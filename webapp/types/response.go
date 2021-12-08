@@ -15,8 +15,6 @@ type APIError struct {
 
 type Pagination struct {
 
-	TotalRecords	int
-	TotalPages		int
 	CurrentPage		int
 	PerPage			int
 

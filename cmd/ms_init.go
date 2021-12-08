@@ -3,6 +3,7 @@ package cmd
 import (
     "gopkg.in/abiosoft/ishell.v2"
     "github.com/fatih/color"
+    "gosha/mode"
     "os"
 )
 
@@ -11,18 +12,27 @@ func msInit(c *ishell.Context) {
     green := color.New(color.FgCyan).SprintFunc()
     red := color.New(color.FgRed).SprintFunc()
 
-    c.Println("Hello new microservice", green(getCurrentDirName()))
+    c.Println("Hello new microservice", green(GetCurrentAppName()))
 
     msCreateMain(c)
 
+    dbtype := DatabaseType{DbTypeName:dbTypeMysql, IsMysql:true, IsPostgres:false}
+
+    msTemplateInsertDataToDb := GetMsTemplateInsertDataToDb()
     //bootstrap
     CreateFile(msTemplateInsertDataToDb.Path, msTemplateInsertDataToDb.Content, c)
+    if mode.GetUuidMode() {
+        addImportIfNeed(msTemplateInsertDataToDb.Path, "github.com/google/uuid")
+    }
 
     //core
+    msTemplateCoreDb := getTemplateCoreDb(dbtype)
     CreateFile(msTemplateCoreDb.Path, msTemplateCoreDb.Content, c)
 
     //settings
     CreateFile(msTemplateSettingsApp.Path, msTemplateSettingsApp.Content, c)
+
+    msTemplateSettingsDb := getMsTemplateSettingsDb(dbtype)
     CreateFile(msTemplateSettingsDb.Path, msTemplateSettingsDb.Content, c)
 
     //dbmodels
@@ -33,7 +43,7 @@ func msInit(c *ishell.Context) {
     CreateFile(msTemplateRpcappErrors.Path, msTemplateRpcappErrors.Content, c)
 
     //logic
-    CreateFile(msTemplateLogicAssigner.Path, msTemplateLogicAssigner.Content, c)
+    //CreateFile(msTemplateLogicAssigner.Path, msTemplateLogicAssigner.Content, c)
 
     //ms forlder
     CreateFile(msTemplateMsTicket.Path, msTemplateMsTicket.Content, c)

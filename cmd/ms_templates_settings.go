@@ -6,6 +6,7 @@ import (
     "os"
     "fmt"
     "regexp"
+    "{ms-name}/flags"
 )
 
 const RabbitServerPassword = "{new-pass}"
@@ -19,7 +20,7 @@ const MicroserviceAuthKey = "{new-guid}"
 
 func IsDev() bool {
     var matchDev = regexp.MustCompile("^/tmp/go-build")
-    return matchDev.Match([]byte(os.Args[0]))
+    return matchDev.Match([]byte(os.Args[0])) || *flags.IsDev
 }
 
 func GetVirtualHost() string {
@@ -41,17 +42,52 @@ func GetVirtualHost() string {
     return rabbitServerVirtualhost
 }`
 
+const msSettingsGoogle = `package settings
+
+const GoogleAnalyticsUrl = "https://www.google-analytics.com/collect"
+const GoogleTrackingId = "G-SOMETRACKINGID"
+
+`
+
+const DbHostpostgres = "127.0.0.1"
+
+const dbHostMySql = "172.17.0.2"
+
+const DbUserpostgres = "{ms-name}"
+
+const DbUserMySql = "root"
+
+const DbPortpostgres = "35432"
+
+const DbPortMySql = "3306"
+
 const msSettingsDb = `package settings
 
-const DbHost = "127.0.0.1"
+const DbHost = "dbhost"
 
-const DbPort = "5432"
+const DbPort = "dbport"
 
-const DbUser = "{ms-name}"
+const DbUser = "dbuser"
 
 const DbPass = "{new-pass}"
 
 const DbName = "{ms-name}"
+`
+
+const msSettingsWss = `package settings
+
+const WssPortDev = "5600"
+
+const WssPortProd = "5050"
+
+func GetWssPort() string {
+
+    if IsDev() {
+        return WssPortDev
+    }
+
+    return WssPortProd
+}
 `
 
 const msTemplageSettingsWebAppContent = `package settings
@@ -59,26 +95,57 @@ const msTemplageSettingsWebAppContent = `package settings
 const ServerPort = "7005"
 
 `
+var dbPass = generatePassword(8)
 
-var msTemplageSettingsAppContent =
+var msTemplateSettingsAppContent =
         assignMsName(
             assignGuid(
                 assignPass(
-                    msSettingsApp)))
+                    msSettingsApp, dbPass)))
 
-var msTemplageSettingsDbContent =
+var msTemplateSettingsGoogleContent =
         assignMsName(
-            assignPass(
-                msSettingsDb))
+            assignGuid(
+                assignPass(
+                    msSettingsGoogle, dbPass)))
+
+var msTemplateSettingsWssContent = assignMsName(msSettingsWss)
 
 var msTemplateSettingsApp = template{
     Path:    "./settings/app.go",
-    Content: msTemplageSettingsAppContent,
+    Content: msTemplateSettingsAppContent,
 }
 
-var msTemplateSettingsDb = template{
-    Path:    "./settings/db.go",
-    Content: msTemplageSettingsDbContent,
+var msTemplateSettingsGoogle = template{
+    Path:    "./settings/google.go",
+    Content: msTemplateSettingsGoogleContent,
+}
+
+func getMsTemplateSettingsDb(dbtype DatabaseType) template {
+
+    content :=  assignPass(msSettingsDb, dbPass)
+
+    if dbtype.IsMysql {
+        content = AssignVar(content, "dbhost", dbHostMySql)
+        content = AssignVar(content, "dbport", DbPortMySql)
+        content = AssignVar(content, "dbuser", DbUserMySql)
+    } else if dbtype.IsPostgres {
+        content = AssignVar(content, "dbhost", DbHostpostgres)
+        content = AssignVar(content, "dbport", DbPortpostgres)
+        content = AssignVar(content, "dbuser", DbUserpostgres)
+    }
+
+    content = assignMsName(content)
+
+    return template{
+        Path:    "./settings/db.go",
+        Content: content,
+    }
+}
+
+var msTemplateSettingsWss = template{
+    Path:    "./settings/wss.go",
+    Content: msTemplateSettingsWssContent,
 }
 
 var msTemplateSettingsWebApp = template{

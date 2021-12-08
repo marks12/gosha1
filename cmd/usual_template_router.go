@@ -8,13 +8,14 @@ import (
     "github.com/rs/cors"
     "encoding/json"
     "{ms-name}/webapp"
+    "{ms-name}/settings"
 )
 
 // Router - маршрутизатор
 func Router() http.Handler {
 
     router := mux.NewRouter().StrictSlash(true)
-    router.HandleFunc("/api", homePage).Methods("GET")
+    router.HandleFunc(settings.HomePageRoute, homePage).Methods("GET")
 
     //router-generator here dont touch this line
 
@@ -39,7 +40,30 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 }
 `
 
+const usualWssRouter = `package router
+
+import (
+    "{ms-name}/wsserver"
+)
+
+func HandleWss(msg wsserver.UserMessage, con *wsserver.UserConnection) (answer wsserver.UserResponse) {
+
+    answer = wsserver.UserResponse{
+        Type:    msg.Type,
+        Result:  "response from home",
+        Success: true,
+    }
+
+    return
+}
+`
+
 var usualTemplateRouter = template{
-    Path:    "./router/router.go",
-    Content: assignCurrentDateTime(assignMsName(usualRouter)),
+	Path:    "./router/router.go",
+	Content: assignCurrentDateTime(assignMsName(usualRouter)),
+}
+
+var usualTemplateWssRouter = template{
+	Path:    "./router/wss.go",
+	Content: assignCurrentDateTime(assignMsName(usualWssRouter)),
 }

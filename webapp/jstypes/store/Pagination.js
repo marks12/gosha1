@@ -6,98 +6,152 @@ import {findItemIndex} from "../common";
 let findUrl = "/api/v1/pagination";
 let readUrl = "/api/v1/pagination/"; // + id
 let createUrl = "/api/v1/pagination";
+let multiCreateUrl = "/api/v1/pagination/list";
 let updateUrl = "/api/v1/pagination/"; // + id
+let multiUpdateUrl = "/api/v1/pagination/list";
 let deleteUrl = "/api/v1/pagination/"; // + id
-let findOrCreateUrl = "/api/v1/pagination"; // + id
+let multiDeleteUrl = "/api/v1/pagination/list";
+let findOrCreateUrl = "/api/v1/pagination";
+let updateOrCreateUrl = "/api/v1/pagination";
 
 const pagination = {
     actions: {
-        createPagination(context, {data, filter, header}) {
+        createPagination(context, {data, filter, header, noMutation}) {
 
-            return api.create(createUrl, data, filter, header)
+            let url = createUrl;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiCreateUrl
+            }
+
+            return api.create(url, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setPagination", response.Model);
+					if(! noMutation) {
+	                    context.commit("setPagination", response.Model);
+					}
 
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        deletePagination(context, {id, header}) {
+        deletePagination(context, {id, header, noMutation}) {
 
-            return api.remove(deleteUrl + id, header)
+            let url;
+            let dataOrNull = null;
+
+            if (Array.isArray && Array.isArray(id)) {
+                url = multiDeleteUrl;
+                dataOrNull = id.map(item => typeof item === "number" ? {Id: item} : item);
+            } else {
+                url = deleteUrl + id;
+            }
+
+            return api.remove(url, header, dataOrNull)
                 .then(function(response) {
-                    context.commit("clearPagination");
+					if(! noMutation) {
+	                    context.commit("clearPagination");
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        findPagination(context, {filter, header}) {
+        findPagination(context, {filter, header, isAppend, noMutation}) {
 
             return api.find(findUrl, filter, header)
                 .then(function(response) {
 
-                    context.commit("setPagination__List", response.List);
+					if(! noMutation) {
+						if (isAppend) {
+							context.commit("appendPagination__List", response.List);
+						} else {
+							context.commit("setPagination__List", response.List);
+						}
+					}
 
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        loadPagination(context, {id, filter, header}) {
+        loadPagination(context, {id, filter, header, noMutation}) {
 
             return api.find(readUrl + id, filter, header)
                 .then(function(response) {
 
-                    context.commit("setPagination", response.Model);
-
+					if(! noMutation) {
+	                    context.commit("setPagination", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        updatePagination(context, {id, data, filter, header}) {
+        updatePagination(context, {id, data, filter, header, noMutation}) {
 
-            return api.update(updateUrl + id, data, filter, header)
+            let url = updateUrl + id;
+            if (Array.isArray && Array.isArray(data)) {
+                url = multiUpdateUrl
+            }
+
+            return api.update(url, data, filter, header)
                 .then(function(response) {
-
-                    context.commit("setPagination", response.Model);
-
+					if(! noMutation) {
+	                    context.commit("setPagination", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
-        findOrCreatePagination(context, {id, data, filter, header}) {
+        findOrCreatePagination(context, {id, data, filter, header, noMutation}) {
 
             return api.update(findOrCreateUrl, data, filter, header)
                 .then(function(response) {
 
-                    context.commit("setPagination", response.Model);
-
+					if(! noMutation) {
+	                    context.commit("setPagination", response.Model);
+					}
                     return response;
                 })
                 .catch(function(err) {
-                    return err;
+                    console.error(err);
+                    throw(err);
                 });
         },
         clearListPagination(context) {
             context.commit("clearListPagination");
+        },
+        clearPagination(context) {
+            context.commit("clearPagination");
         },
     },
     getters: {
         getPagination: (state) => {
             return state.Pagination;
         },
+        getPaginationById: state => id => {
+            return state.Pagination__List.find(item => item.Id === id);
+        },
         getListPagination: (state) => {
             return state.Pagination__List;
+        },
+        getRoute__Pagination: state => action => {
+            return state.Pagination__Routes[action];
+        },
+        getRoutes__Pagination: state => {
+            return state.Pagination__Routes;
         },
     },
     mutations: {
@@ -105,7 +159,17 @@ const pagination = {
             state.Pagination = data;
         },
         setPagination__List(state, data) {
-            state.Pagination__List = data;
+            state.Pagination__List = data || [];
+        },
+        appendPagination__List(state, data) {
+
+            if (! state.Pagination__List) {
+                state.Pagination__List = [];
+            }
+
+			if (data !== null) {
+				state.Pagination__List = state.Pagination__List.concat(data);				
+			}
         },
         clearPagination(state) {
             state.Pagination = new Pagination();
@@ -143,6 +207,18 @@ const pagination = {
     state: {
         Pagination: new Pagination(),
         Pagination__List: [],
+        Pagination__Routes: {
+            find: findUrl,
+            read: readUrl,
+            create: createUrl,
+            multiCreate: multiCreateUrl,
+            update: updateUrl,
+            multiUpdate: multiUpdateUrl,
+            delete: deleteUrl,
+            multiDelete: multiDeleteUrl,
+            findOrCreate: findOrCreateUrl,
+            updateOrCreate: updateOrCreateUrl,
+        },
     },
 };
 

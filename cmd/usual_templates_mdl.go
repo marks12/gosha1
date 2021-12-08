@@ -3,8 +3,6 @@ package cmd
 const usualMdlPagination = `package mdl
 
 type Pagination struct {
-	TotalRecords	int
-	TotalPages		int
 	CurrentPage		int
 	PerPage			int
 }
@@ -105,6 +103,10 @@ type ResponseDelete struct {
 }
 
 type ResponseFindOrCreate struct {
+	Model 	interface{}
+}
+
+type ResponseUpdateOrCreate struct {
 	Model 	interface{}
 }
 

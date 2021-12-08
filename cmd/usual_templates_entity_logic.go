@@ -1,26 +1,67 @@
 package cmd
 
+import (
+	"gosha/mode"
+)
+
+const usualEntityLogicFindWoDb = `
+func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalRecords int, err error) {
+
+	//{Entity} Find logic code
+
+    return
+}
+`
+
 const usualEntityLogicFind = `
 func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalRecords int, err error) {
 
-    foundIds 	:= []int{}
+    foundIds 	:= []{PkType}{}
     dbmodelData	:= []dbmodels.{Entity}{}
     limit       := filter.PerPage
     offset      := filter.GetOffset()
 
     filterIds 	:= filter.GetIds()
+    filterExceptIds 	:= filter.GetExceptIds()
 
-    var count int
+    var count int64
 
     criteria := core.Db.Where(dbmodels.{Entity}{})
+
+	//{Entity}.FindFilterCode remove this line for disable generator functionality
 
     if len(filterIds) > 0 {
         criteria = criteria.Where("id in (?)", filterIds)
     }
 
-//    if len(filter.Search) > 0 {
-//        criteria = criteria.Where("name like ?", ("%" + filter.Search + "%"), filter.Search)
-//    }
+    if len(filterExceptIds) > 0 {
+        criteria = criteria.Where("id not in (?)", filterExceptIds)
+    }
+
+    //if len(filter.Search) > 0 {
+    //
+    //    s := ("%" + filter.Search + "%")
+    //
+    //    if len(filter.SearchBy) > 0 {
+	//
+	//		subCriteria := core.Db
+    //
+    //        for _, field := range filter.SearchBy {
+    //
+    //            if core.Db.Migrator().HasColumn(&dbmodels.{Entity}{}, field) {
+	//				  subCriteria = subCriteria.Or("` + "`" + `"+field+"` + "`" + `"+" ilike ?", s)
+    //            } else {
+    //                err = errors.NewErrorWithCode("Search by unknown field", errors.ErrorCodeNotValid ,field)
+    //                return
+    //            }
+    //        }
+	//
+	//		criteria = criteria.Where(subCriteria)
+	//
+    //    } else {
+    //      criteria = criteria.Where("name ilike ? or code ilike ?", ("%" + filter.Search + "%"), ("%" + filter.Search + "%"))
+    //    }
+    //}
 
     q := criteria.Model(dbmodels.{Entity}{}).Count(&count)
 
@@ -32,10 +73,10 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
     // order global criteria
     if len(filter.Order) > 0  {
         for index, Field := range filter.Order {
-             if core.Db.NewScope(&dbmodels.{Entity}{}).HasColumn(Field) {
-                criteria = criteria.Order(` + `"` + "`" + `"` + ` + Field + ` + `"` + "`" + `"` + ` + " " + filter.OrderDirection[index])
+             if core.Db.Migrator().HasColumn(&dbmodels.{Entity}{}, Field) {
+                criteria = criteria.Order("\"" + strings.ToLower(Field) + "\"" + " " + filter.OrderDirection[index])
             } else {
-                err = errors.New("Ordering by unknown Field " + Field)
+				err = errors.NewErrorWithCode("Ordering by unknown Field", errors.ErrorCodeNotValid ,Field)
                 return
             }
         }
@@ -44,7 +85,7 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
     q = criteria.Limit(limit).Offset(offset).Find(&dbmodelData)
 
     if q.Error != nil {
-       log.Println("FindProduct > Ошибка получения данных2:", q.Error)
+       log.Println("Find{Entity} > Ошибка получения данных2:", q.Error)
        return []types.{Entity}{}, 0, nil
     }
 
@@ -60,42 +101,99 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
        result = append(result, Assign{Entity}TypeFromDb(item))
     }
 
-    return result, count, nil
+    return result, int(count), nil
+}
+`
+
+const usualEntityLogicCreateWoDb = `
+func {Entity}MultiCreate(filter types.{Entity}Filter)  (data []types.{Entity}, err error) {
+
+	//{Entity} MultiCreate logic code
+
+    return
+}
+
+func {Entity}Create(filter types.{Entity}Filter, query *gorm.DB)  (data types.{Entity}, err error) {
+    
+	//{Entity} Create logic code
+    return
 }
 `
 
 const usualEntityLogicCreate = `
-func {Entity}Create(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
 
-    query := core.Db
+func {Entity}MultiCreate(filter types.{Entity}Filter)  (data []types.{Entity}, err error) {
+
+    typeModelList, err := filter.Get{Entity}ModelList()
+
+    if err != nil {
+        return
+    }
+
+    tx := core.Db.Begin()
+
+    for _, typeModel := range typeModelList {
+
+        filter.Set{Entity}Model(typeModel)
+        item, e := {Entity}Create(filter, tx)
+
+        if e != nil {
+            err = e
+            data = nil
+            break
+        }
+
+        data = append(data, item)
+    }
+
+    if err == nil {
+        tx.Commit()
+    } else {
+        tx.Rollback()
+    }
+
+    return
+}
+
+func {Entity}Create(filter types.{Entity}Filter, query *gorm.DB)  (data types.{Entity}, err error) {
 
     typeModel := filter.Get{Entity}Model()
     dbModel := Assign{Entity}DbFromType(typeModel)
-    dbModel.ID = 0
+    dbModel.ID = {PkNil}
 
     dbModel.Validate()
 
-    if dbModel.IsValid() {
-
-        query = core.Db.Create(&dbModel)
-
-    } else {
-
+    if ! dbModel.IsValid() {
         fmt.Println("{Entity}Create > Create {Entity} error:", dbModel)
-        return types.{Entity}{}, errors.New(dbModel.GetValidationErrors())
+        return types.{Entity}{}, dbModel.GetValidationError()
     }
+
+    query = query.Create(&dbModel)
 
     if query.Error != nil {
         fmt.Println("{Entity}Create > Create {Entity} error:", query.Error)
-        return types.{Entity}{}, errors.New("cant create {Entity}")
+        return types.{Entity}{}, errors.NewErrorWithCode("cant create {Entity}", errors.ErrorCodeSqlError, "")
     }
 
     return Assign{Entity}TypeFromDb(dbModel), nil
 }
 `
 
+const usualEntityLogicReadWoDb = `
+func {Entity}Read(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
+
+	//{Entity} Read logic code
+    return
+}
+`
+
 const usualEntityLogicRead = `
 func {Entity}Read(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
+
+    filter.Pagination.CurrentPage = 1
+    filter.Pagination.PerPage = 1
+    filter.ClearIds()
+    filter.AddId(filter.GetCurrentId())
 
     findData, _, err := {Entity}Find(filter)
 
@@ -103,23 +201,74 @@ func {Entity}Read(filter types.{Entity}Filter)  (data types.{Entity}, err error)
         return findData[0], nil
     }
 
-    return types.{Entity}{}, errors.New("Not found")
+    return types.{Entity}{}, errors.NewErrorWithCode("Not found", errors.ErrorCodeNotFound, "")
 }
 `
 
-var usualEntityLogicUpdate = `
-func {Entity}Update(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
+const usualEntityLogicUpdateWoDb = `
+
+func {Entity}MultiUpdate(filter types.{Entity}Filter)  (data []types.{Entity}, err error) {
+
+	//{Entity} MultiUpdate logic code
+    return
+}
+
+func {Entity}Update(filter types.{Entity}Filter, query *gorm.DB)  (data types.{Entity}, err error) {
+
+	//{Entity} Update logic code
+    return
+}
+
+`
+
+func GetUsualEntityLogicUpdate() string {
+	return `
+
+func {Entity}MultiUpdate(filter types.{Entity}Filter)  (data []types.{Entity}, err error) {
+
+    typeModelList, err := filter.Get{Entity}ModelList()
+
+    if err != nil {
+        return
+    }
+
+    tx := core.Db.Begin()
+
+    for _, typeModel := range typeModelList {
+
+        filter.Set{Entity}Model(typeModel)
+        filter.ClearIds()
+        filter.SetCurrentId(typeModel.Id)
+
+        item, e := {Entity}Update(filter, tx)
+
+        if e != nil {
+            err = e
+            data = nil
+            break
+        }
+
+        data = append(data, item)
+    }
+
+    if err == nil {
+        tx.Commit()
+    } else {
+        tx.Rollback()
+    }
+
+    return data, nil
+}
+
+func {Entity}Update(filter types.{Entity}Filter, query *gorm.DB)  (data types.{Entity}, err error) {
 
     filter.Pagination.CurrentPage = 1
     filter.Pagination.PerPage = 1
 
     existsModel, err := {Entity}Read(filter)
 
-    if existsModel.Id < 1 || err != nil {
-
-        if err != nil {
-            err = errors.New("{Entity} not found in db")
-        }
+    if existsModel.Id ` + GetIdIsNotValidExp(mode.GetUuidMode()) + ` || err != nil {
+        err = errors.NewErrorWithCode("{Entity} not found in db with id: " + ` + GetPkAsString("filter.GetCurrentId()", mode.GetUuidMode()) + `, errors.ErrorCodeNotFound, "Id")
         return
     }
 
@@ -135,11 +284,11 @@ func {Entity}Update(filter types.{Entity}Filter)  (data types.{Entity}, err erro
     updateModel.Validate()
 
     if !updateModel.IsValid() {
-        err = errors.New(updateModel.GetValidationErrors())
+        err = updateModel.GetValidationError()
         return
     }
 
-    q := core.Db.Model(dbmodels.{Entity}{}).Save(&updateModel)
+    q := query.Save(&updateModel)
 
     if q.Error != nil {
         err = q.Error
@@ -151,23 +300,80 @@ func {Entity}Update(filter types.{Entity}Filter)  (data types.{Entity}, err erro
 }
 
 `
-const usualEntityLogicDelete = `
-func {Entity}Delete(filter types.{Entity}Filter)  (isOk bool, err error) {
+}
+
+const usualEntityLogicDeleteWoDb = `
+
+func {Entity}MultiDelete(filter types.{Entity}Filter)  (isOk bool, err error) {
+
+	//{Entity} MultiDelete logic code
+    return
+}
+
+func {Entity}Delete(filter types.{Entity}Filter, query *gorm.DB)  (isOk bool, err error) {
+
+	//{Entity} Delete logic code
+    return
+}
+
+`
+
+func GetUsualEntityLogicDelete() string {
+
+	return `
+func {Entity}MultiDelete(filter types.{Entity}Filter)  (isOk bool, err error) {
+
+    typeModelList, err := filter.Get{Entity}ModelList()
+
+    if err != nil {
+        return
+    }
+
+    isOk = true
+
+    tx := core.Db.Begin()
+
+    for _, typeModel := range typeModelList {
+
+        filter.Set{Entity}Model(typeModel)
+        filter.ClearIds()
+        filter.SetCurrentId(typeModel.Id)
+
+        _, e := {Entity}Delete(filter, tx)
+
+        if e != nil {
+            err = e
+            isOk = false
+            break
+        }
+    }
+
+    if err == nil {
+        tx.Commit()
+    } else {
+        tx.Rollback()
+    }
+
+    return isOk, err
+}
+
+func {Entity}Delete(filter types.{Entity}Filter, query *gorm.DB)  (isOk bool, err error) {
 
     filter.Pagination.CurrentPage = 1
     filter.Pagination.PerPage = 1
 
     existsModel, err := {Entity}Read(filter)
 
-    if existsModel.Id < 1 || err != nil {
+    if existsModel.Id {GetIdIsNotValidExp} || err != nil {
 
         if err != nil {
-            err = errors.New("{Entity} not found in db")
+            err = errors.NewErrorWithCode("{Entity} not found in db with id: " + ` + GetPkAsString("filter.GetCurrentId()", mode.GetUuidMode()) + `, errors.ErrorCodeNotFound, "")
         }
         return
     }
 
-    q := core.Db.Model(dbmodels.{Entity}{}).Where(dbmodels.{Entity}{ID: existsModel.Id}).Delete(&existsModel)
+    dbModel := Assign{Entity}DbFromType(existsModel)
+    q := query.Model(dbmodels.{Entity}{}).Where(dbmodels.{Entity}{ID: dbModel.ID}).Delete(&dbModel)
 
     if q.Error != nil {
         err = q.Error
@@ -177,6 +383,27 @@ func {Entity}Delete(filter types.{Entity}Filter)  (isOk bool, err error) {
     isOk = true
     return
 }
+`
+}
+
+const usualEntityLogicFindOrCreateWoDb = `
+
+func {Entity}FindOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
+    
+	//{Entity} FindOrCreate logic code
+    return
+}
+`
+
+const usualEntityLogicUpdateOrCreateWoDb = `
+
+func {Entity}UpdateOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
+    
+	//{Entity} UpdateOrCreate logic code
+    return
+}
+
+// add all assign functions
 `
 
 const usualEntityLogicFindOrCreate = `
@@ -191,7 +418,7 @@ func {Entity}FindOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, er
     findOrCreateModel.Validate()
 
     if !findOrCreateModel.IsValid() {
-        err = errors.New(findOrCreateModel.GetValidationErrors())
+        err = findOrCreateModel.GetValidationError()
         return
     }
 
@@ -207,52 +434,150 @@ func {Entity}FindOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, er
 }
 
 `
-const usualEntityLogic = `package logic
 
-import (
-    "{ms-name}/types"
-    "{ms-name}/dbmodels"
-    "{ms-name}/core"
-    "log"
-    "errors"
-    "fmt"
-)
-`
+const usualEntityLogicUpdateOrCreate = `
+func {Entity}UpdateOrCreate(filter types.{Entity}Filter)  (data types.{Entity}, err error) {
 
-var usualTemplateEntityLogic = template{
-    Path:    "",
-    Content: assignMsName(GetUsualTemplateLogicContent(Crud{true, true, true, true, true, true})),
+    filter.Pagination.CurrentPage = 1
+    filter.Pagination.PerPage = 1
+
+    updateOrCreateModel := Assign{Entity}DbFromType(filter.Get{Entity}Model())
+	//updateOrCreateModel.Field remove this line for disable generator functionality
+
+    updateOrCreateModel.Validate()
+
+    if !updateOrCreateModel.IsValid() {
+        err = updateOrCreateModel.GetValidationError()
+        return
+    }
+
+    //please uncomment and set criteria
+    //q := core.Db.Model(dbmodels.{Entity}{}).Where(dbmodels.{Entity}{ID: updateOrCreateModel.ID}).Assign(dbmodels.{Entity}{/*PLEASE SET CRITERIA*/}).FirstOrCreate(&updateOrCreateModel)
+
+    //if q.Error != nil {
+    //    err = q.Error
+    //    return
+    //}
+
+    data = Assign{Entity}TypeFromDb(updateOrCreateModel)
+    return
 }
 
-func GetUsualTemplateLogicContent(crud Crud) (content string) {
+// add all assign functions
+`
 
-    content = usualEntityLogic
+func getUsualEntityLogicHeader(isWoModels bool) (header string) {
 
-    if crud.IsFind {
-        content += usualEntityLogicFind
-    }
+	top := `package logic
 
-    if crud.IsCreate {
-        content += usualEntityLogicCreate
-    }
+    import (
+        "{ms-name}/types"
+`
 
-    if crud.IsRead {
-        content += usualEntityLogicRead
-    }
+	if mode.GetUuidMode() {
+		if !isWoModels {
+			top += `        "github.com/google/uuid"
+`
+		}
+	} else {
+		if !isWoModels {
+			top += `        "strconv"
+`
+		}
+	}
 
-    if crud.IsUpdate {
-        content += usualEntityLogicUpdate
-    }
+	footer := `
+        "gorm.io/gorm"
+    )
+`
+	middle := ""
 
-    if crud.IsDelete {
-        content += usualEntityLogicDelete
-    }
+	if !isWoModels {
+		middle = `
+        "log"
+        "fmt"
+        "{ms-name}/core"
+        "{ms-name}/errors"
+        "{ms-name}/dbmodels"
+		"strings"` + "\n"
+	}
 
-    if crud.IsFindOrCreate {
-        content += usualEntityLogicFindOrCreate
-    }
+	return top + middle + footer
 
-    content = assignMsName(content)
+}
 
-    return
+//var usualTemplateEntityLogic = template{
+//    Path:    "",
+//    Content: assignMsName(GetUsualTemplateLogicContent(Crud{true, true, true, true, true, true}, false)),
+//}
+
+func GetUsualTemplateLogicContent(crud Crud, isWoDbModel bool) (content string) {
+
+	isUuidAsPk := mode.GetUuidMode()
+
+	content = getUsualEntityLogicHeader(isWoDbModel)
+
+	if crud.IsFind {
+		if isWoDbModel {
+			content += usualEntityLogicFindWoDb
+		} else {
+			content += usualEntityLogicFind
+		}
+
+	}
+
+	if crud.IsCreate {
+		if isWoDbModel {
+			content += usualEntityLogicCreateWoDb
+		} else {
+			content += usualEntityLogicCreate
+		}
+	}
+
+	if crud.IsRead {
+		if isWoDbModel {
+			content += usualEntityLogicReadWoDb
+		} else {
+			content += usualEntityLogicRead
+		}
+	}
+
+	if crud.IsUpdate {
+		if isWoDbModel {
+			content += usualEntityLogicUpdateWoDb
+		} else {
+			content += GetUsualEntityLogicUpdate()
+		}
+	}
+
+	if crud.IsDelete {
+		if isWoDbModel {
+			content += usualEntityLogicDeleteWoDb
+		} else {
+			content += GetUsualEntityLogicDelete()
+		}
+	}
+
+	if crud.IsFindOrCreate {
+		if isWoDbModel {
+			content += usualEntityLogicFindOrCreateWoDb
+		} else {
+			content += usualEntityLogicFindOrCreate
+		}
+	}
+
+	if crud.IsUpdateOrCreate {
+		if isWoDbModel {
+			content += usualEntityLogicUpdateOrCreateWoDb
+		} else {
+			content += usualEntityLogicUpdateOrCreate
+		}
+	}
+
+	content = assignMsName(content)
+	content = AssignVar(content, "{GetIdIsNotValidExp}", GetIdIsNotValidExp(isUuidAsPk))
+	content = AssignVar(content, "{PkNil}", GetIdNil(isUuidAsPk))
+	content = AssignVar(content, "{PkType}", GetPKType(isUuidAsPk))
+
+	return
 }

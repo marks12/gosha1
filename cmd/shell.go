@@ -1,16 +1,20 @@
 package cmd
 
 import (
-    "gopkg.in/abiosoft/ishell.v2"
-    "os"
     "github.com/fatih/color"
+    "gopkg.in/abiosoft/ishell.v2"
     "gosha/mode"
+    "os"
 )
 
 var shell = ishell.New()
 
 const SET_APP_TYPE = "setAppType"
+const GET_APP_INFO = "getAppInfo"
 const GENERATE_TYPES_JS = "gen:types:js"
+const GENERATE_TESTS_WEBAPP = "gen:tests:webapp"
+const GENERATE_GENERATORS = "gen:generators"
+const SetReadOnly = "readonly"
 
 func RunShell() {
 
@@ -43,12 +47,36 @@ func RunShell() {
     })
 
     shell.AddCmd(&ishell.Cmd{
+        Name: GET_APP_INFO,
+        Help: "Get current app info. " +
+              "\n\t\t\t\tNIM: "+GET_APP_INFO,
+        Func: getAppInfo,
+    })
+
+    shell.AddCmd(&ishell.Cmd{
         Name: GENERATE_TYPES_JS,
         Help: "Generate types structs to JS for using in frontend " +
-            "\n\t\t\t\tNIM: "+GENERATE_TYPES_JS+" --dst=/some/destination/path",
+            "\n\t\t\t\tNIM: "+GENERATE_TYPES_JS+" --dst=/some/destination/path --map-namespace=im3 add namespace for modules",
         Func: genTypesJs,
     })
 
+    shell.AddCmd(&ishell.Cmd{
+        Name: GENERATE_TESTS_WEBAPP,
+        Help: "Generate tests for webapp",
+        Func: genTestsWebapp,
+    })
+
+    shell.AddCmd(&ishell.Cmd{
+        Name: GENERATE_GENERATORS,
+        Help: "Generate generators functions",
+        Func: genGenerators,
+    })
+
+    shell.AddCmd(&ishell.Cmd{
+        Name: SetReadOnly,
+        Help: "Just read operations",
+        Func: setReadOnly,
+    })
 
     // run shell
     if len(os.Args) > 1 && os.Args[1] == "exit" {
@@ -68,6 +96,7 @@ func setMode() {
     } else {
         mode.SetInteractiveMode()
     }
+
 }
 
 func GetShell() *ishell.Shell {

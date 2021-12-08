@@ -1,11 +1,7 @@
 package types
 
-import (
-    "net/http"
-)
-
+//Authentication entity for check authorize user in system and store auth tokens
 type Auth struct {
-
     Email     string    `gorm:"many2many:PersonAccount;association_foreignkey:idAccount;foreignkey:idPerson"`
     Password  string
     Token     string
@@ -14,34 +10,4 @@ type Auth struct {
 
 func (auth *Auth) Validate()  {
 //Validate remove this line for disable generator functionality
-}
-
-type AuthFilter struct {
-    model Auth
-    //AuthFilter remove this line for disable generator functionality
-
-    AbstractFilter
-}
-
-func GetAuthFilter(request *http.Request, functionType string) AuthFilter {
-
-    var filter AuthFilter
-
-    filter.request = request
-
-    //GetAuthFilter remove this line for disable generator functionality
-
-    ReadJSON(request, &filter.model)
-
-    filter.AbstractFilter = GetAbstractFilter(request, functionType)
-
-    return  filter
-}
-
-
-func (filter *AuthFilter) GetAuthModel() Auth {
-
-    filter.model.Validate()
-
-    return  filter.model
 }
