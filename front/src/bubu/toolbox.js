@@ -22,7 +22,7 @@ function Toolbox(config, toolboxElementId) {
 
         console.error('Root toolbox not found. Id = ' + toolboxElementId +
             '. Please check is countainer with id=\'' + toolboxElementId + '\' ' +
-            'exists or create new container like: <div id="BubuToolbox">')
+            'exists or create new container like: <div id="BubuToolbox"></div>')
     }
 
     function Img(src, type) {

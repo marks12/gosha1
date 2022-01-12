@@ -31,7 +31,7 @@
                         ></EntityItem>
                     </template>
                 </VSet>
-                <VText class="loading"></VText>
+                <VText v-if="isLoading" class="loading">Loading ...</VText>
             </template>
 
             <VPanel v-if="panel.show" @close="closePanel" :maxWidth="panelMaxWidth">
@@ -315,20 +315,22 @@
                 SearchTimer: null,
             };
         },
+        mounted: function () {
+
+          this.fieldTypeFilter.CurrentPage = 1;
+          this.fieldTypeFilter.PerPage = 100;
+
+          this.findFieldType({
+            filter: this.fieldTypeFilter,
+          }).then(() => {
+            setTimeout(()=>{
+              this.isLoading = false;
+            }, 2000)
+          });
+
+          this.loadCurrentApp({Id:'current'});
+        },
         created: function () {
-
-            // this.panel.request = "request";
-
-            this.fieldTypeFilter.CurrentPage = 1;
-            this.fieldTypeFilter.PerPage = 100;
-
-            this.findFieldType({
-                filter: this.fieldTypeFilter,
-            }).then(() => {
-                this.isLoading = false;
-            });
-
-            this.loadCurrentApp({Id:'current'});
 
         },
         computed: {

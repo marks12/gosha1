@@ -6,7 +6,7 @@
             <VLink url="/bpm" routerLink>Modeller</VLink>
         </VSet>
         <VSet horizontal width="fit">
-            <VLink url="/about" routerLink nowrap>About GOSHA</VLink>
+            <VLink url="/about" routerLink nowrap>О проекте</VLink>
         </VSet>
     </Vset>
 </template>
