@@ -98,7 +98,7 @@ export default {
       this.isShowAuth = false;
     },
     checkAuth() {
-      
+
     },
   },
 }
