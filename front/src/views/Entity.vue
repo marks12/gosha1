@@ -31,11 +31,7 @@
                         ></EntityItem>
                     </template>
                 </VSet>
-<<<<<<< HEAD
                 <VText v-if="isLoading" class="loading">Loading ...</VText>
-=======
-                <VText class="loading"></VText>
->>>>>>> 833a639a4b0d27be7b1f6779fa75c4a2ae01dbb2
             </template>
 
             <VPanel v-if="panel.show" @close="closePanel" :maxWidth="panelMaxWidth">

@@ -43,6 +43,7 @@ import VImage from "swtui/src/components/VImage";
 import VHead from "swtui/src/components/VHead";
 import AuthGosha from "../components/AuthGosha";
 import Documents from "../components/bpm/Documents";
+import cloud from "../store/cloud";
 
 export default {
   name: "Bpm",
@@ -70,8 +71,6 @@ export default {
       this.bubu.UpdateCanvas();
       this.bubu.Render();
     });
-  },
-  mounted() {
     this.checkAuth();
   },
   methods: {
@@ -99,6 +98,9 @@ export default {
     },
     checkAuth() {
 
+      cloud.checkAuthorized((isAuthorized)=>{
+        this.isAuthorized = isAuthorized;
+      }, ()=>{})
     },
   },
 }
