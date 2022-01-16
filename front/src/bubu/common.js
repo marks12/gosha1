@@ -73,9 +73,6 @@ export function IsPointOnLine(ax, ay, bx, by, x, y, delta) {
 
     if (Math.abs(Math.abs(x2) - Math.abs(x1)) > delta) {
         let onLineY = ((y2 - y1) / (x2 - x1)) * (x - x1) + y1;
-
-        console.log('by y', onLineY, y);
-
         return Math.abs(onLineY - y) <= delta;
     }
 
@@ -88,4 +85,20 @@ export function IsPointOnLine(ax, ay, bx, by, x, y, delta) {
 
 export function rounder(a) {
     return Math.round(a / TYPES.positionRound) * TYPES.positionRound;
+}
+
+export function generateUUID() { // Public Domain/MIT
+    let d = new Date().getTime();//Timestamp
+    let d2 = (performance && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        let r = Math.random() * 16;//random number between 0 and 16
+        if(d > 0){//Use timestamp until depleted
+            r = (d + r)%16 | 0;
+            d = Math.floor(d/16);
+        } else {//Use microseconds since page-load if supported
+            r = (d2 + r)%16 | 0;
+            d2 = Math.floor(d2/16);
+        }
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
 }

@@ -17,6 +17,13 @@ function Canvas(canvasElementId) {
     this.Zero.Coords.SetX(canvas.getBoundingClientRect().left);
     this.Zero.Coords.SetY(canvas.getBoundingClientRect().top);
 
+    this.ResetCanvas = (newCanvasDocumentId) => {
+        let newConvas = document.getElementById(newCanvasDocumentId);
+        newConvas.parentNode.replaceChild(canvas, newConvas);
+        this.UpdateCanvas();
+        this.Render();
+    }
+
     this.UpdateCanvas = () => {
 
         canvas.setAttribute("width", document.getElementById(canvasElementId).parentNode.parentElement.clientWidth);
@@ -71,10 +78,6 @@ function Canvas(canvasElementId) {
     canvas.addEventListener("MozMousePixelScroll", wheel);
 
     document.addEventListener("keypress", self.Keyboard.Keypress);
-
-    this.GetCanvas = () => {
-        return this.canvas;
-    };
 
     this.GetScale = () => {
         return scale;

@@ -1,13 +1,13 @@
 <template>
   <VSet vertical>
-    <Documents></Documents>
+    <Documents @rename="rename" :document="document"></Documents>
     <VSet height="dyn">
       <WorkSpace width="fit">
         <AuthGosha v-if="isShowAuth" :callback="callbackAuth"></AuthGosha>
         <VSet vertical>
           <VHead>Элементы</VHead>
           <div id="BubuToolbox"></div>
-          <VButton v-if="isAuthorized" style="padding: 0 15px;" @click="getData" text="Save" small></VButton>
+          <VButton v-if="isAuthorized" style="padding: 0 15px;" @click="saveDoc" text="Save" small></VButton>
           <VButton v-else style="padding: 0 15px;" @click="showAuth" text="Auth" small></VButton>
         </VSet>
       </WorkSpace>
@@ -32,8 +32,6 @@
 
 <script>
 
-import BuBu from '../bubu/main';
-import {TYPES} from '../bubu/constants';
 import VLink from "swtui/src/components/VLink";
 import VButton from "swtui/src/components/VButton";
 import VSet from "swtui/src/components/VSet";
@@ -44,6 +42,7 @@ import VHead from "swtui/src/components/VHead";
 import AuthGosha from "../components/AuthGosha";
 import Documents from "../components/bpm/Documents";
 import cloud from "../store/cloud";
+import documentor from "../store/bpm";
 
 export default {
   name: "Bpm",
@@ -51,39 +50,50 @@ export default {
   data() {
     return {
       text: "Some asd",
-      bubu: {},
+      bubu: null,
       src: {
         task: "",
         condition: "",
+      },
+      document: {
+        Name: "Новый документ",
+        Id: 0,
+        ProjectId: 0,
+        Scale: 0,
+        ZeroPointX: 0,
+        ZeroPointY: 0,
+        Description: "",
+        Items: [],
       },
       isAuthorized: false,
       isShowAuth: false,
     };
   },
-  updated() {
-    this.bubu.UpdateCanvas();
-  },
   created() {
     this.$nextTick(() => {
-      this.bubu = new BuBu('SomeCanvas', 'BubuToolbox');
-      this.src.task = this.bubu.GetSrcImageTask();
-      this.src.condition = this.bubu.GetSrcImageCondition();
-      this.bubu.UpdateCanvas();
-      this.bubu.Render();
+      this.bubu = documentor.GetInstance('SomeCanvas', 'BubuToolbox');
     });
     this.checkAuth();
   },
   methods: {
+    rename(name) {
+      this.document.Name = name;
+    },
     allowDrop: function (ev) {
       ev.preventDefault();
     },
     drop: function (event) {
       this.bubu.DropElement(event)
     },
-    getData: function () {
+    saveDoc: function () {
       let data = this.bubu.GetData();
-
-      console.log('data', data);
+      this.document.Scale = data.Scale;
+      this.document.ZeroPointX = data.ZeroCoords.X;
+      this.document.ZeroPointY = data.ZeroCoords.Y;
+      this.document.ZeroPointY = data.ZeroCoords.Y;
+      this.document.DocId = data.DocId;
+      this.document.Items = data.Items;
+      console.log('doc', this.document);
     },
     showAuth: function () {
       this.isShowAuth = true;

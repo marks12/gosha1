@@ -1,28 +1,38 @@
-import ElementsRegister from "./elements-register";
 import {TYPES as constants} from "./constants";
 
 function Toolbox(config, toolboxElementId) {
 
     let self = this;
 
-    let bubuElement = document.getElementById(toolboxElementId);
+    let renderToolBox = () => {
 
-    if (bubuElement) {
+        let parentItem = document.getElementById(toolboxElementId);
 
-        bubuElement.appendChild((
-            new Img(this.GetSrcImageCondition(), constants.condition)
-        ).GetNode());
+        if (parentItem) {
 
-        bubuElement.appendChild((
-            new Img(this.GetSrcImageTask(), constants.task)
-        ).GetNode());
+            parentItem.innerHTML = '';
 
+            parentItem.appendChild((
+                new Img(this.GetSrcImageCondition(), constants.condition)
+            ).GetNode());
 
+            parentItem.appendChild((
+                new Img(this.GetSrcImageTask(), constants.task)
+            ).GetNode());
+        }
+    }
+
+    if (document.getElementById(toolboxElementId)) {
+        renderToolBox()
     } else {
 
         console.error('Root toolbox not found. Id = ' + toolboxElementId +
             '. Please check is countainer with id=\'' + toolboxElementId + '\' ' +
             'exists or create new container like: <div id="BubuToolbox"></div>')
+    }
+
+    this.UpdateToolbox = () => {
+        renderToolBox();
     }
 
     function Img(src, type) {
@@ -48,8 +58,6 @@ function Toolbox(config, toolboxElementId) {
         img.addEventListener('dragend', self.DropElement);
         img.addEventListener('drop', self.DropElement);
 
-
-        bubuElement.appendChild(img);
         img.setAttribute('src', src);
 
         this.GetNode = () => {
