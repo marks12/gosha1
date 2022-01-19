@@ -39,7 +39,6 @@ function BuBu(canvasElementId, ToolboxElementId) {
     Clone.apply(this, arguments);
     Selection.apply(this, arguments);
 
-
     return {
         Add: this.AddItem,
         Elements: ElementsRegister,
@@ -48,6 +47,8 @@ function BuBu(canvasElementId, ToolboxElementId) {
         GetItemsByName: this.GetItemsByName,
         GetItemById: this.GetItemById,
         Render: this.Render,
+        UpdateToolbox: this.UpdateToolbox,
+        ResetCanvas: this.ResetCanvas,
         GetSrcImageTask: this.GetSrcImageTask,
         GetSrcImageCondition: this.GetSrcImageCondition,
         UpdateCanvas: this.UpdateCanvas,

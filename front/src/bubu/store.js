@@ -1,18 +1,28 @@
 import ElementsRegister from "./elements-register";
 import {TYPES as constants} from "./constants";
-import {IsPointOnLine, rounder} from "./common";
+import {generateUUID, IsPointOnLine, rounder} from "./common";
 
 function Store(config) {
 
     let Items = {};
     let ctx = null;
     let self = this;
+    let DocId = config && config.DocId ? config.DocId : generateUUID();
 
     this.AddItem = (element) => {
         let id = element.GetId();
         Items[id] = element;
         return this;
     };
+
+    this.GetDocId = () => {
+        return DocId;
+    }
+
+    this.SetDocId = (docId) => {
+        DocId = docId;
+        return this;
+    }
 
     let addPoints = (item) => {
         item.AddConnectorPoint('top', false);
@@ -340,6 +350,7 @@ function Store(config) {
 
     this.GetStore = () => {
         return JSON.parse(JSON.stringify({
+            DocId: this.GetDocId(),
             Items: Object.values(Items),
             Scale: this.GetScale(),
             ZeroCoords: {
