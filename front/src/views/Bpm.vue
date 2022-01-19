@@ -82,8 +82,12 @@ export default {
     },
     getData: function () {
       let data = this.bubu.GetData();
-
       console.log('data', data);
+      cloud.saveDocument(data, (document)=>{
+        console.log("success", document);
+      }, (err)=>{
+        console.error(err);
+      });
     },
     showAuth: function () {
       this.isShowAuth = true;

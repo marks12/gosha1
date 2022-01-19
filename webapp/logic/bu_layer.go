@@ -1,8 +1,8 @@
 package logic
 
 import (
-    "gosha/webapp/types"
     "errors"
+    "gosha/webapp/types"
 )
 
 func BuLayerFind(filter types.BuLayerFilter)  (result []types.BuLayer, totalRecords int, err error) {
@@ -57,7 +57,7 @@ func BuLayerFind(filter types.BuLayerFilter)  (result []types.BuLayer, totalReco
 //        foundIds = append(foundIds, item.ID)
 //    }
 //
-//    // получение связнаных сущностей
+//    // получение связанных сущностей
 //
 //    //формирование результатов
 //    for _, item := range dbmodelData {

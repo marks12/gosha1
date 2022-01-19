@@ -100,6 +100,25 @@ class Cloud {
         });
     }
 
+    saveDocument(data, callbackSuccess, callbackError) {
+
+        callbackSuccess = this.getDefaultCallback(callbackSuccess)
+        callbackError = this.getDefaultCallback(callbackError)
+
+        return this.post(this.urls.document, data).then((result)=>{
+
+            if (result && result.Model && result.Model.Token) {
+                this.setToken(result.Model.Token);
+                callbackSuccess(this.getToken());
+            } else {
+                callbackError("Неверный логин или пароль");
+            }
+
+        }).catch((error)=>{
+            callbackError("Сервер недоступен");
+        });
+    }
+
     getDefaultCallback(callback) {
         let def = (data, err)=>{console.error("error. Data: ", data, err)};
         if (!callback) {

@@ -1,8 +1,8 @@
 package logic
 
 import (
-    "gosha/webapp/types"
     "gosha/settings"
+    "gosha/webapp/types"
 )
 
 func FieldTypeFind(filter types.FieldTypeFilter)  (result []types.FieldType, totalRecords int, err error) {
@@ -26,7 +26,7 @@ func FieldTypeFind(filter types.FieldTypeFilter)  (result []types.FieldType, tot
 
     // order global criteria
 
-    // получение связнаных сущностей
+    // получение связанных сущностей
 
     return result, len(result), nil
 }

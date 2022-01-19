@@ -94,7 +94,7 @@ func {Entity}Find(filter types.{Entity}Filter)  (result []types.{Entity}, totalR
         foundIds = append(foundIds, item.ID)
     }
 
-    // получение связнаных сущностей
+    // получение связанных сущностей
 
     //формирование результатов
     for _, item := range dbmodelData {
