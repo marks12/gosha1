@@ -15,7 +15,7 @@ require (
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/mux v1.7.3
 	github.com/inconshreveable/go-update v0.0.0-20160112193335-8152e7eb6ccf
-	github.com/jinzhu/gorm v1.9.11
+	github.com/jinzhu/gorm v1.9.11 // indirect
 	github.com/marks12/gothamel v0.0.0-20190812173402-6c1e26ed7f22
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect

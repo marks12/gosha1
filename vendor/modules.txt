@@ -1,0 +1,49 @@
+# github.com/abiosoft/readline v0.0.0-20180607040430-155bce2042db
+github.com/abiosoft/readline
+# github.com/fatih/color v1.7.0
+github.com/fatih/color
+# github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568
+github.com/flynn-archive/go-shlex
+# github.com/gobwas/httphead v0.0.0-20180130184737-2c6c146eadee
+github.com/gobwas/httphead
+# github.com/gobwas/pool v0.2.1
+github.com/gobwas/pool
+github.com/gobwas/pool/internal/pmath
+github.com/gobwas/pool/pbufio
+github.com/gobwas/pool/pbytes
+# github.com/gobwas/ws v1.0.3
+github.com/gobwas/ws
+github.com/gobwas/ws/wsutil
+# github.com/google/uuid v1.1.1
+github.com/google/uuid
+# github.com/gorilla/mux v1.7.3
+github.com/gorilla/mux
+# github.com/inconshreveable/go-update v0.0.0-20160112193335-8152e7eb6ccf
+github.com/inconshreveable/go-update
+github.com/inconshreveable/go-update/internal/binarydist
+github.com/inconshreveable/go-update/internal/osext
+# github.com/jinzhu/inflection v1.0.0
+github.com/jinzhu/inflection
+# github.com/jinzhu/now v1.1.2
+github.com/jinzhu/now
+# github.com/marks12/gothamel v0.0.0-20190812173402-6c1e26ed7f22
+github.com/marks12/gothamel/constants
+github.com/marks12/gothamel/tag
+# github.com/mattn/go-colorable v0.1.4
+github.com/mattn/go-colorable
+# github.com/mattn/go-isatty v0.0.10
+github.com/mattn/go-isatty
+# github.com/pkg/errors v0.8.1
+github.com/pkg/errors
+# github.com/rs/cors v1.7.0
+github.com/rs/cors
+# golang.org/x/sys v0.0.0-20191008105621-543471e840be
+golang.org/x/sys/unix
+# gopkg.in/abiosoft/ishell.v2 v2.0.0
+gopkg.in/abiosoft/ishell.v2
+# gorm.io/gorm v1.21.12
+gorm.io/gorm
+gorm.io/gorm/clause
+gorm.io/gorm/logger
+gorm.io/gorm/schema
+gorm.io/gorm/utils
