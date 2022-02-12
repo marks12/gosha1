@@ -131,6 +131,13 @@ func {Entity}MultiCreate(filter types.{Entity}Filter)  (data []types.{Entity}, e
     }
 
     tx := core.Db.Begin()
+	defer func(tx *gorm.Db) {
+		if err == nil {
+			tx.Commit()
+		} else {
+			tx.Rollback()
+		}
+	}(tx)
 
     for _, typeModel := range typeModelList {
 
@@ -144,12 +151,6 @@ func {Entity}MultiCreate(filter types.{Entity}Filter)  (data []types.{Entity}, e
         }
 
         data = append(data, item)
-    }
-
-    if err == nil {
-        tx.Commit()
-    } else {
-        tx.Rollback()
     }
 
     return
@@ -233,6 +234,13 @@ func {Entity}MultiUpdate(filter types.{Entity}Filter)  (data []types.{Entity}, e
     }
 
     tx := core.Db.Begin()
+	defer func(tx *gorm.Db) {
+		if err == nil {
+			tx.Commit()
+		} else {
+			tx.Rollback()
+		}
+	}(tx)
 
     for _, typeModel := range typeModelList {
 
@@ -249,12 +257,6 @@ func {Entity}MultiUpdate(filter types.{Entity}Filter)  (data []types.{Entity}, e
         }
 
         data = append(data, item)
-    }
-
-    if err == nil {
-        tx.Commit()
-    } else {
-        tx.Rollback()
     }
 
     return data, nil
@@ -332,6 +334,13 @@ func {Entity}MultiDelete(filter types.{Entity}Filter)  (isOk bool, err error) {
     isOk = true
 
     tx := core.Db.Begin()
+	defer func(tx *gorm.Db) {
+		if err == nil {
+			tx.Commit()
+		} else {
+			tx.Rollback()
+		}
+	}(tx)
 
     for _, typeModel := range typeModelList {
 
@@ -346,12 +355,6 @@ func {Entity}MultiDelete(filter types.{Entity}Filter)  (isOk bool, err error) {
             isOk = false
             break
         }
-    }
-
-    if err == nil {
-        tx.Commit()
-    } else {
-        tx.Rollback()
     }
 
     return isOk, err
