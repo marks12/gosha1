@@ -3,9 +3,9 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"github.com/abiosoft/ishell/v2"
 	"github.com/fatih/color"
 	"golang.org/x/crypto/bcrypt"
-	"github.com/abiosoft/ishell/v2"
 	"gosha/common"
 	"gosha/mode"
 	"os"
@@ -83,7 +83,7 @@ func UsualAppInit(c *ishell.Context) {
 		salt := common.RandomString(10)
 
 		usualCreate(c, email, password, salt, database, isUuidMode, isViewMode)
-		usualAuthAdd(c)
+		usualAuthAdd(c, salt)
 		initGoModules(c)
 		addTranslate(c)
 		addRegionLang(c)

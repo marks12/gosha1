@@ -1,14 +1,13 @@
 package cmd
 
 import (
-	"github.com/fatih/color"
 	"github.com/abiosoft/ishell/v2"
-	"gosha/common"
+	"github.com/fatih/color"
 	"gosha/mode"
 	"os"
 )
 
-func usualAuthAdd(c *ishell.Context) {
+func usualAuthAdd(c *ishell.Context, salt string) {
 
 	yellow := color.New(color.FgYellow).SprintFunc()
 	c.Println(yellow("Hello we start adding auth to app"))
@@ -101,7 +100,7 @@ func usualAuthAdd(c *ishell.Context) {
 	os.Args = argsBak
 
 	// fill fields
-	fillUser(c)
+	fillUser(c, salt)
 	//fillRole(c)
 	//fillUserRole(c)
 	fillAuth(c)
@@ -131,10 +130,10 @@ func fillRole(c *ishell.Context) {
 		c)
 }
 
-func fillUser(c *ishell.Context) {
+func fillUser(c *ishell.Context, salt string) {
 
 	CreateFile("settings/user.go", `package settings
-	const PASSWORD_SALT = "`+common.RandomString(10)+`"
+	const PASSWORD_SALT = "`+salt+`"
 
 	const AdminRoleId ConfigId = 1
 	const UserRoleId ConfigId = 2
