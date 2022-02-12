@@ -1,13 +1,13 @@
 package cmd
 
 import (
-    "gosha/mode"
+	"gosha/mode"
 )
 
 func GetMsTemplateInsertDataToDb() template {
-    return template{
-        Path:    "./bootstrap/insert_data_to_db.go",
-        Content: assignMsName(`package bootstrap
+	return template{
+		Path: "./bootstrap/insert_data_to_db.go",
+		Content: assignMsName(`package bootstrap
 
 import (
 	"{ms-name}/dbmodels"
@@ -85,15 +85,14 @@ func addUser() {
 
 	if count < 1 {
 
-		user := logic.AssignUserDbFromType(types.User{
-			Id:          ` + GetIdNil(mode.GetUuidMode()) + `,
+		user := dbmodels.User{
 			Email:       "{email}",
 			FirstName:   "Superuser",
 			IsActive:    true,
 			LastName:    "Admin",
 			MobilePhone: "",
 			Password:    "{password}",
-		})
+		}
 		core.Db.Model(dbmodels.User{}).FirstOrCreate(&user)
 
 		setRole(user.ID, settings.AdminRoleId` + GetConfigConverter(mode.GetUuidMode()) + `)
@@ -191,16 +190,16 @@ func setRoleAccess(roleId ` + GetPKType(mode.GetUuidMode()) + `, route string, a
 	return errors.New("Wrong route length. Cant set access for route: " + route)
 }
 `),
-    }
+	}
 }
 
 func GetInstallUuidForPostgres() string {
 
-    if ! IsPostgres() || ! mode.GetUuidMode() {
-        return ""
-    }
+	if !IsPostgres() || !mode.GetUuidMode() {
+		return ""
+	}
 
-    return `
+	return `
     core.Db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"")
 `
 

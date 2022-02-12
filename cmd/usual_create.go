@@ -3,18 +3,19 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"github.com/fatih/color"
+	"golang.org/x/crypto/bcrypt"
+	"gopkg.in/abiosoft/ishell.v2"
+	"gosha/common"
 	"gosha/mode"
 	"os"
-
-	"github.com/fatih/color"
-	"gopkg.in/abiosoft/ishell.v2"
 )
 
 const dbTypeMysql = "mysql"
 const dbTypePostgres = "postgres"
 
 type DatabaseType struct {
-	IsMysql bool
+	IsMysql    bool
 	IsPostgres bool
 	DbTypeName string
 }
@@ -79,7 +80,9 @@ func UsualAppInit(c *ishell.Context) {
 			c.Println(green("Creating app structure"))
 		}
 
-		usualCreate(c, email, password, database, isUuidMode, isViewMode)
+		salt := common.RandomString(10)
+
+		usualCreate(c, email, password, salt, database, isUuidMode, isViewMode)
 		usualAuthAdd(c)
 		initGoModules(c)
 		addTranslate(c)
@@ -105,7 +108,7 @@ func addTranslate(c *ishell.Context) {
 	argsBak := os.Args
 
 	os.Args = append(os.Args, "--entity=TranslateError")
-	os.Args = append(os.Args,"--check-auth=fcruda")
+	os.Args = append(os.Args, "--check-auth=fcruda")
 	usualEntityAdd(c)
 	os.Args = os.Args[:len(os.Args)-2]
 
@@ -131,7 +134,7 @@ func addRegionLang(c *ishell.Context) {
 	argsBak := os.Args
 
 	os.Args = append(os.Args, "--entity=Region")
-	os.Args = append(os.Args,"--check-auth=fcruda")
+	os.Args = append(os.Args, "--check-auth=fcruda")
 	usualEntityAdd(c)
 	os.Args = os.Args[:len(os.Args)-2]
 
@@ -143,7 +146,7 @@ func addRegionLang(c *ishell.Context) {
 	os.Args = argsBak
 
 	os.Args = append(os.Args, "--entity=Language")
-	os.Args = append(os.Args,"--check-auth=fcruda")
+	os.Args = append(os.Args, "--check-auth=fcruda")
 	usualEntityAdd(c)
 
 	os.Args = argsBak
@@ -241,14 +244,14 @@ func getDatabaseType(c *ishell.Context) (dbtype DatabaseType, err error) {
 
 	dbtype.Validate()
 
-	if ! dbtype.IsValid() {
+	if !dbtype.IsValid() {
 		return DatabaseType{}, errors.New("Invalid database. Only postgres, mysql supports " + dbTypeMysql + " " + dbTypePostgres + " ")
 	}
 
 	return dbtype, nil
 }
 
-func usualCreate(c *ishell.Context, email, password string, databaseType DatabaseType, isUuidAsPk bool, isViewMode bool) {
+func usualCreate(c *ishell.Context, email, password, salt string, databaseType DatabaseType, isUuidAsPk bool, isViewMode bool) {
 
 	green := color.New(color.FgCyan).SprintFunc()
 	red := color.New(color.FgRed).SprintFunc()
@@ -264,9 +267,13 @@ func usualCreate(c *ishell.Context, email, password string, databaseType Databas
 	//bootstrap
 	msTemplateInsertDataToDb := GetMsTemplateInsertDataToDb()
 	CreateFile(msTemplateInsertDataToDb.Path, msTemplateInsertDataToDb.Content, c)
+
+	pass := []byte(password + salt)
+	hashedPassword, _ := bcrypt.GenerateFromPassword(pass, bcrypt.DefaultCost)
+
 	CopyFile(msTemplateInsertDataToDb.Path, msTemplateInsertDataToDb.Path,
 		[]string{"{email}", "{password}"},
-		[]string{email, password},
+		[]string{email, string(hashedPassword)},
 		c)
 
 	if mode.GetUuidMode() {
@@ -299,7 +306,6 @@ func usualCreate(c *ishell.Context, email, password string, databaseType Databas
 	CreateFile(usualTemplateServicesCaller.Path, usualTemplateServicesCaller.Content, c)
 	CreateFile(usualTemplateServicesTicket.Path, usualTemplateServicesTicket.Content, c)
 
-
 	msTemplateSettingsDb := getMsTemplateSettingsDb(databaseType)
 	//settings
 	CreateFile(msTemplateSettingsApp.Path, msTemplateSettingsApp.Content, c)
@@ -323,7 +329,6 @@ func usualCreate(c *ishell.Context, email, password string, databaseType Databas
 	if isUuidAsPk {
 		addImportIfNeed(usualTemplateTypesAuthenticator.Path, "github.com/google/uuid")
 	}
-
 
 	//CreateFile(usualTemplateTypesEntity.Path, usualTemplateTypesEntity.Content, c)
 	usualTemplateTypesFilter := getUsualTemplateTypesFilter(isUuidAsPk)
