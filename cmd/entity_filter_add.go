@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/fatih/color"
 	"go/ast"
-	"gopkg.in/abiosoft/ishell.v2"
+	"github.com/abiosoft/ishell/v2"
 	"gosha/mode"
 	"gosha/settings"
 	"os"
@@ -155,7 +155,7 @@ func (mr *ModelRepository) addFilter(modelName string, fieldName string, dataTyp
 		types := GetExistsTypes()
 		existsInAbstract := types.IsFieldExists("AbstractFilter", fieldName)
 
-		isAddToFilterStruct = ! existsInAbstract
+		isAddToFilterStruct = !existsInAbstract
 	}
 
 	if isAddToFilterStruct {

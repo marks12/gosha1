@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/fatih/color"
 	"golang.org/x/crypto/bcrypt"
-	"gopkg.in/abiosoft/ishell.v2"
+	"github.com/abiosoft/ishell/v2"
 	"gosha/common"
 	"gosha/mode"
 	"os"

@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"gopkg.in/abiosoft/ishell.v2"
+	"github.com/abiosoft/ishell/v2"
 )
 
 type store struct {

@@ -2,22 +2,22 @@ package cmd
 
 import (
 	"fmt"
-	"gopkg.in/abiosoft/ishell.v2"
+	"github.com/abiosoft/ishell/v2"
 	"os"
 	"strings"
 )
 
 type modelEntity struct {
-	Id int
-	Name     string
-	TypeFields	 []Field
-	ModelFields	 []Field
-	Fields	 []Field
-	IsFilter bool
+	Id          int
+	Name        string
+	TypeFields  []Field
+	ModelFields []Field
+	Fields      []Field
+	IsFilter    bool
 
-	Structures Structures
+	Structures  Structures
 	HttpMethods HttpMethods
-	HttpRoutes HttpRoutes
+	HttpRoutes  HttpRoutes
 }
 
 func createViewForms(c *ishell.Context) {
@@ -33,7 +33,7 @@ func createViewForms(c *ishell.Context) {
 		snakeCase := getLowerCase(ent.Name)
 		firstLowerCase := GetFirstLowerCase(ent.Name)
 
-		file := fmt.Sprintf("./view/form/%s.go",snakeCase)
+		file := fmt.Sprintf("./view/form/%s.go", snakeCase)
 
 		modelFile := strings.Replace(usualTemplateModelsEntity.Path, "{entity}", snakeCase, -1)
 		CreateFileIfNotExists(modelFile, getEntityModel(), nil)
@@ -52,7 +52,7 @@ func createViewForms(c *ishell.Context) {
 			[]string{fmt.Sprintf("init%s()\n    %s", CamelCase, getRemoveLine("initEntity"))},
 			nil)
 
-		if _, err := os.Stat(file); ! os.IsNotExist(err) {
+		if _, err := os.Stat(file); !os.IsNotExist(err) {
 			fmt.Println("file allready exists", file)
 			continue
 		}
@@ -88,14 +88,14 @@ func createViewForms(c *ishell.Context) {
 				file,
 				file,
 				[]string{getRemoveLine(CamelCase + "-collector")},
-				[]string{GetFormFieldCollector(ent.Name, field.Name, strings.ToLower(field.Type)) + "\n                " + getRemoveLine(CamelCase + "-collector")},
+				[]string{GetFormFieldCollector(ent.Name, field.Name, strings.ToLower(field.Type)) + "\n                " + getRemoveLine(CamelCase+"-collector")},
 				nil)
 
 			CopyFile(
 				file,
 				file,
 				[]string{getRemoveLine(CamelCase + "-row-field")},
-				[]string{GetRowFieldLine(ent.Name, field.Name, strings.ToLower(field.Type)) + "\n            " + getRemoveLine(CamelCase + "-row-field")},
+				[]string{GetRowFieldLine(ent.Name, field.Name, strings.ToLower(field.Type)) + "\n            " + getRemoveLine(CamelCase+"-row-field")},
 				nil)
 		}
 	}
@@ -123,8 +123,8 @@ func GetEntities() (result []modelEntity, totalRecords int, err error) {
 		for _, field := range existsTypes.GetFields(t, []Field{}) {
 
 			fields = append(fields, Field{
-				Name:   field.Name,
-				Type:   field.Type,
+				Name: field.Name,
+				Type: field.Type,
 			})
 		}
 
@@ -196,8 +196,6 @@ func GetEntities() (result []modelEntity, totalRecords int, err error) {
 		}
 	}
 
-
-
 	filtered := []modelEntity{}
 
 	for _, entity := range res {
@@ -216,7 +214,6 @@ func GetEntities() (result []modelEntity, totalRecords int, err error) {
 
 	return
 }
-
 
 func getExistsFieldIndex(name string, fields []Field) (Field, int) {
 

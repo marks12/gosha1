@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"gopkg.in/abiosoft/ishell.v2"
+	"github.com/abiosoft/ishell/v2"
 	"gosha/mode"
 )
 

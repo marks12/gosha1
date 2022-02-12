@@ -1,118 +1,116 @@
 package cmd
 
 import (
-    "gopkg.in/abiosoft/ishell.v2"
-    "errors"
-    "strings"
-    "regexp"
-    "github.com/fatih/color"
+	"github.com/abiosoft/ishell/v2"
+	"errors"
+	"strings"
+	"regexp"
+	"github.com/fatih/color"
 )
 
 func msrpcEntityAdd(c *ishell.Context) {
 
-    yellow := color.New(color.FgYellow).SprintFunc()
+	yellow := color.New(color.FgYellow).SprintFunc()
 
-    c.Println(yellow("Hello we start creating api for new entity"))
+	c.Println(yellow("Hello we start creating api for new entity"))
 
-    entity, err := getName(c, false, "Entity")
+	entity, err := getName(c, false, "Entity")
 
-    if err !=nil {
-        return
-    }
+	if err != nil {
+		return
+	}
 
-    camelCase := strings.Title(entity)
-    snakeCase := getLowerCase(entity)
-    FirstLowerCase := GetFirstLowerCase(entity)
+	camelCase := strings.Title(entity)
+	snakeCase := getLowerCase(entity)
+	FirstLowerCase := GetFirstLowerCase(entity)
 
-    sourceFile := "./api/new_entity.go"
-    destinationFile1 := "./api/" + snakeCase + ".go"
+	sourceFile := "./api/new_entity.go"
+	destinationFile1 := "./api/" + snakeCase + ".go"
 
+	QueueConstant, isNew, err := getQueueName(c)
 
-    QueueConstant, isNew, err := getQueueName(c)
+	if err != nil {
+		return
+	}
 
-    if err != nil {
-        return
-    }
+	CopyFile(
+		sourceFile,
+		destinationFile1,
+		[]string{"NewEntity", "newEntity"},
+		[]string{camelCase, FirstLowerCase},
+		c)
 
-    CopyFile(
-        sourceFile,
-        destinationFile1,
-        []string{"NewEntity", "newEntity"},
-        []string{camelCase, FirstLowerCase},
-        c)
+	sourceFile = "./cnf/route_new_entity.go"
+	destinationFile2 := "./cnf/route_" + snakeCase + ".go"
 
-    sourceFile = "./cnf/route_new_entity.go"
-    destinationFile2 := "./cnf/route_" + snakeCase + ".go"
+	CopyFile(
+		sourceFile,
+		destinationFile2,
+		[]string{"NewEntity", "newEntity", "QueueNameCore"},
+		[]string{camelCase, FirstLowerCase, QueueConstant},
+		c)
 
-    CopyFile(
-        sourceFile,
-        destinationFile2,
-        []string{"NewEntity", "newEntity", "QueueNameCore"},
-        []string{camelCase, FirstLowerCase, QueueConstant},
-        c)
+	if isNew {
+		AppendFile("./cnf/queue.go", "\n// generated code\nconst "+QueueConstant+" = \""+strings.ToLower(camelCase)+"\"")
+	}
 
-    if isNew {
-        AppendFile("./cnf/queue.go", "\n// generated code\nconst " + QueueConstant + " = \"" + strings.ToLower(camelCase) + "\"")
-    }
+	c.Println("Created files:")
 
-    c.Println("Created files:" )
+	c.Println(destinationFile1)
+	c.Println(destinationFile2)
 
-    c.Println(destinationFile1)
-    c.Println(destinationFile2)
-
-    c.Println("Конгретулэйшенс плеер уан, Ю уин. New entity " + camelCase + " was created. Bye" )
+	c.Println("Конгретулэйшенс плеер уан, Ю уин. New entity " + camelCase + " was created. Bye")
 
 }
 
 func getQueueName(c *ishell.Context) (name string, IsNew bool, err error) {
 
+	queues := getAvalableQeues()
 
-    queues := getAvalableQeues()
+	queues = append([]string{"Create new queue name"}, queues...)
 
-    queues = append([]string{"Create new queue name"}, queues...)
+	choice := c.MultiChoice(queues, "Please select exists queue or create new in file ?")
 
-    choice := c.MultiChoice(queues, "Please select exists queue or create new in file ?")
+	if choice == 0 {
 
-    if choice == 0 {
+		c.Println("Please, enter new queueName:")
+		queue := strings.Title(c.ReadLine())
 
-        c.Println("Please, enter new queueName:")
-        queue := strings.Title(c.ReadLine())
+		reg, _ := regexp.Compile("^QueueName")
+		queue = reg.ReplaceAllString(queue, "")
 
-        reg, _ := regexp.Compile("^QueueName")
-        queue = reg.ReplaceAllString(queue, "")
+		queue = "QueueName" + queue
+		c.Println("New Queue name is", queue)
 
-        queue = "QueueName" + queue
-        c.Println("New Queue name is", queue)
+		IsNew = true
 
-        IsNew = true
+		return queue, IsNew, nil
 
-        return queue, IsNew, nil
+	} else {
 
-    } else {
+		if choice < 1 {
 
-        if choice < 1 {
+			err = errors.New("cancel creating queue")
+			return
 
-            err = errors.New("cancel creating queue")
-            return
+		}
 
-        }
+		return queues[choice], IsNew, nil
+	}
 
-        return queues[choice], IsNew, nil
-    }
-
-    return
+	return
 }
 
 func getAvalableQeues() (qArr []string) {
 
-    for _, line := range getFileLines("./cnf/queue.go") {
+	for _, line := range getFileLines("./cnf/queue.go") {
 
-        arr := strings.Split(line, " ")
+		arr := strings.Split(line, " ")
 
-        if arr[0] == "const" {
-            qArr = append(qArr, arr[1])
-        }
-    }
+		if arr[0] == "const" {
+			qArr = append(qArr, arr[1])
+		}
+	}
 
-    return
+	return
 }

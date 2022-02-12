@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"gopkg.in/abiosoft/ishell.v2"
+	"github.com/abiosoft/ishell/v2"
 	"github.com/fatih/color"
 	"os"
 )
@@ -12,9 +12,9 @@ func usualCreateHtmlTemplate(c *ishell.Context) {
 	c.Println(yellow("Hello we start adding html template to app"))
 
 	os.Args = append(os.Args, "--entity=HtmlTemplate")
-	os.Args = append(os.Args,"--check-auth=fr")
-	os.Args = append(os.Args,"--crud=fr")
-	os.Args = append(os.Args,"--without-db-models=true")
+	os.Args = append(os.Args, "--check-auth=fr")
+	os.Args = append(os.Args, "--crud=fr")
+	os.Args = append(os.Args, "--without-db-models=true")
 	usualEntityAdd(c)
 	os.Args = os.Args[:len(os.Args)-4]
 
@@ -51,6 +51,6 @@ func usualCreateHtmlTemplate(c *ishell.Context) {
 		c)
 
 	addImportIfNeed(usualTemplateHtmlTemplateRead.Path, "fmt")
-	addImportIfNeed(usualTemplateHtmlTemplateRead.Path, GetCurrentAppName() + "/view")
+	addImportIfNeed(usualTemplateHtmlTemplateRead.Path, GetCurrentAppName()+"/view")
 
 }

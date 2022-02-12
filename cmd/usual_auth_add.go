@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/fatih/color"
-	"gopkg.in/abiosoft/ishell.v2"
+	"github.com/abiosoft/ishell/v2"
 	"gosha/common"
 	"gosha/mode"
 	"os"
@@ -14,7 +14,7 @@ func usualAuthAdd(c *ishell.Context) {
 	c.Println(yellow("Hello we start adding auth to app"))
 
 	os.Args = append(os.Args, "--entity=User")
-	os.Args = append(os.Args,"--check-auth=fcruda")
+	os.Args = append(os.Args, "--check-auth=fcruda")
 	usualEntityAdd(c)
 
 	os.Args = os.Args[:len(os.Args)-2]
@@ -38,68 +38,67 @@ func usualAuthAdd(c *ishell.Context) {
 	usualEntityAdd(c)
 
 	os.Args = os.Args[:len(os.Args)-1]
-	os.Args = append(os.Args,"--entity=Auth")
-	os.Args = append(os.Args,"--crud=cd")
-	os.Args = append(os.Args,"--check-auth=d")
-	os.Args = append(os.Args,"--no-id")
-	os.Args = append(os.Args,"--no-assign")
+	os.Args = append(os.Args, "--entity=Auth")
+	os.Args = append(os.Args, "--crud=cd")
+	os.Args = append(os.Args, "--check-auth=d")
+	os.Args = append(os.Args, "--no-id")
+	os.Args = append(os.Args, "--no-assign")
 
 	usualEntityAdd(c)
 
 	os.Args = os.Args[:len(os.Args)-5]
 
-	os.Args = append(os.Args,"--entity=CurrentUser")
-	os.Args = append(os.Args,"--crud=f")
-	os.Args = append(os.Args,"--check-auth=fcrudax")
+	os.Args = append(os.Args, "--entity=CurrentUser")
+	os.Args = append(os.Args, "--crud=f")
+	os.Args = append(os.Args, "--check-auth=fcrudax")
 
 	usualEntityAdd(c)
 	os.Args = os.Args[:len(os.Args)-3]
 
 	c.Println("Models created success")
 
-    argsBak := os.Args
+	argsBak := os.Args
 
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=ResourceType", "--Field=Name", "--data-type=string"}
-    entityFieldAdd(c)
-
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=UserRole", "--Field=UserId", "--data-type=" + GetPKType(mode.GetUuidMode())}
-    entityFieldAdd(c)
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=UserRole", "--Field=RoleId", "--data-type=" + GetPKType(mode.GetUuidMode())}
-    entityFieldAdd(c)
-
-
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Role", "--Field=Name", "--data-type=string"}
-    entityFieldAdd(c)
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Role", "--Field=Description", "--data-type=string"}
-    entityFieldAdd(c)
-
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Resource", "--Field=Name", "--data-type=string"}
-    entityFieldAdd(c)
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Resource", "--Field=Code", "--data-type=string"}
-    entityFieldAdd(c)
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Resource", "--Field=TypeId", "--data-type=int"}
-    entityFieldAdd(c)
-
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=RoleId", "--data-type=" + GetPKType(mode.GetUuidMode())}
-    entityFieldAdd(c)
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=ResourceId", "--data-type=" + GetPKType(mode.GetUuidMode())}
-    entityFieldAdd(c)
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=Find", "--data-type=bool"}
-    entityFieldAdd(c)
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=Read", "--data-type=bool"}
-    entityFieldAdd(c)
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=Create", "--data-type=bool"}
-    entityFieldAdd(c)
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=Update", "--data-type=bool"}
-    entityFieldAdd(c)
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=Delete", "--data-type=bool"}
-    entityFieldAdd(c)
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=FindOrCreate", "--data-type=bool"}
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=ResourceType", "--Field=Name", "--data-type=string"}
 	entityFieldAdd(c)
-    os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=UpdateOrCreate", "--data-type=bool"}
-    entityFieldAdd(c)
 
-    os.Args = argsBak
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=UserRole", "--Field=UserId", "--data-type=" + GetPKType(mode.GetUuidMode())}
+	entityFieldAdd(c)
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=UserRole", "--Field=RoleId", "--data-type=" + GetPKType(mode.GetUuidMode())}
+	entityFieldAdd(c)
+
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Role", "--Field=Name", "--data-type=string"}
+	entityFieldAdd(c)
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Role", "--Field=Description", "--data-type=string"}
+	entityFieldAdd(c)
+
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Resource", "--Field=Name", "--data-type=string"}
+	entityFieldAdd(c)
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Resource", "--Field=Code", "--data-type=string"}
+	entityFieldAdd(c)
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=Resource", "--Field=TypeId", "--data-type=int"}
+	entityFieldAdd(c)
+
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=RoleId", "--data-type=" + GetPKType(mode.GetUuidMode())}
+	entityFieldAdd(c)
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=ResourceId", "--data-type=" + GetPKType(mode.GetUuidMode())}
+	entityFieldAdd(c)
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=Find", "--data-type=bool"}
+	entityFieldAdd(c)
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=Read", "--data-type=bool"}
+	entityFieldAdd(c)
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=Create", "--data-type=bool"}
+	entityFieldAdd(c)
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=Update", "--data-type=bool"}
+	entityFieldAdd(c)
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=Delete", "--data-type=bool"}
+	entityFieldAdd(c)
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=FindOrCreate", "--data-type=bool"}
+	entityFieldAdd(c)
+	os.Args = []string{"", "exit", "setAppType", "--type=Usual", ENTITY_ADD_FIELD, "--entity=RoleResource", "--Field=UpdateOrCreate", "--data-type=bool"}
+	entityFieldAdd(c)
+
+	os.Args = argsBak
 
 	// fill fields
 	fillUser(c)
@@ -114,8 +113,8 @@ func fillUserRole(c *ishell.Context) {
 		"types/user_role.go",
 		[]string{getRemoveLine("UserRole")},
 		[]string{
-			`RoleID ` + GetPKType(mode.GetUuidMode()) +`
-	UserID ` + GetPKType(mode.GetUuidMode()) +`
+			`RoleID ` + GetPKType(mode.GetUuidMode()) + `
+	UserID ` + GetPKType(mode.GetUuidMode()) + `
     ` + getRemoveLine("UserRole")},
 		c)
 }
@@ -128,14 +127,14 @@ func fillRole(c *ishell.Context) {
 		[]string{
 			`Name        string
 	Description string
-    `+ getRemoveLine("Role")},
+    ` + getRemoveLine("Role")},
 		c)
 }
 
 func fillUser(c *ishell.Context) {
 
 	CreateFile("settings/user.go", `package settings
-	const PASSWORD_SALT = "` + common.RandomString(10) + `"
+	const PASSWORD_SALT = "`+common.RandomString(10)+`"
 
 	const AdminRoleId ConfigId = 1
 	const UserRoleId ConfigId = 2
@@ -152,7 +151,7 @@ func fillUser(c *ishell.Context) {
     LastName    string
     MobilePhone string
     Password    string
-    `+ getRemoveLine("User")},
+    ` + getRemoveLine("User")},
 		c)
 
 	CopyFile(
@@ -166,7 +165,7 @@ func fillUser(c *ishell.Context) {
         LastName:    typeModel.LastName,
         MobilePhone: typeModel.MobilePhone,
 		Password:    string(hashedPassword),
-    `+ getRemoveLine("AssignUserDbFromType.Field")},
+    ` + getRemoveLine("AssignUserDbFromType.Field")},
 		c)
 
 	CopyFile(
@@ -180,7 +179,7 @@ func fillUser(c *ishell.Context) {
         LastName:    dbUser.LastName,
         MobilePhone: dbUser.MobilePhone,
         Password:    "******",
-    `+ getRemoveLine("AssignUserTypeFromDb.Field")},
+    ` + getRemoveLine("AssignUserTypeFromDb.Field")},
 		c)
 
 	addImportIfNeed("logic/user.go", GetCurrentAppName()+"/settings")
@@ -193,7 +192,7 @@ func fillUser(c *ishell.Context) {
 		[]string{
 			`password := []byte(typeModel.Password + settings.PASSWORD_SALT)
     hashedPassword, _ := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
-    `+ getRemoveLine("AssignUserTypeFromDb predefine")},
+    ` + getRemoveLine("AssignUserTypeFromDb predefine")},
 		c)
 
 	CopyFile(
@@ -248,7 +247,7 @@ func fillUser(c *ishell.Context) {
 		"dbmodels/user.go",
 		[]string{getRemoveLine("User")},
 		[]string{
-			`Email       string  `+"`"+`gorm:"type:varchar(100);unique_index"`+"`"+`
+			`Email       string  ` + "`" + `gorm:"type:varchar(100);unique_index"` + "`" + `
     FirstName   string
     IsActive    bool
     LastName    string
@@ -280,10 +279,10 @@ func fillUser(c *ishell.Context) {
         user.AddValidationError("User mobile phone should be valid or empty. Format +0123456789... ", errors.ErrorCodeNotValid, "MobilePhone")
     }
 
-    `+ getRemoveLine("Validate") + `
+    ` + getRemoveLine("Validate") + `
 `},
 		c)
-	addImportIfNeed(path, GetCurrentAppName() + "/errors")
+	addImportIfNeed(path, GetCurrentAppName()+"/errors")
 
 }
 
@@ -306,7 +305,7 @@ func fillAuth(c *ishell.Context) {
     Token     string
     UserId   ` + GetPKType(isUuidAsPk) + `
     Id   ` + GetPKType(isUuidAsPk) + `
-    `+ getRemoveLine("Auth")},
+    ` + getRemoveLine("Auth")},
 		c)
 
 	CopyFile(
@@ -352,10 +351,9 @@ func fillAuth(c *ishell.Context) {
         auth.AddValidationError("User password is empty", errors.ErrorCodeNotEmpty, "Password")
     }
 
-    `+ getRemoveLine("Validate")},
+    ` + getRemoveLine("Validate")},
 		c)
-	addImportIfNeed(path, GetCurrentAppName() + "/errors")
-
+	addImportIfNeed(path, GetCurrentAppName()+"/errors")
 
 	CopyFile(
 		"logic/auth.go",

@@ -1,7 +1,7 @@
 package cmd
 
 import (
-    "gopkg.in/abiosoft/ishell.v2"
+    "github.com/abiosoft/ishell/v2"
     "github.com/fatih/color"
     "gosha/mode"
     "fmt"
@@ -22,15 +22,15 @@ const MS_ENTITY_ADD = "ms:entity:add"
 
 const USUAL_APP_CREATE = "usual:create"
 
-const USUAL_ENTITY_ADD  = "usual:entity:add"
+const USUAL_ENTITY_ADD = "usual:entity:add"
 
-const USUAL_AUTH_ADD    = "usual:auth:add"
+const USUAL_AUTH_ADD = "usual:auth:add"
 
 const ENTITY_ADD_FIELD = "entity:field:add"
 
 const ENTITY_ADD_FILTER = "entity:filter:add"
 
-const CREATE_VIEW_FORMS  = "usual:forms:create"
+const CREATE_VIEW_FORMS = "usual:forms:create"
 
 func setAppType(c *ishell.Context) {
 
@@ -48,7 +48,7 @@ func setAppType(c *ishell.Context) {
     setAppCommands(choice, c)
 
     if IsNextCommand(choice) {
-         runSecondLevelProgram(c)
+        runSecondLevelProgram(c)
     }
 }
 
@@ -84,16 +84,15 @@ func runSecondLevelProgram(c *ishell.Context) {
 
 func IsNextCommand(choice int) bool {
 
-    return  choice > -1 &&
-            mode.IsNonInteractive() &&
-            len(os.Args) > 4
+    return choice > -1 &&
+        mode.IsNonInteractive() &&
+        len(os.Args) > 4
 }
 
 func getAppTypeFromArgs() int {
 
     red := color.New(color.FgRed).SprintFunc()
-    supportedTypes :=  []string{"MsCore", "MsRpcApi", "Microservice", "", "Usual"}
-
+    supportedTypes := []string{"MsCore", "MsRpcApi", "Microservice", "", "Usual"}
 
     arg, er := GetOsArgument("type")
 
@@ -104,8 +103,8 @@ func getAppTypeFromArgs() int {
 
     InArr, choice := InArray(arg.StringResult, supportedTypes)
 
-    if ! InArr {
-        fmt.Println(red("You set unsupported type " + arg.StringResult + ". Please use one of: " + strings.Join(supportedTypes,", ")))
+    if !InArr {
+        fmt.Println(red("You set unsupported type " + arg.StringResult + ". Please use one of: " + strings.Join(supportedTypes, ", ")))
         os.Exit(1)
     }
 
@@ -181,7 +180,7 @@ func setAppCommands(choice int, c *ishell.Context) {
 
         setUsualEntityAdd()
 
-		setUsualAuthAdd()
+        setUsualAuthAdd()
 
         setModelFieldAdd()
 
@@ -247,7 +246,6 @@ func setUsualAppCreate() {
         Func: UsualAppInit,
     })
 }
-
 
 func setUsualEntityAdd() {
 

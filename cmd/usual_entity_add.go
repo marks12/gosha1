@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/fatih/color"
-	"gopkg.in/abiosoft/ishell.v2"
+	"github.com/abiosoft/ishell/v2"
 	"gosha/mode"
 	"os"
 	"strings"

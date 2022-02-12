@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"gopkg.in/abiosoft/ishell.v2"
+	"github.com/abiosoft/ishell/v2"
 	"gosha/settings"
 	"strings"
 )
@@ -19,7 +19,7 @@ func genGenerators(c *ishell.Context) {
 		snakeCase := getLowerCase(modelName)
 		firstLowerCase := GetFirstLowerCase(modelName)
 
-		if strings.Replace(snakeCase + ".go", "_filter.go", "", 1) != snakeCase + ".go" {
+		if strings.Replace(snakeCase+".go", "_filter.go", "", 1) != snakeCase+".go" {
 			continue
 		}
 
@@ -41,7 +41,7 @@ func genGenerators(c *ishell.Context) {
 
 		for _, field := range fields {
 
-			if isInvalid, _ := InArray(field.Name, []string{"Id", "validationErrors"}); ! isInvalid {
+			if isInvalid, _ := InArray(field.Name, []string{"Id", "validationErrors"}); !isInvalid {
 				addGenerator(field.Type, modelName, field.Name)
 			}
 		}

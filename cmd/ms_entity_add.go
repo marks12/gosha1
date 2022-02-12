@@ -1,48 +1,48 @@
 package cmd
 
 import (
-    "gopkg.in/abiosoft/ishell.v2"
-    "strings"
-    "github.com/fatih/color"
+	"github.com/abiosoft/ishell/v2"
+	"strings"
+	"github.com/fatih/color"
 )
 
 func msEntityAdd(c *ishell.Context) {
 
-    yellow := color.New(color.FgYellow).SprintFunc()
+	yellow := color.New(color.FgYellow).SprintFunc()
 
-    c.Println(yellow("Hello we start creating api for new entity"))
+	c.Println(yellow("Hello we start creating api for new entity"))
 
-    entity, err := getName(c, false, "Entity")
+	entity, err := getName(c, false, "Entity")
 
-    if err !=nil {
-        return
-    }
+	if err != nil {
+		return
+	}
 
-    CamelCase := strings.Title(entity)
-    snakeCase := getLowerCase(entity)
-    FirstLowerCase := GetFirstLowerCase(entity)
+	CamelCase := strings.Title(entity)
+	snakeCase := getLowerCase(entity)
+	FirstLowerCase := GetFirstLowerCase(entity)
 
-    sourceFile := "./dbmodels/entity.go"
-    destinationFile := "./dbmodels/" + snakeCase + ".go"
+	sourceFile := "./dbmodels/entity.go"
+	destinationFile := "./dbmodels/" + snakeCase + ".go"
 
-    CopyFile(
-        sourceFile,
-        destinationFile,
-        []string{"Entity", "entity"},
-        []string{CamelCase, FirstLowerCase},
-        c)
+	CopyFile(
+		sourceFile,
+		destinationFile,
+		[]string{"Entity", "entity"},
+		[]string{CamelCase, FirstLowerCase},
+		c)
 
-    tpl := msTemplateLogicEntity.Content
+	tpl := msTemplateLogicEntity.Content
 
-    CreateFile("./logic/" + snakeCase + ".go", assignMsName(assignEntityName(tpl, CamelCase)), c)
+	CreateFile("./logic/"+snakeCase+".go", assignMsName(assignEntityName(tpl, CamelCase)), c)
 
-    //AppendFile(msTemplateLogicAssignEntity.Path, assignEntityName(msTemplateLogicAssignEntity.Content, CamelCase))
-    AppendFile("./logic/" + snakeCase + ".go", assignEntityName(msLogicAssignEntity, CamelCase))
+	//AppendFile(msTemplateLogicAssignEntity.Path, assignEntityName(msTemplateLogicAssignEntity.Content, CamelCase))
+	AppendFile("./logic/"+snakeCase+".go", assignEntityName(msLogicAssignEntity, CamelCase))
 
-    CopyFile("./main.go", "./main.go", []string{"RabbitServer.Run()"}, []string{msTemplateMainEntity.Content}, c)
-    CopyFile("./main.go", "./main.go", []string{"{entity-name}"}, []string{CamelCase}, c)
+	CopyFile("./main.go", "./main.go", []string{"RabbitServer.Run()"}, []string{msTemplateMainEntity.Content}, c)
+	CopyFile("./main.go", "./main.go", []string{"{entity-name}"}, []string{CamelCase}, c)
 
-    AppendFile(msTemplateMsTicketEntity.Path, assignEntityName(msTemplateMsTicketEntity.Content, CamelCase))
+	AppendFile(msTemplateMsTicketEntity.Path, assignEntityName(msTemplateMsTicketEntity.Content, CamelCase))
 
-    CreateFile("./rpcapp/" + snakeCase + ".go", assignEntityName(msTemplateRpcappEntity.Content, CamelCase), c)
+	CreateFile("./rpcapp/"+snakeCase+".go", assignEntityName(msTemplateRpcappEntity.Content, CamelCase), c)
 }

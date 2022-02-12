@@ -1,10 +1,10 @@
 package cmd
 
 import (
-    "github.com/fatih/color"
-    "gopkg.in/abiosoft/ishell.v2"
-    "gosha/mode"
-    "os"
+	"github.com/fatih/color"
+	"github.com/abiosoft/ishell/v2"
+	"gosha/mode"
+	"os"
 )
 
 var shell = ishell.New()
@@ -18,87 +18,87 @@ const SetReadOnly = "readonly"
 
 func RunShell() {
 
-    green := color.New(color.FgGreen).SprintFunc()
-    red := color.New(color.FgRed).SprintFunc()
+	green := color.New(color.FgGreen).SprintFunc()
+	red := color.New(color.FgRed).SprintFunc()
 
-    // display welcome info in interactive mode.
-    InteractiveEcho([]string{
-        "Welcome to interactive shell",
-        "If you want execute shell command in non-interacive mode " + red("(NIM)") + " please type command:",
-        red("$") + green(" gosha exit someCommand"),
-    })
+	// display welcome info in interactive mode.
+	InteractiveEcho([]string{
+		"Welcome to interactive shell",
+		"If you want execute shell command in non-interacive mode " + red("(NIM)") + " please type command:",
+		red("$") + green(" gosha exit someCommand"),
+	})
 
-    InteractiveEcho([]string{
-        "type help for help",
-    })
+	InteractiveEcho([]string{
+		"type help for help",
+	})
 
-    // register a function for "greet" command.
-    shell.AddCmd(&ishell.Cmd{
-        Name: "greet",
-        Help: "greet user",
-        Func: great,
-    })
+	// register a function for "greet" command.
+	shell.AddCmd(&ishell.Cmd{
+		Name: "greet",
+		Help: "greet user",
+		Func: great,
+	})
 
-    shell.AddCmd(&ishell.Cmd{
-        Name: SET_APP_TYPE,
-        Help: "Set app type. " +
-              "\n\t\t\t\tNIM: "+SET_APP_TYPE+" --type=[MsCore | MsRpcApi | Microservice | Usual]",
-        Func: setAppType,
-    })
+	shell.AddCmd(&ishell.Cmd{
+		Name: SET_APP_TYPE,
+		Help: "Set app type. " +
+			"\n\t\t\t\tNIM: " + SET_APP_TYPE + " --type=[MsCore | MsRpcApi | Microservice | Usual]",
+		Func: setAppType,
+	})
 
-    shell.AddCmd(&ishell.Cmd{
-        Name: GET_APP_INFO,
-        Help: "Get current app info. " +
-              "\n\t\t\t\tNIM: "+GET_APP_INFO,
-        Func: getAppInfo,
-    })
+	shell.AddCmd(&ishell.Cmd{
+		Name: GET_APP_INFO,
+		Help: "Get current app info. " +
+			"\n\t\t\t\tNIM: " + GET_APP_INFO,
+		Func: getAppInfo,
+	})
 
-    shell.AddCmd(&ishell.Cmd{
-        Name: GENERATE_TYPES_JS,
-        Help: "Generate types structs to JS for using in frontend " +
-            "\n\t\t\t\tNIM: "+GENERATE_TYPES_JS+" --dst=/some/destination/path --map-namespace=im3 add namespace for modules",
-        Func: genTypesJs,
-    })
+	shell.AddCmd(&ishell.Cmd{
+		Name: GENERATE_TYPES_JS,
+		Help: "Generate types structs to JS for using in frontend " +
+			"\n\t\t\t\tNIM: " + GENERATE_TYPES_JS + " --dst=/some/destination/path --map-namespace=im3 add namespace for modules",
+		Func: genTypesJs,
+	})
 
-    shell.AddCmd(&ishell.Cmd{
-        Name: GENERATE_TESTS_WEBAPP,
-        Help: "Generate tests for webapp",
-        Func: genTestsWebapp,
-    })
+	shell.AddCmd(&ishell.Cmd{
+		Name: GENERATE_TESTS_WEBAPP,
+		Help: "Generate tests for webapp",
+		Func: genTestsWebapp,
+	})
 
-    shell.AddCmd(&ishell.Cmd{
-        Name: GENERATE_GENERATORS,
-        Help: "Generate generators functions",
-        Func: genGenerators,
-    })
+	shell.AddCmd(&ishell.Cmd{
+		Name: GENERATE_GENERATORS,
+		Help: "Generate generators functions",
+		Func: genGenerators,
+	})
 
-    shell.AddCmd(&ishell.Cmd{
-        Name: SetReadOnly,
-        Help: "Just read operations",
-        Func: setReadOnly,
-    })
+	shell.AddCmd(&ishell.Cmd{
+		Name: SetReadOnly,
+		Help: "Just read operations",
+		Func: setReadOnly,
+	})
 
-    // run shell
-    if len(os.Args) > 1 && os.Args[1] == "exit" {
+	// run shell
+	if len(os.Args) > 1 && os.Args[1] == "exit" {
 
-        shell.Process(os.Args[2:]...)
+		shell.Process(os.Args[2:]...)
 
-    } else {
-        // start shell
-        shell.Run()
-    }
+	} else {
+		// start shell
+		shell.Run()
+	}
 }
 
 func setMode() {
 
-    if len(os.Args) > 1 && os.Args[1] == "exit" {
-        mode.SetNonInteractiveMode()
-    } else {
-        mode.SetInteractiveMode()
-    }
+	if len(os.Args) > 1 && os.Args[1] == "exit" {
+		mode.SetNonInteractiveMode()
+	} else {
+		mode.SetInteractiveMode()
+	}
 
 }
 
 func GetShell() *ishell.Shell {
-    return shell
+	return shell
 }
