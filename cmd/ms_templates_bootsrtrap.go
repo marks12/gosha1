@@ -85,13 +85,22 @@ func addUser() {
 
 	if count < 1 {
 
+		firstRunAdminPassword := flags.AdminPass
+
+		if firstRunAdminPassword == nil || len(*firstRunAdminPassword) < 1 {
+			fmt.Println("You must set admin password. Please, use flag --adminPass=SOmePAss")
+			os.Exit(1)
+		}
+
+		hashed, _ := bcrypt.GenerateFromPassword([]byte(*firstRunAdminPassword+settings.PASSWORD_SALT), bcrypt.DefaultCost)
+
 		user := dbmodels.User{
 			Email:       "{email}",
 			FirstName:   "Superuser",
 			IsActive:    true,
 			LastName:    "Admin",
 			MobilePhone: "",
-			Password:    "{password}",
+			Password:    string(hashed),
 		}
 		core.Db.Model(dbmodels.User{}).FirstOrCreate(&user)
 

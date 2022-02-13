@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/abiosoft/ishell/v2"
 	"github.com/fatih/color"
-	"golang.org/x/crypto/bcrypt"
 	"gosha/common"
 	"gosha/mode"
 	"os"
@@ -268,12 +267,9 @@ func usualCreate(c *ishell.Context, email, password, salt string, databaseType D
 	msTemplateInsertDataToDb := GetMsTemplateInsertDataToDb()
 	CreateFile(msTemplateInsertDataToDb.Path, msTemplateInsertDataToDb.Content, c)
 
-	pass := []byte(password + salt)
-	hashedPassword, _ := bcrypt.GenerateFromPassword(pass, bcrypt.DefaultCost)
-
 	CopyFile(msTemplateInsertDataToDb.Path, msTemplateInsertDataToDb.Path,
-		[]string{"{email}", "{password}"},
-		[]string{email, string(hashedPassword)},
+		[]string{"{email}"},
+		[]string{email},
 		c)
 
 	if mode.GetUuidMode() {

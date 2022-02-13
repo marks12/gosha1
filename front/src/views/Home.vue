@@ -22,12 +22,17 @@
                             </VSet>
                             <VSet>
                                 <VText>Password</VText>
-                                <VInput v-model="adminPass" type="password"></VInput>
+                                <VInput disabled type="text" value="Use --adminPass=SomPa$$ first run app"></VInput>
                             </VSet>
-                            <VSet>
-                                <VText>Re-Password</VText>
-                                <VInput v-model="adminRePass" type="password"></VInput>
-                            </VSet>
+
+<!--                            <VSet>-->
+<!--                                <VText>Password</VText>-->
+<!--                                <VInput v-model="adminPass" type="password"></VInput>-->
+<!--                            </VSet>-->
+<!--                            <VSet>-->
+<!--                                <VText>Re-Password</VText>-->
+<!--                                <VInput v-model="adminRePass" type="password"></VInput>-->
+<!--                            </VSet>-->
                             <VSet>
                                 <VText width="dyn">Database</VText>
                                 <VRadioGroup :items="segmentControls" v-model="appDb"/>
@@ -131,7 +136,7 @@
 
                 let app = new CurrentApp();
                 app.AdminEmail = this.adminMail;
-                app.AdminPassword = this.adminPass;
+                // app.AdminPassword = this.adminPass;
                 app.DbType = this.appDb;
                 app.IsUuidMode = this.IsUuidMode;
                 app.IsViewMode = this.IsViewMode;
@@ -157,13 +162,13 @@
                     this.error += " Wrong email address. ";
                 }
 
-                if (this.adminPass.trim().length < 4) {
-                    this.error += "Admin password must be more then 3 chars. ";
-                }
-
-                if (this.adminPass.trim() !== this.adminRePass) {
-                    this.error += "Admin password and repeat password is not same. ";
-                }
+                // if (this.adminPass.trim().length < 4) {
+                //     this.error += "Admin password must be more then 3 chars. ";
+                // }
+                //
+                // if (this.adminPass.trim() !== this.adminRePass) {
+                //     this.error += "Admin password and repeat password is not same. ";
+                // }
             },
         },
         computed: {

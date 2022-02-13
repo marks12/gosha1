@@ -131,7 +131,7 @@ func {Entity}MultiCreate(filter types.{Entity}Filter)  (data []types.{Entity}, e
     }
 
     tx := core.Db.Begin()
-	defer func(tx *gorm.Db) {
+	defer func(tx *gorm.DB) {
 		if err == nil {
 			tx.Commit()
 		} else {
@@ -234,7 +234,7 @@ func {Entity}MultiUpdate(filter types.{Entity}Filter)  (data []types.{Entity}, e
     }
 
     tx := core.Db.Begin()
-	defer func(tx *gorm.Db) {
+	defer func(tx *gorm.DB) {
 		if err == nil {
 			tx.Commit()
 		} else {
@@ -334,7 +334,7 @@ func {Entity}MultiDelete(filter types.{Entity}Filter)  (isOk bool, err error) {
     isOk = true
 
     tx := core.Db.Begin()
-	defer func(tx *gorm.Db) {
+	defer func(tx *gorm.DB) {
 		if err == nil {
 			tx.Commit()
 		} else {
